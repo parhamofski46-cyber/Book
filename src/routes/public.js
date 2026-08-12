@@ -35,8 +35,8 @@ router.get('/', (req, res) => {
     categories,
     gridCategories,
     featuredCategory: featured,
-    latest: q.listProducts({ limit: 8 }),
-    forgeProducts: featured ? q.listProducts({ category: featured.slug, limit: 6 }) : [],
+    latest: q.listProducts({ limit: 6 }),
+    forgeProducts: featured ? q.listProducts({ category: featured.slug, limit: 4 }) : [],
     hero: {
       title: getSetting('hero_title', site.name),
       subtitle: getSetting('hero_subtitle', site.tagline),
@@ -156,6 +156,45 @@ router.get('/product/:slug', (req, res, next) => {
   });
 });
 
+// ------------------------------------------------------- درباره‌ی ما
+/**
+ * صفحه‌ی «درباره‌ی ما».
+ * قبلاً این محتوا ته صفحه‌ی اصلی بود و آن را خیلی بلند می‌کرد. حالا صفحه‌ی
+ * مستقل خودش را دارد: هم صفحه‌ی اصلی سبک شد، هم این صفحه آدرس ثابتی گرفت که
+ * می‌شود در منو، فوتر و گوگل به آن لینک داد (لینک لنگری «/#about» روی گوشی و
+ * داخل قاب پیش‌نمایش گاهی کار نمی‌کرد).
+ */
+router.get('/about', (req, res) => {
+  cachePublic(res);
+  res.render('public/about', {
+    title: `درباره‌ی ${site.name} | آهن‌آلات و فرفورژه در علی‌آباد کتول`,
+    metaDescription: truncate(
+      `${site.name} در علی‌آباد کتول: تولید ورق گالوانیزه، بیش از ۱۰۰۰ مدل گل فرفورژه‌ی آماده ` +
+        `و عرضه‌ی آهن‌آلات ساختمانی با ارسال به گرگان و سراسر گلستان. آدرس: ${site.address.full}.`
+    ),
+    aboutText: getSetting('about_text', ''),
+    mapEmbed: getSetting('map_embed', ''),
+    statCategoryCount: q.listCategories().length,
+  });
+});
+
+// ------------------------------------------------------- نظر مشتریان
+/**
+ * صفحه‌ی نظرات مشتریان با داده‌ی ساختاریافته‌ی Review.
+ * داشتن آدرس مستقل باعث می‌شود گوگل بتواند ستاره‌ها را در نتایج نشان دهد.
+ */
+router.get('/reviews', (req, res) => {
+  cachePublic(res);
+  res.render('public/reviews', {
+    title: `نظر مشتریان ${site.name} | تجربه‌ی خرید در علی‌آباد کتول و گرگان`,
+    metaDescription: truncate(
+      `نظر پیمانکارها و مشتری‌های ${site.name} درباره‌ی کیفیت جنس، قیمت و تحویل بار ` +
+        `در علی‌آباد کتول، گرگان و شهرهای اطراف.`
+    ),
+    reviews: q.listTestimonials({}),
+  });
+});
+
 // ------------------------------------------------------------ تماس با ما
 router.get('/contact', (req, res) => {
   cachePublic(res);
@@ -174,6 +213,8 @@ router.get('/sitemap.xml', (req, res) => {
     { loc: '/', priority: '1.0', changefreq: 'weekly' },
     { loc: '/products', priority: '0.9', changefreq: 'weekly' },
     { loc: '/forge', priority: '0.9', changefreq: 'weekly' },
+    { loc: '/about', priority: '0.7', changefreq: 'monthly' },
+    { loc: '/reviews', priority: '0.7', changefreq: 'monthly' },
     { loc: '/contact', priority: '0.6', changefreq: 'monthly' },
   ];
 

@@ -4,7 +4,7 @@
  * طول خط، سرفصل‌ها، alt، و لایه‌بندی z-index
  */
 const { chromium } = require('playwright');
-const B = 'http://localhost:3111';
+const B = process.argv[2] || 'http://localhost:3000';
 
 const AUDIT = () => {
   // ---- محاسبه‌ی کنتراست WCAG
@@ -44,6 +44,11 @@ const AUDIT = () => {
   document.querySelectorAll('body *').forEach((el) => {
     const cs = getComputedStyle(el);
     if (cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0') return;
+    // نکته: display:none روی «والد» باعث نمی‌شود getComputedStyle فرزند هم
+    // none برگرداند؛ برای همین باید جداگانه بررسی کنیم که عنصر واقعاً رندر
+    // شده باشد. بدون این خط، دکمه‌های منوی موبایل (که روی دسکتاپ پنهان‌اند)
+    // به‌عنوان «کنتراست ناکافی» گزارش می‌شدند و ایرادهای واقعی گم می‌شد.
+    if (!el.getClientRects().length) return;
     const rect = el.getBoundingClientRect();
 
     // --- متن مستقیم دارد؟
@@ -123,7 +128,7 @@ const AUDIT = () => {
 
 (async () => {
   const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
-  const pages = ['/', '/products', '/forge', '/contact'];
+  const pages = ['/', '/products', '/forge', '/about', '/reviews', '/contact'];
 
   for (const size of [{ n: 'دسکتاپ 1440', w: 1440, h: 900, m: false }, { n: 'موبایل 390', w: 390, h: 844, m: true }]) {
     const ctx = await b.newContext({ viewport: { width: size.w, height: size.h }, isMobile: size.m });

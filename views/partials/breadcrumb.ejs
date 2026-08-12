@@ -1,0 +1,34 @@
+<%
+/**
+ * مسیر راهنما (breadcrumb) + داده‌ی ساختاریافته‌ی آن.
+ * گوگل این مسیر را زیر عنوان صفحه در نتایج نشان می‌دهد؛ هم نرخ کلیک را بالا
+ * می‌برد و هم ساختار سایت را به موتور جست‌وجو می‌فهماند.
+ *
+ * ورودی: crumbs = [{ name, url }] — آخرین مورد صفحه‌ی جاری است و لینک نمی‌گیرد.
+ * این پارشال باید داخل یک <div class="wrap"> صدا زده شود (مثل بقیه‌ی صفحات).
+ */
+const items = (typeof crumbs !== 'undefined' && crumbs) ? crumbs : [];
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [{ '@type': 'ListItem', position: 1, name: 'خانه', item: site.url + '/' }].concat(
+    items.map(function (c, i) {
+      const el = { '@type': 'ListItem', position: i + 2, name: c.name };
+      if (c.url) el.item = site.url + c.url;
+      return el;
+    })
+  ),
+};
+%>
+<nav class="breadcrumb" aria-label="مسیر صفحه">
+  <a href="/">خانه</a>
+  <% items.forEach(function (c, i) { %>
+    <span>›</span>
+    <% if (c.url && i !== items.length - 1) { %>
+      <a href="<%= c.url %>"><%= c.name %></a>
+    <% } else { %>
+      <span aria-current="page"><%= c.name %></span>
+    <% } %>
+  <% }); %>
+</nav>
+<script type="application/ld+json" nonce="<%= nonce %>"><%- JSON.stringify(ld) %></script>

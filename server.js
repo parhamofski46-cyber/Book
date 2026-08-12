@@ -10,6 +10,8 @@ const compression = require('compression');
 const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
 
+const fs = require('fs');
+
 const { site, activeChannels, inquiryLink } = require('./src/config/site');
 const { DATA_DIR, getSetting } = require('./src/db');
 const queries = require('./src/db/queries');
@@ -24,6 +26,40 @@ const isProd = process.env.NODE_ENV === 'production';
 
 // در اولین اجرا: ساخت دسته‌بندی‌ها، محصولات نمونه و کاربر مدیر
 const seedResult = seedAll();
+
+// ---------------------------------------------------------- امنیت راه‌اندازی
+// در حالت تولید، کلید نشست باید حتماً در فایل .env تعریف شده باشد. اگر با کلید
+// پیش‌فرض بالا بیاید، هر کسی که سورس را دیده باشد می‌تواند کوکی مدیر را جعل کند.
+if (isProd && (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 24)) {
+  console.error(
+    '\n✋ SESSION_SECRET تعریف نشده یا خیلی کوتاه است.\n' +
+      '   در فایل .env یک رشته‌ی تصادفی بلند بگذارید، مثلاً خروجی این دستور:\n' +
+      '   node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))"\n'
+  );
+  process.exit(1);
+}
+
+/**
+ * نسخه‌ی فایل‌های استاتیک بر اساس محتوایشان.
+ *
+ * چرا مهم است: CSS و JS با کش یک‌هفته‌ای سرو می‌شوند. اگر آدرسشان ثابت بماند،
+ * بعد از هر اصلاحی مرورگرِ مشتری تا یک هفته نسخه‌ی قدیمی را نشان می‌دهد و
+ * به نظر می‌رسد باگ رفع نشده. با گذاشتن هش محتوا در آدرس، به‌محض تغییر فایل
+ * آدرس عوض می‌شود و همه بلافاصله نسخه‌ی تازه را می‌گیرند.
+ */
+function assetHash(rel) {
+  try {
+    const buf = fs.readFileSync(path.join(__dirname, 'public', rel));
+    return crypto.createHash('md5').update(buf).digest('hex').slice(0, 8);
+  } catch (err) {
+    return String(Date.now());
+  }
+}
+const ASSET_VERSION = {
+  css: assetHash('css/style.css'),
+  js: assetHash('js/main.js'),
+  admin: assetHash('css/admin.css'),
+};
 
 // وقتی پشت nginx / لیارا / آروان و ... اجرا می‌شود، آی‌پی و https درست تشخیص داده شود
 app.set('trust proxy', 1);
@@ -63,6 +99,16 @@ app.use(
     crossOriginResourcePolicy: { policy: 'cross-origin' },
   })
 );
+
+// دسترسی‌هایی که این سایت هرگز لازم ندارد را از ریشه می‌بندیم؛ اگر روزی
+// اسکریپتی به صفحه راه پیدا کرد، نتواند به دوربین/میکروفون/موقعیت دست بزند.
+app.use((req, res, next) => {
+  res.set(
+    'Permissions-Policy',
+    'camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=()'
+  );
+  next();
+});
 
 // فایل‌های استاتیک — عکس‌ها و فونت‌ها با کش طولانی، چون نامشان یکتاست
 const staticOpts = { maxAge: isProd ? '365d' : 0, immutable: isProd };
@@ -104,6 +150,7 @@ app.use((req, res, next) => {
   res.locals.setting = getSetting;
   // خلاصه‌ی امتیاز مشتریان — در داده‌ی ساختاریافته‌ی همه‌ی صفحات استفاده می‌شود
   res.locals.reviewSummary = queries.testimonialSummary();
+  res.locals.assetVersion = ASSET_VERSION;
   res.locals.currentPath = req.path;
   res.locals.canonical = site.url + req.originalUrl.split('?')[0];
   next();

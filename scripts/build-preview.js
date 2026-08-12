@@ -10,8 +10,10 @@ const fs = require('fs');
 const http = require('http');
 const path = require('path');
 
-const ROOT = '/home/user/Book';
-const B = { host: 'localhost', port: 3111 };
+const ROOT = path.resolve(__dirname, '..');
+// آدرس سرور محلی از آرگومان خط فرمان (پیش‌فرض ۳۰۰۰)
+const BASE = new URL(process.argv[2] || 'http://localhost:3000');
+const B = { host: BASE.hostname, port: BASE.port || 80 };
 
 const get = (p) =>
   new Promise((res, rej) => {
@@ -33,7 +35,7 @@ const dataUri = (file, mime) =>
   const cats = db.prepare('SELECT slug FROM categories ORDER BY sort_order').all();
   const prods = db.prepare('SELECT slug FROM products WHERE is_active = 1').all();
 
-  const routes = ['/', '/products', '/forge', '/contact'];
+  const routes = ['/', '/products', '/forge', '/about', '/reviews', '/contact'];
   cats.forEach((c) => routes.push('/category/' + encodeURIComponent(c.slug)));
   prods.forEach((p) => routes.push('/product/' + encodeURIComponent(p.slug)));
 

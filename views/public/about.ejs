@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <%- include('../partials/head') %>
+  <%- include('../partials/schema-business') %>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main id="main">
+    <div class="wrap">
+      <%- include('../partials/breadcrumb', { crumbs: [{ name: 'درباره‌ی ما', url: '/about' }] }) %>
+    </div>
+
+    <!-- ================================================== سربرگ صفحه -->
+    <section class="page-head">
+      <div class="wrap">
+        <span class="eyebrow"><%- icon('handshake') %> از سال‌ها پیش، در بازار آهن گلستان</span>
+        <h1>درباره‌ی فولاد ایمان</h1>
+        <p>
+          یک آهن‌فروشی واقعی در <strong>علی‌آباد کتول</strong> با انبار، تولید ورق گالوانیزه
+          و بیش از هزار مدل گل فرفورژه‌ی آماده — نه یک فروشگاه اینترنتی بدون آدرس.
+        </p>
+      </div>
+    </section>
+
+    <!-- ================================================== نوار آمار -->
+    <%- include('../partials/section-stats') %>
+
+    <!-- ================================================== معرفی مدیر -->
+    <%- include('../partials/section-owner') %>
+
+    <!-- ============================== تضمین‌ها و مراحل سفارش -->
+    <%- include('../partials/section-trust', { aboutText: aboutText }) %>
+
+    <%- include('../partials/ornament') %>
+
+    <!-- ================================================== منطقه‌ی خدمات -->
+    <section class="section" id="area">
+      <div class="wrap">
+        <div class="area-grid">
+          <div>
+            <div class="section-title"><h2>منطقه‌ی خدمات‌رسانی</h2></div>
+            <p>
+              پایگاه اصلی ما <strong>علی‌آباد کتول</strong> است و بیشترین مشتری‌های ما از
+              <strong>گرگان</strong> و شهرهای اطراف هستند. برای پروژه‌های ساختمانی در
+              سراسر استان گلستان، بار ارسال می‌کنیم.
+            </p>
+            <ul class="area-list">
+              <% site.areaServed.forEach(function (a, i) { %>
+                <li class="<%= i < 2 ? 'main' : '' %>"><%= a %></li>
+              <% }); %>
+            </ul>
+            <p style="margin-top:1.4rem">
+              <a class="btn btn-primary" href="/contact"><%- icon('map') %> اطلاعات تماس و آدرس</a>
+            </p>
+          </div>
+
+          <div class="map-frame">
+            <% if (mapEmbed) { %>
+              <%- mapEmbed %>
+            <% } else { %>
+              <div class="map-placeholder">
+                <%- icon('map', '') %>
+                <strong><%= site.address.full %></strong>
+                <span style="font-size:.88rem">
+                  برای مراجعه‌ی حضوری خوش‌آمدید. اگر مسیر را پیدا نکردید با
+                  <a href="<%= site.phoneHref %>" dir="ltr"><%= h.toFaDigits(site.phone) %></a>
+                  تماس بگیرید.
+                </span>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== پل به صفحه‌ی نظرها -->
+    <section class="section section-soft">
+      <div class="wrap">
+        <div class="next-band">
+          <div>
+            <h2>ببینید مشتری‌ها چه می‌گویند</h2>
+            <p>نظر پیمانکارها و اهالی علی‌آباد کتول و گرگان که کارشان را به ما سپرده‌اند.</p>
+          </div>
+          <a class="btn btn-primary btn-lg" href="/reviews">
+            <%- icon('chat') %> نظر مشتریان
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

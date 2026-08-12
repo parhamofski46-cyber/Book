@@ -131,56 +131,43 @@
     </section>
     <% } %>
 
-    <!-- ================================================== معرفی مدیر -->
-    <%- include('../partials/section-owner') %>
-
-    <!-- ================================================== نظرات مشتریان -->
+    <!-- ================================================== نظرات مشتریان (تیزر) -->
     <%- include('../partials/section-reviews') %>
 
-    <!-- ============================== تضمین‌ها و مراحل سفارش -->
-    <%- include('../partials/section-trust', { aboutText: aboutText }) %>
-
-    <%- include('../partials/ornament') %>
-
-    <!-- ================================================== منطقه‌ی خدمات -->
-    <section class="section section-soft" id="area">
+    <!-- ================================ پل کوتاه به صفحه‌ی «درباره‌ی ما»
+         بخش کامل معرفی مدیر، تضمین‌ها و منطقه‌ی خدمات به صفحه‌ی /about منتقل شد
+         تا صفحه‌ی اصلی کوتاه و سریع بماند. -->
+    <section class="section">
       <div class="wrap">
-        <div class="area-grid">
-          <div>
-            <div class="section-title"><h2>منطقه‌ی خدمات‌رسانی</h2></div>
-            <p>
-              پایگاه اصلی ما <strong>علی‌آباد کتول</strong> است و بیشترین مشتری‌های ما از
-              <strong>گرگان</strong> و شهرهای اطراف هستند. برای پروژه‌های ساختمانی در
-              سراسر استان گلستان، بار و کار سفارشی ارسال می‌کنیم.
-            </p>
-            <ul class="area-list">
-              <% site.areaServed.forEach(function (a, i) { %>
-                <li class="<%= i < 2 ? 'main' : '' %>"><%= a %></li>
-              <% }); %>
-            </ul>
-            <p style="margin-top:1.4rem">
-              <a class="btn btn-primary" href="/contact"><%- icon('map') %> اطلاعات تماس و آدرس</a>
-            </p>
+        <div class="about-teaser reveal">
+          <div class="about-teaser-photo">
+            <%
+            const ownerImg = setting('owner_image', '');
+            const tphoto = ownerImg
+              ? { src: h.imageUrl(ownerImg, 'medium'), srcset: h.imageSrcset(ownerImg) }
+              : { src: '/img/owner-800.webp', srcset: '/img/owner-480.webp 480w, /img/owner-800.webp 800w' };
+            const tname = setting('owner_name', '');
+            %>
+            <img src="<%= tphoto.src %>" srcset="<%= tphoto.srcset %>"
+                 sizes="(max-width: 760px) 40vw, 220px"
+                 alt="<%= (tname ? tname + '، ' : '') + setting('owner_title', 'مدیر فولاد ایمان') %>"
+                 width="800" height="1000" loading="lazy" decoding="async">
           </div>
-
-          <div class="map-frame">
-            <% if (mapEmbed) { %>
-              <%- mapEmbed %>
-            <% } else { %>
-              <div class="map-placeholder">
-                <%- icon('map', '') %>
-                <strong><%= site.address.full %></strong>
-                <span style="font-size:.88rem">
-                  برای مراجعه‌ی حضوری خوش‌آمدید. اگر مسیر را پیدا نکردید با
-                  <a href="<%= site.phoneHref %>" dir="ltr"><%= h.toFaDigits(site.phone) %></a>
-                  تماس بگیرید.
-                </span>
-              </div>
-            <% } %>
+          <div class="about-teaser-body">
+            <span class="eyebrow"><%- icon('handshake') %> آدمی که پشت فولاد ایمان است</span>
+            <h2>با ما طرف هستید، نه با یک شماره‌ی ناشناس</h2>
+            <p>
+              مغازه‌ی ما آدرس دارد، انبار دارد و خودمان ورق گالوانیزه تولید می‌کنیم.
+              داستان کارمان، تضمین‌هایی که می‌دهیم و شهرهایی که بار می‌فرستیم را
+              در صفحه‌ی درباره‌ی ما بخوانید.
+            </p>
+            <a class="btn btn-primary" href="/about">درباره‌ی ما <%- icon('arrow') %></a>
           </div>
         </div>
       </div>
     </section>
+
+    <%- include('../partials/ornament') %>
 
     <!-- ================================================== CTA پایانی -->
     <section class="section">

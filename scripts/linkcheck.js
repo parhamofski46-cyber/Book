@@ -7,7 +7,12 @@
  *  • لینک‌های بیرونی شکل درستی داشته باشند
  */
 const http = require('http');
-const B = { host: 'localhost', port: 3111 };
+
+// آدرس پایه از آرگومان خط فرمان گرفته می‌شود تا روی هر پورتی قابل اجرا باشد.
+// (قبلاً پورت ثابت ۳۱۱۱ بود و اگر سرور روی پورت دیگری بالا می‌آمد، این تست
+//  خطای گمراه‌کننده‌ی «وضعیت ۵۰۰» می‌داد.)
+const BASE = new URL(process.argv[2] || 'http://localhost:3000');
+const B = { host: BASE.hostname, port: BASE.port || 80 };
 
 const get = (p) =>
   new Promise((res) => {

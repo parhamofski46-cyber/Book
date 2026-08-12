@@ -124,10 +124,20 @@ const listTestimonials = (opts = {}) =>
 
 const getTestimonial = (id) => db.prepare('SELECT * FROM testimonials WHERE id = ?').get(id);
 
-/** میانگین امتیاز و تعداد نظرات — برای نمایش و داده‌ی ساختاریافته‌ی گوگل */
+/**
+ * میانگین امتیاز و تعداد نظرات — برای نمایش ستاره‌ها و داده‌ی ساختاریافته‌ی گوگل.
+ *
+ * ⚠️ نظرهای نمونه (که نامشان با «(نمونه)» علامت خورده) عمداً شمرده نمی‌شوند.
+ * فرستادن امتیاز ساختگی به گوگل هم خلاف قوانین نتایج غنی است و می‌تواند باعث
+ * حذف سایت از آن نتایج شود، هم به اعتماد مشتری واقعی ضربه می‌زند. تا وقتی
+ * صاحب مغازه از پنل نظر واقعی ثبت نکند، هیچ ستاره‌ای نمایش داده نمی‌شود.
+ */
 const testimonialSummary = () => {
   const row = db
-    .prepare('SELECT COUNT(*) n, AVG(rating) avg FROM testimonials WHERE is_active = 1')
+    .prepare(
+      `SELECT COUNT(*) n, AVG(rating) avg FROM testimonials
+        WHERE is_active = 1 AND name NOT LIKE '%(نمونه)%'`
+    )
     .get();
   return { count: row.n, average: row.n ? Math.round(row.avg * 10) / 10 : 0 };
 };

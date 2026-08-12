@@ -1,34 +1,37 @@
 <%
 /**
- * نظرات مشتریان.
- * نظرها از دیتابیس خوانده می‌شوند و از پنل مدیریت قابل افزودن/ویرایش‌اند.
+ * تیزر کوتاه نظرات مشتریان برای صفحه‌ی اصلی.
+ *
+ * قبلاً کل نظرها اینجا بود و صفحه‌ی اصلی را خیلی بلند می‌کرد. حالا فقط سه نظر
+ * نشان داده می‌شود و بقیه در صفحه‌ی مستقل /reviews است — هم صفحه‌ی اصلی
+ * کوتاه می‌ماند و هم نظرها آدرس مستقل خودشان را برای سئو می‌گیرند.
  */
+const teaser = (reviews || []).slice(0, 3);
 const initials = function (name) {
   const clean = String(name || '').replace(/\(نمونه\)/g, '').trim();
   return clean ? clean.charAt(0) : '؟';
 };
 %>
-<% if (reviews && reviews.length) { %>
-<section class="section section-soft" id="reviews">
+<% if (teaser.length) { %>
+<section class="section section-soft">
   <div class="wrap">
-    <div class="section-head center">
-      <span class="eyebrow"><%- icon('chat') %> تجربه‌ی مشتری‌های ما</span>
-      <div class="section-title"><h2>مشتری‌ها چه می‌گویند</h2></div>
-      <p>
-        نظر پیمانکارها و اهالی علی‌آباد کتول و گرگان که کارشان را به ما سپرده‌اند.
-      </p>
-    </div>
-
-    <div class="reviews-head">
-      <div class="rating-summary">
-        <%- include('stars', { rating: Math.round(reviewSummary.average) }) %>
-        <b><%= h.toFaDigits(reviewSummary.average) %></b>
-        <span>از <%= h.toFaDigits(reviewSummary.count) %> نظر ثبت‌شده</span>
+    <div class="section-head head-row">
+      <div>
+        <span class="eyebrow"><%- icon('chat') %> تجربه‌ی مشتری‌های ما</span>
+        <div class="section-title"><h2>مشتری‌ها چه می‌گویند</h2></div>
+        <% if (reviewSummary.count) { %>
+          <div class="rating-summary" style="margin-top:.6rem">
+            <%- include('stars', { rating: Math.round(reviewSummary.average) }) %>
+            <b><%= h.toFaDigits(reviewSummary.average) %></b>
+            <span>از <%= h.toFaDigits(reviewSummary.count) %> نظر</span>
+          </div>
+        <% } %>
       </div>
+      <a class="btn btn-ghost btn-sm" href="/reviews">همه‌ی نظرها <%- icon('arrow') %></a>
     </div>
 
     <div class="review-grid reveal">
-      <% reviews.forEach(function (r) { %>
+      <% teaser.forEach(function (r) { %>
         <article class="review-card">
           <%- include('stars', { rating: r.rating }) %>
           <p class="review-text"><%= r.text %></p>
@@ -39,22 +42,13 @@ const initials = function (name) {
               <span>
                 <% if (r.job) { %><%= r.job %><% } %>
                 <% if (r.job && r.city) { %> · <% } %>
-                <% if (r.city) { %>
-                  <span class="loc"><%- icon('map') %><%= r.city %></span>
-                <% } %>
+                <% if (r.city) { %><span class="loc"><%- icon('map') %><%= r.city %></span><% } %>
               </span>
             </div>
           </div>
         </article>
       <% }); %>
     </div>
-
-    <p style="text-align:center;margin-top:1.8rem;color:var(--ink-faint);font-size:.9rem">
-      شما هم از ما خرید کرده‌اید؟
-      <% const wa = inquiryLink('whatsapp'); if (wa) { %>
-        <a href="<%= wa %>" target="_blank" rel="noopener">نظرتان را در واتساپ برایمان بفرستید</a>
-      <% } %>
-    </p>
   </div>
 </section>
 <% } %>

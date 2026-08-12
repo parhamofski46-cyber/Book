@@ -891,7 +891,12 @@ p {
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }
 @media (max-width: 560px) {
-  .product-grid {
+  /* هر دو حالت گرید باید روی گوشی دو ستونه شوند. نکته‌ی ظریف: چون
+     `.product-grid.big` امتیاز (specificity) بالاتری دارد، اگر اینجا فقط
+     `.product-grid` نوشته شود، گرید بزرگ روی گوشی تک‌ستونه می‌ماند و بخش
+     فرفورژه‌ی صفحه‌ی اصلی سه برابر بلندتر می‌شود. */
+  .product-grid,
+  .product-grid.big {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.7rem;
   }
@@ -2428,4 +2433,188 @@ p {
   text-align: start;
   line-height: 1.95;
   color: var(--ink-soft);
+}
+
+/* ==========================================================================
+   صفحه‌های داخلی: سربرگ صفحه، تیزر «درباره‌ی ما»، نوار پل بین صفحه‌ها
+   این‌ها بعد از تفکیک صفحه‌ی اصلی به چند صفحه‌ی مستقل اضافه شدند.
+   ========================================================================== */
+
+/* سربرگ صفحه — جای h1 صفحه‌های داخلی، سبک‌تر از هیروی صفحه‌ی اصلی */
+.page-head {
+  padding: clamp(1.4rem, 3vw, 2.6rem) 0 clamp(1rem, 2vw, 1.6rem);
+  text-align: center;
+  background:
+    radial-gradient(120% 90% at 50% 0%, var(--rust-soft) 0%, transparent 70%),
+    var(--bg);
+}
+.page-head .eyebrow {
+  justify-content: center;
+}
+.page-head h1 {
+  font-size: clamp(1.7rem, 1.2rem + 2vw, 2.6rem);
+  margin: 0.6rem 0 0;
+  line-height: 1.25;
+}
+.page-head p {
+  color: var(--ink-soft);
+  max-width: 60ch;
+  margin: 0.9rem auto 0;
+}
+
+/* تیزر معرفی مدیر در صفحه‌ی اصلی — نسخه‌ی کوچک بخش کامل که به /about رفت */
+.about-teaser {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: clamp(1.2rem, 4vw, 2.6rem);
+  align-items: center;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--bg-soft);
+  box-shadow: var(--shadow-sm);
+}
+.about-teaser-photo {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  background: var(--bg-warm);
+}
+.about-teaser-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+.about-teaser-body h2 {
+  margin: 0.5rem 0 0.7rem;
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.7rem);
+}
+.about-teaser-body p {
+  color: var(--ink-soft);
+  margin: 0 0 1.2rem;
+  max-width: 56ch;
+}
+@media (max-width: 700px) {
+  .about-teaser {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .about-teaser-photo {
+    width: min(220px, 55vw);
+    margin-inline: auto;
+  }
+  .about-teaser-body .eyebrow {
+    justify-content: center;
+  }
+  .about-teaser-body p {
+    margin-inline: auto;
+  }
+}
+
+/* نوار پل — انتهای یک صفحه، دعوت به صفحه‌ی بعدی */
+.next-band {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  padding: clamp(1.2rem, 3vw, 1.8rem) clamp(1.2rem, 3vw, 2rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+}
+.next-band h2 {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.15rem, 1rem + 0.7vw, 1.5rem);
+}
+.next-band p {
+  margin: 0;
+  color: var(--ink-soft);
+}
+@media (max-width: 620px) {
+  .next-band {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+}
+
+/* یادداشت «این نظرها نمونه‌اند» — تا وقتی نظر واقعی ثبت نشده */
+.sample-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  max-width: 68ch;
+  margin: 0 auto clamp(1.4rem, 3vw, 2rem);
+  padding: 0.9rem 1.1rem;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--bg-warm);
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.8;
+}
+.sample-note svg {
+  flex: none;
+  width: 1.2em;
+  height: 1.2em;
+  margin-top: 0.35em;
+  fill: var(--copper);
+}
+
+/* ==========================================================================
+   یادداشت درباره‌ی content-visibility — عمداً استفاده نمی‌شود
+   ==========================================================================
+   وسوسه‌انگیز است که برای سریع‌تر شدن رندر، روی بخش‌های پایین صفحه
+   `content-visibility: auto` بگذاریم. یک‌بار امتحان شد و باگ واقعی ساخت:
+   وقتی کاربر اسکرول می‌کرد، بخش‌هایی که تا آن لحظه رندر نشده بودند ناگهان
+   ارتفاع واقعی‌شان را می‌گرفتند، بقیه‌ی صفحه را هل می‌دادند پایین و اسکرول
+   می‌پرید — دقیقاً همان حس «سایت روی گوشی تکان می‌خورد». تست
+   scripts/clickcheck.js این را گرفت: دو بخش انتهای صفحه‌ی اصلی هرگز ظاهر
+   نمی‌شدند. تا وقتی contain-intrinsic-size را نتوانیم برای همه‌ی اندازه‌های
+   صفحه دقیق حساب کنیم، این بهینه‌سازی نمی‌ارزد.
+   ========================================================================== */
+
+/* ==========================================================================
+   بزرگ‌کردن هدف‌های لمسی روی گوشی
+   ==========================================================================
+   معیار: هر چیزی که قابل کلیک است باید دست‌کم ۴۴×۴۴ پیکسل فضای لمس داشته
+   باشد (توصیه‌ی اپل و گوگل). لینک‌های ریز فوتر و لینک‌های تلفن درون متن،
+   روی گوشی با انگشت شست به‌سختی زده می‌شدند. با padding عمودی، بدون
+   به‌هم‌ریختن ظاهر، فضای لمس بزرگ می‌شود. */
+@media (max-width: 900px), (pointer: coarse) {
+  .footer-links {
+    gap: 0.1rem;
+  }
+  .footer-links a {
+    display: flex;
+    align-items: center;
+    min-height: var(--tap);
+  }
+  .footer-contact a {
+    min-height: var(--tap);
+  }
+  .breadcrumb a,
+  .breadcrumb > span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+  }
+  .breadcrumb a {
+    min-width: 44px;
+  }
+  /* لینک تلفن که وسط یک پاراگراف آمده */
+  p a[href^='tel:'],
+  span a[href^='tel:'] {
+    display: inline-block;
+    padding-block: 0.55rem;
+  }
+  .switch input {
+    width: 24px;
+    height: 24px;
+  }
 }
