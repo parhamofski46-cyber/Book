@@ -1,0 +1,24 @@
+---
+title:
+  - type: main
+    text: مردی که دخترش را فراموش کرد
+creator:
+  - role: author
+    text: محمدپرهام پلنگ سنگدوینی
+    file-as: پلنگ سنگدوینی، محمدپرهام
+lang: fa
+dir: rtl
+publisher: فراموشخانه
+rights: © ۲۰۲۶ محمدپرهام پلنگ سنگدوینی. تمام حقوق محفوظ است.
+description: رمانی دربارهٔ مغازه‌ای که خاطره می‌خرد، و مردی که پشت پیشخوانش ایستاده.
+subject:
+  - داستان
+  - رمان فارسی
+date: 2026-08-12
+# Each edition is a separate work in every store, so it carries its own identifier.
+# This value is deliberately fixed: regenerating it would republish the book as a
+# different title on every build.
+identifier:
+  - scheme: uuid
+    text: c954efa8-3cd7-4f45-a0da-40afdfc17375
+...

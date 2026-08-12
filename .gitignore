@@ -1,0 +1,6 @@
+# Build intermediates. The deliverables (.epub, .pdf, cover .png) are committed.
+build/*/body.html
+build/*/media/
+
+node_modules
+package-lock.json

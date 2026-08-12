@@ -1,0 +1,24 @@
+---
+title:
+  - type: main
+    text: The Man Who Forgot His Daughter
+creator:
+  - role: author
+    text: Mohammadparham Palangsangdovini
+    file-as: Palangsangdovini, Mohammadparham
+lang: en
+dir: ltr
+publisher: Faramushkhaneh
+rights: © 2026 Mohammadparham Palangsangdovini. All rights reserved.
+description: A novel about a shop that buys memories, and the man who stands behind its counter.
+subject:
+  - Fiction
+  - Literary Fiction
+date: 2026-08-12
+# Each edition is a separate work in every store, so it carries its own identifier.
+# This value is deliberately fixed: regenerating it would republish the book as a
+# different title on every build.
+identifier:
+  - scheme: uuid
+    text: b3f28ad0-34f2-46d7-9a89-32e7a4506bd6
+...

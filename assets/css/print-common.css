@@ -1,0 +1,169 @@
+/* Print interior, 6x9in trim — rules shared by both editions.
+ *
+ * Injected on top of each source file's own screen stylesheet, so this only has
+ * to undo what the screen needs (viewport-height covers, wide measure, screen
+ * type sizes) and add what paper needs (page breaks, widow/orphan control,
+ * blocks that refuse to split).
+ *
+ * Text block is 4.5 x 7.5in: 6x9 less 0.75in margins on every side.
+ */
+
+@page {
+  size: 6in 9in;
+  margin: 0.75in;
+}
+
+@media print {
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  /* The screen measure is set for a browser window; on a 4.5in text block the
+     page box is the measure. */
+  .wrap {
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* ── Page breaks ────────────────────────────────────── */
+
+  .cover,
+  .part,
+  .chapter,
+  .end {
+    page-break-before: always;
+    break-before: page;
+  }
+
+  /* The first page must not be preceded by a blank one. */
+  .cover {
+    page-break-before: avoid;
+    break-before: avoid;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .chapter-head,
+  h1,
+  h2,
+  h3,
+  h4 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  /* The chapter number and the chapter title are two elements inside one head.
+     Without this they can land on opposite sides of a page break, leaving a
+     stranded "CHAPTER SIXTEEN" on a page of its own. */
+  .chapter-head {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* ── Blocks that must stay whole ────────────────────── */
+
+  .brk,
+  .letter,
+  .journal,
+  .ledger,
+  .names,
+  .epigraph {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* ── Full-page designed spreads ─────────────────────── */
+  /* Cover, part dividers, the interlude and the closing page are dark by design.
+     Chromium drops background paint in print unless told otherwise. */
+
+  .cover,
+  .part,
+  .midbreak,
+  .end {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .cover,
+  .part,
+  .end,
+  .epigraph {
+    height: 7.5in;
+    min-height: 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+
+  /* Two screen-only textures. The rain is a 1px repeating gradient that turns
+     into banding at print resolution. The shelf is positioned at 44% of a
+     full-viewport cover; once the cover is squeezed to 7.5in that band lands
+     across the title. Both are decorative. */
+  .rain,
+  .shelf {
+    display: none !important;
+  }
+
+  /* The cover's breathing glow is an animation; on paper it is a still. */
+  .glow {
+    animation: none !important;
+    width: 170px !important;
+    height: 170px !important;
+  }
+
+  .cover-frame {
+    inset: 0.12in !important;
+  }
+
+  .vial-wrap svg {
+    width: 74px !important;
+    height: auto !important;
+  }
+
+  .cover-foot {
+    margin-top: 1.4rem !important;
+  }
+
+  .epigraph {
+    background: #fff !important;
+  }
+
+  .chapter {
+    padding: 0 !important;
+  }
+
+  /* The interlude is the one chapter set on a dark ground. Without an inset the
+     pale text runs flush to the edge of the panel and reads as clipped, so it
+     keeps the horizontal padding the other chapters give up. */
+  .midbreak {
+    padding: 0.3in 0.28in !important;
+  }
+
+  .chapter-head {
+    margin-bottom: 1.5rem !important;
+    padding-top: 0.25in;
+  }
+
+  /* The colophon is the last .chapter and carries no heading of its own; it
+     still gets a page to itself. */
+  .chapter:last-of-type {
+    page-break-before: always;
+    break-before: page;
+  }
+
+  /* Screen-only affordances. */
+  .toc a {
+    text-decoration: none;
+    color: inherit;
+  }
+}
