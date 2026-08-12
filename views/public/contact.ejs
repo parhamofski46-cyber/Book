@@ -30,7 +30,7 @@ const faqSchema = {
 <head>
   <%- include('../partials/head') %>
   <%- include('../partials/schema-business') %>
-  <script type="application/ld+json" nonce="<%= nonce %>"><%- JSON.stringify(faqSchema) %></script>
+  <script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(faqSchema) %></script>
 </head>
 <body>
   <%- include('../partials/header') %>

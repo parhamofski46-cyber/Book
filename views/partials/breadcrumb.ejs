@@ -31,4 +31,4 @@ const ld = {
     <% } %>
   <% }); %>
 </nav>
-<script type="application/ld+json" nonce="<%= nonce %>"><%- JSON.stringify(ld) %></script>
+<script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(ld) %></script>

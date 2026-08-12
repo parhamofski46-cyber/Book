@@ -43,8 +43,8 @@ const breadcrumbSchema = {
 %>
 <head>
   <%- include('../partials/head', { ogImage: mainImg.src }) %>
-  <script type="application/ld+json" nonce="<%= nonce %>"><%- JSON.stringify(productSchema) %></script>
-  <script type="application/ld+json" nonce="<%= nonce %>"><%- JSON.stringify(breadcrumbSchema) %></script>
+  <script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(productSchema) %></script>
+  <script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(breadcrumbSchema) %></script>
 </head>
 <body>
   <%- include('../partials/header') %>

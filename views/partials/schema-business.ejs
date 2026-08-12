@@ -62,4 +62,4 @@ if (reviewSummary && reviewSummary.count > 0) {
   };
 }
 %>
-<script type="application/ld+json" nonce="<%= nonce %>"><%- JSON.stringify(business) %></script>
+<script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(business) %></script>

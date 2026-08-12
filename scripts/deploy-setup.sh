@@ -62,7 +62,7 @@ After=network.target
 Type=simple
 User=$APP_USER
 WorkingDirectory=$APP_DIR
-ExecStart=$(command -v node) $APP_DIR/server.js
+ExecStart=$(command -v node) $APP_DIR/cluster.js
 Restart=always
 RestartSec=5
 Environment=NODE_ENV=production

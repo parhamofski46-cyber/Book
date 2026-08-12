@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "node server.js",
+    "start:cluster": "node cluster.js",
     "dev": "node --watch server.js",
     "seed": "node src/db/seed.js",
     "reset-password": "node scripts/reset-password.js"

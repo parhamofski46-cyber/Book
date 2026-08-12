@@ -35,7 +35,7 @@ const ld = real.length ? {
 <head>
   <%- include('../partials/head') %>
   <% if (ld) { %>
-    <script type="application/ld+json" nonce="<%= nonce %>"><%- JSON.stringify(ld) %></script>
+    <script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(ld) %></script>
   <% } %>
 </head>
 <body>

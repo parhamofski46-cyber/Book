@@ -204,7 +204,12 @@ app.use((err, req, res, next) => {
 });
 
 // ---------------------------------------------------------------- اجرا
+// وقتی از cluster.js بالا می‌آید، هر پردازش فرزند خودش را اینجا معرفی نمی‌کند
+// چون بنر خوش‌آمد و پیام رمز مدیر را cluster.js یک‌بار (نه به تعداد پردازش‌ها)
+// چاپ کرده است؛ اجرای مستقیم `node server.js` مثل قبل پیام کامل را می‌بیند.
+const isClusterWorker = require('cluster').isWorker;
 app.listen(PORT, () => {
+  if (isClusterWorker) return;
   console.log(`\n🔨 ${site.name}`);
   console.log(`   سایت روی http://localhost:${PORT} اجرا شد`);
   console.log(`   پنل مدیریت: http://localhost:${PORT}/admin`);

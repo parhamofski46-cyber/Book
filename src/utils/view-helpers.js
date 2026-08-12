@@ -61,4 +61,18 @@ function stockLabel(product) {
   return { text: 'موجود', cls: 'in' };
 }
 
-module.exports = { esc, truncate, productImage, stockLabel, imageUrl, imageSrcset, toFaDigits };
+/**
+ * JSON برای گذاشتن داخل تگ <script type="application/ld+json"> — امن در برابر
+ * خروج زودهنگام از اسکریپت.
+ *
+ * چرا لازم است: اگر متنی که مدیر از پنل وارد کرده (مثلاً توضیح محصول یا متن
+ * نظر) به‌طور اتفاقی رشته‌ی «</script>» را داشته باشد، JSON.stringify ساده
+ * آن را عوض نمی‌کند و مرورگر همان‌جا تگ اسکریپت را می‌بندد — باقی صفحه به‌عنوان
+ * HTML خوانده می‌شود. با تبدیل «<» به «<» این حمله ممکن نیست، بدون اینکه
+ * به معنای JSON خللی وارد شود.
+ */
+function jsonLd(obj) {
+  return JSON.stringify(obj).replace(/</g, '\\u003c');
+}
+
+module.exports = { esc, truncate, productImage, stockLabel, imageUrl, imageSrcset, toFaDigits, jsonLd };

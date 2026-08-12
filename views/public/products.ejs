@@ -33,7 +33,7 @@ if (category) {
 <head>
   <%- include('../partials/head') %>
   <% schemas.forEach(function (sc) { %>
-    <script type="application/ld+json" nonce="<%= nonce %>"><%- JSON.stringify(sc) %></script>
+    <script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(sc) %></script>
   <% }); %>
 </head>
 <body>

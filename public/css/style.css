@@ -105,6 +105,12 @@ html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-h) + 16px);
+  /* اگر این «hidden» فقط روی body باشد، در صفحات راست‌به‌چپ گاهی مرورگر
+     body را «عنصر اسکرول ریشه» حساب می‌کند و موقعیت اولیه‌ی اسکرول را به‌جای
+     صفر، منفی (یعنی از راست پیش‌رفته) می‌گذارد — نتیجه‌اش شکافی سفید در
+     لبه‌ی صفحه و کج‌شدن هدر است. با گذاشتن hidden روی هر دو، این ابهام از
+     ریشه از بین می‌رود. */
+  overflow-x: hidden;
 }
 
 body {
@@ -322,6 +328,7 @@ p {
   top: 0;
   z-index: var(--z-header);
   background: rgba(255, 255, 255, 0.92);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
   backdrop-filter: saturate(180%) blur(12px);
   border-bottom: 1px solid var(--line);
 }
@@ -357,6 +364,15 @@ p {
   color: var(--ink-faint);
   line-height: 1.2;
   letter-spacing: 0;
+}
+/* روی گوشی‌های خیلی باریک (۳۲۰-۳۶۰px، مثل iPhone SE)، زیرنویس برند به‌همراه
+   دکمه‌ی همبرگر و دکمه‌ی تماس از عرض هدر بیرون می‌زد — چون .brand با
+   white-space:nowrap هرگز کوچک‌تر از پهن‌ترین خط (همین زیرنویس) نمی‌شود.
+   با پنهان‌کردن زیرنویس، فقط نام اصلی (کوتاه‌تر) باقی می‌ماند و جا باز می‌شود. */
+@media (max-width: 480px) {
+  .brand-text small {
+    display: none;
+  }
 }
 
 .nav {
@@ -416,6 +432,7 @@ p {
   position: fixed;
   inset: 0;
   background: rgba(20, 18, 16, 0.45);
+  -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
   opacity: 0;
   visibility: hidden;
@@ -442,6 +459,7 @@ p {
     padding: 0.7rem 0.9rem 1.1rem;
     transform: translateY(-130%);
     transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+    max-height: calc(100vh - var(--header-h)); /* پشتیبان برای مرورگرهای بدون dvh */
     max-height: calc(100dvh - var(--header-h));
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -960,6 +978,7 @@ p {
   font-weight: 700;
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
 .badge-in {
@@ -1577,6 +1596,7 @@ p {
     flex-direction: row;
     gap: 0;
     background: rgba(255, 255, 255, 0.96);
+    -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     border-top: 1px solid var(--line);
     padding: 0.5rem 0.6rem calc(0.5rem + env(safe-area-inset-bottom));
