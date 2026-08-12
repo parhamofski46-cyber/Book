@@ -18,15 +18,30 @@
     </a>
 
     <button class="nav-toggle" type="button" aria-label="منو" aria-expanded="false" aria-controls="main-nav">
-      <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      <svg viewBox="0 0 24 24">
+        <path class="l1" d="M4 7h16"/>
+        <path class="l2" d="M4 12h16"/>
+        <path class="l3" d="M4 17h16"/>
+      </svg>
     </button>
 
     <nav class="nav" id="main-nav" aria-label="منوی اصلی">
       <a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">صفحه اصلی</a>
       <a href="/products" class="<%= currentPath === '/products' ? 'active' : '' %>">محصولات</a>
       <a href="/forge" class="<%= currentPath === '/forge' ? 'active' : '' %>">فرفورژه</a>
-      <a href="/#why">چرا ما</a>
+      <a href="/#reviews">نظر مشتریان</a>
+      <a href="/#about">درباره‌ی ما</a>
       <a href="/contact" class="<%= currentPath === '/contact' ? 'active' : '' %>">تماس با ما</a>
+
+      <!-- دکمه‌های تماس داخل منوی موبایل -->
+      <div class="nav-actions">
+        <% activeChannels().forEach(function (ch) { %>
+          <a class="btn <%= ch.key === 'whatsapp' ? 'btn-wa' : 'btn-tg' %>"
+             href="<%= ch.href %>" target="_blank" rel="noopener">
+            <%- icon(ch.key) %> <%= ch.label %>
+          </a>
+        <% }); %>
+      </div>
     </nav>
 
     <!-- دکمه‌ی تماس همیشه در دسترس، حتی در موبایل -->
@@ -37,3 +52,8 @@
     </div>
   </div>
 </header>
+
+<!-- پرده‌ی تیره‌ی پشت منوی موبایل — عمداً بیرون از تگ header قرار دارد، چون
+     backdrop-filter روی هدر باعث می‌شود عنصر fixed داخلش فقط به اندازه‌ی خود
+     هدر دیده شود و کل صفحه را نپوشاند -->
+<div class="nav-backdrop" hidden></div>

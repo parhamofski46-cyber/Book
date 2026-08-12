@@ -1,0 +1,89 @@
+<%
+/**
+ * بخش معرفی مدیر — «آدمی که پشت این کسب‌وکار است».
+ * قوی‌ترین ابزار اعتمادسازی در کسب‌وکارهای محلی: مشتری وقتی چهره‌ی فروشنده را
+ * می‌بیند، احساس می‌کند طرف حسابش یک آدم واقعی است، نه یک شماره تلفن.
+ *
+ * عکس: اگر از پنل عکس جدیدی آپلود شده باشد از آن استفاده می‌شود،
+ * وگرنه عکس پیش‌فرض در public/img به‌کار می‌رود.
+ */
+const uploaded = setting('owner_image', '');
+const ownerName = setting('owner_name', '');
+const ownerTitle = setting('owner_title', 'مدیر و مؤسس فولاد ایمان');
+const photo = uploaded
+  ? { src: h.imageUrl(uploaded, 'large'), srcset: h.imageSrcset(uploaded) }
+  : {
+      src: '/img/owner-800.webp',
+      srcset: '/img/owner-480.webp 480w, /img/owner-800.webp 800w, /img/owner-1200.webp 1200w',
+    };
+const alt = (ownerName ? ownerName + '، ' : '') + ownerTitle + ' — آهن‌آلات و فرفورژه در علی‌آباد کتول و گرگان';
+%>
+<section class="owner-section" id="about">
+  <div class="wrap">
+    <div class="owner-grid">
+
+      <!-- عکس در قاب حرفه‌ای: بلوک زنگاری پشت عکس + مدال فرفورژه -->
+      <div class="owner-photo reveal">
+        <div class="frame">
+          <img src="<%= photo.src %>" srcset="<%= photo.srcset %>"
+               sizes="(max-width: 820px) 90vw, 420px"
+               alt="<%= alt %>" width="800" height="1000"
+               loading="lazy" decoding="async">
+        </div>
+        <% const years = setting('stat_years', ''); %>
+        <% if (years) { %>
+          <div class="exp-badge">
+            <b><%= h.toFaDigits(years) %></b>
+            <span>سال تجربه</span>
+          </div>
+        <% } %>
+        <% if (ownerName) { %>
+          <span class="owner-caption"><%= ownerName %></span>
+        <% } %>
+      </div>
+
+      <!-- متن -->
+      <div class="owner-body">
+        <span class="eyebrow"><%- icon('handshake') %> آدمی که پشت فولاد ایمان است</span>
+
+        <h2>با ما طرف هستید، نه با یک شماره‌ی ناشناس</h2>
+
+        <% if (setting('owner_quote', '')) { %>
+          <p class="owner-quote">«<%= setting('owner_quote', '') %>»</p>
+        <% } %>
+
+        <% if (setting('owner_text', '')) { %>
+          <p class="owner-text"><%= setting('owner_text', '') %></p>
+        <% } %>
+
+        <div class="owner-sign">
+          <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+            <rect width="64" height="64" rx="14" fill="#1c1c1e"/>
+            <g fill="none" stroke="#c0763c" stroke-width="3.4" stroke-linecap="round">
+              <path d="M20 46V26c0-6 5-10 11-10h14"/>
+              <path d="M31 46V33c0-3 2-5 5-5h9"/>
+              <path d="M38 20c0-6 5-9 9-7s3 9-2 9-6-5-2-8"/>
+            </g>
+          </svg>
+          <div class="who">
+            <b><%= ownerName || 'مدیریت فولاد ایمان' %></b>
+            <span><%= ownerTitle %> — <%= site.address.city %></span>
+          </div>
+        </div>
+
+        <div class="hero-actions" style="margin-top:1.4rem">
+          <% activeChannels().forEach(function (ch) { %>
+            <a class="btn <%= ch.key === 'whatsapp' ? 'btn-wa' : 'btn-tg' %>"
+               href="<%= ch.href %>" target="_blank" rel="noopener">
+              <%- icon(ch.key) %> گفت‌وگو در <%= ch.label %>
+            </a>
+          <% }); %>
+          <a class="btn btn-ghost" href="<%= site.phoneHref %>">
+            <%- icon('phone') %> <span dir="ltr"><%= h.toFaDigits(site.phone) %></span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

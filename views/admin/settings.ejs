@@ -2,18 +2,19 @@
 
 <div class="page-head">
   <div>
-    <h1>متن‌های سایت</h1>
-    <p class="hint">متن‌هایی که در صفحه‌ی اصلی دیده می‌شوند. هر وقت خواستید عوضشان کنید.</p>
+    <h1>متن‌ها و آمار سایت</h1>
+    <p class="hint">متن‌ها و اعدادی که در صفحه‌ی اصلی دیده می‌شوند. هر وقت خواستید عوضشان کنید.</p>
   </div>
 </div>
 
-<% if (flash) { %><div class="alert alert-ok">✅ متن‌ها ذخیره شد.</div><% } %>
+<% if (flash) { %><div class="alert alert-ok">✅ ذخیره شد.</div><% } %>
 
-<form method="post" action="/admin/settings">
+<form method="post" action="/admin/settings" enctype="multipart/form-data">
   <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
+  <!-- ============================================ هیرو -->
   <div class="panel">
-    <h2>بالای صفحه‌ی اصلی (هیرو)</h2>
+    <h2>بالای صفحه‌ی اصلی</h2>
 
     <div class="field">
       <label for="hero_title">عنوان اصلی</label>
@@ -32,6 +33,96 @@
     </div>
   </div>
 
+  <!-- ============================================ آمار -->
+  <div class="panel">
+    <h2>آمار اعتمادسازی</h2>
+    <p class="hint">
+      این چهار عدد در نوار تیره‌ی زیر صفحه‌ی اصلی نمایش داده می‌شوند.
+      <strong>حتماً اعداد واقعی خودتان را بگذارید</strong> — عدد اغراق‌شده اگر با واقعیت
+      مغازه جور نباشد، همان اعتمادی که می‌خواهید بسازید را از بین می‌برد.
+      هر کدام را خالی بگذارید، آن ستون اصلاً نمایش داده نمی‌شود.
+    </p>
+
+    <div class="row" style="margin-top:1rem">
+      <div class="field">
+        <label for="stat_years">سال‌های سابقه</label>
+        <input type="text" id="stat_years" name="stat_years" value="<%= values.stat_years %>" maxlength="10">
+      </div>
+      <div class="field">
+        <label for="stat_orders">تعداد سفارش تحویل‌شده</label>
+        <input type="text" id="stat_orders" name="stat_orders" value="<%= values.stat_orders %>" maxlength="10">
+      </div>
+      <div class="field">
+        <label for="stat_customers">تعداد مشتری ثابت</label>
+        <input type="text" id="stat_customers" name="stat_customers" value="<%= values.stat_customers %>" maxlength="10">
+      </div>
+      <div class="field">
+        <label for="stat_satisfaction">درصد رضایت</label>
+        <input type="text" id="stat_satisfaction" name="stat_satisfaction" value="<%= values.stat_satisfaction %>" maxlength="10">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="stats_note">توضیح زیر آمار</label>
+      <input type="text" id="stats_note" name="stats_note" value="<%= values.stats_note %>" maxlength="160">
+    </div>
+  </div>
+
+  <!-- ============================================ معرفی مدیر -->
+  <div class="panel">
+    <h2>بخش معرفی مدیر</h2>
+    <p class="hint">
+      عکس و حرف مدیر، مؤثرترین بخش صفحه در جلب اعتماد مشتری محلی است.
+      نام واقعی را وارد کنید تا زیر عکس نمایش داده شود.
+    </p>
+
+    <div class="row" style="margin-top:1rem">
+      <div class="field">
+        <label for="owner_name">نام مدیر</label>
+        <p class="desc">اگر خالی بماند، فقط عنوان «مدیریت فولاد ایمان» نوشته می‌شود.</p>
+        <input type="text" id="owner_name" name="owner_name" value="<%= values.owner_name %>"
+               maxlength="60" placeholder="مثال: حاج‌آقا ...">
+      </div>
+      <div class="field">
+        <label for="owner_title">عنوان / سمت</label>
+        <input type="text" id="owner_title" name="owner_title" value="<%= values.owner_title %>" maxlength="80">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="owner_quote">جمله‌ی نقل‌قول (داخل گیومه نمایش داده می‌شود)</label>
+      <textarea id="owner_quote" name="owner_quote" style="min-height:90px"><%= values.owner_quote %></textarea>
+    </div>
+
+    <div class="field">
+      <label for="owner_text">متن معرفی</label>
+      <textarea id="owner_text" name="owner_text"><%= values.owner_text %></textarea>
+    </div>
+
+    <div class="field">
+      <span class="lbl">عکس مدیر</span>
+      <p class="desc">
+        عکس فعلی در سایت نمایش داده می‌شود. برای تعویض، عکس جدید انتخاب کنید
+        (بهترین نتیجه: عکس عمودی، نور روشن، پس‌زمینه‌ی ساده).
+      </p>
+      <div style="display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap;margin-top:.6rem">
+        <img src="<%= values.owner_image ? h.imageUrl(values.owner_image, 'thumb') : '/img/owner-480.webp' %>"
+             alt="عکس فعلی مدیر"
+             style="width:120px;aspect-ratio:4/5;object-fit:cover;border-radius:10px;border:1px solid var(--line)">
+        <div style="flex:1;min-width:240px">
+          <input type="file" name="owner_photo" accept="image/*">
+          <% if (values.owner_image) { %>
+            <label class="check" style="margin-top:.7rem">
+              <input type="checkbox" name="remove_owner_photo" value="1">
+              <span>برگرد به عکس پیش‌فرض <small>— عکس آپلودشده حذف می‌شود</small></span>
+            </label>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ چرا ما -->
   <div class="panel">
     <h2>بخش «چرا ما»</h2>
     <div class="field">
@@ -40,6 +131,7 @@
     </div>
   </div>
 
+  <!-- ============================================ نقشه -->
   <div class="panel">
     <h2>نقشه</h2>
     <div class="field">
@@ -55,7 +147,7 @@
   </div>
 
   <div class="actions">
-    <button class="btn btn-primary btn-lg" type="submit">ذخیره‌ی متن‌ها</button>
+    <button class="btn btn-primary btn-lg" type="submit">ذخیره‌ی همه‌ی تغییرات</button>
     <a class="btn btn-ghost" href="/" target="_blank" rel="noopener">دیدن سایت ↗</a>
   </div>
 </form>

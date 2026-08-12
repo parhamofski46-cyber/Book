@@ -27,10 +27,12 @@
         <a href="/admin" class="<%= currentPath === '/' ? 'active' : '' %>">داشبورد</a>
         <a href="/admin/products" class="<%= currentPath.indexOf('/products') === 0 ? 'active' : '' %>">محصولات</a>
         <a href="/admin/categories" class="<%= currentPath.indexOf('/categories') === 0 ? 'active' : '' %>">دسته‌بندی‌ها</a>
-        <a href="/admin/settings" class="<%= currentPath.indexOf('/settings') === 0 ? 'active' : '' %>">متن‌های سایت</a>
+        <a href="/admin/reviews" class="<%= currentPath.indexOf('/reviews') === 0 ? 'active' : '' %>">نظرات مشتریان</a>
+        <a href="/admin/settings" class="<%= currentPath.indexOf('/settings') === 0 ? 'active' : '' %>">متن‌ها و آمار</a>
         <a href="/admin/password" class="<%= currentPath.indexOf('/password') === 0 ? 'active' : '' %>">رمز عبور</a>
         <a href="/" target="_blank" rel="noopener">مشاهده‌ی سایت ↗</a>
         <form method="post" action="/admin/logout">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <button type="submit">خروج</button>
         </form>
       </nav>

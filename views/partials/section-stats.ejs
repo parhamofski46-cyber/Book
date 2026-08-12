@@ -1,0 +1,29 @@
+<%
+/**
+ * نوار آمار — اولین چیزی که بعد از هیرو حس «اینجا کارش را بلد است» را منتقل می‌کند.
+ * همه‌ی اعداد از پنل مدیریت (بخش «اعتمادسازی») قابل تغییرند.
+ */
+const stats = [
+  { num: setting('stat_years', '۲۰'), suffix: 'سال', label: 'سابقه در بازار آهن گلستان' },
+  { num: setting('stat_orders', ''), suffix: '+', label: 'سفارش تحویل‌شده' },
+  { num: setting('stat_customers', ''), suffix: '+', label: 'مشتری ثابت و پیمانکار' },
+  { num: setting('stat_satisfaction', ''), suffix: '٪', label: 'رضایت از کیفیت و تحویل' },
+].filter((s) => String(s.num).trim() !== '');
+%>
+<% if (stats.length) { %>
+<section class="stats-band" aria-label="آمار فولاد ایمان">
+  <div class="wrap">
+    <div class="stats-grid">
+      <% stats.forEach(function (s) { %>
+        <div class="stat-item">
+          <span class="stat-num"><%= h.toFaDigits(s.num) %><span class="suffix"><%= s.suffix %></span></span>
+          <span class="stat-label"><%= s.label %></span>
+        </div>
+      <% }); %>
+    </div>
+    <% if (setting('stats_note', '')) { %>
+      <p class="stats-note"><%= setting('stats_note', '') %></p>
+    <% } %>
+  </div>
+</section>
+<% } %>

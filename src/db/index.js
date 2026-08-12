@@ -93,6 +93,19 @@ db.exec(`
     key   TEXT PRIMARY KEY,
     value TEXT NOT NULL DEFAULT ''
   );
+
+  -- نظرات مشتریان (برای اعتمادسازی) — از پنل مدیریت قابل افزودن و ویرایش
+  CREATE TABLE IF NOT EXISTS testimonials (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    name       TEXT    NOT NULL,                  -- نام مشتری
+    city       TEXT    NOT NULL DEFAULT '',       -- شهر (برای سئوی محلی مفید است)
+    job        TEXT    NOT NULL DEFAULT '',       -- شغل یا نسبت: پیمانکار، ساکن، مهندس ...
+    text       TEXT    NOT NULL,                  -- متن نظر
+    rating     INTEGER NOT NULL DEFAULT 5,        -- امتیاز ۱ تا ۵
+    is_active  INTEGER NOT NULL DEFAULT 1,
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT    NOT NULL DEFAULT (datetime('now'))
+  );
 `);
 
 /** خواندن یک تنظیم با مقدار پیش‌فرض */

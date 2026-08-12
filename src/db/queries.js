@@ -110,6 +110,28 @@ const relatedProducts = (product, limit = 4) =>
     )
     .all({ cat: product.category_id, id: product.id, limit });
 
+// -------------------------------------------------- نظرات مشتریان
+
+const listTestimonials = (opts = {}) =>
+  db
+    .prepare(
+      `SELECT * FROM testimonials
+        ${opts.includeInactive ? '' : 'WHERE is_active = 1'}
+        ORDER BY sort_order, id
+        ${opts.limit ? 'LIMIT @limit' : ''}`
+    )
+    .all(opts.limit ? { limit: opts.limit } : {});
+
+const getTestimonial = (id) => db.prepare('SELECT * FROM testimonials WHERE id = ?').get(id);
+
+/** میانگین امتیاز و تعداد نظرات — برای نمایش و داده‌ی ساختاریافته‌ی گوگل */
+const testimonialSummary = () => {
+  const row = db
+    .prepare('SELECT COUNT(*) n, AVG(rating) avg FROM testimonials WHERE is_active = 1')
+    .get();
+  return { count: row.n, average: row.n ? Math.round(row.avg * 10) / 10 : 0 };
+};
+
 // ------------------------------------------------------- آمار پنل مدیریت
 
 const adminStats = () => ({
@@ -135,5 +157,8 @@ module.exports = {
   getProductById,
   listProductImages,
   relatedProducts,
+  listTestimonials,
+  getTestimonial,
+  testimonialSummary,
   adminStats,
 };

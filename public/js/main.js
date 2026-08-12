@@ -8,28 +8,41 @@
   // ----------------------------------------------------- منوی موبایل
   var toggle = document.querySelector('.nav-toggle');
   var nav = document.getElementById('main-nav');
+  var backdrop = document.querySelector('.nav-backdrop');
 
   if (toggle && nav) {
-    toggle.addEventListener('click', function () {
-      var open = nav.classList.toggle('open');
+    var setMenu = function (open) {
+      nav.classList.toggle('open', open);
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (backdrop) {
+        backdrop.hidden = false;
+        backdrop.classList.toggle('show', open);
+      }
+      // وقتی منو باز است، صفحه‌ی پشت آن اسکرول نشود
+      document.body.style.overflow = open ? 'hidden' : '';
+    };
+
+    toggle.addEventListener('click', function () {
+      setMenu(!nav.classList.contains('open'));
     });
 
-    // با کلیک روی هر لینک، منو بسته شود
+    // با کلیک روی هر لینک یا روی پرده‌ی تیره، منو بسته شود
     nav.addEventListener('click', function (e) {
-      if (e.target.tagName === 'A') {
-        nav.classList.remove('open');
-        toggle.setAttribute('aria-expanded', 'false');
-      }
+      if (e.target.closest('a')) setMenu(false);
     });
+    if (backdrop) backdrop.addEventListener('click', function () { setMenu(false); });
 
     // با کلید Escape هم بسته شود
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && nav.classList.contains('open')) {
-        nav.classList.remove('open');
-        toggle.setAttribute('aria-expanded', 'false');
+        setMenu(false);
         toggle.focus();
       }
+    });
+
+    // اگر کاربر گوشی را افقی کرد و صفحه بزرگ شد، منو بسته شود
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 900 && nav.classList.contains('open')) setMenu(false);
     });
   }
 

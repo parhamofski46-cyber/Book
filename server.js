@@ -12,6 +12,7 @@ const SQLiteStore = require('connect-sqlite3')(session);
 
 const { site, activeChannels, inquiryLink } = require('./src/config/site');
 const { DATA_DIR, getSetting } = require('./src/db');
+const queries = require('./src/db/queries');
 const { seedAll } = require('./src/db/seed');
 const helpers = require('./src/utils/view-helpers');
 const { icon, categoryIcon } = require('./src/utils/icons');
@@ -100,6 +101,8 @@ app.use((req, res, next) => {
   res.locals.icon = icon;
   res.locals.categoryIcon = categoryIcon;
   res.locals.setting = getSetting;
+  // خلاصه‌ی امتیاز مشتریان — در داده‌ی ساختاریافته‌ی همه‌ی صفحات استفاده می‌شود
+  res.locals.reviewSummary = queries.testimonialSummary();
   res.locals.currentPath = req.path;
   res.locals.canonical = site.url + req.originalUrl.split('?')[0];
   next();

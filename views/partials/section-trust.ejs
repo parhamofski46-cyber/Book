@@ -1,0 +1,104 @@
+<%
+/**
+ * تضمین‌ها و مراحل سفارش.
+ * هدف: برداشتن دلهره‌ی مشتری قبل از اینکه دکمه‌ی واتساپ را بزند —
+ * «چطور سفارش بدهم؟»، «اگر جنس بد باشد چه؟»، «فاکتور می‌دهند؟»
+ */
+%>
+<section class="section section-soft" id="trust">
+  <div class="wrap">
+
+    <!-- ---------------------------------------- تضمین‌ها -->
+    <div class="section-head center">
+      <div class="section-title"><h2>خیالتان راحت باشد</h2></div>
+      <p>چیزهایی که از روز اول کارمان بوده و بابتشان پای حرفمان می‌ایستیم.</p>
+    </div>
+
+    <div class="guarantee-grid reveal">
+      <div class="guarantee">
+        <span class="g-ico"><%- icon('badge') %></span>
+        <div>
+          <b>جنس درست، وزن درست</b>
+          <span>آهن‌آلات استاندارد از کارخانه‌های شناخته‌شده؛ اگر مشخصات با چیزی که گفتیم فرق داشت، برمی‌گردانیم.</span>
+        </div>
+      </div>
+
+      <div class="guarantee">
+        <span class="g-ico"><%- icon('receipt') %></span>
+        <div>
+          <b>قیمت شفاف، بدون چانه‌زنی الکی</b>
+          <span>قیمت روز را همان لحظه اعلام می‌کنیم؛ فاکتور هم در صورت نیاز صادر می‌شود.</span>
+        </div>
+      </div>
+
+      <div class="guarantee">
+        <span class="g-ico"><%- icon('truck') %></span>
+        <div>
+          <b>حمل تا پای کار</b>
+          <span>هماهنگی باربری با خودمان — به علی‌آباد کتول، گرگان و شهرهای اطراف.</span>
+        </div>
+      </div>
+
+      <div class="guarantee">
+        <span class="g-ico"><%- icon('ruler') %></span>
+        <div>
+          <b>ساخت سفارشی فرفورژه</b>
+          <span>اندازه‌ی درگاه و پنجره‌ی شما را می‌گیریم و در کارگاه خودمان می‌سازیم و نصب می‌کنیم.</span>
+        </div>
+      </div>
+
+      <div class="guarantee">
+        <span class="g-ico"><%- icon('chat') %></span>
+        <div>
+          <b>پاسخ‌گویی واقعی</b>
+          <span>پیام واتساپ و تلگرام را خودمان می‌خوانیم و جواب می‌دهیم؛ نه ربات، نه منشی.</span>
+        </div>
+      </div>
+
+      <div class="guarantee">
+        <span class="g-ico"><%- icon('users') %></span>
+        <div>
+          <b>مشاوره‌ی بی‌طرفانه</b>
+          <span>اگر سایز یا ضخامتی که خواسته‌اید به درد کارتان نخورد، می‌گوییم — حتی اگر گران‌ترش سود ما باشد.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------------------------------------- مراحل سفارش -->
+    <div class="section-head center" style="margin-top:clamp(2.5rem,5vw,4rem)">
+      <div class="section-title"><h2>سفارش دادن فقط سه قدم است</h2></div>
+      <p>نه ثبت‌نام، نه سبد خرید، نه پرداخت آنلاین. مثل خرید حضوری، فقط راحت‌تر.</p>
+    </div>
+
+    <div class="steps reveal" style="margin-top:2rem">
+      <div class="step">
+        <h3>لیستتان را بفرستید</h3>
+        <p>
+          اسم و تعداد جنسی که می‌خواهید را در واتساپ یا تلگرام بنویسید — یا اگر کار
+          فرفورژه است، عکس طرح و اندازه‌ی تقریبی را بفرستید.
+        </p>
+      </div>
+      <div class="step">
+        <h3>قیمت و زمان را بگیرید</h3>
+        <p>
+          قیمت روز، موجودی و زمان تحویل را همان‌جا برایتان می‌نویسیم. اگر چیزی به
+          صرفه‌تر باشد، پیشنهاد می‌دهیم.
+        </p>
+      </div>
+      <div class="step">
+        <h3>تحویل بگیرید</h3>
+        <p>
+          بار را می‌فرستیم پای کار یا خودتان از انبار تحویل می‌گیرید؛ تسویه هم موقع تحویل.
+        </p>
+      </div>
+    </div>
+
+    <p style="text-align:center;margin-top:2rem">
+      <% const wa = inquiryLink('whatsapp'); if (wa) { %>
+        <a class="btn btn-wa btn-lg" href="<%= wa %>" target="_blank" rel="noopener">
+          <%- icon('whatsapp') %> همین حالا لیستم را می‌فرستم
+        </a>
+      <% } %>
+    </p>
+  </div>
+</section>

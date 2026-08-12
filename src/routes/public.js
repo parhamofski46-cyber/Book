@@ -40,6 +40,8 @@ router.get('/', (req, res) => {
     },
     aboutText: getSetting('about_text', ''),
     mapEmbed: getSetting('map_embed', ''),
+    reviews: q.listTestimonials({ limit: 6 }),
+    reviewSummary: q.testimonialSummary(),
     isHome: true,
   });
 });

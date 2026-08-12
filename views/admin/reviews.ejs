@@ -1,0 +1,135 @@
+<%- include('_layout-top') %>
+<%
+const ed = editing; // نظری که در حال ویرایش است (یا null برای افزودن)
+%>
+
+<div class="page-head">
+  <div>
+    <h1>نظرات مشتریان</h1>
+    <p class="hint">نظرها در صفحه‌ی اصلی، بخش «مشتری‌ها چه می‌گویند» نمایش داده می‌شوند.</p>
+  </div>
+</div>
+
+<% if (flash) { %><div class="alert alert-ok">✅ انجام شد.</div><% } %>
+
+<div class="alert alert-info">
+  ⚠️ <strong>نظرهای «(نمونه)» را حتماً با نظر واقعی مشتریان خودتان جایگزین کنید.</strong>
+  نظر ساختگی هم خلاف قوانین گوگل است (می‌تواند باعث حذف ستاره‌های سایت از نتایج جست‌وجو شود)
+  و هم مشتری محلی معمولاً تشخیص می‌دهد و اعتمادش کم می‌شود.
+  <div style="margin-top:.7rem">
+    <form method="post" action="/admin/reviews/clear-samples"
+          data-confirm="همه‌ی نظرهای نمونه حذف شوند؟">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button class="btn btn-danger btn-sm" type="submit">حذف همه‌ی نظرهای نمونه</button>
+    </form>
+  </div>
+</div>
+
+<!-- ------------------------------------------------ فرم افزودن / ویرایش -->
+<div class="panel">
+  <h2><%= ed ? 'ویرایش نظر' : 'افزودن نظر جدید' %></h2>
+  <p class="hint">
+    ساده‌ترین راه جمع‌آوری نظر واقعی: بعد از تحویل کار، در واتساپ بپرسید
+    «اگر راضی بودید یک جمله بنویسید» — همان جمله را عیناً اینجا وارد کنید.
+  </p>
+
+  <form method="post" action="<%= ed ? '/admin/reviews/' + ed.id : '/admin/reviews' %>"
+        style="margin-top:1rem">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <div class="row">
+      <div class="field">
+        <label for="r-name">نام مشتری *</label>
+        <input type="text" id="r-name" name="name" required maxlength="60"
+               value="<%= ed ? ed.name : '' %>" placeholder="مثال: رضا محمدی">
+      </div>
+      <div class="field">
+        <label for="r-city">شهر</label>
+        <p class="desc">نوشتن شهر، هم اعتماد می‌آورد هم برای سئوی محلی مفید است.</p>
+        <input type="text" id="r-city" name="city" maxlength="40"
+               value="<%= ed ? ed.city : '' %>" placeholder="گرگان">
+      </div>
+      <div class="field">
+        <label for="r-job">شغل یا نسبت</label>
+        <input type="text" id="r-job" name="job" maxlength="60"
+               value="<%= ed ? ed.job : '' %>" placeholder="پیمانکار ساختمان">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="r-text">متن نظر *</label>
+      <textarea id="r-text" name="text" required maxlength="1000"
+                style="min-height:110px"><%= ed ? ed.text : '' %></textarea>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="r-rating">امتیاز</label>
+        <select id="r-rating" name="rating">
+          <% [5,4,3,2,1].forEach(function (n) { %>
+            <option value="<%= n %>" <%= ed && ed.rating === n ? 'selected' : (!ed && n === 5 ? 'selected' : '') %>>
+              <%= '★'.repeat(n) %> (<%= h.toFaDigits(n) %>)
+            </option>
+          <% }); %>
+        </select>
+      </div>
+      <div class="field">
+        <label for="r-sort">ترتیب نمایش</label>
+        <p class="desc">عدد کوچک‌تر = اول نمایش داده می‌شود.</p>
+        <input type="number" id="r-sort" name="sort_order" value="<%= ed ? ed.sort_order : 0 %>">
+      </div>
+    </div>
+
+    <label class="check">
+      <input type="checkbox" name="is_active" value="1" <%= !ed || ed.is_active ? 'checked' : '' %>>
+      <span>در سایت نمایش داده شود</span>
+    </label>
+
+    <div class="actions">
+      <button class="btn btn-primary" type="submit"><%= ed ? 'ذخیره‌ی تغییرات' : 'افزودن نظر' %></button>
+      <% if (ed) { %><a class="btn btn-ghost" href="/admin/reviews">انصراف</a><% } %>
+    </div>
+  </form>
+</div>
+
+<!-- ------------------------------------------------ فهرست نظرها -->
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>مشتری</th><th>متن</th><th>امتیاز</th><th>وضعیت</th><th>کارها</th></tr>
+    </thead>
+    <tbody>
+      <% if (!reviews.length) { %>
+        <tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--ink-faint)">
+          هنوز نظری ثبت نشده.
+        </td></tr>
+      <% } %>
+      <% reviews.forEach(function (r) { %>
+        <tr>
+          <td>
+            <strong><%= r.name %></strong>
+            <div class="hint"><%= [r.job, r.city].filter(Boolean).join(' · ') %></div>
+          </td>
+          <td style="max-width:380px"><%= r.text.length > 110 ? r.text.slice(0, 110) + '…' : r.text %></td>
+          <td style="white-space:nowrap;color:#e8a33d"><%= '★'.repeat(r.rating) %></td>
+          <td>
+            <% if (r.is_active) { %><span class="pill pill-in">نمایش</span>
+            <% } else { %><span class="pill pill-off">مخفی</span><% } %>
+          </td>
+          <td>
+            <div class="cell-actions">
+              <a class="btn btn-ghost btn-sm" href="/admin/reviews?edit=<%= r.id %>">ویرایش</a>
+              <form method="post" action="/admin/reviews/<%= r.id %>/delete"
+                    data-confirm="این نظر حذف شود؟">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button class="btn btn-danger btn-sm" type="submit">حذف</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('_layout-bottom') %>

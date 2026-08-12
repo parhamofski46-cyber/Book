@@ -60,9 +60,9 @@ const site = {
       base: `https://wa.me/${PHONE_INTL}`,
     },
     telegram: {
-      enabled: false, // ← بعد از گرفتن یوزرنیم، این را true کنید
+      enabled: true,
       label: 'تلگرام',
-      username: '', // ← مثال: 'fooladiman' (بدون @)
+      username: 'parham_plg', // بدون @ — برای تغییر، فقط همین را عوض کنید
       base: '', // به‌صورت خودکار از username ساخته می‌شود (پایین‌تر)
     },
     eitaa: {

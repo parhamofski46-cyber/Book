@@ -41,5 +41,18 @@ if (site.channels.whatsapp.enabled) {
 if (site.channels.telegram.enabled && site.channels.telegram.base) {
   business.sameAs = (business.sameAs || []).concat([site.channels.telegram.base]);
 }
+
+// امتیاز کلی بر اساس نظرات ثبت‌شده در پنل.
+// ⚠️ این داده باید بازتاب نظرات واقعی مشتریان باشد؛ نظر ساختگی هم خلاف قوانین
+// گوگل است و هم می‌تواند باعث حذف سایت از نتایج غنی شود.
+if (reviewSummary && reviewSummary.count > 0) {
+  business.aggregateRating = {
+    '@type': 'AggregateRating',
+    ratingValue: reviewSummary.average,
+    reviewCount: reviewSummary.count,
+    bestRating: 5,
+    worstRating: 1,
+  };
+}
 %>
 <script type="application/ld+json" nonce="<%= nonce %>"><%- JSON.stringify(business) %></script>

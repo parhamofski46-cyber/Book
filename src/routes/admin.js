@@ -88,7 +88,7 @@ router.post('/login', loginLimiter, express.urlencoded({ extended: false }), csr
   });
 });
 
-router.post('/logout', express.urlencoded({ extended: false }), (req, res) => {
+router.post('/logout', express.urlencoded({ extended: false }), csrf, (req, res) => {
   req.session.destroy(() => res.redirect('/admin/login'));
 });
 
@@ -398,27 +398,123 @@ router.post('/subcategories/:id/delete', csrf, (req, res) => {
   res.redirect('/admin/categories?ok=deleted');
 });
 
-// ============================================================ متن‌های سایت
+// ======================================================= نظرات مشتریان
 
-router.get('/settings', csrf, (req, res) => {
-  res.render('admin/settings', {
-    title: 'متن‌های سایت',
-    values: {
-      hero_title: getSetting('hero_title'),
-      hero_subtitle: getSetting('hero_subtitle'),
-      hero_text: getSetting('hero_text'),
-      about_text: getSetting('about_text'),
-      map_embed: getSetting('map_embed'),
-    },
+router.get('/reviews', csrf, (req, res) => {
+  res.render('admin/reviews', {
+    title: 'نظرات مشتریان',
+    reviews: q.listTestimonials({ includeInactive: true }),
+    editing: req.query.edit ? q.getTestimonial(Number(req.query.edit)) : null,
     flash: req.query.ok || null,
   });
 });
 
-router.post('/settings', csrf, (req, res) => {
-  for (const key of ['hero_title', 'hero_subtitle', 'hero_text', 'about_text', 'map_embed']) {
-    if (key in req.body) setSetting(key, String(req.body[key]).slice(0, 4000));
+/** خواندن فیلدهای فرم نظر */
+function readReviewForm(body) {
+  return {
+    name: String(body.name || '').trim().slice(0, 60),
+    city: String(body.city || '').trim().slice(0, 40),
+    job: String(body.job || '').trim().slice(0, 60),
+    text: String(body.text || '').trim().slice(0, 1000),
+    rating: Math.max(1, Math.min(5, Number(body.rating) || 5)),
+    is_active: body.is_active ? 1 : 0,
+    sort_order: Number(body.sort_order) || 0,
+  };
+}
+
+router.post('/reviews', csrf, (req, res) => {
+  const d = readReviewForm(req.body);
+  if (!d.name || !d.text) return res.redirect('/admin/reviews');
+
+  db.prepare(
+    `INSERT INTO testimonials (name, city, job, text, rating, is_active, sort_order)
+     VALUES (@name, @city, @job, @text, @rating, @is_active, @sort_order)`
+  ).run(d);
+  res.redirect('/admin/reviews?ok=added');
+});
+
+router.post('/reviews/:id', csrf, (req, res) => {
+  const d = readReviewForm(req.body);
+  if (!d.name || !d.text) return res.redirect('/admin/reviews');
+
+  db.prepare(
+    `UPDATE testimonials SET name = @name, city = @city, job = @job, text = @text,
+            rating = @rating, is_active = @is_active, sort_order = @sort_order
+      WHERE id = @id`
+  ).run({ ...d, id: Number(req.params.id) });
+  res.redirect('/admin/reviews?ok=saved');
+});
+
+router.post('/reviews/:id/delete', csrf, (req, res) => {
+  db.prepare('DELETE FROM testimonials WHERE id = ?').run(Number(req.params.id));
+  res.redirect('/admin/reviews?ok=deleted');
+});
+
+/** حذف یک‌جای همه‌ی نظرات نمونه — برای وقتی مدیر نظرات واقعی را وارد کرد */
+router.post('/reviews/clear-samples', csrf, (req, res) => {
+  db.prepare("DELETE FROM testimonials WHERE name LIKE '%(نمونه)%'").run();
+  res.redirect('/admin/reviews?ok=deleted');
+});
+
+// ============================================================ متن‌های سایت
+
+// کلیدهایی که از فرم «متن‌های سایت» قابل ویرایش‌اند
+const SETTING_KEYS = [
+  'hero_title',
+  'hero_subtitle',
+  'hero_text',
+  'about_text',
+  'map_embed',
+  // آمار اعتمادسازی
+  'stat_years',
+  'stat_orders',
+  'stat_customers',
+  'stat_satisfaction',
+  'stats_note',
+  // بخش معرفی مدیر
+  'owner_name',
+  'owner_title',
+  'owner_quote',
+  'owner_text',
+];
+
+router.get('/settings', csrf, (req, res) => {
+  const values = {};
+  for (const key of SETTING_KEYS) values[key] = getSetting(key);
+  values.owner_image = getSetting('owner_image');
+
+  res.render('admin/settings', {
+    title: 'متن‌ها و آمار سایت',
+    values,
+    flash: req.query.ok || null,
+  });
+});
+
+router.post('/settings', upload.single('owner_photo'), csrf, async (req, res, next) => {
+  try {
+    for (const key of SETTING_KEYS) {
+      if (key in req.body) setSetting(key, String(req.body[key]).slice(0, 4000));
+    }
+
+    // آپلود عکس جدید مدیر (اختیاری) — جایگزین عکس قبلی می‌شود
+    if (req.file) {
+      const old = getSetting('owner_image');
+      const { basename } = await processUpload(req.file.buffer, 'modir');
+      setSetting('owner_image', basename);
+      if (old) deleteImageFiles(old);
+    }
+
+    // بازگشت به عکس پیش‌فرض
+    if (req.body.remove_owner_photo) {
+      const old = getSetting('owner_image');
+      if (old) deleteImageFiles(old);
+      setSetting('owner_image', '');
+    }
+
+    res.redirect('/admin/settings?ok=saved');
+  } catch (err) {
+    next(err);
   }
-  res.redirect('/admin/settings?ok=saved');
 });
 
 // ============================================================ تغییر رمز عبور
