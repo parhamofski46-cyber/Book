@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main id="main">
+    <!-- ================================================== هیرو‌ی فرفورژه -->
+    <section class="hero" style="padding-bottom:1.5rem">
+      <div class="hero-ornament">
+        <%- include('../partials/ornament', { variant: 'panel' }) %>
+      </div>
+      <div class="wrap hero-inner">
+        <span class="eyebrow"><span class="dot"></span> ساخت در کارگاه خودمان</span>
+        <h1>گل و طرح‌های <span class="accent">فرفورژه</span></h1>
+        <p class="hero-sub">نرده، درب حیاط و حفاظ پنجره — علی‌آباد کتول و گرگان</p>
+        <p class="hero-text">
+          فرفورژه یعنی آهنِ گرم‌شده که با دست فرم می‌گیرد؛ برگ، پیچک و حلزونی‌هایی که
+          یک نرده‌ی ساده را تبدیل به نمای ساختمان می‌کنند. طرح‌های زیر نمونه‌ی کارهای
+          ماست و هر کدام را می‌شود در اندازه‌ی دلخواه شما ساخت.
+        </p>
+        <div class="hero-actions">
+          <% const wa = inquiryLink('whatsapp', 'طرح‌های فرفورژه'); if (wa) { %>
+            <a class="btn btn-wa btn-lg" href="<%= wa %>" target="_blank" rel="noopener">
+              <%- icon('whatsapp') %> ارسال عکس محل کار و گرفتن قیمت
+            </a>
+          <% } %>
+          <a class="btn btn-ghost btn-lg" href="<%= site.phoneHref %>">
+            <%- icon('phone') %> مشاوره‌ی تلفنی
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <%- include('../partials/ornament') %>
+
+    <!-- ================================================== گالری به تفکیک طرح -->
+    <div class="wrap">
+      <% subcategories.forEach(function (sub) { %>
+        <% if (sub.products.length) { %>
+          <section class="section" id="<%= sub.slug %>">
+            <div class="section-head head-row">
+              <div>
+                <div class="section-title"><h2><%= sub.name %></h2></div>
+                <p>
+                  <% if (sub.name.indexOf('نرده') > -1) { %>
+                    طرح‌های مناسب نرده‌ی بالکن، راه‌پله و تراس.
+                  <% } else if (sub.name.indexOf('درب') > -1) { %>
+                    طرح‌های درب حیاط و درب پارکینگ، دولنگه و تک‌لنگه.
+                  <% } else { %>
+                    حفاظ پنجره که هم امنیت می‌آورد هم زیبایی.
+                  <% } %>
+                </p>
+              </div>
+              <span class="result-count"><%= h.toFaDigits(sub.products.length) %> طرح</span>
+            </div>
+
+            <div class="product-grid big">
+              <% sub.products.forEach(function (product, i) { %>
+                <%- include('../partials/product-card', { product: product, eager: i < 3 }) %>
+              <% }); %>
+            </div>
+          </section>
+        <% } %>
+      <% }); %>
+
+      <% if (others.length) { %>
+        <section class="section">
+          <div class="section-head">
+            <div class="section-title"><h2>سایر المان‌های فرفورژه</h2></div>
+          </div>
+          <div class="product-grid">
+            <% others.forEach(function (product) { %>
+              <%- include('../partials/product-card', { product: product }) %>
+            <% }); %>
+          </div>
+        </section>
+      <% } %>
+
+      <!-- ================================================== سفارش ساخت -->
+      <section class="section">
+        <div class="cta-band">
+          <div class="ornament"><%- include('../partials/ornament', { variant: 'panel' }) %></div>
+          <div>
+            <h2>طرح دلخواه خودتان را داریم؟</h2>
+            <p>
+              عکس طرحی که پسندیده‌اید را در واتساپ بفرستید و اندازه‌ی تقریبی درگاه یا
+              پنجره را بگویید؛ همان را برایتان می‌سازیم و نصب می‌کنیم.
+            </p>
+          </div>
+          <div class="cta-actions">
+            <% activeChannels('سفارش ساخت فرفورژه').forEach(function (ch) { %>
+              <a class="btn <%= ch.key === 'whatsapp' ? 'btn-wa' : 'btn-tg' %> btn-lg"
+                 href="<%= ch.href %>" target="_blank" rel="noopener">
+                <%- icon(ch.key) %> <%= ch.label %>
+              </a>
+            <% }); %>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

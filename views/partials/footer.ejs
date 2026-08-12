@@ -1,0 +1,65 @@
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h4><%= site.name %></h4>
+        <p>
+          تولید و فروش انواع قوطی، پروفیل، نبشی، رابیتس، شاخ گوزنی، فنس، ایزوگام و
+          گل و طرح‌های دست‌ساز فرفورژه. تحویل و نصب در
+          <strong>علی‌آباد کتول</strong> و <strong>گرگان</strong> و سراسر استان گلستان.
+        </p>
+        <div class="footer-contact">
+          <a href="<%= site.phoneHref %>">
+            <%- icon('phone') %><span dir="ltr"><%= h.toFaDigits(site.phone) %></span>
+          </a>
+          <% activeChannels().forEach(function (ch) { %>
+            <a href="<%= ch.href %>" target="_blank" rel="noopener">
+              <%- icon(ch.key) %><span class="label"><%= ch.label %></span>
+            </a>
+          <% }); %>
+        </div>
+      </div>
+
+      <div>
+        <h4>دسترسی سریع</h4>
+        <ul class="footer-links">
+          <li><a href="/products">همه‌ی محصولات</a></li>
+          <li><a href="/forge">گل و طرح‌های فرفورژه</a></li>
+          <li><a href="/#why">چرا فولاد ایمان؟</a></li>
+          <li><a href="/#area">منطقه‌ی خدمات</a></li>
+          <li><a href="/contact">تماس و استعلام قیمت</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>ساعات کاری و منطقه</h4>
+        <p><%- icon('clock', 'ico') %> <%= site.openingHours %></p>
+        <p><%- icon('map', 'ico') %> <%= site.address.street %></p>
+        <p style="font-size:.85rem;color:var(--ink-faint)">
+          خدمات‌رسانی در: <%= site.areaServed.join('، ') %>
+        </p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <%= h.toFaDigits(new Date().toLocaleDateString('fa-IR-u-nu-latn', { year: 'numeric' })) %> — تمام حقوق برای <%= site.name %> محفوظ است.</span>
+      <span>ساخته‌شده برای علی‌آباد کتول و گرگان</span>
+    </div>
+  </div>
+</footer>
+
+<!-- دکمه‌ی شناور تماس: همیشه در دسترس، مهم‌ترین مسیر رسیدن مشتری به شما -->
+<div class="float-cta">
+  <% activeChannels().forEach(function (ch) { %>
+    <a class="float-btn float-<%= ch.key === 'whatsapp' ? 'wa' : (ch.key === 'telegram' ? 'tg' : 'call') %>"
+       href="<%= ch.href %>" target="_blank" rel="noopener"
+       aria-label="ارتباط از طریق <%= ch.label %>">
+      <%- icon(ch.key) %><span class="txt"><%= ch.label %></span>
+    </a>
+  <% }); %>
+  <a class="float-btn float-call" href="<%= site.phoneHref %>" aria-label="تماس تلفنی">
+    <%- icon('phone') %><span class="txt">تماس</span>
+  </a>
+</div>
+
+<script src="/js/main.js?v=1" defer nonce="<%= nonce %>"></script>

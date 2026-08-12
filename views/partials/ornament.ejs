@@ -1,0 +1,57 @@
+<%
+/**
+ * جداکننده‌ی فرفورژه — امضای بصری سایت
+ * خطوط حلزونی و شاخ‌وبرگ، همان الگویی که در کار فرفورژه اجرا می‌شود.
+ * پارامتر اختیاری: variant ('line' پیش‌فرض | 'corner' | 'panel')
+ */
+const style = locals.variant || 'line';
+%>
+<% if (style === 'line') { %>
+<div class="divider" aria-hidden="true">
+  <svg viewBox="0 0 460 46" fill="none" stroke="currentColor" stroke-width="1.7"
+       stroke-linecap="round" stroke-linejoin="round">
+    <!-- نیمه‌ی راست، سپس همان طرح آینه‌ای برای نیمه‌ی چپ -->
+    <g>
+      <path d="M2 23h108" />
+      <path d="M110 23c0-13 11-19 20-14 8 5 6 19-4 19-9 0-13-11-5-17 11-8 30-3 37 15" />
+      <path d="M158 26c5 9 17 11 24 5" />
+      <path d="M182 31c7-11 21-13 29-5" />
+      <path d="M196 12c-6 6-6 15 0 20" opacity=".8" />
+    </g>
+    <g transform="translate(460,0) scale(-1,1)">
+      <path d="M2 23h108" />
+      <path d="M110 23c0-13 11-19 20-14 8 5 6 19-4 19-9 0-13-11-5-17 11-8 30-3 37 15" />
+      <path d="M158 26c5 9 17 11 24 5" />
+      <path d="M182 31c7-11 21-13 29-5" />
+      <path d="M196 12c-6 6-6 15 0 20" opacity=".8" />
+    </g>
+    <path d="M230 13l7 10-7 10-7-10z" fill="currentColor" stroke="none" />
+  </svg>
+</div>
+<% } else if (style === 'panel') { %>
+<svg class="ornament" viewBox="0 0 240 240" fill="none" stroke="currentColor"
+     stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <!-- پنل فرفورژه: میله‌های عمودی + گل‌های حلزونی قرینه
+       (همان چیزی که در نرده‌ی واقعی اجرا می‌شود) -->
+  <path d="M60 18v204M120 18v204M180 18v204" opacity=".45" />
+  <path d="M24 40h192M24 200h192" opacity=".55" />
+
+  <!-- حلزونی‌های بالا، قرینه نسبت به میله‌ی وسط -->
+  <path d="M120 74c0-16 13-27 26-21s10 25-5 25c-12 0-18-14-7-22" />
+  <path d="M120 74c0-16-13-27-26-21s-10 25 5 25c12 0 18-14 7-22" />
+  <!-- حلزونی‌های پایین -->
+  <path d="M120 166c0 16 13 27 26 21s10-25-5-25c-12 0-18 14-7 22" />
+  <path d="M120 166c0 16-13 27-26 21s-10-25 5-25c12 0 18 14 7 22" />
+
+  <!-- برگ‌های میانی -->
+  <path d="M120 108c-14 4-22 12-22 12s8 8 22 12c14-4 22-12 22-12s-8-8-22-12Z" opacity=".8" />
+  <circle cx="120" cy="120" r="5" fill="currentColor" stroke="none" />
+</svg>
+<% } else { %>
+<svg class="ornament" viewBox="0 0 160 160" fill="none" stroke="currentColor"
+     stroke-width="2.6" stroke-linecap="round" aria-hidden="true">
+  <path d="M10 150V40c0-17 14-30 31-30h109" />
+  <path d="M46 150V60c0-9 7-16 16-16h88" />
+  <path d="M96 44c0-16 13-26 24-19s7 24-6 24c-12 0-17-14-7-21" />
+</svg>
+<% } %>

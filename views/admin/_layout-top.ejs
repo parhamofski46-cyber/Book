@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title><%= title %> — پنل مدیریت فولاد ایمان</title>
+  <link rel="stylesheet" href="/css/admin.css?v=1">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <header class="admin-header">
+    <div class="bar">
+      <a class="logo" href="/admin">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <rect width="64" height="64" rx="14" fill="#2a2a2c"/>
+          <g fill="none" stroke="#c0763c" stroke-width="3.4" stroke-linecap="round">
+            <path d="M20 46V26c0-6 5-10 11-10h14"/>
+            <path d="M31 46V33c0-3 2-5 5-5h9"/>
+            <path d="M38 20c0-6 5-9 9-7s3 9-2 9-6-5-2-8"/>
+          </g>
+        </svg>
+        پنل مدیریت
+      </a>
+
+      <nav class="admin-nav">
+        <a href="/admin" class="<%= currentPath === '/' ? 'active' : '' %>">داشبورد</a>
+        <a href="/admin/products" class="<%= currentPath.indexOf('/products') === 0 ? 'active' : '' %>">محصولات</a>
+        <a href="/admin/categories" class="<%= currentPath.indexOf('/categories') === 0 ? 'active' : '' %>">دسته‌بندی‌ها</a>
+        <a href="/admin/settings" class="<%= currentPath.indexOf('/settings') === 0 ? 'active' : '' %>">متن‌های سایت</a>
+        <a href="/admin/password" class="<%= currentPath.indexOf('/password') === 0 ? 'active' : '' %>">رمز عبور</a>
+        <a href="/" target="_blank" rel="noopener">مشاهده‌ی سایت ↗</a>
+        <form method="post" action="/admin/logout">
+          <button type="submit">خروج</button>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-main">

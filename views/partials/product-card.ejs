@@ -1,0 +1,34 @@
+<%
+/**
+ * کارت محصول در گرید.
+ * ورودی: product (رکورد محصول) و اختیاری eager (عکس بدون lazy برای ردیف اول)
+ */
+const img = h.productImage(product, 'thumb');
+const stock = h.stockLabel(product);
+const eagerLoad = typeof eager !== 'undefined' && eager;
+%>
+<a class="card <%= product.in_stock ? '' : 'is-out' %>" href="/product/<%= encodeURIComponent(product.slug) %>">
+  <div class="card-media <%= img.isPlaceholder ? 'placeholder' : '' %>">
+    <img
+      src="<%= img.src %>"
+      <% if (img.srcset) { %>srcset="<%= img.srcset %>" sizes="(max-width: 560px) 45vw, (max-width: 900px) 30vw, 260px"<% } %>
+      alt="<%= img.alt %>"
+      width="400" height="300"
+      loading="<%= eagerLoad ? 'eager' : 'lazy' %>"
+      decoding="async"
+      <%= eagerLoad ? 'fetchpriority="high"' : '' %>>
+    <span class="badge badge-<%= stock.cls %>"><%= stock.text %></span>
+    <% if (product.subcategory_name) { %>
+      <span class="badge-sub"><%= product.subcategory_name %></span>
+    <% } %>
+  </div>
+  <div class="card-body">
+    <span class="card-cat"><%= product.category_name %></span>
+    <h3 class="card-title"><%= product.name %></h3>
+    <% if (product.summary) { %><p class="card-desc"><%= product.summary %></p><% } %>
+    <div class="card-foot">
+      <span class="price"><%= product.price_text || 'استعلام قیمت' %></span>
+      <span class="more">مشاهده و سفارش ›</span>
+    </div>
+  </div>
+</a>

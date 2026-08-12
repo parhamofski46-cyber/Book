@@ -1,0 +1,33 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title><%= title %></title>
+<meta name="description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : site.description %>">
+<meta name="theme-color" content="#a8431a">
+<link rel="canonical" href="<%= canonical %>">
+
+<!-- فونت اصلی از قبل بارگذاری می‌شود تا متن بدون تأخیر نمایش داده شود -->
+<link rel="preload" href="/fonts/Vazirmatn-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/style.css?v=1">
+<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/img/favicon.svg">
+
+<!-- اشتراک‌گذاری در شبکه‌های اجتماعی و پیام‌رسان‌ها -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="<%= site.name %>">
+<meta property="og:locale" content="fa_IR">
+<meta property="og:title" content="<%= title %>">
+<meta property="og:description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : site.description %>">
+<meta property="og:url" content="<%= canonical %>">
+<% if (typeof ogImage !== 'undefined' && ogImage) { %>
+<meta property="og:image" content="<%= site.url %><%= ogImage %>">
+<% } %>
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- علامت‌گذاری فعال‌بودن جاوااسکریپت؛ انیمیشن ورودِ بخش‌ها فقط در این حالت
+     اجرا می‌شود تا اگر اسکریپت لود نشد، محتوا همچنان دیده شود -->
+<script nonce="<%= nonce %>">document.documentElement.className += ' js';</script>
+
+<!-- کلمات کلیدی محلی برای موتورهای جست‌وجو -->
+<meta name="geo.region" content="IR-37">
+<meta name="geo.placename" content="علی‌آباد کتول، گرگان">
+<meta name="robots" content="index, follow, max-image-preview:large">

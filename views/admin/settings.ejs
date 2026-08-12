@@ -1,0 +1,63 @@
+<%- include('_layout-top') %>
+
+<div class="page-head">
+  <div>
+    <h1>متن‌های سایت</h1>
+    <p class="hint">متن‌هایی که در صفحه‌ی اصلی دیده می‌شوند. هر وقت خواستید عوضشان کنید.</p>
+  </div>
+</div>
+
+<% if (flash) { %><div class="alert alert-ok">✅ متن‌ها ذخیره شد.</div><% } %>
+
+<form method="post" action="/admin/settings">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+  <div class="panel">
+    <h2>بالای صفحه‌ی اصلی (هیرو)</h2>
+
+    <div class="field">
+      <label for="hero_title">عنوان اصلی</label>
+      <input type="text" id="hero_title" name="hero_title" value="<%= values.hero_title %>" maxlength="120">
+    </div>
+
+    <div class="field">
+      <label for="hero_subtitle">زیرعنوان</label>
+      <p class="desc">بهتر است اسم شهرها در آن باشد — برای دیده‌شدن در گوگل مفید است.</p>
+      <input type="text" id="hero_subtitle" name="hero_subtitle" value="<%= values.hero_subtitle %>" maxlength="180">
+    </div>
+
+    <div class="field">
+      <label for="hero_text">متن معرفی کوتاه</label>
+      <textarea id="hero_text" name="hero_text" style="min-height:100px"><%= values.hero_text %></textarea>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>بخش «چرا ما»</h2>
+    <div class="field">
+      <label for="about_text">متن معرفی کسب‌وکار</label>
+      <textarea id="about_text" name="about_text"><%= values.about_text %></textarea>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>نقشه</h2>
+    <div class="field">
+      <label for="map_embed">کد نقشه (iframe)</label>
+      <p class="desc">
+        اگر می‌خواهید نقشه‌ی مغازه در سایت نمایش داده شود: در سایت
+        <strong>نشان</strong> یا <strong>گوگل مپ</strong> محل مغازه را پیدا کنید، گزینه‌ی
+        «اشتراک‌گذاری / جاسازی (Embed)» را بزنید، کد <code>&lt;iframe…&gt;</code> را کپی
+        و اینجا بچسبانید. اگر خالی بماند، به‌جایش آدرس و شماره تماس نمایش داده می‌شود.
+      </p>
+      <textarea id="map_embed" name="map_embed" dir="ltr" style="min-height:100px;font-family:monospace;font-size:.85rem"><%= values.map_embed %></textarea>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-primary btn-lg" type="submit">ذخیره‌ی متن‌ها</button>
+    <a class="btn btn-ghost" href="/" target="_blank" rel="noopener">دیدن سایت ↗</a>
+  </div>
+</form>
+
+<%- include('_layout-bottom') %>

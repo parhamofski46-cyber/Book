@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main id="main">
+    <div class="wrap">
+      <nav class="breadcrumb" aria-label="مسیر صفحه">
+        <a href="/">خانه</a> <span>›</span>
+        <% if (category) { %>
+          <a href="/products">محصولات</a> <span>›</span> <span><%= category.name %></span>
+        <% } else { %>
+          <span>محصولات</span>
+        <% } %>
+      </nav>
+
+      <div class="section-head" style="padding-top:1.2rem">
+        <div class="section-title">
+          <h1 style="font-size:clamp(1.5rem,1.2rem+1.4vw,2.1rem)">
+            <%= category ? category.name : 'همه‌ی محصولات' %>
+          </h1>
+        </div>
+        <p>
+          <% if (category && category.description) { %>
+            <%= category.description %> — موجود در انبار فولاد ایمان، علی‌آباد کتول و گرگان.
+          <% } else { %>
+            آهن‌آلات ساختمانی و طرح‌های فرفورژه، با موجودی به‌روز. برای قیمت روز پیام بدهید.
+          <% } %>
+        </p>
+      </div>
+
+      <!-- فیلتر دسته‌بندی -->
+      <div class="filters">
+        <a class="chip <%= category ? '' : 'active' %>" href="/products">همه</a>
+        <% categories.forEach(function (c) { %>
+          <a class="chip <%= category && category.id === c.id ? 'active' : '' %>"
+             href="/products?cat=<%= encodeURIComponent(c.slug) %>">
+            <%= c.name %> <small><%= h.toFaDigits(c.product_count) %></small>
+          </a>
+        <% }); %>
+      </div>
+
+      <!-- فیلتر زیردسته (فقط وقتی دسته زیرشاخه دارد) -->
+      <% if (subcategories && subcategories.length) { %>
+        <div class="filters">
+          <a class="chip <%= activeSub ? '' : 'active' %>"
+             href="/products?cat=<%= encodeURIComponent(category.slug) %>">همه‌ی طرح‌ها</a>
+          <% subcategories.forEach(function (s) { %>
+            <a class="chip <%= activeSub === s.slug ? 'active' : '' %>"
+               href="/products?cat=<%= encodeURIComponent(category.slug) %>&sub=<%= encodeURIComponent(s.slug) %>">
+              <%= s.name %>
+            </a>
+          <% }); %>
+        </div>
+      <% } %>
+
+      <!-- جست‌وجو و فیلتر موجودی -->
+      <form class="toolbar" method="get" action="/products">
+        <% if (category) { %><input type="hidden" name="cat" value="<%= category.slug %>"><% } %>
+        <% if (activeSub) { %><input type="hidden" name="sub" value="<%= activeSub %>"><% } %>
+        <label class="search-box">
+          <%- icon('search', '') %>
+          <span class="sr-only">جست‌وجو در محصولات</span>
+          <input type="search" name="q" value="<%= search %>" placeholder="جست‌وجو… مثلاً قوطی ۴۰">
+        </label>
+        <label class="switch">
+          <input type="checkbox" name="stock" value="1" <%= onlyInStock ? 'checked' : '' %> data-autosubmit>
+          فقط کالاهای موجود
+        </label>
+        <button class="btn btn-ghost btn-sm" type="submit">جست‌وجو</button>
+        <span class="result-count"><%= h.toFaDigits(products.length) %> محصول</span>
+      </form>
+
+      <% if (products.length) { %>
+        <div class="product-grid">
+          <% products.forEach(function (product, i) { %>
+            <%- include('../partials/product-card', { product: product, eager: i < 4 }) %>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <div class="empty">
+          <%- icon('box', '') %>
+          <h3>محصولی با این مشخصات پیدا نشد</h3>
+          <p>
+            شاید هنوز در سایت ثبتش نکرده باشیم — ولی احتمالاً در انبار داریم.
+            یک پیام بدهید تا بررسی کنیم.
+          </p>
+          <% const wa = inquiryLink('whatsapp'); if (wa) { %>
+            <a class="btn btn-wa" href="<%= wa %>" target="_blank" rel="noopener">
+              <%- icon('whatsapp') %> پرسیدن از واتساپ
+            </a>
+          <% } %>
+        </div>
+      <% } %>
+
+      <!-- متن سئوی محلی — طبیعی و مفید برای بازدیدکننده -->
+      <% if (!search) { %>
+      <section class="section">
+        <%- include('../partials/ornament') %>
+        <div class="section-head">
+          <div class="section-title"><h2>خرید <%= category ? category.name : 'آهن‌آلات' %> در علی‌آباد کتول و گرگان</h2></div>
+          <p>
+            <%= site.name %> در علی‌آباد کتول، <%= category ? category.name : 'انواع آهن‌آلات ساختمانی' %>
+            را با قیمت روز عرضه می‌کند. اگر در گرگان یا شهرهای اطراف هستید، بار شما با هماهنگی
+            خودمان ارسال می‌شود. برای استعلام قیمت و موجودی، شماره‌ی
+            <a href="<%= site.phoneHref %>" dir="ltr"><%= h.toFaDigits(site.phone) %></a>
+            هم تلفن است و هم واتساپ.
+          </p>
+        </div>
+      </section>
+      <% } %>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

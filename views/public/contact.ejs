@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <%- include('../partials/head') %>
+  <%- include('../partials/schema-business') %>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main id="main">
+    <div class="wrap">
+      <nav class="breadcrumb" aria-label="مسیر صفحه">
+        <a href="/">خانه</a> <span>›</span> <span>تماس با ما</span>
+      </nav>
+
+      <section class="section">
+        <div class="area-grid">
+          <div>
+            <div class="section-title"><h1 style="font-size:clamp(1.6rem,1.2rem+1.5vw,2.2rem)">تماس با فولاد ایمان</h1></div>
+            <p>
+              سریع‌ترین راه گرفتن قیمت روز، پیام واتساپ است؛ لیست خریدتان را بفرستید،
+              قیمت و موجودی را همان‌جا می‌نویسیم. برای کارهای سفارشی فرفورژه هم عکس و
+              اندازه را بفرستید.
+            </p>
+
+            <div class="order-box" style="margin-top:1.4rem">
+              <div class="order-actions">
+                <% activeChannels().forEach(function (ch) { %>
+                  <a class="btn <%= ch.key === 'whatsapp' ? 'btn-wa' : 'btn-tg' %> btn-lg btn-block"
+                     href="<%= ch.href %>" target="_blank" rel="noopener">
+                    <%- icon(ch.key) %> پیام در <%= ch.label %>
+                  </a>
+                <% }); %>
+                <a class="btn btn-dark btn-lg btn-block" href="<%= site.phoneHref %>">
+                  <%- icon('phone') %> تماس: <span dir="ltr"><%= h.toFaDigits(site.phone) %></span>
+                </a>
+              </div>
+            </div>
+
+            <ul class="spec-list" style="margin-top:1.4rem">
+              <li><span>نام کسب‌وکار</span><b><%= site.name %></b></li>
+              <li><span>شماره تماس و واتساپ</span><b dir="ltr"><%= h.toFaDigits(site.phone) %></b></li>
+              <li><span>آدرس</span><b><%= site.address.street %></b></li>
+              <li><span>ساعات کاری</span><b><%= site.openingHours %></b></li>
+              <li><span>منطقه‌ی خدمات</span><b><%= site.areaServed.slice(0, 4).join('، ') %></b></li>
+            </ul>
+          </div>
+
+          <div class="map-frame">
+            <% if (mapEmbed) { %>
+              <%- mapEmbed %>
+            <% } else { %>
+              <div class="map-placeholder">
+                <%- icon('map', '') %>
+                <strong>علی‌آباد کتول، استان گلستان</strong>
+                <span style="font-size:.88rem">
+                  برای گرفتن آدرس دقیق و مسیر، تماس بگیرید یا در واتساپ پیام بدهید.
+                </span>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </section>
+
+      <%- include('../partials/ornament') %>
+
+      <section class="section">
+        <div class="section-head">
+          <div class="section-title"><h2>سؤال‌های پرتکرار</h2></div>
+        </div>
+        <ul class="spec-list" style="display:block">
+          <li style="display:block">
+            <b style="display:block;text-align:start">قیمت‌ها در سایت نوشته نشده، چرا؟</b>
+            <span style="display:block;text-align:start;line-height:1.9">
+              قیمت آهن روزانه تغییر می‌کند؛ نوشتن قیمت ثابت در سایت باعث می‌شود اطلاعات
+              غلط به دست شما برسد. به‌جایش، قیمت لحظه‌ای را در واتساپ و تلفن اعلام می‌کنیم.
+            </span>
+          </li>
+          <li style="display:block">
+            <b style="display:block;text-align:start">به گرگان هم بار می‌فرستید؟</b>
+            <span style="display:block;text-align:start;line-height:1.9">
+              بله. گرگان، فاضل‌آباد، رامیان، آزادشهر و کردکوی را پوشش می‌دهیم؛ هزینه‌ی
+              حمل بسته به حجم بار محاسبه می‌شود.
+            </span>
+          </li>
+          <li style="display:block">
+            <b style="display:block;text-align:start">کار فرفورژه را نصب هم می‌کنید؟</b>
+            <span style="display:block;text-align:start;line-height:1.9">
+              بله، ساخت و نصب هر دو انجام می‌شود. کافی است عکس محل و اندازه‌ی تقریبی را بفرستید.
+            </span>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

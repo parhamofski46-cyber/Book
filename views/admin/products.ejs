@@ -1,0 +1,93 @@
+<%- include('_layout-top') %>
+
+<div class="page-head">
+  <div>
+    <h1>محصولات</h1>
+    <p class="hint">موجودی هر محصول را با یک کلیک عوض کنید یا برای تغییر عکس و متن، «ویرایش» بزنید.</p>
+  </div>
+  <a class="btn btn-primary btn-lg" href="/admin/products/new">+ افزودن محصول جدید</a>
+</div>
+
+<% if (flash === 'deleted') { %>
+  <div class="alert alert-ok">محصول حذف شد.</div>
+<% } %>
+
+<div class="panel">
+  <form method="get" action="/admin/products" class="actions">
+    <input type="search" name="q" value="<%= search %>" placeholder="جست‌وجوی نام محصول…"
+           style="max-width:320px">
+    <button class="btn btn-ghost" type="submit">جست‌وجو</button>
+    <% if (search) { %><a class="btn btn-ghost btn-sm" href="/admin/products">حذف فیلتر</a><% } %>
+    <span class="hint" style="margin-inline-start:auto"><%= h.toFaDigits(products.length) %> محصول</span>
+  </form>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>عکس</th>
+        <th>نام محصول</th>
+        <th>دسته‌بندی</th>
+        <th>وضعیت</th>
+        <th>تغییر سریع موجودی</th>
+        <th>کارها</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!products.length) { %>
+        <tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--ink-faint)">
+          محصولی پیدا نشد.
+        </td></tr>
+      <% } %>
+
+      <% products.forEach(function (p) { const im = h.productImage(p, 'thumb'); %>
+        <tr>
+          <td>
+            <img class="thumb <%= im.isPlaceholder ? 'ph' : '' %>" src="<%= im.src %>"
+                 alt="<%= p.name %>" loading="lazy">
+          </td>
+          <td>
+            <strong><%= p.name %></strong>
+            <% if (p.subcategory_name) { %>
+              <div class="hint"><%= p.subcategory_name %></div>
+            <% } %>
+          </td>
+          <td><%= p.category_name %></td>
+          <td>
+            <% if (!p.is_active) { %>
+              <span class="pill pill-off">مخفی از سایت</span>
+            <% } else if (p.in_stock) { %>
+              <span class="pill pill-in">موجود</span>
+            <% } else { %>
+              <span class="pill pill-out">ناموجود</span>
+            <% } %>
+          </td>
+          <td>
+            <form method="post" action="/admin/products/<%= p.id %>/stock">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <input type="hidden" name="in_stock" value="<%= p.in_stock ? '0' : '1' %>">
+              <button class="btn btn-ghost btn-sm" type="submit">
+                <%= p.in_stock ? 'ناموجود شد' : 'موجود شد' %>
+              </button>
+            </form>
+          </td>
+          <td>
+            <div class="cell-actions">
+              <a class="btn btn-ghost btn-sm" href="/admin/products/<%= p.id %>/edit">ویرایش</a>
+              <a class="btn btn-ghost btn-sm" href="/product/<%= encodeURIComponent(p.slug) %>"
+                 target="_blank" rel="noopener">دیدن ↗</a>
+              <form method="post" action="/admin/products/<%= p.id %>/delete"
+                    data-confirm="این محصول و همه‌ی عکس‌هایش برای همیشه حذف شود؟">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button class="btn btn-danger btn-sm" type="submit">حذف</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('_layout-bottom') %>

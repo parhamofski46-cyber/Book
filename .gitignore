@@ -1,0 +1,23 @@
+# وابستگی‌ها
+node_modules/
+
+# تنظیمات محرمانه
+.env
+
+# دیتابیس و نشست‌ها (روی سرور ساخته می‌شوند)
+data/
+*.db
+*.db-shm
+*.db-wal
+
+# عکس‌های آپلودشده توسط مدیر (روی سرور می‌مانند، در گیت نه)
+public/uploads/*
+!public/uploads/.gitkeep
+
+# سیستم‌عامل و ادیتور
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+.vscode/
+.idea/

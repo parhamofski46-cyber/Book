@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="فولاد ایمان">
+  <rect width="64" height="64" rx="14" fill="#1c1c1e"/>
+  <g fill="none" stroke="#c0763c" stroke-width="3.4" stroke-linecap="round">
+    <path d="M20 46V26c0-6 5-10 11-10h14"/>
+    <path d="M31 46V33c0-3 2-5 5-5h9"/>
+    <path d="M38 20c0-6 5-9 9-7s3 9-2 9-6-5-2-8"/>
+  </g>
+</svg>

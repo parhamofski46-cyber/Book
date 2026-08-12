@@ -1,0 +1,524 @@
+@charset "UTF-8";
+/* ==========================================================================
+   پنل مدیریت فولاد ایمان — استایل ساده، بزرگ و قابل‌استفاده روی موبایل
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('/fonts/Vazirmatn-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('/fonts/Vazirmatn-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --ink: #1c1c1e;
+  --ink-soft: #55555c;
+  --ink-faint: #86868f;
+  --rust: #a8431a;
+  --rust-dark: #7f3113;
+  --rust-soft: #f6ece7;
+  --line: #e5e1dc;
+  --bg: #f4f2ef;
+  --green: #1b7a4b;
+  --red: #b3261e;
+  --radius: 12px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Vazirmatn', system-ui, Tahoma, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+a {
+  color: var(--rust);
+  text-decoration: none;
+}
+h1,
+h2,
+h3 {
+  line-height: 1.4;
+  margin: 0 0 0.6em;
+}
+h1 {
+  font-size: 1.5rem;
+}
+h2 {
+  font-size: 1.15rem;
+}
+:focus-visible {
+  outline: 3px solid var(--rust);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------ چیدمان */
+.admin-header {
+  background: var(--ink);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.admin-header .bar {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding: 0.7rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+.admin-header .logo {
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.admin-header .logo svg {
+  width: 30px;
+  height: 30px;
+}
+.admin-nav {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  margin-inline-start: auto;
+}
+.admin-nav a {
+  color: rgba(255, 255, 255, 0.75);
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.admin-nav a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+.admin-nav a.active {
+  background: var(--rust);
+  color: #fff;
+}
+.admin-nav form {
+  display: inline;
+}
+.admin-nav button {
+  background: none;
+  border: 0;
+  color: rgba(255, 255, 255, 0.75);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+}
+.admin-nav button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.admin-main {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding: 1.5rem 1rem 4rem;
+}
+
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.2rem;
+}
+
+/* --------------------------------------------------------------- کارت */
+.panel {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+  margin-bottom: 1.2rem;
+}
+.panel > h2 {
+  margin-top: 0;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--line);
+}
+.hint {
+  color: var(--ink-faint);
+  font-size: 0.87rem;
+  line-height: 1.8;
+}
+
+/* --------------------------------------------------------------- آمار */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.8rem;
+  margin-bottom: 1.4rem;
+}
+.stat {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+.stat b {
+  display: block;
+  font-size: 1.8rem;
+  line-height: 1.2;
+  color: var(--rust);
+}
+.stat span {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+.stat.warn b {
+  color: var(--red);
+}
+
+/* --------------------------------------------------------------- فرم */
+.field {
+  margin-bottom: 1.1rem;
+}
+.field label,
+.field > span.lbl {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+  font-size: 0.94rem;
+}
+.field .desc {
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+  margin: 0 0 0.4rem;
+}
+input[type='text'],
+input[type='password'],
+input[type='number'],
+input[type='search'],
+select,
+textarea {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 1rem;
+  background: #fff;
+  color: var(--ink);
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--rust);
+  box-shadow: 0 0 0 3px var(--rust-soft);
+}
+textarea {
+  min-height: 130px;
+  resize: vertical;
+  line-height: 1.9;
+}
+input[type='file'] {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px dashed var(--line);
+  border-radius: 10px;
+  background: #fafafa;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 0.9rem;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+.check input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--rust);
+  cursor: pointer;
+}
+.check small {
+  font-weight: 400;
+  color: var(--ink-faint);
+  font-size: 0.82rem;
+}
+
+/* ------------------------------------------------------------ دکمه‌ها */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.3rem;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.btn-primary {
+  background: var(--rust);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--rust-dark);
+  color: #fff;
+}
+.btn-ghost {
+  background: #fff;
+  color: var(--ink);
+  border-color: var(--line);
+}
+.btn-ghost:hover {
+  border-color: var(--rust);
+  color: var(--rust);
+}
+.btn-danger {
+  background: #fff;
+  color: var(--red);
+  border-color: #f0cfcd;
+}
+.btn-danger:hover {
+  background: var(--red);
+  color: #fff;
+}
+.btn-sm {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.83rem;
+}
+.btn-lg {
+  padding: 0.85rem 1.8rem;
+  font-size: 1.05rem;
+}
+.btn-block {
+  width: 100%;
+}
+.actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* --------------------------------------------------------------- جدول */
+.table-wrap {
+  overflow-x: auto;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+}
+th,
+td {
+  padding: 0.7rem 0.8rem;
+  text-align: start;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+  font-size: 0.92rem;
+}
+th {
+  background: #fbfaf9;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+tr:last-child td {
+  border-bottom: 0;
+}
+tr:hover td {
+  background: #fcfbfa;
+}
+.thumb {
+  width: 56px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 7px;
+  background: #f2f0ee;
+  border: 1px solid var(--line);
+}
+.thumb.ph {
+  object-fit: contain;
+  padding: 6px;
+  opacity: 0.4;
+}
+
+.pill {
+  display: inline-block;
+  padding: 0.15rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.pill-in {
+  background: rgba(27, 122, 75, 0.12);
+  color: var(--green);
+}
+.pill-out {
+  background: rgba(179, 38, 30, 0.1);
+  color: var(--red);
+}
+.pill-off {
+  background: #eee;
+  color: var(--ink-faint);
+}
+
+.cell-actions {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+.cell-actions form {
+  display: inline;
+}
+
+/* --------------------------------------------------------------- پیام */
+.alert {
+  padding: 0.85rem 1.1rem;
+  border-radius: 10px;
+  margin-bottom: 1.2rem;
+  font-weight: 700;
+  font-size: 0.93rem;
+  border: 1.5px solid transparent;
+}
+.alert-ok {
+  background: rgba(27, 122, 75, 0.09);
+  color: var(--green);
+  border-color: rgba(27, 122, 75, 0.22);
+}
+.alert-err {
+  background: rgba(179, 38, 30, 0.07);
+  color: var(--red);
+  border-color: rgba(179, 38, 30, 0.22);
+}
+.alert-info {
+  background: var(--rust-soft);
+  color: var(--rust-dark);
+  border-color: rgba(168, 67, 26, 0.2);
+}
+
+/* ------------------------------------------------------- گالری عکس‌ها */
+.img-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.8rem;
+}
+.img-item {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+.img-item img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+.img-item .bar {
+  display: flex;
+  gap: 0.3rem;
+  padding: 0.45rem;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--line);
+}
+.img-item .main-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--green);
+}
+
+/* ----------------------------------------------------- صفحه‌ی ورود */
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background:
+    radial-gradient(circle at 80% 10%, rgba(192, 118, 60, 0.14), transparent 45%),
+    var(--bg);
+}
+.login-card {
+  width: min(100%, 400px);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 2rem 1.6rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.07);
+}
+.login-card .mark {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 1rem;
+}
+.login-card h1 {
+  text-align: center;
+  font-size: 1.25rem;
+  margin-bottom: 0.2em;
+}
+.login-card .sub {
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: 0.88rem;
+  margin-bottom: 1.6rem;
+}
+.login-card .back {
+  display: block;
+  text-align: center;
+  margin-top: 1.2rem;
+  font-size: 0.86rem;
+  color: var(--ink-faint);
+}
+
+@media (max-width: 600px) {
+  .admin-main {
+    padding: 1rem 0.7rem 3rem;
+  }
+  .panel {
+    padding: 1rem;
+  }
+}

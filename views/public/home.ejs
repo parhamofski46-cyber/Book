@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <%- include('../partials/head') %>
+  <%- include('../partials/schema-business') %>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main id="main">
+
+    <!-- ================================================== هیرو -->
+    <section class="hero">
+      <div class="hero-ornament">
+        <%- include('../partials/ornament', { variant: 'panel' }) %>
+      </div>
+      <div class="wrap hero-inner">
+        <span class="eyebrow"><span class="dot"></span> فروش و تولید در علی‌آباد کتول و گرگان</span>
+        <h1><%= hero.title %></h1>
+        <p class="hero-sub"><%= hero.subtitle %></p>
+        <% if (hero.text) { %><p class="hero-text"><%= hero.text %></p><% } %>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="/products">
+            <%- icon('box') %> مشاهده‌ی محصولات
+          </a>
+          <% const wa = inquiryLink('whatsapp'); if (wa) { %>
+            <a class="btn btn-wa btn-lg" href="<%= wa %>" target="_blank" rel="noopener">
+              <%- icon('whatsapp') %> استعلام قیمت در واتساپ
+            </a>
+          <% } %>
+          <a class="btn btn-ghost btn-lg" href="<%= site.phoneHref %>">
+            <%- icon('phone') %> <span dir="ltr"><%= h.toFaDigits(site.phone) %></span>
+          </a>
+        </div>
+
+        <div class="hero-badges">
+          <span><%- icon('check') %> قیمت روز و شفاف</span>
+          <span><%- icon('truck') %> ارسال به گرگان و شهرهای اطراف</span>
+          <span><%- icon('hammer') %> ساخت سفارشی فرفورژه در کارگاه خودمان</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== دسته‌بندی‌ها -->
+    <section class="section" id="categories">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-title"><h2>دنبال چه چیزی هستید؟</h2></div>
+          <p>روی دسته‌ی موردنظرتان بزنید تا محصولات و موجودی همان دسته را ببینید.</p>
+        </div>
+
+        <div class="cat-grid reveal">
+          <% categories.forEach(function (cat) { %>
+            <a class="cat-card <%= cat.is_featured ? 'featured' : '' %>"
+               href="/products?cat=<%= encodeURIComponent(cat.slug) %>">
+              <%- icon(categoryIcon(cat.name), 'cat-icon') %>
+              <b><%= cat.name %></b>
+              <small><%= h.toFaDigits(cat.product_count) %> محصول</small>
+            </a>
+          <% }); %>
+        </div>
+      </div>
+    </section>
+
+    <%- include('../partials/ornament') %>
+
+    <!-- ================================================== محصولات تازه -->
+    <section class="section" id="products">
+      <div class="wrap">
+        <div class="section-head head-row">
+          <div>
+            <div class="section-title"><h2>محصولات پرفروش</h2></div>
+            <p>موجودی انبار به‌روز است؛ برای قیمت روز یک پیام واتساپ کافی است.</p>
+          </div>
+          <a class="btn btn-ghost btn-sm" href="/products">همه‌ی محصولات <%- icon('arrow') %></a>
+        </div>
+
+        <div class="product-grid reveal">
+          <% latest.forEach(function (product, i) { %>
+            <%- include('../partials/product-card', { product: product, eager: i < 4 }) %>
+          <% }); %>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== بخش ویژه‌ی فرفورژه -->
+    <% if (featuredCategory && forgeProducts.length) { %>
+    <section class="section section-soft" id="forge">
+      <div class="wrap">
+        <div class="section-head center">
+          <span class="eyebrow">محصول شاخص کارگاه ما</span>
+          <div class="section-title"><h2>گل و طرح‌های فرفورژه</h2></div>
+          <p>
+            نرده، درب حیاط و حفاظ پنجره با طرح‌های دست‌ساز فرفورژه؛ خم‌کاری و جوش تمیز،
+            رنگ کوره‌ای، ساخت و نصب در علی‌آباد کتول و گرگان.
+          </p>
+        </div>
+
+        <div class="product-grid big reveal">
+          <% forgeProducts.forEach(function (product) { %>
+            <%- include('../partials/product-card', { product: product }) %>
+          <% }); %>
+        </div>
+
+        <p style="text-align:center;margin-top:1.6rem">
+          <a class="btn btn-primary" href="/forge">دیدن گالری کامل فرفورژه <%- icon('arrow') %></a>
+        </p>
+      </div>
+    </section>
+    <% } %>
+
+    <!-- ================================================== چرا ما -->
+    <section class="section" id="why">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-title"><h2>چرا فولاد ایمان؟</h2></div>
+          <% if (aboutText) { %><p><%= aboutText %></p><% } %>
+        </div>
+
+        <div class="why-grid reveal">
+          <div class="why-card">
+            <div class="ico-circle"><%- icon('hammer') %></div>
+            <h3>هم فروشنده، هم سازنده</h3>
+            <p>
+              آهن‌آلات ساختمانی را با قیمت روز می‌فروشیم و گل و طرح‌های فرفورژه را در
+              کارگاه خودمان می‌سازیم؛ برای نرده و درب لازم نیست چند جا بروید.
+            </p>
+          </div>
+          <div class="why-card">
+            <div class="ico-circle"><%- icon('check') %></div>
+            <h3>موجودی واقعی و به‌روز</h3>
+            <p>
+              وضعیت «موجود / ناموجود» هر محصول در سایت به‌روز نگه داشته می‌شود؛
+              بی‌خود تا مغازه نمی‌آیید.
+            </p>
+          </div>
+          <div class="why-card">
+            <div class="ico-circle"><%- icon('truck') %></div>
+            <h3>ارسال در سطح استان</h3>
+            <p>
+              بار شما به علی‌آباد کتول، گرگان، فاضل‌آباد، رامیان و آزادشهر ارسال می‌شود؛
+              هماهنگی حمل با خودمان.
+            </p>
+          </div>
+          <div class="why-card">
+            <div class="ico-circle"><%- icon('users') %></div>
+            <h3>مشاوره‌ی صادقانه</h3>
+            <p>
+              اگر ضخامت یا سایز اشتباهی انتخاب کرده باشید، به شما می‌گوییم — کار درست
+              برای ما مهم‌تر از یک فروش بیشتر است.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <%- include('../partials/ornament') %>
+
+    <!-- ================================================== منطقه‌ی خدمات -->
+    <section class="section" id="area">
+      <div class="wrap">
+        <div class="area-grid">
+          <div>
+            <div class="section-title"><h2>منطقه‌ی خدمات‌رسانی</h2></div>
+            <p>
+              پایگاه اصلی ما <strong>علی‌آباد کتول</strong> است و بیشترین مشتری‌های ما از
+              <strong>گرگان</strong> و شهرهای اطراف هستند. برای پروژه‌های ساختمانی در
+              سراسر استان گلستان، بار و کار سفارشی ارسال می‌کنیم.
+            </p>
+            <ul class="area-list">
+              <% site.areaServed.forEach(function (a, i) { %>
+                <li class="<%= i < 2 ? 'main' : '' %>"><%= a %></li>
+              <% }); %>
+            </ul>
+            <p style="margin-top:1.4rem">
+              <a class="btn btn-primary" href="/contact"><%- icon('map') %> اطلاعات تماس و آدرس</a>
+            </p>
+          </div>
+
+          <div class="map-frame">
+            <% if (mapEmbed) { %>
+              <%- mapEmbed %>
+            <% } else { %>
+              <div class="map-placeholder">
+                <%- icon('map', '') %>
+                <strong>علی‌آباد کتول، استان گلستان</strong>
+                <span style="font-size:.88rem">
+                  برای هماهنگی آدرس دقیق و مسیر، با شماره‌ی
+                  <a href="<%= site.phoneHref %>" dir="ltr"><%= h.toFaDigits(site.phone) %></a>
+                  تماس بگیرید.
+                </span>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== CTA پایانی -->
+    <section class="section">
+      <div class="wrap">
+        <div class="cta-band reveal">
+          <div class="ornament"><%- include('../partials/ornament', { variant: 'panel' }) %></div>
+          <div>
+            <h2>قیمت امروز را بپرسید</h2>
+            <p>
+              لیست خریدتان را در واتساپ بفرستید؛ قیمت روز، موجودی و زمان تحویل را
+              همان‌جا برایتان می‌نویسیم.
+            </p>
+          </div>
+          <div class="cta-actions">
+            <% activeChannels().forEach(function (ch) { %>
+              <a class="btn <%= ch.key === 'whatsapp' ? 'btn-wa' : 'btn-tg' %> btn-lg"
+                 href="<%= ch.href %>" target="_blank" rel="noopener">
+                <%- icon(ch.key) %> <%= ch.label %>
+              </a>
+            <% }); %>
+            <a class="btn btn-ghost btn-lg" href="<%= site.phoneHref %>">
+              <%- icon('phone') %> تماس تلفنی
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>
