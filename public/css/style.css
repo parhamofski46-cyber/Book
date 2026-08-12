@@ -81,6 +81,12 @@ video {
   display: block;
 }
 
+/* عنصری که صفت hidden دارد باید همیشه مخفی بماند، حتی اگر کلاسش
+   display خودش را تعریف کرده باشد (مثل دکمه‌های flex) */
+[hidden] {
+  display: none !important;
+}
+
 a {
   color: var(--rust);
   text-decoration: none;
@@ -1594,6 +1600,8 @@ p {
   color: var(--ink-soft);
   line-height: 2;
   margin-bottom: 1.4rem;
+  /* تا پاراگراف‌هایی که مدیر در پنل با خط خالی جدا کرده، در سایت هم جدا بمانند */
+  white-space: pre-line;
 }
 .owner-sign {
   display: flex;
@@ -1735,6 +1743,49 @@ p {
   fill: var(--copper);
 }
 
+/* ------------------------------------------------ کارت نشانی حضوری */
+.address-card {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  background: linear-gradient(135deg, var(--rust-soft), #fff 70%);
+  border: 1px solid rgba(168, 67, 26, 0.22);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.2rem;
+  margin-top: 1.4rem;
+}
+.address-card .a-ico {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  background: var(--rust);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.address-card .a-ico svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+.address-card b {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--rust);
+  margin-bottom: 0.2rem;
+}
+.address-card p {
+  margin: 0 0 0.25rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.7;
+}
+.address-card .hint-line {
+  font-size: 0.84rem;
+  color: var(--ink-faint);
+}
+
 /* --------------------------------------------------- تضمین‌ها / مزیت‌ها */
 /* سه ستون در دسکتاپ (۶ کارت = دو ردیف کامل و متوازن)، دو ستون در تبلت، یکی در موبایل */
 .guarantee-grid {
@@ -1827,6 +1878,204 @@ p {
   color: var(--ink-soft);
   margin: 0;
   line-height: 1.85;
+}
+
+/* ========================================================================
+   لیست استعلام (جایگزین سبک سبد خرید — فقط برای ساختن یک پیام واتساپ)
+   ======================================================================== */
+
+/* لینک کشیده روی کل کارت، تا دکمه‌ی «+ لیست» دکمه‌ی مستقل بماند */
+.card {
+  position: relative;
+}
+.card-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.card .card-foot {
+  position: relative;
+  z-index: 2;
+}
+
+.add-quote {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: var(--bg-soft);
+  border: 1.5px solid var(--line-strong);
+  color: var(--ink-soft);
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.add-quote:hover {
+  border-color: var(--rust);
+  color: var(--rust);
+  background: var(--rust-soft);
+}
+.add-quote .plus {
+  font-size: 1.05em;
+  line-height: 1;
+}
+.add-quote.added {
+  background: rgba(27, 122, 75, 0.1);
+  border-color: rgba(27, 122, 75, 0.35);
+  color: var(--green);
+}
+.add-quote-lg {
+  justify-content: center;
+  font-size: 0.95rem;
+  padding: 0.72rem 1.5rem;
+}
+
+/* دکمه‌ی شناور لیست */
+.float-quote {
+  background: var(--rust);
+  position: relative;
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+.float-quote .count {
+  background: #fff;
+  color: var(--rust);
+  border-radius: 999px;
+  min-width: 22px;
+  height: 22px;
+  display: inline-grid;
+  place-items: center;
+  font-size: 0.78rem;
+  font-weight: 900;
+  padding: 0 0.35rem;
+}
+
+/* پنل لیست */
+.quote-panel {
+  position: fixed;
+  inset-inline-end: 1rem;
+  bottom: 5rem;
+  z-index: 96;
+  width: min(340px, calc(100vw - 2rem));
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 18px 46px rgba(28, 28, 30, 0.18);
+  overflow: hidden;
+}
+.quote-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-soft);
+}
+.quote-close {
+  background: none;
+  border: 0;
+  font-size: 1rem;
+  color: var(--ink-faint);
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  line-height: 1;
+}
+.quote-close:hover {
+  color: var(--rust);
+}
+.quote-items {
+  list-style: none;
+  margin: 0;
+  padding: 0.4rem 0;
+  max-height: 45vh;
+  overflow-y: auto;
+}
+.quote-items li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--line);
+}
+.quote-items li:last-child {
+  border-bottom: 0;
+}
+.quote-items .name {
+  flex: 1;
+  min-width: 0;
+}
+.quote-items .rm {
+  background: none;
+  border: 0;
+  color: var(--ink-faint);
+  cursor: pointer;
+  font-size: 1.05rem;
+  line-height: 1;
+  padding: 0.15rem 0.3rem;
+}
+.quote-items .rm:hover {
+  color: #b3261e;
+}
+.quote-items .empty-note {
+  padding: 1.2rem 1rem;
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: 0.88rem;
+}
+.quote-foot {
+  padding: 0.8rem 1rem 1rem;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 0.5rem;
+}
+.quote-clear {
+  background: none;
+  border: 0;
+  color: var(--ink-faint);
+  font-family: inherit;
+  font-size: 0.83rem;
+  cursor: pointer;
+  padding: 0.2rem;
+}
+.quote-clear:hover {
+  color: #b3261e;
+}
+@media (max-width: 700px) {
+  .quote-panel {
+    inset-inline: 0.6rem;
+    bottom: calc(74px + 0.6rem);
+    width: auto;
+  }
+}
+
+/* پیام کوتاه تأیید افزودن */
+.toast {
+  position: fixed;
+  inset-inline-start: 50%;
+  transform: translate(50%, 20px);
+  bottom: 6.5rem;
+  z-index: 120;
+  background: var(--ink);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.toast.show {
+  opacity: 1;
+  transform: translate(50%, 0);
 }
 
 /* --------------------------------------------------------- حالت خالی */

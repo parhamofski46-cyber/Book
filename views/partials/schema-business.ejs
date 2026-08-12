@@ -23,6 +23,9 @@ const business = {
     addressRegion: site.address.province,
     addressCountry: 'IR',
   },
+  founder: setting('owner_name', '')
+    ? { '@type': 'Person', name: setting('owner_name', '') }
+    : undefined,
   geo: { '@type': 'GeoCoordinates', latitude: site.geo.lat, longitude: site.geo.lng },
   areaServed: site.areaServed.map(function (a) {
     return { '@type': 'City', name: a };
@@ -33,7 +36,11 @@ const business = {
     opens: '08:00',
     closes: '20:00',
   }],
-  knowsAbout: ['قوطی', 'پروفیل', 'نبشی', 'رابیتس', 'شاخ گوزنی', 'فنس', 'ایزوگام', 'فرفورژه'],
+  knowsAbout: [
+    'ورق گالوانیزه', 'ورق شیروانی طرح سفال', 'قوطی', 'پروفیل', 'نبشی', 'رابیتس',
+    'شاخ گوزنی', 'فنس', 'تور مرغی', 'ایزوگام', 'پشم شیشه', 'فوم', 'پیچ سرمته',
+    'قفل درب', 'لولا', 'گل و طرح فرفورژه',
+  ],
 };
 if (site.channels.whatsapp.enabled) {
   business.sameAs = [site.channels.whatsapp.base];

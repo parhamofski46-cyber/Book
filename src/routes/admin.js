@@ -467,9 +467,7 @@ const SETTING_KEYS = [
   'map_embed',
   // آمار اعتمادسازی
   'stat_years',
-  'stat_orders',
-  'stat_customers',
-  'stat_satisfaction',
+  'stat_models',
   'stats_note',
   // بخش معرفی مدیر
   'owner_name',

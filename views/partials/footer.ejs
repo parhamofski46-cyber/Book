@@ -4,9 +4,10 @@
       <div>
         <h4><%= site.name %></h4>
         <p>
-          تولید و فروش انواع قوطی، پروفیل، نبشی، رابیتس، شاخ گوزنی، فنس، ایزوگام و
-          گل و طرح‌های دست‌ساز فرفورژه. تحویل و نصب در
-          <strong>علی‌آباد کتول</strong> و <strong>گرگان</strong> و سراسر استان گلستان.
+          تولید ورق گالوانیزه (طرح سفال رنگی و شفاف) و عرضه‌ی قوطی، پروفیل، نبشی، رابیتس،
+          شاخ گوزنی، فنس، تور مرغی، ایزوگام، پشم شیشه، فوم، پیچ سرمته، قفل و لولا و
+          بیش از ۱۰۰۰ مدل گل و طرح فرفورژه. ارسال به
+          <strong>علی‌آباد کتول</strong>، <strong>گرگان</strong> و سراسر استان گلستان.
         </p>
         <div class="footer-contact">
           <a href="<%= site.phoneHref %>">
@@ -34,7 +35,7 @@
       <div>
         <h4>ساعات کاری و منطقه</h4>
         <p><%- icon('clock', 'ico') %> <%= site.openingHours %></p>
-        <p><%- icon('map', 'ico') %> <%= site.address.street %></p>
+        <p><%- icon('map', 'ico') %> <%= site.address.full %></p>
         <p style="font-size:.85rem;color:var(--ink-faint)">
           خدمات‌رسانی در: <%= site.areaServed.join('، ') %>
         </p>
@@ -48,8 +49,34 @@
   </div>
 </footer>
 
+<!-- ============================================================
+     لیست استعلام: مشتری چند کالا را انتخاب می‌کند و همه را در یک پیام
+     واتساپ می‌فرستد. سبد خرید نیست — نه قیمتی، نه پرداختی؛ فقط یک
+     لیست خرید که در مرورگر خودش ذخیره می‌شود.
+     ============================================================ -->
+<div class="quote-panel" id="quote-panel" hidden aria-live="polite">
+  <div class="quote-head">
+    <b>لیست استعلام شما</b>
+    <button type="button" class="quote-close" aria-label="بستن">✕</button>
+  </div>
+  <ul class="quote-items" id="quote-items"></ul>
+  <div class="quote-foot">
+    <% const waBase = site.channels.whatsapp.enabled ? site.channels.whatsapp.base : ''; %>
+    <a class="btn btn-wa btn-block" id="quote-send"
+       data-base="<%= waBase %>" href="<%= waBase %>" target="_blank" rel="noopener">
+      <%- icon('whatsapp') %> ارسال کل لیست در واتساپ
+    </a>
+    <button type="button" class="quote-clear" id="quote-clear">پاک‌کردن لیست</button>
+  </div>
+</div>
+
 <!-- دکمه‌ی شناور تماس: همیشه در دسترس، مهم‌ترین مسیر رسیدن مشتری به شما -->
 <div class="float-cta">
+  <!-- وقتی چیزی در لیست باشد، این دکمه ظاهر می‌شود -->
+  <button type="button" class="float-btn float-quote" id="quote-toggle" hidden>
+    <%- icon('box') %><span class="txt">لیست استعلام</span>
+    <span class="count" id="quote-count">۰</span>
+  </button>
   <% activeChannels().forEach(function (ch) { %>
     <a class="float-btn float-<%= ch.key === 'whatsapp' ? 'wa' : (ch.key === 'telegram' ? 'tg' : 'call') %>"
        href="<%= ch.href %>" target="_blank" rel="noopener"

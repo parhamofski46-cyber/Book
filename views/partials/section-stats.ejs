@@ -1,14 +1,18 @@
 <%
 /**
  * نوار آمار — اولین چیزی که بعد از هیرو حس «اینجا کارش را بلد است» را منتقل می‌کند.
- * همه‌ی اعداد از پنل مدیریت (بخش «اعتمادسازی») قابل تغییرند.
+ *
+ * نکته‌ی مهم: عمداً به‌جای «تعداد فروش» (که قابل راستی‌آزمایی نیست و اگر اغراق‌شده
+ * باشد به اعتماد ضربه می‌زند) از عددهای واقعی و قابل‌بررسی استفاده شده:
+ * تعداد مدل‌های موجود، تعداد گروه کالا و شهرهای تحت پوشش.
+ * دو مورد آخر به‌صورت خودکار از دیتابیس و تنظیمات محاسبه می‌شوند.
  */
 const stats = [
-  { num: setting('stat_years', '۲۰'), suffix: 'سال', label: 'سابقه در بازار آهن گلستان' },
-  { num: setting('stat_orders', ''), suffix: '+', label: 'سفارش تحویل‌شده' },
-  { num: setting('stat_customers', ''), suffix: '+', label: 'مشتری ثابت و پیمانکار' },
-  { num: setting('stat_satisfaction', ''), suffix: '٪', label: 'رضایت از کیفیت و تحویل' },
-].filter((s) => String(s.num).trim() !== '');
+  { num: setting('stat_models', ''), suffix: '+', label: 'مدل گل و طرح فرفورژه آماده' },
+  { num: setting('stat_years', ''), suffix: 'سال', label: 'سابقه در بازار آهن گلستان' },
+  { num: statCategoryCount, suffix: '', label: 'گروه کالا زیر یک سقف' },
+  { num: site.areaServed.length, suffix: '', label: 'شهر تحت پوشش ارسال' },
+].filter((s) => String(s.num).trim() !== '' && String(s.num) !== '0');
 %>
 <% if (stats.length) { %>
 <section class="stats-band" aria-label="آمار فولاد ایمان">
@@ -16,7 +20,7 @@ const stats = [
     <div class="stats-grid">
       <% stats.forEach(function (s) { %>
         <div class="stat-item">
-          <span class="stat-num"><%= h.toFaDigits(s.num) %><span class="suffix"><%= s.suffix %></span></span>
+          <span class="stat-num"><%= h.toFaDigits(s.num) %><% if (s.suffix) { %><span class="suffix"><%= s.suffix %></span><% } %></span>
           <span class="stat-label"><%= s.label %></span>
         </div>
       <% }); %>

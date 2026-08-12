@@ -7,7 +7,13 @@ const img = h.productImage(product, 'thumb');
 const stock = h.stockLabel(product);
 const eagerLoad = typeof eager !== 'undefined' && eager;
 %>
-<a class="card <%= product.in_stock ? '' : 'is-out' %>" href="/product/<%= encodeURIComponent(product.slug) %>">
+<div class="card <%= product.in_stock ? '' : 'is-out' %>">
+  <!-- کل کارت با همین لینک کلیک‌پذیر می‌شود (الگوی stretched link)،
+       تا دکمه‌ی «افزودن به لیست» بتواند دکمه‌ی مستقل خودش باشد -->
+  <a class="card-link" href="/product/<%= encodeURIComponent(product.slug) %>">
+    <span class="sr-only"><%= product.name %></span>
+  </a>
+
   <div class="card-media <%= img.isPlaceholder ? 'placeholder' : '' %>">
     <img
       src="<%= img.src %>"
@@ -28,7 +34,11 @@ const eagerLoad = typeof eager !== 'undefined' && eager;
     <% if (product.summary) { %><p class="card-desc"><%= product.summary %></p><% } %>
     <div class="card-foot">
       <span class="price"><%= product.price_text || 'استعلام قیمت' %></span>
-      <span class="more">مشاهده و سفارش ›</span>
+      <button type="button" class="add-quote"
+              data-slug="<%= product.slug %>" data-name="<%= product.name %>"
+              aria-label="افزودن <%= product.name %> به لیست استعلام">
+        <span class="plus">+</span> لیست
+      </button>
     </div>
   </div>
-</a>
+</div>

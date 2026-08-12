@@ -70,14 +70,17 @@ const paths = {
  */
 function categoryIcon(name) {
   const n = String(name || '');
-  if (/فرفورژه|گل|طرح/.test(n)) return 'scroll';
-  if (/قوطی|پروفیل/.test(n) && !/نبشی/.test(n)) return 'tube';
+  if (/فرفورژه/.test(n)) return 'scroll';
+  if (/ورق|گالوانیزه|شیروانی|سفال/.test(n)) return 'layers';
+  if (/پیچ|یراق|قفل|لولا|مهره/.test(n)) return 'wrench';
+  if (/قوطی/.test(n)) return 'tube';
   if (/نبشی|پروفیل/.test(n)) return 'angle';
-  if (/رابیتس|توری|مش/.test(n)) return 'mesh';
-  if (/گوزن|حفاظ|شاخ/.test(n)) return 'spikes';
-  if (/فنس|حصار/.test(n)) return 'fence';
-  if (/ایزوگام|قیر|عایق/.test(n)) return 'roll';
-  if (/میلگرد|تیرآهن|ورق/.test(n)) return 'layers';
+  if (/رابیتس|مش/.test(n)) return 'mesh';
+  if (/گوزن|شاخ/.test(n)) return 'spikes';
+  if (/فنس|حصار|توری|تور/.test(n)) return 'fence';
+  if (/ایزوگام|قیر|عایق|پشم|فوم/.test(n)) return 'roll';
+  if (/میلگرد|تیرآهن/.test(n)) return 'layers';
+  if (/گل|طرح/.test(n)) return 'scroll';
   return 'box';
 }
 

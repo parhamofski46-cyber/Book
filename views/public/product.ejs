@@ -134,7 +134,14 @@ const breadcrumbSchema = {
               <a class="btn btn-dark btn-block" href="<%= site.phoneHref %>">
                 <%- icon('phone') %> تماس تلفنی: <span dir="ltr"><%= h.toFaDigits(site.phone) %></span>
               </a>
+              <button type="button" class="btn btn-ghost btn-block add-quote add-quote-lg"
+                      data-slug="<%= product.slug %>" data-name="<%= product.name %>">
+                <span class="plus">+</span> افزودن به لیست استعلام
+              </button>
             </div>
+            <p class="order-note" style="margin-top:.6rem">
+              چند قلم جنس می‌خواهید؟ همه را به لیست اضافه کنید و یک‌جا بفرستید.
+            </p>
             <p class="order-note">پاسخ‌گویی <%= site.openingHours %></p>
           </div>
         </div>

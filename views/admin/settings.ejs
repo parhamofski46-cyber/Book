@@ -37,28 +37,24 @@
   <div class="panel">
     <h2>آمار اعتمادسازی</h2>
     <p class="hint">
-      این چهار عدد در نوار تیره‌ی زیر صفحه‌ی اصلی نمایش داده می‌شوند.
-      <strong>حتماً اعداد واقعی خودتان را بگذارید</strong> — عدد اغراق‌شده اگر با واقعیت
-      مغازه جور نباشد، همان اعتمادی که می‌خواهید بسازید را از بین می‌برد.
-      هر کدام را خالی بگذارید، آن ستون اصلاً نمایش داده نمی‌شود.
+      نوار تیره‌ی زیر صفحه‌ی اصلی، چهار عدد نشان می‌دهد. دو تای اول را شما وارد می‌کنید
+      و دو تای بعدی (تعداد گروه کالا و شهرهای تحت پوشش) خودکار از خود سایت محاسبه می‌شوند.
+      <br><br>
+      عمداً از «تعداد فروش» استفاده نکرده‌ایم، چون عددی است که کسی نمی‌تواند راستی‌آزمایی
+      کند و اگر اغراق‌شده باشد به اعتماد ضربه می‌زند. عددهای زیر واقعی و قابل بررسی‌اند.
+      هر کدام را خالی بگذارید، آن ستون نمایش داده نمی‌شود.
     </p>
 
     <div class="row" style="margin-top:1rem">
       <div class="field">
+        <label for="stat_models">تعداد مدل‌های فرفورژه‌ی موجود</label>
+        <p class="desc">در سایت به‌صورت «۱۰۰۰+ مدل» نمایش داده می‌شود.</p>
+        <input type="text" id="stat_models" name="stat_models" value="<%= values.stat_models %>" maxlength="10">
+      </div>
+      <div class="field">
         <label for="stat_years">سال‌های سابقه</label>
+        <p class="desc">اگر عدد دقیقش را نمی‌دانید، عدد محتاطانه‌تر بگذارید.</p>
         <input type="text" id="stat_years" name="stat_years" value="<%= values.stat_years %>" maxlength="10">
-      </div>
-      <div class="field">
-        <label for="stat_orders">تعداد سفارش تحویل‌شده</label>
-        <input type="text" id="stat_orders" name="stat_orders" value="<%= values.stat_orders %>" maxlength="10">
-      </div>
-      <div class="field">
-        <label for="stat_customers">تعداد مشتری ثابت</label>
-        <input type="text" id="stat_customers" name="stat_customers" value="<%= values.stat_customers %>" maxlength="10">
-      </div>
-      <div class="field">
-        <label for="stat_satisfaction">درصد رضایت</label>
-        <input type="text" id="stat_satisfaction" name="stat_satisfaction" value="<%= values.stat_satisfaction %>" maxlength="10">
       </div>
     </div>
 

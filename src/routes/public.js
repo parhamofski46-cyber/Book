@@ -42,6 +42,7 @@ router.get('/', (req, res) => {
     mapEmbed: getSetting('map_embed', ''),
     reviews: q.listTestimonials({ limit: 6 }),
     reviewSummary: q.testimonialSummary(),
+    statCategoryCount: categories.length, // برای نوار آمار — عدد واقعی از دیتابیس
     isHome: true,
   });
 });
@@ -91,10 +92,10 @@ router.get('/forge', (req, res, next) => {
   const subs = q.listSubcategories(featured.id);
 
   res.render('public/forge', {
-    title: `گل و طرح‌های فرفورژه | نرده، درب و حفاظ پنجره در گرگان و علی‌آباد کتول`,
+    title: `بیش از ۱۰۰۰ مدل گل و طرح فرفورژه | درب، پنجره و نرده — علی‌آباد کتول و گرگان`,
     metaDescription: truncate(
-      'گالری گل و طرح‌های فرفورژه دست‌ساز فولاد ایمان برای نرده، درب حیاط و حفاظ پنجره — ' +
-        'ساخت و نصب در علی‌آباد کتول و گرگان.'
+      'گالری گل و طرح‌های آماده‌ی فرفورژه فولاد ایمان برای نرده، درب حیاط و حفاظ پنجره؛ ' +
+        'بیش از ۱۰۰۰ مدل موجود در انبار علی‌آباد کتول، آماده‌ی تحویل و ارسال به گرگان.'
     ),
     category: featured,
     subcategories: subs.map((s) => ({

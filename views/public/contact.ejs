@@ -37,10 +37,21 @@
               </div>
             </div>
 
+            <!-- آدرس حضوری، برجسته -->
+            <div class="address-card">
+              <span class="a-ico"><%- icon('map') %></span>
+              <div>
+                <b>نشانی مراجعه‌ی حضوری</b>
+                <p><%= site.address.city %>، <%= site.address.street %></p>
+                <span class="hint-line">انبار، خط تولید ورق و نمایش مدل‌های فرفورژه، همه همین‌جاست.</span>
+              </div>
+            </div>
+
             <ul class="spec-list" style="margin-top:1.4rem">
               <li><span>نام کسب‌وکار</span><b><%= site.name %></b></li>
+              <li><span>مدیریت</span><b><%= setting('owner_name', 'مدیریت فولاد ایمان') %></b></li>
               <li><span>شماره تماس و واتساپ</span><b dir="ltr"><%= h.toFaDigits(site.phone) %></b></li>
-              <li><span>آدرس</span><b><%= site.address.street %></b></li>
+              <li><span>آدرس</span><b><%= site.address.full %></b></li>
               <li><span>ساعات کاری</span><b><%= site.openingHours %></b></li>
               <li><span>منطقه‌ی خدمات</span><b><%= site.areaServed.slice(0, 4).join('، ') %></b></li>
             </ul>
@@ -52,9 +63,9 @@
             <% } else { %>
               <div class="map-placeholder">
                 <%- icon('map', '') %>
-                <strong>علی‌آباد کتول، استان گلستان</strong>
+                <strong><%= site.address.full %></strong>
                 <span style="font-size:.88rem">
-                  برای گرفتن آدرس دقیق و مسیر، تماس بگیرید یا در واتساپ پیام بدهید.
+                  اگر مسیر را پیدا نکردید، تماس بگیرید — راهنمایی‌تان می‌کنیم.
                 </span>
               </div>
             <% } %>
@@ -84,9 +95,27 @@
             </span>
           </li>
           <li style="display:block">
-            <b style="display:block;text-align:start">کار فرفورژه را نصب هم می‌کنید؟</b>
+            <b style="display:block;text-align:start">فرفورژه را خودتان می‌سازید؟</b>
             <span style="display:block;text-align:start;line-height:1.9">
-              بله، ساخت و نصب هر دو انجام می‌شود. کافی است عکس محل و اندازه‌ی تقریبی را بفرستید.
+              نه — ما گل و طرح‌های فرفورژه را <strong>آماده</strong> عرضه می‌کنیم، بیش از
+              ۱۰۰۰ مدل برای درب، پنجره و نرده. قطعه را از ما تحویل می‌گیرید و جوشکار
+              خودتان روی کار نصبش می‌کند. اگر طرح خاصی مدنظرتان است عکسش را بفرستید تا
+              بگوییم موجود داریم یا نه.
+            </span>
+          </li>
+          <li style="display:block">
+            <b style="display:block;text-align:start">ورق گالوانیزه را خودتان تولید می‌کنید؟</b>
+            <span style="display:block;text-align:start;line-height:1.9">
+              بله. ورق شیروانی طرح سفال رنگی و گالوانیزه شفاف تولید خودمان است؛ به همین
+              دلیل هم قیمت بدون واسطه است و هم می‌توانیم ورق را در طولی که لازم دارید
+              تولید کنیم تا پرت کارتان کم شود.
+            </span>
+          </li>
+          <li style="display:block">
+            <b style="display:block;text-align:start">می‌توانم حضوری بیایم و جنس را ببینم؟</b>
+            <span style="display:block;text-align:start;line-height:1.9">
+              حتماً. آدرس: <strong><%= site.address.full %></strong>.
+              مخصوصاً برای انتخاب طرح فرفورژه، دیدن حضوری مدل‌ها خیلی راحت‌تر از عکس است.
             </span>
           </li>
         </ul>
