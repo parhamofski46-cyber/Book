@@ -52,11 +52,15 @@ router.get('/', (req, res) => {
 });
 
 // ----------------------------------------------------------- کاتالوگ محصولات
-router.get('/products', (req, res) => {
+/**
+ * رندر فهرست محصولات — هم برای /products و هم برای آدرس تمیز دسته.
+ * آدرس تمیز (/category/قوطی) برای سئو خیلی بهتر از پارامتر پرس‌وجو
+ * (/products?cat=قوطی) است؛ گوگل آن را یک صفحه‌ی مستقل با موضوع مشخص می‌بیند.
+ */
+function renderProductList(req, res, category) {
   cachePublic(res);
 
   const categories = q.listCategories();
-  const category = req.query.cat ? q.getCategoryBySlug(req.query.cat) : null;
   const subcategories = category ? q.listSubcategories(category.id) : [];
   const search = (req.query.q || '').trim().slice(0, 60);
   const onlyInStock = req.query.stock === '1';
@@ -68,14 +72,18 @@ router.get('/products', (req, res) => {
     onlyInStock,
   });
 
+  const cityLine = 'علی‌آباد کتول و گرگان';
   const title = category
-    ? `${category.name} | خرید در علی‌آباد کتول و گرگان — ${site.shortName}`
-    : `محصولات | آهن‌آلات و فرفورژه در علی‌آباد کتول و گرگان — ${site.shortName}`;
+    ? `${category.name} | قیمت و خرید در ${cityLine} — ${site.shortName}`
+    : `همه‌ی محصولات | آهن‌آلات، ورق گالوانیزه و فرفورژه در ${cityLine}`;
 
   res.render('public/products', {
     title,
     metaDescription: category
-      ? truncate(`${category.name} — ${category.description} | ${site.name}، علی‌آباد کتول و گرگان.`)
+      ? truncate(
+          `خرید ${category.name} در ${cityLine}. ${category.description} ` +
+            `موجودی به‌روز، قیمت روز و ارسال به سراسر استان گلستان — ${site.name}.`
+        )
       : truncate(site.description),
     categories,
     category,
@@ -85,6 +93,25 @@ router.get('/products', (req, res) => {
     search,
     onlyInStock,
   });
+}
+
+// آدرس تمیز هر دسته — نسخه‌ی اصلی و canonical
+router.get('/category/:slug', (req, res, next) => {
+  const category = q.getCategoryBySlug(req.params.slug);
+  if (!category) return next();
+  renderProductList(req, res, category);
+});
+
+// فهرست کامل محصولات
+router.get('/products', (req, res) => {
+  // آدرس قدیمی با پارامتر ?cat= به آدرس تمیز منتقل می‌شود تا اعتبار سئویی
+  // بین دو آدرس تقسیم نشود (redirect دائمی ۳۰۱)
+  if (req.query.cat && !req.query.sub && !req.query.q && !req.query.stock) {
+    const c = q.getCategoryBySlug(req.query.cat);
+    if (c) return res.redirect(301, '/category/' + encodeURIComponent(c.slug));
+  }
+  const category = req.query.cat ? q.getCategoryBySlug(req.query.cat) : null;
+  renderProductList(req, res, category);
 });
 
 // ------------------------------------------------- بخش ویژه‌ی گل‌های فرفورژه
@@ -152,7 +179,7 @@ router.get('/sitemap.xml', (req, res) => {
 
   for (const c of q.listCategories()) {
     urls.push({
-      loc: `/products?cat=${encodeURIComponent(c.slug)}`,
+      loc: `/category/${encodeURIComponent(c.slug)}`,
       priority: '0.8',
       changefreq: 'weekly',
     });

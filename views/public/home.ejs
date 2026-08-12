@@ -68,7 +68,7 @@
         <div class="cat-grid reveal">
           <% gridCategories.forEach(function (cat, i) { %>
             <a class="cat-card <%= cat.is_featured ? 'featured' : '' %>"
-               href="/products?cat=<%= encodeURIComponent(cat.slug) %>"
+               href="/category/<%= encodeURIComponent(cat.slug) %>"
                style="--i:<%= i %>">
               <span class="cat-art">
                 <img src="<%= categoryArtUrl(cat.name) %>" alt=""

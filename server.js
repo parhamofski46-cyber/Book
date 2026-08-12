@@ -109,6 +109,29 @@ app.use((req, res, next) => {
   next();
 });
 
+// ---------------------------------------------------------------- سلامت سرور
+/**
+ * /healthz — بررسی سریع اینکه سایت و دیتابیس سالم‌اند.
+ * برای مانیتورینگ هاست و برای عیب‌یابی از راه دور استفاده می‌شود؛
+ * هیچ اطلاعات محرمانه‌ای برنمی‌گرداند.
+ */
+app.get('/healthz', (req, res) => {
+  try {
+    const stats = queries.adminStats();
+    res.set('Cache-Control', 'no-store').json({
+      ok: true,
+      uptimeSeconds: Math.round(process.uptime()),
+      node: process.version,
+      env: process.env.NODE_ENV || 'development',
+      db: { products: stats.products, categories: stats.categories, ok: true },
+      memoryMb: Math.round(process.memoryUsage().rss / 1048576),
+      time: new Date().toISOString(),
+    });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
 // ---------------------------------------------------------------- مسیرها
 app.use('/admin', require('./src/routes/admin'));
 app.use('/', require('./src/routes/public'));

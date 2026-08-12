@@ -75,7 +75,7 @@ function categoryIcon(name) {
   if (/پیچ|یراق|قفل|لولا|مهره/.test(n)) return 'wrench';
   if (/قوطی/.test(n)) return 'tube';
   if (/نبشی|پروفیل/.test(n)) return 'angle';
-  if (/رابیتس|مش/.test(n)) return 'mesh';
+  if (/رابیس|رابیتس|مش/.test(n)) return 'mesh';
   if (/گوزن|شاخ/.test(n)) return 'spikes';
   if (/فنس|حصار|توری|تور/.test(n)) return 'fence';
   if (/ایزوگام|قیر|عایق|پشم|فوم/.test(n)) return 'roll';
@@ -96,7 +96,7 @@ function categoryArt(name) {
   if (/پیچ|یراق|قفل|لولا|مهره/.test(n)) return 'pich';
   if (/قوطی/.test(n)) return 'qooti';
   if (/نبشی|پروفیل/.test(n)) return 'nabshi';
-  if (/رابیتس|مش/.test(n)) return 'rabits';
+  if (/رابیس|رابیتس|مش/.test(n)) return 'rabits';
   if (/گوزن|شاخ/.test(n)) return 'shakh';
   if (/فنس|حصار|توری|تور/.test(n)) return 'fence';
   if (/ایزوگام|قیر|عایق|پشم|فوم/.test(n)) return 'izogam';
@@ -106,6 +106,29 @@ function categoryArt(name) {
 
 /** آدرس تصویر دسته */
 const categoryArtUrl = (name) => `/img/cat/${categoryArt(name)}.svg`;
+
+/**
+ * تصویرسازی اختصاصی خودِ محصول (public/img/prod/<slug>.svg).
+ * برای محصولاتی ساخته شده که تفاوت دیدنی دارند (سایز مقطع، تراکم شبکه،
+ * تعداد شاخه و ...). فهرست فایل‌ها یک‌بار هنگام بالا آمدن سرور خوانده و
+ * در حافظه نگه داشته می‌شود تا برای هر درخواست به دیسک مراجعه نشود.
+ */
+const fs = require('fs');
+const path = require('path');
+
+let productArtSet = new Set();
+try {
+  const dir = path.join(__dirname, '..', '..', 'public', 'img', 'prod');
+  productArtSet = new Set(
+    fs.readdirSync(dir).filter((f) => f.endsWith('.svg')).map((f) => f.slice(0, -4))
+  );
+} catch (e) {
+  /* پوشه هنوز ساخته نشده — همه از تصویر دسته استفاده می‌کنند */
+}
+
+/** اگر محصول تصویر اختصاصی دارد آدرسش را بده، وگرنه null */
+const productArtUrl = (slug) =>
+  slug && productArtSet.has(slug) ? `/img/prod/${encodeURIComponent(slug)}.svg` : null;
 
 /**
  * ساخت تگ SVG یک آیکون.
@@ -122,4 +145,4 @@ function icon(name, className = 'ico') {
   return `<svg class="${className}" viewBox="0 0 24 24" aria-hidden="true" ${attrs}><path d="${d}"/></svg>`;
 }
 
-module.exports = { icon, categoryIcon, categoryArt, categoryArtUrl, paths };
+module.exports = { icon, categoryIcon, categoryArt, categoryArtUrl, productArtUrl, paths };

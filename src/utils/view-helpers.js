@@ -2,7 +2,7 @@
 
 const { imageUrl, imageSrcset } = require('../services/images');
 const { toFaDigits } = require('./slug');
-const { categoryArtUrl } = require('./icons');
+const { categoryArtUrl, productArtUrl } = require('./icons');
 
 /**
  * توابع کمکی که در قالب‌ها (EJS) استفاده می‌شوند.
@@ -33,7 +33,9 @@ function truncate(str, len = 155) {
 function productImage(product, size = 'medium') {
   if (!product || !product.image) {
     return {
-      src: product ? categoryArtUrl(product.category_name) : '/img/cat/default.svg',
+      src: product
+        ? productArtUrl(product.slug) || categoryArtUrl(product.category_name)
+        : '/img/cat/default.svg',
       srcset: '',
       alt: product
         ? `${product.name} — ${product.category_name || ''} در فولاد ایمان، علی‌آباد کتول`

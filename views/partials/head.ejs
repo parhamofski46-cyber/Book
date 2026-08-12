@@ -18,9 +18,11 @@
 <meta property="og:title" content="<%= title %>">
 <meta property="og:description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : site.description %>">
 <meta property="og:url" content="<%= canonical %>">
-<% if (typeof ogImage !== 'undefined' && ogImage) { %>
-<meta property="og:image" content="<%= site.url %><%= ogImage %>">
-<% } %>
+<%# اگر صفحه عکس اختصاصی دارد از آن، وگرنه کارت پیش‌فرض سایت %>
+<meta property="og:image" content="<%= site.url %><%= (typeof ogImage !== 'undefined' && ogImage) ? ogImage : '/img/og-cover.jpg' %>">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="<%= site.name %> — <%= site.tagline %>">
 <meta name="twitter:card" content="summary_large_image">
 
 <!-- علامت‌گذاری فعال‌بودن جاوااسکریپت؛ انیمیشن ورودِ بخش‌ها فقط در این حالت

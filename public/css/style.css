@@ -2408,3 +2408,24 @@ p {
     min-height: var(--tap);
   }
 }
+
+/* ---- سؤالات پرتکرار ---- */
+.faq-list {
+  display: block;
+}
+.faq-list li {
+  display: block;
+  padding: 1rem 1.1rem;
+}
+.faq-list b {
+  display: block;
+  text-align: start;
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+.faq-list span {
+  display: block;
+  text-align: start;
+  line-height: 1.95;
+  color: var(--ink-soft);
+}

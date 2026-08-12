@@ -35,7 +35,7 @@ const breadcrumbSchema = {
       '@type': 'ListItem',
       position: 3,
       name: product.category_name,
-      item: site.url + '/products?cat=' + encodeURIComponent(product.category_slug),
+      item: site.url + '/category/' + encodeURIComponent(product.category_slug),
     },
     { '@type': 'ListItem', position: 4, name: product.name, item: canonical },
   ],
@@ -54,7 +54,7 @@ const breadcrumbSchema = {
       <nav class="breadcrumb" aria-label="مسیر صفحه">
         <a href="/">خانه</a> <span>›</span>
         <a href="/products">محصولات</a> <span>›</span>
-        <a href="/products?cat=<%= encodeURIComponent(product.category_slug) %>"><%= product.category_name %></a>
+        <a href="/category/<%= encodeURIComponent(product.category_slug) %>"><%= product.category_name %></a>
         <span>›</span> <span><%= product.name %></span>
       </nav>
 

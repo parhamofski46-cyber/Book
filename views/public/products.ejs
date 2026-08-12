@@ -1,7 +1,40 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+<%
+/* داده‌ی ساختاریافته‌ی صفحه‌ی دسته: مسیر راهنما + فهرست محصولات.
+   به گوگل کمک می‌کند صفحه را «فهرست محصولات فلان دسته» بفهمد، نه یک صفحه‌ی عمومی. */
+const schemas = [];
+if (category) {
+  schemas.push({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'خانه', item: site.url + '/' },
+      { '@type': 'ListItem', position: 2, name: 'محصولات', item: site.url + '/products' },
+      { '@type': 'ListItem', position: 3, name: category.name, item: canonical },
+    ],
+  });
+  schemas.push({
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: category.name + ' — ' + site.name,
+    numberOfItems: products.length,
+    itemListElement: products.slice(0, 30).map(function (p, i) {
+      return {
+        '@type': 'ListItem',
+        position: i + 1,
+        url: site.url + '/product/' + encodeURIComponent(p.slug),
+        name: p.name,
+      };
+    }),
+  });
+}
+%>
 <head>
   <%- include('../partials/head') %>
+  <% schemas.forEach(function (sc) { %>
+    <script type="application/ld+json" nonce="<%= nonce %>"><%- JSON.stringify(sc) %></script>
+  <% }); %>
 </head>
 <body>
   <%- include('../partials/header') %>
@@ -37,7 +70,7 @@
         <a class="chip <%= category ? '' : 'active' %>" href="/products">همه</a>
         <% categories.forEach(function (c) { %>
           <a class="chip <%= category && category.id === c.id ? 'active' : '' %>"
-             href="/products?cat=<%= encodeURIComponent(c.slug) %>">
+             href="/category/<%= encodeURIComponent(c.slug) %>">
             <%= c.name %> <small><%= h.toFaDigits(c.product_count) %></small>
           </a>
         <% }); %>
@@ -47,10 +80,10 @@
       <% if (subcategories && subcategories.length) { %>
         <div class="filters">
           <a class="chip <%= activeSub ? '' : 'active' %>"
-             href="/products?cat=<%= encodeURIComponent(category.slug) %>">همه‌ی طرح‌ها</a>
+             href="/category/<%= encodeURIComponent(category.slug) %>">همه‌ی طرح‌ها</a>
           <% subcategories.forEach(function (s) { %>
             <a class="chip <%= activeSub === s.slug ? 'active' : '' %>"
-               href="/products?cat=<%= encodeURIComponent(category.slug) %>&sub=<%= encodeURIComponent(s.slug) %>">
+               href="/category/<%= encodeURIComponent(category.slug) %>?sub=<%= encodeURIComponent(s.slug) %>">
               <%= s.name %>
             </a>
           <% }); %>
@@ -58,8 +91,8 @@
       <% } %>
 
       <!-- جست‌وجو و فیلتر موجودی -->
-      <form class="toolbar" method="get" action="/products">
-        <% if (category) { %><input type="hidden" name="cat" value="<%= category.slug %>"><% } %>
+      <form class="toolbar" method="get"
+            action="<%= category ? '/category/' + encodeURIComponent(category.slug) : '/products' %>">
         <% if (activeSub) { %><input type="hidden" name="sub" value="<%= activeSub %>"><% } %>
         <label class="search-box">
           <%- icon('search', '') %>

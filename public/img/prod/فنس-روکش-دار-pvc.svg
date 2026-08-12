@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img">
+  <defs>
+    <pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0v20" fill="none" stroke="#A8431A" stroke-width=".5" opacity=".07"/>
+    </pattern>
+    <radialGradient id="glow" cx="78%" cy="18%" r="70%">
+      <stop offset="0" stop-color="#C0763C" stop-opacity=".16"/>
+      <stop offset="1" stop-color="#C0763C" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="300" fill="#FBF7F3"/>
+  <rect width="400" height="300" fill="url(#g)"/>
+  <rect width="400" height="300" fill="url(#glow)"/>
+  <g fill="none" stroke="#A8431A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+
+    <clipPath id="cf"><rect x="112" y="66" width="176" height="174"/></clipPath>
+    <g clip-path="url(#cf)" stroke="#C0763C" stroke-width="3.4" opacity=".95">
+    <path d="M-168 66 L6 240"/>
+    <path d="M-136 66 L38 240"/>
+    <path d="M-104 66 L70 240"/>
+    <path d="M-72 66 L102 240"/>
+    <path d="M-40 66 L134 240"/>
+    <path d="M-8 66 L166 240"/>
+    <path d="M24 66 L198 240"/>
+    <path d="M56 66 L230 240"/>
+    <path d="M88 66 L262 240"/>
+    <path d="M120 66 L294 240"/>
+    <path d="M152 66 L326 240"/>
+    <path d="M184 66 L358 240"/>
+    <path d="M216 66 L390 240"/>
+    <path d="M248 66 L422 240"/>
+    <path d="M280 66 L454 240"/>
+    <path d="M312 66 L486 240"/>
+    <path d="M344 66 L518 240"/>
+    <path d="M376 66 L550 240"/>
+    <path d="M408 66 L582 240"/>
+    <path d="M440 66 L614 240"/>
+    <path d="M472 66 L646 240"/>
+    <path d="M504 66 L678 240"/>
+    <path d="M536 66 L710 240"/>
+    <path d="M-168 240 L6 66"/>
+    <path d="M-136 240 L38 66"/>
+    <path d="M-104 240 L70 66"/>
+    <path d="M-72 240 L102 66"/>
+    <path d="M-40 240 L134 66"/>
+    <path d="M-8 240 L166 66"/>
+    <path d="M24 240 L198 66"/>
+    <path d="M56 240 L230 66"/>
+    <path d="M88 240 L262 66"/>
+    <path d="M120 240 L294 66"/>
+    <path d="M152 240 L326 66"/>
+    <path d="M184 240 L358 66"/>
+    <path d="M216 240 L390 66"/>
+    <path d="M248 240 L422 66"/>
+    <path d="M280 240 L454 66"/>
+    <path d="M312 240 L486 66"/>
+    <path d="M344 240 L518 66"/>
+    <path d="M376 240 L550 66"/>
+    <path d="M408 240 L582 66"/>
+    <path d="M440 240 L614 66"/>
+    <path d="M472 240 L646 66"/>
+    <path d="M504 240 L678 66"/>
+    <path d="M536 240 L710 66"/>
+    </g>
+    <path d="M100 54 v210M300 54 v210" stroke-width="4"/>
+    <path d="M96 66 h208M96 240 h208" stroke-width="3"/>
+    <path d="M100 54 q100 -14 200 0" stroke-width="2.4" stroke="#C0763C"/>
+  </g>
+</svg>
