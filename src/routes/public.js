@@ -25,11 +25,15 @@ router.get('/', (req, res) => {
 
   const categories = q.listCategories();
   const featured = categories.find((c) => c.is_featured) || null;
+  // دسته‌ی شاخص اول گرید بیاید — هم اولویت بصری درست می‌شود و هم
+  // کارت دو-ستونه‌اش وسط ردیف حفره ایجاد نمی‌کند
+  const gridCategories = [...categories].sort((a, b) => b.is_featured - a.is_featured);
 
   res.render('public/home', {
     title: `${site.name} | آهن‌آلات و فرفورژه در علی‌آباد کتول و گرگان`,
     metaDescription: truncate(site.description),
     categories,
+    gridCategories,
     featuredCategory: featured,
     latest: q.listProducts({ limit: 8 }),
     forgeProducts: featured ? q.listProducts({ category: featured.slug, limit: 6 }) : [],

@@ -85,6 +85,29 @@ function categoryIcon(name) {
 }
 
 /**
+ * تصویرسازی اختصاصی هر دسته (فایل‌های public/img/cat/*.svg).
+ * تا وقتی عکس واقعی محصولات آپلود نشده، هر محصول به‌جای یک placeholder
+ * خاکستری یکسان، تصویر خطی دسته‌ی خودش را نشان می‌دهد.
+ */
+function categoryArt(name) {
+  const n = String(name || '');
+  if (/فرفورژه/.test(n)) return 'ferforzhe';
+  if (/ورق|گالوانیزه|شیروانی|سفال/.test(n)) return 'varagh';
+  if (/پیچ|یراق|قفل|لولا|مهره/.test(n)) return 'pich';
+  if (/قوطی/.test(n)) return 'qooti';
+  if (/نبشی|پروفیل/.test(n)) return 'nabshi';
+  if (/رابیتس|مش/.test(n)) return 'rabits';
+  if (/گوزن|شاخ/.test(n)) return 'shakh';
+  if (/فنس|حصار|توری|تور/.test(n)) return 'fence';
+  if (/ایزوگام|قیر|عایق|پشم|فوم/.test(n)) return 'izogam';
+  if (/گل|طرح/.test(n)) return 'ferforzhe';
+  return 'default';
+}
+
+/** آدرس تصویر دسته */
+const categoryArtUrl = (name) => `/img/cat/${categoryArt(name)}.svg`;
+
+/**
  * ساخت تگ SVG یک آیکون.
  * @param {string} name نام آیکون
  * @param {string} className کلاس CSS
@@ -99,4 +122,4 @@ function icon(name, className = 'ico') {
   return `<svg class="${className}" viewBox="0 0 24 24" aria-hidden="true" ${attrs}><path d="${d}"/></svg>`;
 }
 
-module.exports = { icon, categoryIcon, paths };
+module.exports = { icon, categoryIcon, categoryArt, categoryArtUrl, paths };

@@ -30,24 +30,68 @@
 
 /* ------------------------------------------------------------- متغیرها */
 :root {
-  --ink: #1c1c1e; /* خاکستری زغالی — متن اصلی */
-  --ink-soft: #55555c; /* متن کم‌رنگ‌تر */
-  --ink-faint: #86868f;
-  --rust: #a8431a; /* رنگ اکسید آهن — اکسنت اصلی */
+  /* ---------- رنگ ----------
+     همه‌ی جفت‌های متن/پس‌زمینه با معیار WCAG AA (۴.۵:۱) سنجیده شده‌اند. */
+  --ink: #1c1c1e; /* خاکستری زغالی — متن اصلی (۱۵.۸:۱ روی سفید) */
+  --ink-soft: #55555c; /* متن کم‌رنگ‌تر (۷.۳:۱) */
+  --ink-faint: #6e6e77; /* کم‌رنگ‌ترین متن مجاز (۵.۱:۱) */
+  --rust: #a8431a; /* رنگ اکسید آهن — اکسنت اصلی (۶.۱:۱ روی سفید) */
   --rust-dark: #7f3113;
   --rust-soft: #f6ece7; /* پس‌زمینه‌ی خیلی روشن زنگاری */
-  --copper: #c0763c; /* مسی — جزئیات ثانویه */
+  --copper: #b06a33; /* مسی — جزئیات ثانویه روی زمینه‌ی روشن */
+  --copper-bright: #d08a50; /* مسی روشن — فقط روی زمینه‌ی تیره */
   --bg: #ffffff;
-  --bg-soft: #faf8f6;
+  --bg-soft: #faf7f4; /* خنثی گرم برای بخش‌های یک‌درمیان */
+  --bg-warm: #f6f1ec; /* یک پله گرم‌تر */
   --line: #e9e4df;
-  --line-strong: #d8d1c9;
-  --green: #1b7a4b;
+  --line-strong: #d5cec6;
+  --green: #14803c; /* سبز موجودی (۵:۱ با متن سفید) */
+  --wa: #0e8340; /* سبز واتساپ، تیره‌شده تا متن سفید ۴.۹:۱ شود */
+  --wa-dark: #0a6b34;
+  --tg: #1a7aa9; /* آبی تلگرام، تیره‌شده تا متن سفید ۴.۸:۱ شود */
+  --tg-dark: #14607f;
+
+  /* ---------- سایه ---------- */
   --shadow-sm: 0 1px 2px rgba(28, 28, 30, 0.05), 0 2px 8px rgba(28, 28, 30, 0.04);
   --shadow-md: 0 4px 12px rgba(28, 28, 30, 0.07), 0 12px 32px rgba(28, 28, 30, 0.06);
+  --shadow-lg: 0 10px 24px rgba(28, 28, 30, 0.09), 0 24px 56px rgba(28, 28, 30, 0.08);
+
+  /* ---------- فرم ---------- */
   --radius: 14px;
   --radius-sm: 9px;
+  --radius-lg: 20px;
   --wrap: 1180px;
   --header-h: 68px;
+
+  /* ---------- فاصله‌گذاری (مضرب ۴) ---------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* ---------- زمان‌بندی حرکت (۱۵۰–۴۰۰ms طبق قواعد) ---------- */
+  --t-fast: 150ms;
+  --t: 220ms;
+  --t-slow: 380ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ---------- لایه‌بندی ---------- */
+  --z-raised: 10;
+  --z-sticky: 40;
+  --z-float: 90;
+  --z-backdrop: 95;
+  --z-panel: 96;
+  --z-nav: 99;
+  --z-header: 100;
+  --z-toast: 120;
+  --z-skip: 200;
+
+  /* حداقل اندازه‌ی هدف لمسی طبق قواعد دسترسی‌پذیری */
+  --tap: 44px;
 }
 
 /* --------------------------------------------------------------- پایه */
@@ -145,7 +189,7 @@ p {
   position: absolute;
   inset-inline-start: 1rem;
   top: -60px;
-  z-index: 200;
+  z-index: var(--z-skip);
   background: var(--ink);
   color: #fff;
   padding: 0.6rem 1rem;
@@ -170,8 +214,8 @@ p {
   font-family: inherit;
   border: 1.5px solid transparent;
   cursor: pointer;
-  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease,
-    border-color 0.15s ease, color 0.15s ease;
+  transition: transform var(--t-fast) var(--ease-out), background var(--t) var(--ease-out),
+    box-shadow var(--t) var(--ease-out), border-color var(--t) var(--ease-out), color var(--t) var(--ease-out);
   line-height: 1.4;
   text-align: center;
 }
@@ -210,21 +254,21 @@ p {
 }
 
 .btn-wa {
-  background: #1faf54;
+  background: var(--wa);
   color: #fff;
-  box-shadow: 0 6px 18px rgba(31, 175, 84, 0.24);
+  box-shadow: 0 6px 18px rgba(14, 131, 64, 0.26);
 }
 .btn-wa:hover {
-  background: #178b42;
+  background: var(--wa-dark);
   color: #fff;
 }
 
 .btn-tg {
-  background: #2aa0d8;
+  background: var(--tg);
   color: #fff;
 }
 .btn-tg:hover {
-  background: #1e6ca8;
+  background: var(--tg-dark);
   color: #fff;
 }
 
@@ -238,6 +282,28 @@ p {
 }
 .btn-block {
   width: 100%;
+}
+
+/* ---- حداقل اندازه‌ی هدف لمسی (۴۴×۴۴) ----
+   طبق قواعد دسترسی‌پذیری، هر چیز قابل‌کلیک باید با انگشت راحت زده شود.
+   روی دسکتاپ کمی کوچک‌تر مجاز است، در موبایل اجباری. */
+.btn,
+.chip,
+.nav-toggle {
+  min-height: 40px;
+}
+@media (max-width: 900px) {
+  .btn,
+  .chip,
+  .nav-toggle,
+  .add-quote,
+  .search-box input,
+  .switch {
+    min-height: var(--tap);
+  }
+  .nav-toggle {
+    min-width: var(--tap);
+  }
 }
 
 /* آیکون‌های درون‌خطی: همیشه هم‌اندازه‌ی متن کنارشان */
@@ -254,7 +320,7 @@ p {
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: var(--z-header);
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: saturate(180%) blur(12px);
   border-bottom: 1px solid var(--line);
@@ -287,7 +353,7 @@ p {
 .brand-text small {
   display: block;
   font-weight: 400;
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   color: var(--ink-faint);
   line-height: 1.2;
   letter-spacing: 0;
@@ -301,6 +367,9 @@ p {
 }
 .nav a {
   color: var(--ink-soft);
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
   padding: 0.45rem 0.8rem;
   border-radius: 999px;
   font-size: 0.94rem;
@@ -351,7 +420,7 @@ p {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.25s ease, visibility 0.25s;
-  z-index: 95;
+  z-index: var(--z-backdrop);
 }
 .nav-backdrop.show {
   opacity: 1;
@@ -362,7 +431,7 @@ p {
   .nav {
     position: fixed;
     inset: var(--header-h) 0 auto 0;
-    z-index: 99;
+    z-index: var(--z-nav);
     flex-direction: column;
     align-items: stretch;
     gap: 0.15rem;
@@ -407,6 +476,12 @@ p {
     border-bottom: 0;
     justify-content: center;
   }
+  /* قانون «.nav a» رنگ متن دکمه‌ها را هم عوض می‌کرد و متن تیره روی سبز
+     می‌نشست (کنتراست ۲.۴:۱). اینجا صریحاً برمی‌گردانیم به سفید. */
+  .nav-actions .btn-wa,
+  .nav-actions .btn-tg {
+    color: #fff;
+  }
   /* دکمه‌های تماس داخل منو — مشتری بدون بستن منو می‌تواند پیام بدهد */
   .nav-actions {
     display: flex;
@@ -426,6 +501,7 @@ p {
   }
   .header-cta .btn {
     padding: 0.6rem 0.75rem;
+    min-width: var(--tap);
   }
 }
 
@@ -556,6 +632,94 @@ p {
   flex: none;
 }
 
+/* ---- ترکیب تصویری هیرو (فقط صفحه‌ی اصلی) ---- */
+.hero-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
+}
+.hero-home .hero-inner {
+  max-width: none;
+}
+
+.hero-art {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.9rem;
+  padding: 0.5rem;
+}
+.hero-tile {
+  display: block;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--bg-warm);
+  box-shadow: var(--shadow-sm);
+  animation: tile-in 0.6s var(--ease-out) both;
+}
+.hero-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 4 / 3;
+}
+/* چیدمان پلکانی تا بلوک‌ها یکنواخت و بی‌روح نباشند */
+.hero-tile-1 {
+  transform: translateY(-16px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(168, 67, 26, 0.28);
+  animation-delay: 0.05s;
+}
+.hero-tile-2 {
+  transform: translateY(14px);
+  animation-delay: 0.13s;
+}
+.hero-tile-3 {
+  transform: translateY(-6px);
+  animation-delay: 0.21s;
+}
+.hero-tile-4 {
+  transform: translateY(24px);
+  animation-delay: 0.29s;
+}
+@keyframes tile-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.97);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-tile {
+    animation: none;
+  }
+}
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+  /* در موبایل، تصویرها زیر متن و بدون جابه‌جایی عمودی */
+  .hero-art {
+    order: 2;
+    gap: 0.6rem;
+    padding: 0;
+    margin-top: 0.5rem;
+  }
+  .hero-tile,
+  .hero-tile-1,
+  .hero-tile-2,
+  .hero-tile-3,
+  .hero-tile-4 {
+    transform: none;
+  }
+  .hero-tile-3,
+  .hero-tile-4 {
+    display: none;
+  }
+}
+
 /* ----------------------------------------------------- جداکننده‌ی فرفورژه */
 .divider {
   display: block;
@@ -621,66 +785,99 @@ p {
 /* ------------------------------------------------------ کارت دسته‌بندی */
 .cat-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
-  gap: 0.9rem;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-4);
 }
 
 .cat-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  padding: 1.15rem 1.1rem;
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   color: var(--ink);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
   overflow: hidden;
+  transition: transform var(--t) var(--ease-out), box-shadow var(--t) var(--ease-out),
+    border-color var(--t) var(--ease-out);
 }
 .cat-card:hover {
   color: var(--ink);
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   border-color: rgba(168, 67, 26, 0.35);
   box-shadow: var(--shadow-md);
 }
-.cat-card .cat-icon {
-  width: 40px;
-  height: 40px;
-  color: var(--rust);
-  margin-bottom: 0.3rem;
+.cat-card:active {
+  transform: translateY(-1px) scale(0.99);
 }
-.cat-card b {
-  font-size: 1.02rem;
+
+/* تصویرسازی خطی اختصاصی هر دسته */
+.cat-art {
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--bg-warm);
+  border-bottom: 1px solid var(--line);
+}
+.cat-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--t-slow) var(--ease-out);
+}
+.cat-card:hover .cat-art img {
+  transform: scale(1.05);
+}
+
+.cat-meta {
+  display: block;
+  padding: 0.85rem 1rem 1rem;
+}
+.cat-meta b {
+  display: block;
+  font-size: 1rem;
   font-weight: 900;
+  line-height: 1.5;
 }
-.cat-card small {
+.cat-meta small {
   color: var(--ink-faint);
   font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
 }
+
+/* دسته‌ی شاخص: دو برابر عرض و پس‌زمینه‌ی گرم */
 .cat-card.featured {
   grid-column: span 2;
-  background: linear-gradient(135deg, #fff 55%, var(--rust-soft));
   border-color: rgba(168, 67, 26, 0.3);
 }
-.cat-card.featured b::after {
+.cat-card.featured .cat-art {
+  background: linear-gradient(135deg, var(--rust-soft), var(--bg-warm));
+}
+.cat-card.featured .cat-meta b::after {
   content: 'محصول شاخص';
   display: inline-block;
   margin-inline-start: 0.5rem;
   background: var(--rust);
   color: #fff;
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  padding: 0.15rem 0.5rem;
+  padding: 0.1rem 0.55rem;
   border-radius: 999px;
   vertical-align: middle;
 }
 @media (max-width: 560px) {
   .cat-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.7rem;
   }
-  .cat-card {
-    padding: 0.9rem;
+  .cat-meta {
+    padding: 0.7rem 0.75rem 0.85rem;
+  }
+  .cat-meta b {
+    font-size: 0.92rem;
+  }
+  .cat-card.featured .cat-meta b::after {
+    display: none;
   }
 }
 
@@ -708,13 +905,21 @@ p {
   border-radius: var(--radius);
   overflow: hidden;
   color: var(--ink);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  transition: transform var(--t) var(--ease-out), box-shadow var(--t) var(--ease-out),
+    border-color var(--t) var(--ease-out);
 }
 .card:hover {
   color: var(--ink);
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
   border-color: var(--line-strong);
+}
+.card:active {
+  transform: translateY(-1px) scale(0.99);
+}
+.card:has(.card-link:focus-visible) {
+  border-color: var(--rust);
+  box-shadow: var(--shadow-md);
 }
 
 .card-media {
@@ -732,17 +937,21 @@ p {
 .card:hover .card-media img {
   transform: scale(1.045);
 }
+/* تصویرسازی دسته: چون خودش پس‌زمینه و کادربندی دارد، کل کارت را پر می‌کند
+   (برخلاف placeholder قدیمی که یک آیکون محو وسط کادر بود) */
 .card-media.placeholder img {
-  object-fit: contain;
-  padding: 18%;
-  opacity: 0.35;
+  object-fit: cover;
+  opacity: 1;
+}
+.card:hover .card-media.placeholder img {
+  transform: scale(1.03);
 }
 
 .badge {
   position: absolute;
   top: 0.6rem;
   inset-inline-start: 0.6rem;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 700;
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
@@ -762,7 +971,7 @@ p {
   inset-inline-start: 0.6rem;
   background: rgba(255, 255, 255, 0.92);
   color: var(--ink);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 700;
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
@@ -810,6 +1019,7 @@ p {
 .card-foot .price {
   font-weight: 700;
   color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 .card-foot .more {
   color: var(--rust);
@@ -899,6 +1109,7 @@ p {
 }
 .result-count {
   color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
   font-size: 0.88rem;
   margin-inline-start: auto;
 }
@@ -913,8 +1124,8 @@ p {
   user-select: none;
 }
 .switch input {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   accent-color: var(--rust);
   cursor: pointer;
 }
@@ -962,9 +1173,8 @@ p {
   object-fit: cover;
 }
 .gallery-main.placeholder img {
-  object-fit: contain;
-  padding: 15%;
-  opacity: 0.35;
+  object-fit: cover;
+  opacity: 1;
 }
 .gallery-thumbs {
   display: flex;
@@ -1050,6 +1260,14 @@ p {
 .spec-list b {
   font-weight: 700;
   text-align: end;
+}
+
+/* در دسکتاپ، جعبه‌ی سفارش هنگام اسکرول در دید می‌ماند */
+@media (min-width: 861px) {
+  .product-info {
+    position: sticky;
+    top: calc(var(--header-h) + 1rem);
+  }
 }
 
 .order-box {
@@ -1273,6 +1491,7 @@ p {
 .footer-contact a {
   display: inline-flex;
   align-items: center;
+  min-height: 40px;
   gap: 0.5rem;
   color: var(--ink);
   font-weight: 700;
@@ -1306,7 +1525,7 @@ p {
   position: fixed;
   inset-inline-end: 1rem;
   bottom: 1rem;
-  z-index: 90;
+  z-index: var(--z-float);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -1336,10 +1555,10 @@ p {
   flex: none;
 }
 .float-wa {
-  background: #1faf54;
+  background: var(--wa);
 }
 .float-tg {
-  background: #2aa0d8;
+  background: var(--tg);
 }
 .float-call {
   background: var(--ink);
@@ -1436,6 +1655,7 @@ p {
 }
 .stat-num {
   display: block;
+  font-variant-numeric: tabular-nums;
   font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3rem);
   font-weight: 900;
   line-height: 1.1;
@@ -1444,7 +1664,7 @@ p {
 }
 .stat-num .suffix {
   font-size: 0.5em;
-  color: var(--copper);
+  color: var(--copper-bright);
   margin-inline-start: 0.15em;
   font-weight: 700;
 }
@@ -1457,15 +1677,15 @@ p {
 .stats-note {
   position: relative;
   text-align: center;
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.82rem;
   margin: 1.6rem 0 0;
 }
 
 /* ------------------------------------------------- معرفی مدیر (اعتماد) */
 .owner-section {
   padding: clamp(2.5rem, 5vw, 4.5rem) 0;
-  background: var(--bg-soft);
+  background: var(--bg);
   border-block: 1px solid var(--line);
 }
 .owner-grid {
@@ -1548,7 +1768,7 @@ p {
 }
 .owner-photo .exp-badge span {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--ink-soft);
   font-weight: 700;
 }
@@ -1888,11 +2108,13 @@ p {
 .card {
   position: relative;
 }
-.card-link::after {
-  content: '';
+/* خودِ لینک کل کارت را می‌پوشاند (نه یک شبه‌عنصر)، تا کادر واقعی داشته باشد
+   و ابزارهای دسترسی‌پذیری و تست هم آن را ببینند */
+.card-link {
   position: absolute;
   inset: 0;
   z-index: 1;
+  border-radius: var(--radius);
 }
 .card .card-foot {
   position: relative;
@@ -1902,6 +2124,7 @@ p {
 .add-quote {
   display: inline-flex;
   align-items: center;
+  min-height: 36px;
   gap: 0.25rem;
   background: var(--bg-soft);
   border: 1.5px solid var(--line-strong);
@@ -1961,7 +2184,7 @@ p {
   position: fixed;
   inset-inline-end: 1rem;
   bottom: 5rem;
-  z-index: 96;
+  z-index: var(--z-panel);
   width: min(340px, calc(100vw - 2rem));
   background: #fff;
   border: 1px solid var(--line);
@@ -1983,7 +2206,9 @@ p {
   font-size: 1rem;
   color: var(--ink-faint);
   cursor: pointer;
-  padding: 0.2rem 0.4rem;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 8px;
   line-height: 1;
 }
 .quote-close:hover {
@@ -2018,7 +2243,12 @@ p {
   cursor: pointer;
   font-size: 1.05rem;
   line-height: 1;
-  padding: 0.15rem 0.3rem;
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 8px;
+}
+.quote-items .rm:hover {
+  background: var(--bg-soft);
 }
 .quote-items .rm:hover {
   color: #b3261e;
@@ -2061,7 +2291,7 @@ p {
   inset-inline-start: 50%;
   transform: translate(50%, 20px);
   bottom: 6.5rem;
-  z-index: 120;
+  z-index: var(--z-toast);
   background: var(--ink);
   color: #fff;
   padding: 0.6rem 1.2rem;
@@ -2118,13 +2348,31 @@ p {
    (کلاس js روی <html>). اگر جاوااسکریپت اجرا نشود، محتوا عادی دیده می‌شود. */
 .js .reveal {
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateY(12px);
+  transition: opacity var(--t-slow) var(--ease-out), transform var(--t-slow) var(--ease-out);
   will-change: opacity, transform;
 }
 .js .reveal.in {
   opacity: 1;
   transform: none;
+}
+
+/* ورود پله‌ای آیتم‌های گرید (۴۰ms فاصله بین هر کارت) — طبق قاعده‌ی
+   stagger-sequence؛ هم‌زمان‌ظاهرشدن همه‌ی کارت‌ها بی‌روح به‌نظر می‌رسد. */
+.js .reveal.in > * {
+  animation: item-in var(--t-slow) var(--ease-out) both;
+  animation-delay: calc(var(--stagger, 0) * 40ms);
+}
+@keyframes item-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal.in > * {
+    animation: none;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -2148,5 +2396,15 @@ p {
   .filters,
   .toolbar {
     display: none !important;
+  }
+}
+
+/* ---- بازتعریف نهایی اندازه‌ی هدف لمسی ----
+   این بلوک عمداً آخر فایل است تا قانون‌های بعدی خنثی‌اش نکنند. */
+@media (max-width: 900px) {
+  .add-quote,
+  .quote-clear,
+  .gallery-thumbs button {
+    min-height: var(--tap);
   }
 }

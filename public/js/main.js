@@ -55,6 +55,12 @@
       function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
+            // شماره‌گذاری فرزندان تا ورودشان پله‌ای باشد (حداکثر ۸ پله،
+            // وگرنه آخرین کارت‌های یک گرید بلند خیلی دیر ظاهر می‌شوند)
+            var kids = entry.target.children;
+            for (var i = 0; i < kids.length; i++) {
+              kids[i].style.setProperty('--stagger', Math.min(i, 8));
+            }
             entry.target.classList.add('in');
             observer.unobserve(entry.target);
           }

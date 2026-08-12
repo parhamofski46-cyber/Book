@@ -2,6 +2,7 @@
 
 const { imageUrl, imageSrcset } = require('../services/images');
 const { toFaDigits } = require('./slug');
+const { categoryArtUrl } = require('./icons');
 
 /**
  * توابع کمکی که در قالب‌ها (EJS) استفاده می‌شوند.
@@ -25,15 +26,20 @@ function truncate(str, len = 155) {
 
 /**
  * اطلاعات عکس یک محصول برای نمایش در قالب.
- * اگر محصول هنوز عکس ندارد، تصویر جایگزین (placeholder) برمی‌گردد.
+ * اگر محصول هنوز عکس واقعی ندارد، به‌جای یک placeholder خاکستری یکسان،
+ * تصویرسازی خطی اختصاصی دسته‌ی خودش نمایش داده می‌شود — هم گرید
+ * «طراحی‌شده» به‌نظر می‌رسد، هم مشتری از روی تصویر می‌فهمد با چه دسته‌ای طرف است.
  */
 function productImage(product, size = 'medium') {
   if (!product || !product.image) {
     return {
-      src: '/img/placeholder.svg',
+      src: product ? categoryArtUrl(product.category_name) : '/img/cat/default.svg',
       srcset: '',
-      alt: product ? `${product.name} — فولاد ایمان، علی‌آباد کتول` : 'تصویر محصول',
+      alt: product
+        ? `${product.name} — ${product.category_name || ''} در فولاد ایمان، علی‌آباد کتول`
+        : 'تصویر محصول',
       isPlaceholder: true,
+      isArt: true, // تصویرسازی است، نه عکس واقعی
     };
   }
   return {

@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img">
+  <defs>
+    <pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0v20" fill="none" stroke="#A8431A" stroke-width=".5" opacity=".07"/>
+    </pattern>
+    <radialGradient id="glow" cx="78%" cy="18%" r="70%">
+      <stop offset="0" stop-color="#C0763C" stop-opacity=".16"/>
+      <stop offset="1" stop-color="#C0763C" stop-opacity="0"/>
+    </radialGradient>
+    
+  </defs>
+  <rect width="400" height="300" fill="#FBF7F3"/>
+  <rect width="400" height="300" fill="url(#g)"/>
+  <rect width="400" height="300" fill="url(#glow)"/>
+  <g fill="none" stroke="#A8431A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+
+    <clipPath id="c"><rect x="82" y="62" width="236" height="176" rx="6"/></clipPath>
+    <g clip-path="url(#c)">
+    <path d="M90 76 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M90 102 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M90 128 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M90 154 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M90 180 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M90 206 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M116 89 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M116 115 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M116 141 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M116 167 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M116 193 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M116 219 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M142 76 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M142 102 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M142 128 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M142 154 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M142 180 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M142 206 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M168 89 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M168 115 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M168 141 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M168 167 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M168 193 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M168 219 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M194 76 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M194 102 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M194 128 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M194 154 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M194 180 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M194 206 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M220 89 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M220 115 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M220 141 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M220 167 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M220 193 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M220 219 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M246 76 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M246 102 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M246 128 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M246 154 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M246 180 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M246 206 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M272 89 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M272 115 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M272 141 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M272 167 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M272 193 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M272 219 l13 8 l-13 8 l-13 -8 Z" stroke="#C0763C" stroke-width="1.9"/>
+    <path d="M298 76 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M298 102 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M298 128 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M298 154 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M298 180 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    <path d="M298 206 l13 8 l-13 8 l-13 -8 Z" stroke="#A8431A" stroke-width="1.9"/>
+    </g>
+    <rect x="82" y="62" width="236" height="176" rx="6" stroke-width="3"/>
+    <!-- گوشه‌ی تاخورده -->
+    <path d="M282 62 q36 26 36 58" stroke="#C0763C" stroke-width="2.2"/>
+
+  </g>
+</svg>

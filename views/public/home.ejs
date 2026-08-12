@@ -10,11 +10,9 @@
   <main id="main">
 
     <!-- ================================================== هیرو -->
-    <section class="hero">
-      <div class="hero-ornament">
-        <%- include('../partials/ornament', { variant: 'panel' }) %>
-      </div>
-      <div class="wrap hero-inner">
+    <section class="hero hero-home">
+      <div class="wrap hero-grid">
+        <div class="hero-inner">
         <span class="eyebrow"><span class="dot"></span> فروش و تولید در علی‌آباد کتول و گرگان</span>
         <h1><%= hero.title %></h1>
         <p class="hero-sub"><%= hero.subtitle %></p>
@@ -40,6 +38,19 @@
           <span><%- icon('scroll') %> بیش از ۱۰۰۰ مدل فرفورژه‌ی آماده</span>
           <span><%- icon('layers') %> تولیدکننده‌ی ورق گالوانیزه</span>
         </div>
+        </div>
+
+        <!-- ترکیب تصویری هیرو: چهار دسته‌ی شاخص، هم تزئین است هم میان‌بر -->
+        <div class="hero-art" aria-hidden="true">
+          <%
+          const heroPicks = ['گل و طرح‌های فرفورژه', 'ورق گالوانیزه', 'قوطی', 'فنس و توری'];
+          heroPicks.forEach(function (nm, i) { %>
+            <span class="hero-tile hero-tile-<%= i + 1 %>">
+              <img src="<%= categoryArtUrl(nm) %>" alt="" width="400" height="300"
+                   <%= i === 0 ? 'fetchpriority="high"' : 'loading="lazy"' %> decoding="async">
+            </span>
+          <% }); %>
+        </div>
       </div>
     </section>
 
@@ -47,7 +58,7 @@
     <%- include('../partials/section-stats') %>
 
     <!-- ================================================== دسته‌بندی‌ها -->
-    <section class="section" id="categories">
+    <section class="section section-soft" id="categories">
       <div class="wrap">
         <div class="section-head">
           <div class="section-title"><h2>دنبال چه چیزی هستید؟</h2></div>
@@ -55,12 +66,18 @@
         </div>
 
         <div class="cat-grid reveal">
-          <% categories.forEach(function (cat) { %>
+          <% gridCategories.forEach(function (cat, i) { %>
             <a class="cat-card <%= cat.is_featured ? 'featured' : '' %>"
-               href="/products?cat=<%= encodeURIComponent(cat.slug) %>">
-              <%- icon(categoryIcon(cat.name), 'cat-icon') %>
-              <b><%= cat.name %></b>
-              <small><%= h.toFaDigits(cat.product_count) %> محصول</small>
+               href="/products?cat=<%= encodeURIComponent(cat.slug) %>"
+               style="--i:<%= i %>">
+              <span class="cat-art">
+                <img src="<%= categoryArtUrl(cat.name) %>" alt=""
+                     width="400" height="300" loading="lazy" decoding="async">
+              </span>
+              <span class="cat-meta">
+                <b><%= cat.name %></b>
+                <small><%= h.toFaDigits(cat.product_count) %> محصول</small>
+              </span>
             </a>
           <% }); %>
         </div>
@@ -90,7 +107,7 @@
 
     <!-- ================================================== بخش ویژه‌ی فرفورژه -->
     <% if (featuredCategory && forgeProducts.length) { %>
-    <section class="section section-soft" id="forge">
+    <section class="section" id="forge">
       <div class="wrap">
         <div class="section-head center">
           <span class="eyebrow">بیش از ۱۰۰۰ مدل، آماده‌ی تحویل</span>
@@ -121,65 +138,12 @@
     <%- include('../partials/section-reviews') %>
 
     <!-- ============================== تضمین‌ها و مراحل سفارش -->
-    <%- include('../partials/section-trust') %>
-
-    <!-- ================================================== چرا ما -->
-    <section class="section" id="why">
-      <div class="wrap">
-        <div class="section-head">
-          <div class="section-title"><h2>چرا فولاد ایمان؟</h2></div>
-          <% if (aboutText) { %><p><%= aboutText %></p><% } %>
-        </div>
-
-        <div class="why-grid reveal">
-          <div class="why-card">
-            <div class="ico-circle"><%- icon('hammer') %></div>
-            <h3>ورق گالوانیزه، تولید خودمان</h3>
-            <p>
-              ورق شیروانی طرح سفال رنگی و گالوانیزه شفاف را خودمان تولید می‌کنیم؛
-              یعنی قیمت بدون واسطه و امکان تولید در طولی که شما لازم دارید.
-            </p>
-          </div>
-          <div class="why-card">
-            <div class="ico-circle"><%- icon('check') %></div>
-            <h3>موجودی واقعی و به‌روز</h3>
-            <p>
-              وضعیت «موجود / ناموجود» هر محصول در سایت به‌روز نگه داشته می‌شود؛
-              بی‌خود تا مغازه نمی‌آیید.
-            </p>
-          </div>
-          <div class="why-card">
-            <div class="ico-circle"><%- icon('scroll') %></div>
-            <h3>هزار مدل فرفورژه، یک‌جا</h3>
-            <p>
-              به‌جای اینکه چند مغازه را دنبال یک طرح بگردید، بین بیش از ۱۰۰۰ مدل آماده‌ی
-              درب، پنجره و نرده انتخاب کنید — همه موجود و آماده‌ی تحویل.
-            </p>
-          </div>
-          <div class="why-card">
-            <div class="ico-circle"><%- icon('truck') %></div>
-            <h3>ارسال در سطح استان</h3>
-            <p>
-              بار شما به علی‌آباد کتول، گرگان، فاضل‌آباد، رامیان و آزادشهر ارسال می‌شود؛
-              هماهنگی حمل با خودمان.
-            </p>
-          </div>
-          <div class="why-card">
-            <div class="ico-circle"><%- icon('users') %></div>
-            <h3>مشاوره‌ی صادقانه</h3>
-            <p>
-              اگر ضخامت یا سایز اشتباهی انتخاب کرده باشید، به شما می‌گوییم — کار درست
-              برای ما مهم‌تر از یک فروش بیشتر است.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
+    <%- include('../partials/section-trust', { aboutText: aboutText }) %>
 
     <%- include('../partials/ornament') %>
 
     <!-- ================================================== منطقه‌ی خدمات -->
-    <section class="section" id="area">
+    <section class="section section-soft" id="area">
       <div class="wrap">
         <div class="area-grid">
           <div>

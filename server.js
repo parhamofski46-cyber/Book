@@ -15,7 +15,7 @@ const { DATA_DIR, getSetting } = require('./src/db');
 const queries = require('./src/db/queries');
 const { seedAll } = require('./src/db/seed');
 const helpers = require('./src/utils/view-helpers');
-const { icon, categoryIcon } = require('./src/utils/icons');
+const { icon, categoryIcon, categoryArtUrl } = require('./src/utils/icons');
 
 // ---------------------------------------------------------------- راه‌اندازی
 const app = express();
@@ -100,6 +100,7 @@ app.use((req, res, next) => {
   res.locals.h = helpers;
   res.locals.icon = icon;
   res.locals.categoryIcon = categoryIcon;
+  res.locals.categoryArtUrl = categoryArtUrl;
   res.locals.setting = getSetting;
   // خلاصه‌ی امتیاز مشتریان — در داده‌ی ساختاریافته‌ی همه‌ی صفحات استفاده می‌شود
   res.locals.reviewSummary = queries.testimonialSummary();
