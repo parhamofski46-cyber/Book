@@ -2,6 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 const crypto = require('crypto');
 const sharp = require('sharp');
 
@@ -23,24 +24,45 @@ const sharp = require('sharp');
  * سرویس وصل و مسیرش در متغیر محیطی UPLOAD_DIR داده شود، وگرنه عکس‌هایی
  * که مدیر آپلود کرده با اولین به‌روزرسانی از بین می‌روند.
  */
-const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(__dirname, '..', '..', 'public', 'uploads');
+const PREFERRED_UPLOAD_DIR =
+  process.env.UPLOAD_DIR || path.join(__dirname, '..', '..', 'public', 'uploads');
 
-try {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-} catch (err) {
-  // همان دلیل DATA_DIR در src/db/index.js: روی سرویس‌های ابری، مسیرهای
-  // خارج از دیسک متصل‌شده قابل نوشتن نیستند. اینجا برنامه را نمی‌کشیم (خود
-  // سایت بدون آپلود عکس هم کار می‌کند)، فقط واضح در لاگ می‌گوییم چرا آپلود
-  // عکس کار نخواهد کرد.
-  console.error(
-    `\n⚠️  نوشتن در پوشه‌ی عکس‌های آپلودی (${UPLOAD_DIR}) ممکن نشد: ${err.message}\n` +
-      (process.env.UPLOAD_DIR
-        ? '   بررسی کنید دیسکی که به این مسیر وصل کرده‌اید واقعاً متصل و قابل‌نوشتن است.\n'
-        : '   متغیر محیطی UPLOAD_DIR تنظیم نشده — روی سرویس‌های ابری باید یک «دیسک»\n' +
-          '   بسازید و مسیرش را در UPLOAD_DIR بدهید. راهنمای کامل: LIARA.md\n' +
-          '   تا آن موقع، آپلود عکس از پنل کار نمی‌کند؛ بقیه‌ی سایت مشکلی ندارد.\n')
-  );
+/**
+ * همان منطق «شکست نرم» پوشه‌ی داده (src/db/index.js را ببین): اگر مسیر
+ * آپلود قابل نوشتن نبود، به پوشه‌ی موقت پناه می‌بریم تا آپلود عکس از پنل
+ * دست‌کم کار کند، ولی هشدار می‌دهیم که عکس‌ها با دیپلوی بعدی پاک می‌شوند.
+ */
+function pickUploadDir() {
+  try {
+    fs.mkdirSync(PREFERRED_UPLOAD_DIR, { recursive: true });
+    fs.accessSync(PREFERRED_UPLOAD_DIR, fs.constants.W_OK);
+    return { dir: PREFERRED_UPLOAD_DIR, temporary: false, reason: '' };
+  } catch (err) {
+    const fallback = path.join(os.tmpdir(), 'foolad-iman-uploads');
+    try {
+      fs.mkdirSync(fallback, { recursive: true });
+      return { dir: fallback, temporary: true, reason: err.message };
+    } catch (err2) {
+      // آپلود عکس اختیاری است — برنامه را نمی‌کشیم، فقط اعلام می‌کنیم.
+      return { dir: PREFERRED_UPLOAD_DIR, temporary: false, reason: err.message, broken: true };
+    }
+  }
 }
+
+const pickedUpload = pickUploadDir();
+const UPLOAD_DIR = pickedUpload.dir;
+
+/** متن هشدار وضعیت ذخیره‌سازی عکس‌ها (اگر مشکلی هست)، وگرنه null. */
+const UPLOAD_WARNING = pickedUpload.broken
+  ? `پوشه‌ی عکس‌های آپلودی (${PREFERRED_UPLOAD_DIR}) قابل نوشتن نیست؛ آپلود عکس از پنل کار نمی‌کند.`
+  : pickedUpload.temporary
+    ? `عکس‌های آپلودی روی حافظه‌ی موقت (${UPLOAD_DIR}) ذخیره می‌شود و با هر به‌روزرسانی پاک خواهد شد.` +
+      (process.env.UPLOAD_DIR
+        ? ` مسیر تنظیم‌شده در UPLOAD_DIR قابل نوشتن نبود (${pickedUpload.reason}).`
+        : ' متغیر محیطی UPLOAD_DIR تنظیم نشده (راهنما: LIARA.md).')
+    : null;
+
+if (UPLOAD_WARNING) console.error(`\n⚠️  ${UPLOAD_WARNING}\n`);
 
 // سایزهای تولیدی (عرض بر حسب پیکسل)
 const SIZES = {
@@ -136,4 +158,12 @@ function imageSrcset(basename, originalWidth) {
   return parts.join(', ');
 }
 
-module.exports = { processUpload, deleteImageFiles, imageUrl, imageSrcset, UPLOAD_DIR, SIZES };
+module.exports = {
+  processUpload,
+  deleteImageFiles,
+  imageUrl,
+  imageSrcset,
+  UPLOAD_DIR,
+  UPLOAD_WARNING,
+  SIZES,
+};

@@ -40,3 +40,18 @@
   </header>
 
   <main class="admin-main">
+    <%# نوار هشدار ذخیره‌سازی موقت. عمداً بالای همه‌ی صفحه‌های پنل و پررنگ است:
+        اگر دیسک وصل نباشد، مالک ممکن است ساعت‌ها محصول وارد کند و همه‌اش با
+        اولین به‌روزرسانی از بین برود. %>
+    <% if (typeof storageWarning !== 'undefined' && (storageWarning || uploadWarning)) { %>
+      <div class="storage-alert" role="alert">
+        <strong>⚠️ هشدار: ذخیره‌سازی دائمی نیست</strong>
+        <% if (storageWarning) { %><p><%= storageWarning %></p><% } %>
+        <% if (uploadWarning) { %><p><%= uploadWarning %></p><% } %>
+        <p class="fix">
+          راه‌حل: در پنل لیارا یک «دیسک» بسازید و مسیرش را در متغیرهای محیطی
+          <code>DATA_DIR</code> و <code>UPLOAD_DIR</code> تنظیم کنید. تا آن موقع
+          از وارد کردن اطلاعات مهم خودداری کنید.
+        </p>
+      </div>
+    <% } %>

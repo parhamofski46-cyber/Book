@@ -2,6 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 const Database = require('better-sqlite3');
 
 /**
@@ -10,26 +11,63 @@ const Database = require('better-sqlite3');
  * همین یک فایل را کپی کنید (به‌همراه پوشه‌ی public/uploads برای عکس‌ها).
  */
 
-const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', '..', 'data');
+const PREFERRED_DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', '..', 'data');
 
-try {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-} catch (err) {
-  // روی سرویس‌های ابری (لیارا و مانند آن)، ریشه‌ی برنامه معمولاً فقط-خواندنی
-  // است و فقط مسیرهایی که به یک «دیسک» متصل شده‌اند قابل نوشتن‌اند. اگر
-  // DATA_DIR تنظیم نشده باشد، این خط با یک خطای مبهم (ENOENT/EACCES/EROFS)
-  // کل برنامه را می‌کشد و کاربر فقط یک stack trace فنی می‌بیند، نه راه‌حل.
-  const usingDefault = !process.env.DATA_DIR;
-  console.error(
-    `\n✋ نوشتن در پوشه‌ی داده (${DATA_DIR}) ممکن نشد: ${err.message}\n` +
-      (usingDefault
-        ? '   متغیر محیطی DATA_DIR تنظیم نشده — روی سرویس‌های ابری (لیارا و مانند\n' +
-          '   آن) باید یک «دیسک» بسازید و مسیرش را در DATA_DIR بدهید؛ ریشه‌ی\n' +
-          '   برنامه روی این سرویس‌ها فقط-خواندنی است. راهنمای کامل: LIARA.md\n'
-        : '   بررسی کنید دیسکی که به این مسیر وصل کرده‌اید واقعاً متصل و قابل‌نوشتن\n' +
-          '   است.\n')
-  );
-  process.exit(1);
+/**
+ * انتخاب پوشه‌ی داده، با «شکست نرم».
+ *
+ * ⚠️ درس گرفته‌شده از دیپلوی روی لیارا: قبلاً اگر ساختن پوشه‌ی داده ممکن
+ * نبود، برنامه با یک stack trace خام می‌مرد و کل سایت بالا نمی‌آمد. روی
+ * سرویس‌های ابری ریشه‌ی برنامه فقط-خواندنی است، پس تا وقتی کاربر «دیسک»
+ * نساخته و DATA_DIR را ست نکرده بود، سایت اصلاً قابل دیدن نبود — نه صفحه‌ی
+ * اصلی، نه پنل، هیچ.
+ *
+ * حالا اگر مسیر اصلی قابل‌نوشتن نبود، به پوشه‌ی موقت سیستم پناه می‌بریم:
+ * سایت بالا می‌آید و کامل کار می‌کند، فقط اطلاعاتش با هر دیپلوی پاک
+ * می‌شود. این وضعیت **موقتی و خطرناک** است، برای همین در لاگ، در /healthz
+ * و به‌صورت یک نوار قرمز در پنل مدیریت اعلام می‌شود تا از چشم مالک پنهان
+ * نماند. راه‌حل درست همیشه ساختن دیسک است (LIARA.md).
+ */
+function pickDataDir() {
+  try {
+    fs.mkdirSync(PREFERRED_DATA_DIR, { recursive: true });
+    fs.accessSync(PREFERRED_DATA_DIR, fs.constants.W_OK);
+    return { dir: PREFERRED_DATA_DIR, temporary: false, reason: '' };
+  } catch (err) {
+    const fallback = path.join(os.tmpdir(), 'foolad-iman-data');
+    try {
+      fs.mkdirSync(fallback, { recursive: true });
+      return { dir: fallback, temporary: true, reason: err.message };
+    } catch (err2) {
+      // حتی پوشه‌ی موقت هم قابل نوشتن نیست — دیگر واقعاً کاری از دست ما
+      // برنمی‌آید، چون SQLite بدون فایل قابل‌نوشتن اصلاً کار نمی‌کند.
+      console.error(
+        `\n✋ هیچ پوشه‌ی قابل‌نوشتنی پیدا نشد.\n` +
+          `   مسیر اصلی (${PREFERRED_DATA_DIR}): ${err.message}\n` +
+          `   مسیر موقت (${fallback}): ${err2.message}\n` +
+          '   راهنمای کامل: LIARA.md\n'
+      );
+      process.exit(1);
+    }
+  }
+}
+
+const picked = pickDataDir();
+const DATA_DIR = picked.dir;
+
+/**
+ * اگر روی حافظه‌ی موقت افتاده‌ایم، متن هشدار؛ وگرنه null.
+ * server.js آن را در لاگ و /healthz، و پنل مدیریت در بالای صفحه نشان می‌دهد.
+ */
+const STORAGE_WARNING = picked.temporary
+  ? `اطلاعات سایت روی حافظه‌ی موقت (${DATA_DIR}) ذخیره می‌شود و با هر به‌روزرسانی پاک خواهد شد.` +
+    (process.env.DATA_DIR
+      ? ` مسیر تنظیم‌شده در DATA_DIR قابل نوشتن نبود (${picked.reason}).`
+      : ' متغیر محیطی DATA_DIR تنظیم نشده — باید یک «دیسک» بسازید و مسیرش را در DATA_DIR بدهید (راهنما: LIARA.md).')
+  : null;
+
+if (STORAGE_WARNING) {
+  console.error(`\n⚠️  ${STORAGE_WARNING}\n   سایت بالا می‌آید و کار می‌کند، ولی این وضعیت موقتی است.\n`);
 }
 
 const DB_PATH = path.join(DATA_DIR, 'shop.db');
@@ -152,4 +190,4 @@ function setSetting(key, value) {
   ).run(key, String(value ?? ''));
 }
 
-module.exports = { db, DB_PATH, DATA_DIR, getSetting, setSetting };
+module.exports = { db, DB_PATH, DATA_DIR, STORAGE_WARNING, getSetting, setSetting };

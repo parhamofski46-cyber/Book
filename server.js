@@ -13,13 +13,13 @@ const SQLiteStore = require('connect-sqlite3')(session);
 const fs = require('fs');
 
 const { site, activeChannels, inquiryLink } = require('./src/config/site');
-const { DATA_DIR, getSetting } = require('./src/db');
+const { DATA_DIR, STORAGE_WARNING, getSetting } = require('./src/db');
 const { resolveSessionSecret, describeSecretSource } = require('./src/config/session-secret');
 const queries = require('./src/db/queries');
 const { seedAll } = require('./src/db/seed');
 const helpers = require('./src/utils/view-helpers');
 const { icon, categoryIcon, categoryArtUrl } = require('./src/utils/icons');
-const { UPLOAD_DIR } = require('./src/services/images');
+const { UPLOAD_DIR, UPLOAD_WARNING } = require('./src/services/images');
 
 // ---------------------------------------------------------------- راه‌اندازی
 const app = express();
@@ -158,6 +158,10 @@ app.use((req, res, next) => {
   // خلاصه‌ی امتیاز مشتریان — در داده‌ی ساختاریافته‌ی همه‌ی صفحات استفاده می‌شود
   res.locals.reviewSummary = queries.testimonialSummary();
   res.locals.assetVersion = ASSET_VERSION;
+  // هشدار ذخیره‌سازی موقت — فقط پنل مدیریت آن را نشان می‌دهد (نوار قرمز بالای
+  // صفحه)؛ در سایت عمومی نمایش داده نمی‌شود چون به مشتری ربطی ندارد.
+  res.locals.storageWarning = STORAGE_WARNING;
+  res.locals.uploadWarning = UPLOAD_WARNING;
   res.locals.currentPath = req.path;
   res.locals.canonical = site.url + req.originalUrl.split('?')[0];
   next();
@@ -179,6 +183,14 @@ app.get('/healthz', (req, res) => {
       env: process.env.NODE_ENV || 'development',
       db: { products: stats.products, categories: stats.categories, ok: true },
       memoryMb: Math.round(process.memoryUsage().rss / 1048576),
+      // اگر ذخیره‌سازی روی حافظه‌ی موقت افتاده باشد، اینجا هم اعلام می‌شود تا
+      // بدون ورود به پنل هم بشود از راه دور فهمید دیسک وصل نیست.
+      storage: {
+        persistent: !STORAGE_WARNING,
+        uploadsPersistent: !UPLOAD_WARNING,
+        ...(STORAGE_WARNING ? { warning: STORAGE_WARNING } : {}),
+        ...(UPLOAD_WARNING ? { uploadWarning: UPLOAD_WARNING } : {}),
+      },
       time: new Date().toISOString(),
     });
   } catch (err) {
