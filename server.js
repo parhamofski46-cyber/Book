@@ -14,10 +14,12 @@ const fs = require('fs');
 
 const { site, activeChannels, inquiryLink } = require('./src/config/site');
 const { DATA_DIR, getSetting } = require('./src/db');
+const { resolveSessionSecret, describeSecretSource } = require('./src/config/session-secret');
 const queries = require('./src/db/queries');
 const { seedAll } = require('./src/db/seed');
 const helpers = require('./src/utils/view-helpers');
 const { icon, categoryIcon, categoryArtUrl } = require('./src/utils/icons');
+const { UPLOAD_DIR } = require('./src/services/images');
 
 // ---------------------------------------------------------------- راه‌اندازی
 const app = express();
@@ -28,16 +30,10 @@ const isProd = process.env.NODE_ENV === 'production';
 const seedResult = seedAll();
 
 // ---------------------------------------------------------- امنیت راه‌اندازی
-// در حالت تولید، کلید نشست باید حتماً در فایل .env تعریف شده باشد. اگر با کلید
-// پیش‌فرض بالا بیاید، هر کسی که سورس را دیده باشد می‌تواند کوکی مدیر را جعل کند.
-if (isProd && (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 24)) {
-  console.error(
-    '\n✋ SESSION_SECRET تعریف نشده یا خیلی کوتاه است.\n' +
-      '   در فایل .env یک رشته‌ی تصادفی بلند بگذارید، مثلاً خروجی این دستور:\n' +
-      '   node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))"\n'
-  );
-  process.exit(1);
-}
+// کلید امضای کوکی نشست. اگر در متغیرهای محیطی نباشد، یک کلید تصادفی امن ساخته
+// و در پوشه‌ی داده ذخیره می‌شود. جزئیات و دلیلش در src/config/session-secret.js
+const secretInfo = resolveSessionSecret(DATA_DIR);
+const secretNote = describeSecretSource(secretInfo);
 
 /**
  * نسخه‌ی فایل‌های استاتیک بر اساس محتوایشان.
@@ -112,7 +108,7 @@ app.use((req, res, next) => {
 
 // فایل‌های استاتیک — عکس‌ها و فونت‌ها با کش طولانی، چون نامشان یکتاست
 const staticOpts = { maxAge: isProd ? '365d' : 0, immutable: isProd };
-app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads'), staticOpts));
+app.use('/uploads', express.static(UPLOAD_DIR, staticOpts));
 app.use('/fonts', express.static(path.join(__dirname, 'public', 'fonts'), staticOpts));
 app.use('/img', express.static(path.join(__dirname, 'public', 'img'), { maxAge: isProd ? '30d' : 0 }));
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: isProd ? '7d' : 0 }));
@@ -124,7 +120,7 @@ app.use(express.urlencoded({ extended: false, limit: '1mb' }));
 app.use(
   session({
     store: new SQLiteStore({ db: 'sessions.db', dir: DATA_DIR }),
-    secret: process.env.SESSION_SECRET || 'change-me-in-env-file',
+    secret: secretInfo.secret,
     resave: false,
     saveUninitialized: false,
     name: 'fi.sid',
@@ -223,6 +219,7 @@ app.listen(PORT, () => {
   if (isClusterWorker) return;
   console.log(`\n🔨 ${site.name}`);
   console.log(`   سایت روی http://localhost:${PORT} اجرا شد`);
+  if (secretNote) console.log('\n' + secretNote);
   console.log(`   پنل مدیریت: http://localhost:${PORT}/admin`);
 
   if (seedResult.admin) {

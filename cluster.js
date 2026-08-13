@@ -39,8 +39,27 @@ if (cluster.isPrimary) {
   const { seedAll } = require('./src/db/seed');
   const seedResult = seedAll();
 
+  /**
+   * کلید نشست هم باید **قبل از fork** تعیین شود و از طریق متغیر محیطی به
+   * فرزندان برسد.
+   *
+   * چرا: اگر هر فرزند خودش کلید را حل کند، چهار پردازش تقریباً هم‌زمان
+   * می‌بینند «فایل کلید هنوز نیست»، هر کدام یک کلید تصادفیِ متفاوت می‌سازند
+   * و روی هم می‌نویسند. نتیجه‌اش یک باگ آزاردهنده و متناوب است: کوکی‌ای که
+   * پردازش A امضا کرده، وقتی درخواست بعدی به پردازش B می‌رسد نامعتبر
+   * شمرده می‌شود و مدیر بی‌دلیل از پنل بیرون می‌افتد. با تعیین کلید در
+   * پردازش اصلی، همه‌ی فرزندان قطعاً یک کلید دارند.
+   */
+  const { resolveSessionSecret, describeSecretSource } = require('./src/config/session-secret');
+  const { DATA_DIR } = require('./src/db');
+  const secretInfo = resolveSessionSecret(DATA_DIR);
+  process.env.SESSION_SECRET = secretInfo.secret; // فرزندان این را ارث می‌برند
+
   console.log(`\n🔨 گروه تولیدی صنعتی فولاد ایمان — حالت چندپردازشی`);
   console.log(`   ${numWorkers} پردازش روی پورت ${process.env.PORT || 3000} بالا می‌آید`);
+
+  const secretNote = describeSecretSource(secretInfo);
+  if (secretNote) console.log('\n' + secretNote);
 
   if (seedResult.admin) {
     console.log('\n   ── کاربر مدیر ساخته شد ──');

@@ -15,7 +15,15 @@ const sharp = require('sharp');
  * نتیجه: طرح‌های ظریف فرفورژه واضح دیده می‌شوند ولی سایت سنگین نمی‌شود.
  */
 
-const UPLOAD_DIR = path.join(__dirname, '..', '..', 'public', 'uploads');
+/**
+ * پوشه‌ی عکس‌های آپلودی.
+ *
+ * روی سرور معمولی همان public/uploads است. روی سرویس‌های ابری (لیارا و
+ * مانند آن) که فایل‌سیستم با هر دیپلوی پاک می‌شود، باید یک «دیسک» به
+ * سرویس وصل و مسیرش در متغیر محیطی UPLOAD_DIR داده شود، وگرنه عکس‌هایی
+ * که مدیر آپلود کرده با اولین به‌روزرسانی از بین می‌روند.
+ */
+const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(__dirname, '..', '..', 'public', 'uploads');
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
 // سایزهای تولیدی (عرض بر حسب پیکسل)
