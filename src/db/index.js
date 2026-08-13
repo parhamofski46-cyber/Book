@@ -106,6 +106,18 @@ db.exec(`
     sort_order INTEGER NOT NULL DEFAULT 0,
     created_at TEXT    NOT NULL DEFAULT (datetime('now'))
   );
+
+  -- محدودسازی تلاش ورود به پنل مدیریت (rate limit).
+  -- عمداً در دیتابیس نگه‌داری می‌شود، نه در حافظه‌ی پردازش: روی سرور واقعی
+  -- سایت با cluster.js چند پردازش موازی اجرا می‌شود و هرکدام حافظه‌ی جدای
+  -- خودشان را دارند. اگر شمارنده در حافظه بود، هر پردازش جدا تا سقف مجاز
+  -- می‌شمرد و مهاجم عملاً به‌جای ۱۰ تلاش، ۱۰ ضرب‌در تعداد پردازش‌ها تلاش
+  -- می‌گرفت. با یک جدول مشترک، شمارش واقعاً سراسری می‌ماند.
+  CREATE TABLE IF NOT EXISTS login_attempts (
+    ip           TEXT PRIMARY KEY,
+    count        INTEGER NOT NULL DEFAULT 0,
+    window_start INTEGER NOT NULL
+  );
 `);
 
 /** خواندن یک تنظیم با مقدار پیش‌فرض */

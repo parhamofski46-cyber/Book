@@ -1,6 +1,8 @@
 'use strict';
 
 const crypto = require('crypto');
+const { db } = require('../db');
+const { toFaDigits } = require('../utils/slug');
 
 /**
  * محافظت از پنل مدیریت
@@ -49,4 +51,47 @@ function csrf(req, res, next) {
   return next();
 }
 
-module.exports = { requireLogin, csrf };
+/**
+ * محدودسازی تلاش ورود به پنل مدیریت (rate limit) — بدون کتابخانه‌ی بیرونی.
+ *
+ * چرا در دیتابیس، نه در حافظه‌ی پردازش (مثل express-rate-limit پیش‌فرض):
+ * روی سرور واقعی سایت با cluster.js چند پردازش موازی اجرا می‌شود و هرکدام
+ * حافظه‌ی جدای خودشان را دارند. با شمارنده‌ی در-حافظه، هر پردازش جدا تا
+ * سقف مجاز می‌شمرد — یعنی به‌جای ۱۰ تلاش واقعی، مهاجم عملاً «۱۰ ضرب‌در
+ * تعداد پردازش‌ها» فرصت می‌گرفت (در تست با ۴ پردازش، محدودیت تا تلاش ۴۱ ام
+ * اعمال نمی‌شد). با یک جدول مشترک در همان دیتابیسی که همه‌ی پردازش‌ها به آن
+ * وصل‌اند، شمارش واقعاً سراسری و درست می‌ماند.
+ */
+const LOGIN_WINDOW_MS = 15 * 60 * 1000;
+const LOGIN_MAX_ATTEMPTS = 10;
+
+const getAttempt = db.prepare('SELECT count, window_start FROM login_attempts WHERE ip = ?');
+const upsertAttempt = db.prepare(`
+  INSERT INTO login_attempts (ip, count, window_start) VALUES (?, ?, ?)
+  ON CONFLICT(ip) DO UPDATE SET count = excluded.count, window_start = excluded.window_start
+`);
+
+function loginLimiter(req, res, next) {
+  const ip = req.ip || 'unknown';
+  const now = Date.now();
+  const row = getAttempt.get(ip);
+
+  if (!row || now - row.window_start > LOGIN_WINDOW_MS) {
+    // پنجره‌ی زمانی تازه (یا اولین تلاش این آی‌پی)
+    upsertAttempt.run(ip, 1, now);
+    return next();
+  }
+
+  if (row.count >= LOGIN_MAX_ATTEMPTS) {
+    const waitMin = Math.ceil((LOGIN_WINDOW_MS - (now - row.window_start)) / 60000);
+    return res.status(429).render('admin/error', {
+      title: 'تعداد تلاش زیاد',
+      message: `تعداد تلاش‌های ناموفق زیاد بود. حدود ${toFaDigits(waitMin)} دقیقه‌ی دیگر دوباره امتحان کنید.`,
+    });
+  }
+
+  upsertAttempt.run(ip, row.count + 1, row.window_start);
+  return next();
+}
+
+module.exports = { requireLogin, csrf, loginLimiter };

@@ -3,11 +3,10 @@
 const express = require('express');
 const multer = require('multer');
 const bcrypt = require('bcryptjs');
-const rateLimit = require('express-rate-limit');
 
 const { db, getSetting, setSetting } = require('../db');
 const q = require('../db/queries');
-const { requireLogin, csrf } = require('../middleware/auth');
+const { requireLogin, csrf, loginLimiter } = require('../middleware/auth');
 const { processUpload, deleteImageFiles } = require('../services/images');
 const { slugify, uniqueSlug } = require('../utils/slug');
 
@@ -38,15 +37,6 @@ const upload = multer({
     if (/^image\/(jpe?g|png|webp|gif|avif|heic|heif)$/i.test(file.mimetype)) return cb(null, true);
     return cb(new Error('فقط فایل عکس (JPG, PNG, WebP) قابل آپلود است.'));
   },
-});
-
-// جلوگیری از حدس زدن رمز عبور: حداکثر ۱۰ تلاش ورود در ۱۵ دقیقه
-const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: 'تعداد تلاش‌های ناموفق زیاد بود. لطفاً ۱۵ دقیقه دیگر دوباره امتحان کنید.',
 });
 
 // ============================================================ ورود و خروج

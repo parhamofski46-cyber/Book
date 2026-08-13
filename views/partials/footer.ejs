@@ -89,4 +89,16 @@
   </a>
 </div>
 
+<!-- ============================================================
+     نمای بزرگ‌شده‌ی طرح — main.js محتوایش را پر می‌کند (دکمه‌های
+     data-zoom در گالری فرفورژه این را باز می‌کنند)
+     ============================================================ -->
+<div class="lightbox" id="lightbox" hidden>
+  <div class="lightbox-inner">
+    <button type="button" class="lightbox-close" id="lightbox-close" aria-label="بستن">✕</button>
+    <img id="lightbox-img" src="" alt="">
+    <p class="lightbox-caption" id="lightbox-caption"></p>
+  </div>
+</div>
+
 <script src="/js/main.js?v=<%= assetVersion.js %>" defer nonce="<%= nonce %>"></script>

@@ -89,6 +89,7 @@
   --z-header: 100;
   --z-toast: 120;
   --z-skip: 200;
+  --z-lightbox: 210;
 
   /* حداقل اندازه‌ی هدف لمسی طبق قواعد دسترسی‌پذیری */
   --tap: 44px;
@@ -950,6 +951,38 @@ p {
   aspect-ratio: 4 / 3;
   background: var(--bg-soft);
   overflow: hidden;
+}
+/* دکمه‌ی بزرگ‌نمایی — فقط در گالری فرفورژه؛ چون طرح گل و حلزونی‌ها ریزکاری
+   دارند و مشتری باید بتواند بدون رفتن به صفحه‌ی محصول، نمایی بزرگ‌تر ببیند.
+   z-index:2 آن را بالای .card-link (z-index:1) نگه می‌دارد، دقیقاً مثل
+   .card-foot — پس کلیک روی این دکمه به صفحه‌ی محصول نمی‌رود. */
+.zoom-btn {
+  position: absolute;
+  inset-inline-end: 0.5rem;
+  inset-block-end: 0.5rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(28, 28, 30, 0.62);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+.zoom-btn:hover,
+.zoom-btn:focus-visible {
+  background: rgba(28, 28, 30, 0.85);
+  transform: scale(1.08);
+}
+/* آیکون داخل دکمه با icon('search') ساخته می‌شود که fill-based است (نه stroke) */
+.zoom-btn .ico {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
 }
 .card-media img {
   width: 100%;
@@ -2636,5 +2669,74 @@ p {
   .switch input {
     width: 24px;
     height: 24px;
+  }
+}
+
+/* ==========================================================================
+   نمای بزرگ‌شده‌ی طرح (لایت‌باکس) — برای گالری فرفورژه
+   ==========================================================================
+   عمداً بدون هیچ کتابخانه‌ای؛ یک عنصر ثابت که main.js محتوایش را پر می‌کند.
+   چون تصویرسازی‌های گل و طرح، SVG (وکتور) هستند، در هر اندازه‌ای بدون
+   کیفیت‌افت نمایش داده می‌شوند — درست همان چیزی که برای دیدن جزئیات ریز
+   طرح لازم است. */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-lightbox);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem;
+  background: rgba(20, 18, 16, 0.86);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s;
+}
+.lightbox.show {
+  opacity: 1;
+  visibility: visible;
+}
+.lightbox-inner {
+  position: relative;
+  max-width: min(900px, 92vw);
+  max-height: 88vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.lightbox-inner img {
+  max-width: 100%;
+  max-height: 74vh;
+  width: auto;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+}
+.lightbox-caption {
+  margin-top: 0.9rem;
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+}
+.lightbox-close {
+  position: absolute;
+  top: -0.9rem;
+  inset-inline-end: -0.9rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: none;
+  background: #fff;
+  color: var(--ink);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+@media (max-width: 480px) {
+  .lightbox-close {
+    top: -0.5rem;
+    inset-inline-end: 0.2rem;
   }
 }

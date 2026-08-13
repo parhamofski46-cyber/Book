@@ -358,4 +358,63 @@
       });
     });
   })();
+
+  // ================================================ نمای بزرگ‌شده‌ی طرح
+  // دکمه‌ی «بزرگ‌نمایی» روی کارت‌های گالری فرفورژه (data-zoom) این را باز
+  // می‌کند؛ چون کل کارت با .card-link به صفحه‌ی محصول لینک است، این دکمه
+  // z-index بالاتری دارد تا کلیکش به‌جای رفتن به صفحه، لایت‌باکس را باز کند.
+  (function initLightbox() {
+    var box = $('lightbox');
+    var img = $('lightbox-img');
+    var caption = $('lightbox-caption');
+    var closeBtn = $('lightbox-close');
+    if (!box || !img || !closeBtn) return;
+
+    var lastTrigger = null;
+
+    function close() {
+      box.classList.remove('show');
+      box.hidden = true;
+      document.body.style.overflow = '';
+      if (lastTrigger) {
+        lastTrigger.focus();
+        lastTrigger = null;
+      }
+    }
+
+    function open(trigger) {
+      var src = trigger.getAttribute('data-zoom-src');
+      if (!src) return;
+      img.src = src;
+      img.alt = trigger.getAttribute('data-zoom-alt') || '';
+      if (caption) caption.textContent = trigger.getAttribute('data-zoom-caption') || '';
+      lastTrigger = trigger;
+      box.hidden = false;
+      // یک فریم صبر تا مرورگر hidden=false را اعمال کند، بعد transition اجرا شود
+      requestAnimationFrame(function () {
+        box.classList.add('show');
+      });
+      document.body.style.overflow = 'hidden';
+    }
+
+    bindOnce(document, 'click', 'zoomopen', function (e) {
+      var trigger = e.target.closest && e.target.closest('[data-zoom]');
+      if (trigger) {
+        e.preventDefault();
+        open(trigger);
+      }
+    });
+
+    closeBtn.addEventListener('click', close);
+
+    bindOnce(document, 'click', 'lightboxbackdrop', function (e) {
+      var box2 = $('lightbox');
+      if (box2 && !box2.hidden && e.target === box2) close();
+    });
+
+    bindOnce(document, 'keydown', 'lightboxesc', function (e) {
+      var box3 = $('lightbox');
+      if (box3 && !box3.hidden && e.key === 'Escape') close();
+    });
+  })();
 })();

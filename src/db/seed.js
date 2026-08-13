@@ -462,12 +462,20 @@ function migrateCatalog() {
  * فقط یک‌بار اجرا می‌شود (بر اساس content_fixes_version) تا اگر مدیر بعداً
  * دستی چیزی را عوض کرد، دوباره بازنویسی نشود.
  */
-const CONTENT_FIX_VERSION = '1';
+const CONTENT_FIX_VERSION = '2';
 
 function fixContent() {
   if (getSetting('content_fixes_version') === CONTENT_FIX_VERSION) return false;
 
   const run = db.transaction(() => {
+    // زیرنویس هیرو برای سئو («آهن‌فروشی گرگان»، «فروش قوطی و پروفیل») — فقط
+    // اگر هنوز مقدار پیش‌فرض قدیمی است دست می‌زنیم، تا متن سفارشی‌شده‌ی
+    // مدیر از پنل پاک نشود.
+    db.prepare(
+      `UPDATE settings SET value = 'آهن‌فروشی گرگان و علی‌آباد کتول — فروش قوطی و پروفیل و تولید ورق گالوانیزه'
+       WHERE key = 'hero_subtitle' AND value = 'تأمین‌کننده‌ی مصالح فلزی و فرفورژه در علی‌آباد کتول و گرگان'`
+    ).run();
+
     // «رابیتس» → «رابیس» (املایی که مشتری‌های خودمان به کار می‌برند)
     const ren = (table, col) =>
       db.prepare(`UPDATE ${table} SET ${col} = REPLACE(${col}, 'رابیتس', 'رابیس') WHERE ${col} LIKE '%رابیتس%'`).run();
@@ -568,7 +576,7 @@ function seedAdmin() {
 function seedSettings() {
   const defaults = {
     hero_title: 'گروه تولیدی صنعتی فولاد ایمان',
-    hero_subtitle: 'تأمین‌کننده‌ی مصالح فلزی و فرفورژه در علی‌آباد کتول و گرگان',
+    hero_subtitle: 'آهن‌فروشی گرگان و علی‌آباد کتول — فروش قوطی و پروفیل و تولید ورق گالوانیزه',
     hero_text:
       'تولید ورق گالوانیزه، بیش از ۱۰۰۰ مدل گل و طرح آماده‌ی فرفورژه، و هرچه از آهن‌آلات ' +
       'ساختمانی تا پیچ و یراق و عایق لازم دارید — یک‌جا، با قیمت روز.',

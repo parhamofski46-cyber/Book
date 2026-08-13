@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const { site } = require('../config/site');
+const { site, defaultMapEmbed } = require('../config/site');
 const { getSetting } = require('../db');
 const q = require('../db/queries');
 const { truncate } = require('../utils/view-helpers');
@@ -30,7 +30,7 @@ router.get('/', (req, res) => {
   const gridCategories = [...categories].sort((a, b) => b.is_featured - a.is_featured);
 
   res.render('public/home', {
-    title: `${site.name} | آهن‌آلات و فرفورژه در علی‌آباد کتول و گرگان`,
+    title: `آهن‌فروشی گرگان و علی‌آباد کتول | ${site.shortName}`,
     metaDescription: truncate(site.description),
     categories,
     gridCategories,
@@ -42,8 +42,6 @@ router.get('/', (req, res) => {
       subtitle: getSetting('hero_subtitle', site.tagline),
       text: getSetting('hero_text', ''),
     },
-    aboutText: getSetting('about_text', ''),
-    mapEmbed: getSetting('map_embed', ''),
     reviews: q.listTestimonials({ limit: 6 }),
     reviewSummary: q.testimonialSummary(),
     statCategoryCount: categories.length, // برای نوار آمار — عدد واقعی از دیتابیس
@@ -123,10 +121,10 @@ router.get('/forge', (req, res, next) => {
   const subs = q.listSubcategories(featured.id);
 
   res.render('public/forge', {
-    title: `بیش از ۱۰۰۰ مدل گل و طرح فرفورژه | درب، پنجره و نرده — علی‌آباد کتول و گرگان`,
+    title: `فرفورژه گرگان و علی‌آباد کتول | بیش از ۱۰۰۰ مدل گل و طرح — درب، پنجره و نرده`,
     metaDescription: truncate(
-      'گالری گل و طرح‌های آماده‌ی فرفورژه فولاد ایمان برای نرده، درب حیاط و حفاظ پنجره؛ ' +
-        'بیش از ۱۰۰۰ مدل موجود در انبار علی‌آباد کتول، آماده‌ی تحویل و ارسال به گرگان.'
+      'گالری فرفورژه گرگان و علی‌آباد کتول: گل و طرح‌های آماده‌ی فولاد ایمان برای نرده، درب ' +
+        'حیاط و حفاظ پنجره؛ بیش از ۱۰۰۰ مدل موجود در انبار، آماده‌ی تحویل و ارسال به گرگان.'
     ),
     category: featured,
     subcategories: subs.map((s) => ({
@@ -173,7 +171,7 @@ router.get('/about', (req, res) => {
         `و عرضه‌ی آهن‌آلات ساختمانی با ارسال به گرگان و سراسر گلستان. آدرس: ${site.address.full}.`
     ),
     aboutText: getSetting('about_text', ''),
-    mapEmbed: getSetting('map_embed', ''),
+    mapEmbed: getSetting('map_embed', '') || defaultMapEmbed(),
     statCategoryCount: q.listCategories().length,
   });
 });
@@ -203,7 +201,7 @@ router.get('/contact', (req, res) => {
     metaDescription: truncate(
       `شماره تماس و واتساپ ${site.name} برای استعلام قیمت آهن‌آلات و سفارش فرفورژه در علی‌آباد کتول و گرگان.`
     ),
-    mapEmbed: getSetting('map_embed', ''),
+    mapEmbed: getSetting('map_embed', '') || defaultMapEmbed(),
   });
 });
 
