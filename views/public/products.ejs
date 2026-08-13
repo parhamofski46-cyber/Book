@@ -122,7 +122,7 @@ if (category) {
       <% if (products.length) { %>
         <div class="product-grid">
           <% products.forEach(function (product, i) { %>
-            <%- include('../partials/product-card', { product: product, eager: i < 4 }) %>
+            <%- include('../partials/product-card', { product: product, eager: i < 4, hideCategory: !!category }) %>
           <% }); %>
         </div>
       <% } else { %>

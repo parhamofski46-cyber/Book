@@ -179,10 +179,22 @@ router.get('/product/:slug', (req, res, next) => {
   cachePublic(res);
   const images = q.listProductImages(product.id);
 
+  // نام دسته وقتی به عنوان صفحه اضافه می‌شود که خودِ نام محصول آن را نداشته
+  // باشد. مثلاً «قوطی ۴۰×۴۰» خودش گویاست، ولی گل‌های فرفورژه فقط کد دارند
+  // («کد ۱۰۱») و بدون نام دسته، نه مشتری می‌فهمد چیست نه گوگل.
+  // ⚠️ فقط با فاصله و ویرگول جدا می‌کنیم. یک‌بار «و» را هم جداکننده گذاشتیم
+  // و چون «و» داخل خودِ کلمه‌ها هم هست، «قوطی» به «ق» و «طی» تکه شد، هیچ‌کدام
+  // مطابقت نکردند و عنوان «قوطی قوطی ۴۰×۴۰» درآمد.
+  const catWords = String(product.category_name || '')
+    .split(/[\s،]+/)
+    .filter((w) => w.length > 2 && w !== 'و');
+  const nameHasCat = catWords.some((w) => product.name.includes(w));
+  const label = nameHasCat ? product.name : `${product.category_name} ${product.name}`;
+
   res.render('public/product', {
-    title: `${product.name} | قیمت و خرید در علی‌آباد کتول و گرگان — ${site.shortName}`,
+    title: `${label} | قیمت و خرید در علی‌آباد کتول و گرگان — ${site.shortName}`,
     metaDescription: truncate(
-      `${product.name} — ${product.summary || product.description} | فروش در علی‌آباد کتول و گرگان، ${site.name}.`
+      `${label} — ${product.summary || product.description} | فروش در علی‌آباد کتول و گرگان، ${site.name}.`
     ),
     product,
     images,

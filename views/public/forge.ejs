@@ -64,7 +64,7 @@
 
             <div class="product-grid big">
               <% sub.products.forEach(function (product, i) { %>
-                <%- include('../partials/product-card', { product: product, eager: i < 3, zoomable: true }) %>
+                <%- include('../partials/product-card', { product: product, eager: i < 3, zoomable: true, hideCategory: true }) %>
               <% }); %>
             </div>
           </section>
@@ -78,7 +78,7 @@
           </div>
           <div class="product-grid">
             <% others.forEach(function (product) { %>
-              <%- include('../partials/product-card', { product: product, zoomable: true }) %>
+              <%- include('../partials/product-card', { product: product, zoomable: true, hideCategory: true }) %>
             <% }); %>
           </div>
         </section>

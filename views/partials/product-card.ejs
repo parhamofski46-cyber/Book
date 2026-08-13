@@ -44,7 +44,12 @@ const zoomImg = zoomable ? h.productImage(product, 'large') : null;
     <% } %>
   </div>
   <div class="card-body">
-    <span class="card-cat"><%= product.category_name %></span>
+    <%# نام دسته وقتی نمایش داده می‌شود که کارت بین محصولات دسته‌های مختلف
+        باشد. داخل صفحه‌ی یک دسته، تکرارش روی همه‌ی کارت‌ها فقط شلوغی است —
+        صفحه‌ی فرفورژه با ۱۳ کارت، ۱۳ بار «گل و طرح‌های فرفورژه» می‌نوشت. %>
+    <% if (typeof hideCategory === 'undefined' || !hideCategory) { %>
+      <span class="card-cat"><%= product.category_name %></span>
+    <% } %>
     <h3 class="card-title"><%= product.name %></h3>
     <% if (product.summary) { %><p class="card-desc"><%= product.summary %></p><% } %>
     <div class="card-foot">
