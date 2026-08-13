@@ -61,7 +61,11 @@ const breadcrumbSchema = {
       <div class="product-layout">
         <!-- ---------------------------------------------- گالری عکس -->
         <div>
-          <div class="gallery-main <%= mainImg.isPlaceholder ? 'placeholder' : '' %>" id="gallery-main">
+          <%# عکس واقعی کالا کامل نشان داده می‌شود (contain)، نه بریده‌شده:
+              نسبت ابعاد عکس‌ها یکسان نیست و مثلاً ورق شیروانی عکس خیلی
+              پهنی دارد که با برش، دو سرش از کادر بیرون می‌ماند. در گرید
+              کارت‌ها برعکس، برش (cover) لازم است تا همه‌ی کارت‌ها هم‌قد باشند. %>
+          <div class="gallery-main <%= mainImg.isPlaceholder ? 'placeholder' : '' %> <%= mainImg.isPhoto ? 'photo' : '' %>" id="gallery-main">
             <img id="gallery-img"
                  src="<%= mainImg.src %>"
                  <% if (mainImg.srcset) { %>srcset="<%= mainImg.srcset %>" sizes="(max-width: 860px) 100vw, 560px"<% } %>

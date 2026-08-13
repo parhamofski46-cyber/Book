@@ -65,47 +65,59 @@ if (category) {
         </p>
       </div>
 
-      <!-- فیلتر دسته‌بندی -->
-      <div class="filters">
-        <a class="chip <%= category ? '' : 'active' %>" href="/products">همه</a>
-        <% categories.forEach(function (c) { %>
-          <a class="chip <%= category && category.id === c.id ? 'active' : '' %>"
-             href="/category/<%= encodeURIComponent(c.slug) %>">
-            <%= c.name %> <small><%= h.toFaDigits(c.product_count) %></small>
-          </a>
-        <% }); %>
-      </div>
-
-      <!-- فیلتر زیردسته (فقط وقتی دسته زیرشاخه دارد) -->
-      <% if (subcategories && subcategories.length) { %>
+      <!-- ============================================================
+           پنل فیلتر: دسته‌ها، زیردسته‌ها، منوی سایز قوطی و جست‌وجو همه
+           داخل یک کادر جمع شده‌اند تا صفحه به‌جای چند ردیف شناور، یک
+           «ناحیه‌ی انتخاب» مشخص و یک «ناحیه‌ی نتیجه» داشته باشد.
+           ============================================================ -->
+      <div class="filter-panel">
+        <!-- فیلتر دسته‌بندی -->
         <div class="filters">
-          <a class="chip <%= activeSub ? '' : 'active' %>"
-             href="/category/<%= encodeURIComponent(category.slug) %>">همه‌ی طرح‌ها</a>
-          <% subcategories.forEach(function (s) { %>
-            <a class="chip <%= activeSub === s.slug ? 'active' : '' %>"
-               href="/category/<%= encodeURIComponent(category.slug) %>?sub=<%= encodeURIComponent(s.slug) %>">
-              <%= s.name %>
+          <a class="chip <%= category ? '' : 'active' %>" href="/products">همه</a>
+          <% categories.forEach(function (c) { %>
+            <a class="chip <%= category && category.id === c.id ? 'active' : '' %>"
+               href="/category/<%= encodeURIComponent(c.slug) %>">
+              <%= c.name %> <small><%= h.toFaDigits(c.product_count) %></small>
             </a>
           <% }); %>
         </div>
-      <% } %>
 
-      <!-- جست‌وجو و فیلتر موجودی -->
-      <form class="toolbar" method="get"
-            action="<%= category ? '/category/' + encodeURIComponent(category.slug) : '/products' %>">
-        <% if (activeSub) { %><input type="hidden" name="sub" value="<%= activeSub %>"><% } %>
-        <label class="search-box">
-          <%- icon('search', '') %>
-          <span class="sr-only">جست‌وجو در محصولات</span>
-          <input type="search" name="q" value="<%= search %>" placeholder="جست‌وجو… مثلاً قوطی ۴۰">
-        </label>
-        <label class="switch">
-          <input type="checkbox" name="stock" value="1" <%= onlyInStock ? 'checked' : '' %> data-autosubmit>
-          فقط کالاهای موجود
-        </label>
-        <button class="btn btn-ghost btn-sm" type="submit">جست‌وجو</button>
-        <span class="result-count"><%= h.toFaDigits(products.length) %> محصول</span>
-      </form>
+        <!-- فیلتر زیردسته (فقط وقتی دسته زیرشاخه دارد) -->
+        <% if (subcategories && subcategories.length) { %>
+          <div class="filters filters-sub">
+            <a class="chip <%= activeSub ? '' : 'active' %>"
+               href="/category/<%= encodeURIComponent(category.slug) %>">همه</a>
+            <% subcategories.forEach(function (s) { %>
+              <a class="chip <%= activeSub === s.slug ? 'active' : '' %>"
+                 href="/category/<%= encodeURIComponent(category.slug) %>?sub=<%= encodeURIComponent(s.slug) %>">
+                <%= s.name %>
+              </a>
+            <% }); %>
+          </div>
+        <% } %>
+
+        <!-- منوی انتخاب سایز قوطی -->
+        <% if (typeof ghouti !== 'undefined' && ghouti) { %>
+          <%- include('../partials/size-menu', { ghouti: ghouti, openByDefault: !!category }) %>
+        <% } %>
+
+        <!-- جست‌وجو و فیلتر موجودی -->
+        <form class="toolbar" method="get"
+              action="<%= category ? '/category/' + encodeURIComponent(category.slug) : '/products' %>">
+          <% if (activeSub) { %><input type="hidden" name="sub" value="<%= activeSub %>"><% } %>
+          <label class="search-box">
+            <%- icon('search', '') %>
+            <span class="sr-only">جست‌وجو در محصولات</span>
+            <input type="search" name="q" value="<%= search %>" placeholder="جست‌وجو… مثلاً قوطی ۴۰">
+          </label>
+          <label class="switch">
+            <input type="checkbox" name="stock" value="1" <%= onlyInStock ? 'checked' : '' %> data-autosubmit>
+            فقط کالاهای موجود
+          </label>
+          <button class="btn btn-ghost btn-sm" type="submit">جست‌وجو</button>
+          <span class="result-count"><%= h.toFaDigits(products.length) %> محصول</span>
+        </form>
+      </div>
 
       <% if (products.length) { %>
         <div class="product-grid">

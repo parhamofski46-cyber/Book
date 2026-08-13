@@ -52,7 +52,10 @@ const PRODUCT_SELECT = `
          (SELECT basename FROM product_images i
            WHERE i.product_id = p.id ORDER BY i.sort_order, i.id LIMIT 1) AS image,
          (SELECT alt FROM product_images i
-           WHERE i.product_id = p.id ORDER BY i.sort_order, i.id LIMIT 1) AS image_alt
+           WHERE i.product_id = p.id ORDER BY i.sort_order, i.id LIMIT 1) AS image_alt,
+         -- عرض عکس اصلی: برای ساختن srcset با عرض‌های واقعی لازم است
+         (SELECT width FROM product_images i
+           WHERE i.product_id = p.id ORDER BY i.sort_order, i.id LIMIT 1) AS image_width
     FROM products p
     JOIN categories c    ON c.id = p.category_id
     LEFT JOIN subcategories s ON s.id = p.subcategory_id

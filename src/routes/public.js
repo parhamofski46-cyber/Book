@@ -55,6 +55,34 @@ router.get('/', (req, res) => {
  * آدرس تمیز (/category/قوطی) برای سئو خیلی بهتر از پارامتر پرس‌وجو
  * (/products?cat=قوطی) است؛ گوگل آن را یک صفحه‌ی مستقل با موضوع مشخص می‌بیند.
  */
+/**
+ * منوی «انتخاب سایز قوطی».
+ *
+ * قوطی تنها دسته‌ای است که مشتری معمولاً با یک سایز مشخص در ذهنش سراغش
+ * می‌آید («قوطی ۴۰×۴۰ داری؟»). به‌جای اینکه مجبور شود بین ۱۶ کارت بگردد،
+ * یک منوی جمع‌وجور می‌گیرد که مستقیم به صفحه‌ی همان سایز می‌رود.
+ *
+ * دسته با اسلاگ پیدا می‌شود؛ اگر مدیر دسته را حذف یا تغییرنام داده باشد،
+ * منو به‌جای خطا فقط نمایش داده نمی‌شود.
+ */
+function ghoutiSizeGroups() {
+  const cat = q.getCategoryBySlug('قوطی');
+  if (!cat) return null;
+
+  const products = q.listProducts({ category: cat.slug });
+  if (products.length < 2) return null;
+
+  const groups = q
+    .listSubcategories(cat.id)
+    .map((s) => ({ name: s.name, items: products.filter((p) => p.subcategory_id === s.id) }))
+    .filter((g) => g.items.length);
+
+  const loose = products.filter((p) => !p.subcategory_id);
+  if (loose.length) groups.push({ name: 'سایر سایزها', items: loose });
+
+  return { category: cat, groups, total: products.length };
+}
+
 function renderProductList(req, res, category) {
   cachePublic(res);
 
@@ -90,6 +118,14 @@ function renderProductList(req, res, category) {
     products,
     search,
     onlyInStock,
+    // منوی سایز فقط جایی نشان داده می‌شود که به کار می‌آید: فهرست کل
+    // محصولات و خود دسته‌ی قوطی. روی دسته‌های دیگر فقط شلوغی است.
+    ghouti: (() => {
+      const g = ghoutiSizeGroups();
+      if (!g) return null;
+      const relevant = !category || category.slug === g.category.slug;
+      return relevant ? g : null;
+    })(),
   });
 }
 

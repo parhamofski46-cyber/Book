@@ -37,7 +37,10 @@ npm run start:cluster    # اجرای چندپردازشی (تولید — clust
 npm run dev              # با ری‌استارت خودکار
 npm run seed             # ساخت داده‌های اولیه
 npm run reset-password   # بازنشانی رمز پنل
+npm run set-admin -- <کاربر> <رمز>   # تعیین نام کاربری و رمز پنل
 bash scripts/backup.sh   # پشتیبان‌گیری از دیتابیس و عکس‌ها
+bash scripts/auto-update.sh          # گرفتن نسخه‌ی جدید از گیت (روی سرور)
+node scripts/import-photos.js <کلید>=<فایل>   # افزودن عکس واقعی کالا
 curl localhost:3000/healthz   # بررسی سلامت
 ```
 
@@ -64,6 +67,7 @@ src/routes/public.js      صفحات عمومی + sitemap + robots
 src/routes/admin.js       پنل مدیریت (CRUD محصول/دسته/نظر/تنظیمات/رمز)
 src/services/images.js    پردازش عکس با sharp → سه سایز WebP
 src/utils/icons.js        آیکون‌های SVG + نگاشت دسته/محصول به تصویرسازی
+src/utils/photos.js       ⭐ نگاشت محصول → عکس واقعی (public/img/photos)
 src/utils/view-helpers.js توابع قالب (productImage، stockLabel، toFaDigits)
 views/partials/           head، هدر، فوتر، breadcrumb، کارت محصول، اسکیماها، بخش‌های صفحه
 views/public/             home · products · product · forge · about · reviews · contact · 404
@@ -72,6 +76,7 @@ public/css/style.css      کل استایل سایت (توکن‌محور)
 public/js/main.js         منو، انیمیشن، گالری، لیست استعلام
 public/img/cat/*.svg      تصویرسازی هر دسته
 public/img/prod/*.svg     تصویرسازی هر محصول (۲۶ مورد)
+public/img/photos/*.webp  ⭐ عکس واقعی کالاها، چندسایز — تحت گیت، با دیپلوی می‌رود
 data/shop.db              دیتابیس (در گیت نیست)
 public/uploads/           عکس‌های آپلودشده (در گیت نیست)
 ```
@@ -173,7 +178,27 @@ public/uploads/           عکس‌های آپلودشده (در گیت نیست
     `secure: 'auto'` (با `trust proxy` که از قبل تنظیم است) هم پشت نگینکس با
     HTTPS واقعی درست کار می‌کند، هم قبل از راه‌اندازی کامل HTTPS خراب نمی‌شود.
 
-16. **محدودیت تلاش ورود (rate limit) باید در دیتابیس باشد، نه در حافظه‌ی
+16. **عکس محصولات در `public/img/photos/` است، نه `public/uploads/`.**
+    پوشه‌ی uploads در `.gitignore` است (عکس‌های آپلودی مدیر روی سرور
+    می‌مانند)، پس اگر عکس پایه‌ی سایت آنجا گذاشته شود **با دیپلوی همراه
+    نمی‌رود و سایت روی سرور بی‌عکس بالا می‌آید**. عکس‌های پایه با
+    `scripts/import-photos.js` ساخته و در مسیر تحت گیت ذخیره می‌شوند.
+    ترتیب اولویت در `productImage()`: آپلود مدیر → عکس واقعی → SVG محصول →
+    SVG دسته.
+
+17. **`imageSrcset` باید عرض واقعی فایل را اعلام کند، نه عرض هدف را.**
+    چون با `withoutEnlargement` عکسی که اصلش ۵۰۰ پیکسل است در هر سه نسخه
+    ۵۰۰ می‌ماند؛ اگر «۱۶۰۰w» اعلام شود مرورگر همان فایل کوچک را برای جای
+    بزرگ برمی‌دارد و عکس تار می‌شود. برای همین `image_width` به پرس‌وجوی
+    محصولات اضافه شده است.
+
+18. **منوی سایز قوطی با `<details>/<summary>` ساخته شده، نه جاوااسکریپت.**
+    بدون JS کار می‌کند، با CSP سختگیر سایت مشکلی ندارد و با کیبورد و
+    صفحه‌خوان درست رفتار می‌کند. پیکانش عمداً با `border-right/bottom`
+    فیزیکی است نه `inline-end`، چون در چیدمان راست‌به‌چپ خاصیت منطقی آن را
+    به پهلو می‌چرخاند.
+
+19. **محدودیت تلاش ورود (rate limit) باید در دیتابیس باشد، نه در حافظه‌ی
     پردازش.** `express-rate-limit` با فروشگاه پیش‌فرضش (MemoryStore) روی
     `cluster.js` هر پردازش شمارنده‌ی جدای خودش را نگه می‌دارد — با ۴ پردازش،
     مهاجم عملاً ۴۰ تلاش می‌گرفت نه ۱۰ (در تست دقیق اندازه‌گیری شد: محدودیت تا

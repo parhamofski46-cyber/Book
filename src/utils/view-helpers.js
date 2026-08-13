@@ -3,6 +3,7 @@
 const { imageUrl, imageSrcset } = require('../services/images');
 const { toFaDigits } = require('./slug');
 const { categoryArtUrl, productArtUrl } = require('./icons');
+const { productPhoto } = require('./photos');
 
 /**
  * توابع کمکی که در قالب‌ها (EJS) استفاده می‌شوند.
@@ -26,29 +27,52 @@ function truncate(str, len = 155) {
 
 /**
  * اطلاعات عکس یک محصول برای نمایش در قالب.
- * اگر محصول هنوز عکس واقعی ندارد، به‌جای یک placeholder خاکستری یکسان،
- * تصویرسازی خطی اختصاصی دسته‌ی خودش نمایش داده می‌شود — هم گرید
- * «طراحی‌شده» به‌نظر می‌رسد، هم مشتری از روی تصویر می‌فهمد با چه دسته‌ای طرف است.
+ *
+ * ترتیب اولویت (اولین چیزی که موجود باشد استفاده می‌شود):
+ *   ۱) عکسی که مدیر از پنل برای همین محصول آپلود کرده — همیشه اولویت اول
+ *   ۲) عکس واقعی کالا از public/img/photos (همراه کد روی سرور می‌رود)
+ *   ۳) تصویرسازی خطی اختصاصی خود محصول
+ *   ۴) تصویرسازی خطی دسته
+ *
+ * یعنی مدیر هر وقت از انبار خودش عکس بهتری گرفت و آپلود کرد، بدون هیچ
+ * تغییری در کد جای عکس فعلی را می‌گیرد.
  */
 function productImage(product, size = 'medium') {
-  if (!product || !product.image) {
+  if (!product) {
+    return { src: '/img/cat/default.svg', srcset: '', alt: 'تصویر محصول', isPlaceholder: true, isArt: true };
+  }
+
+  // ۱) عکس آپلودی مدیر
+  if (product.image) {
     return {
-      src: product
-        ? productArtUrl(product.slug) || categoryArtUrl(product.category_name)
-        : '/img/cat/default.svg',
-      srcset: '',
-      alt: product
-        ? `${product.name} — ${product.category_name || ''} در فولاد ایمان، علی‌آباد کتول`
-        : 'تصویر محصول',
-      isPlaceholder: true,
-      isArt: true, // تصویرسازی است، نه عکس واقعی
+      src: imageUrl(product.image, size),
+      srcset: imageSrcset(product.image, product.image_width),
+      alt: product.image_alt || `${product.name} — فولاد ایمان، علی‌آباد کتول و گرگان`,
+      isPlaceholder: false,
+      isArt: false,
     };
   }
+
+  // ۲) عکس واقعی کالا
+  const photo = productPhoto(product);
+  if (photo) {
+    return {
+      src: photo.src,
+      srcset: photo.srcset,
+      alt: `${product.name} — ${product.category_name || ''} در فولاد ایمان، علی‌آباد کتول و گرگان`,
+      isPlaceholder: false,
+      isArt: false,
+      isPhoto: true,
+    };
+  }
+
+  // ۳ و ۴) تصویرسازی خطی
   return {
-    src: imageUrl(product.image, size),
-    srcset: imageSrcset(product.image),
-    alt: product.image_alt || `${product.name} — فولاد ایمان، علی‌آباد کتول و گرگان`,
-    isPlaceholder: false,
+    src: productArtUrl(product.slug) || categoryArtUrl(product.category_name),
+    srcset: '',
+    alt: `${product.name} — ${product.category_name || ''} در فولاد ایمان، علی‌آباد کتول`,
+    isPlaceholder: true,
+    isArt: true, // تصویرسازی است، نه عکس واقعی
   };
 }
 

@@ -86,12 +86,30 @@ function imageUrl(basename, size = 'medium') {
   return `/uploads/${basename}-${size}.webp`;
 }
 
-/** رشته‌ی srcset برای واکنش‌گرا بودن عکس‌ها */
-function imageSrcset(basename) {
+/**
+ * رشته‌ی srcset برای واکنش‌گرا بودن عکس‌ها.
+ *
+ * @param {string} basename نام پایه‌ی فایل
+ * @param {number} [originalWidth] عرض عکس اصلی (ستون width در product_images)
+ *
+ * ⚠️ چرا originalWidth مهم است: هنگام ساخت نسخه‌ها از withoutEnlargement
+ * استفاده می‌شود، یعنی عکسی که اصلش ۵۰۰ پیکسل است در هر سه نسخه ۵۰۰ پیکسل
+ * می‌ماند. اگر بدون توجه به این موضوع در srcset بنویسیم «۱۶۰۰w»، مرورگر
+ * باور می‌کند فایل ۱۶۰۰ پیکسلی در دست دارد، آن را برای جای بزرگ انتخاب
+ * می‌کند و نتیجه یک عکس تارِ کش‌آمده است. با دانستن عرض اصلی، عرض واقعی هر
+ * نسخه min(اندازه‌ی هدف، عرض اصلی) است و نسخه‌های تکراری هم حذف می‌شوند.
+ */
+function imageSrcset(basename, originalWidth) {
   if (!basename) return '';
-  return Object.entries(SIZES)
-    .map(([label, width]) => `${imageUrl(basename, label)} ${width}w`)
-    .join(', ');
+  const seen = new Set();
+  const parts = [];
+  for (const [label, target] of Object.entries(SIZES)) {
+    const actual = originalWidth ? Math.min(target, originalWidth) : target;
+    if (seen.has(actual)) continue; // نسخه‌ی هم‌عرض تکراری به مرورگر ندهیم
+    seen.add(actual);
+    parts.push(`${imageUrl(basename, label)} ${actual}w`);
+  }
+  return parts.join(', ');
 }
 
 module.exports = { processUpload, deleteImageFiles, imageUrl, imageSrcset, UPLOAD_DIR, SIZES };

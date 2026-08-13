@@ -1,0 +1,47 @@
+<%
+/**
+ * منوی بازشوی «انتخاب سایز قوطی».
+ *
+ * عمداً با <details>/<summary> ساخته شده، نه جاوااسکریپت:
+ *  • بدون هیچ کد جاوااسکریپتی باز و بسته می‌شود، پس حتی اگر main.js دیر
+ *    برسد یا اصلاً لود نشود، کار می‌کند
+ *  • با سیاست امنیتی سختگیر سایت (CSP) هیچ مشکلی ندارد
+ *  • با کیبورد و صفحه‌خوان از خودش درست رفتار می‌کند، بدون aria اضافه
+ *
+ * ورودی: ghouti = { category, groups: [{name, items}], total }
+ *        openByDefault (اختیاری) — در صفحه‌ی خود دسته‌ی قوطی باز باشد
+ */
+const open = typeof openByDefault !== 'undefined' && openByDefault;
+%>
+<details class="size-menu"<%= open ? ' open' : '' %>>
+  <summary>
+    <span class="sm-ico"><%- icon('tube') %></span>
+    <span class="sm-text">
+      <b>انتخاب سایز قوطی</b>
+      <small>مستقیم به صفحه‌ی سایزی که می‌خواهید بروید</small>
+    </span>
+    <span class="sm-count"><%= h.toFaDigits(ghouti.total) %> سایز</span>
+  </summary>
+
+  <div class="sm-body">
+    <% ghouti.groups.forEach(function (g) { %>
+      <div class="sm-group">
+        <h3><%= g.name %></h3>
+        <div class="sm-links">
+          <% g.items.forEach(function (p) { %>
+            <a class="sm-size <%= p.in_stock ? '' : 'is-out' %>"
+               href="/product/<%= encodeURIComponent(p.slug) %>">
+              <%= p.name.replace(/^قوطی\s*/, '') %>
+              <% if (!p.in_stock) { %><span class="sr-only"> — ناموجود</span><% } %>
+            </a>
+          <% }); %>
+        </div>
+      </div>
+    <% }); %>
+    <p class="sm-note">
+      <%- icon('info') %>
+      ضخامت در نام سایز نیامده چون هر سایز در چند ضخامت موجود است؛
+      ضخامت و قیمت روز را در واتساپ بپرسید.
+    </p>
+  </div>
+</details>

@@ -122,13 +122,60 @@ echo "▸ پشتیبان‌گیری خودکار شبانه…"
 CRON="0 3 * * * cd $APP_DIR && bash scripts/backup.sh >> logs/backup.log 2>&1"
 ( crontab -u "$APP_USER" -l 2>/dev/null | grep -v 'scripts/backup.sh' ; echo "$CRON" ) | crontab -u "$APP_USER" -
 
+# --------------------------------------------------------- کاربر مدیر
+# اگر موقع اجرای این اسکریپت نام کاربری و رمز داده شده باشد، همان اعمال
+# می‌شود و رمز هیچ‌جا در فایلی ذخیره نمی‌ماند:
+#   ADMIN_USERNAME=parham ADMIN_PASSWORD='رمز-شما' bash scripts/deploy-setup.sh دامنه.ir
+if [ -n "${ADMIN_USERNAME:-}" ] && [ -n "${ADMIN_PASSWORD:-}" ]; then
+  echo "▸ تنظیم کاربر مدیر…"
+  sudo -u "$APP_USER" node "$APP_DIR/scripts/set-admin.js" "$ADMIN_USERNAME" "$ADMIN_PASSWORD"
+fi
+
+# ------------------------------------------- به‌روزرسانی خودکار از گیت‌هاب
+echo "▸ راه‌اندازی به‌روزرسانی خودکار…"
+# گیت وقتی پوشه مال کاربر دیگری باشد و با root اجرا شود شکایت می‌کند
+git config --global --add safe.directory "$APP_DIR" 2>/dev/null || true
+
+cat > /etc/systemd/system/fooladiman-update.service <<UPD
+[Unit]
+Description=Foolad Iman — auto update from git
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=$APP_DIR
+ExecStart=/usr/bin/env bash $APP_DIR/scripts/auto-update.sh
+UPD
+
+cat > /etc/systemd/system/fooladiman-update.timer <<UPT
+[Unit]
+Description=Foolad Iman — check for updates every few minutes
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=3min
+AccuracySec=30s
+
+[Install]
+WantedBy=timers.target
+UPT
+
+systemctl daemon-reload
+systemctl enable --now fooladiman-update.timer
+echo "  هر ۳ دقیقه تغییرات گیت‌هاب بررسی می‌شود ✓"
+
 echo
 echo "════════════════════════════════════════════"
 echo " ✅ نصب تمام شد"
 echo "   سایت:        https://$DOMAIN"
 echo "   پنل مدیریت:  https://$DOMAIN/admin"
-echo "   کاربر پیش‌فرض: admin / foolad1234"
-echo "   ⚠️  در اولین ورود، سایت رمز را از شما عوض می‌کند."
+if [ -n "${ADMIN_USERNAME:-}" ] && [ -n "${ADMIN_PASSWORD:-}" ]; then
+  echo "   کاربر مدیر:   $ADMIN_USERNAME (رمزی که خودتان دادید)"
+else
+  echo "   کاربر پیش‌فرض: admin / foolad1234"
+  echo "   ⚠️  در اولین ورود، سایت رمز را از شما عوض می‌کند."
+  echo "   یا همین حالا: npm run set-admin -- <نام‌کاربری> <رمز>"
+fi
 echo
 echo " دستورهای مفید:"
 echo "   systemctl status fooladiman     وضعیت سایت"
