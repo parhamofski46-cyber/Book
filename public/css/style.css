@@ -2944,3 +2944,30 @@ p {
   margin-top: 0.35em;
   fill: var(--copper);
 }
+
+/* حالت خالی صفحه‌ی نظرات — تا وقتی نظر واقعی ثبت نشده.
+   عمداً وجود دارد: نظر ساختگی نمی‌سازیم، پس این حالت باید محترمانه و
+   توضیح‌دهنده باشد، نه یک خط خشکِ «چیزی نیست». */
+.empty-reviews {
+  max-width: 46ch;
+  margin: 0 auto;
+  text-align: center;
+  padding: clamp(1.5rem, 4vw, 2.5rem) 1.2rem;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-soft, transparent);
+}
+.empty-reviews .lead {
+  font-weight: 800;
+  font-size: 1.05rem;
+  margin-bottom: 0.6rem;
+}
+.empty-reviews p {
+  color: var(--ink-faint);
+  line-height: 2;
+  margin: 0.3rem 0;
+}
+.empty-reviews .hint {
+  margin-top: 0.9rem;
+  font-size: 0.9rem;
+}
