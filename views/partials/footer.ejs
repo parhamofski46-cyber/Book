@@ -45,6 +45,11 @@
     <div class="footer-bottom">
       <span>© <%= h.toFaDigits(new Date().toLocaleDateString('fa-IR-u-nu-latn', { year: 'numeric' })) %> — تمام حقوق برای <%= site.name %> محفوظ است.</span>
       <span>ساخته‌شده برای علی‌آباد کتول و گرگان</span>
+      <%# ورود مدیر. عمداً فقط یک لینک ساده به صفحه‌ی ورود است و هیچ نام کاربری
+          یا رمزی اینجا نوشته نمی‌شود — این صفحه برای همه‌ی دنیا قابل دیدن است. %>
+      <a class="admin-link" href="/admin" rel="nofollow">
+        <%- icon('lock') %> ورود مدیر
+      </a>
     </div>
   </div>
 </footer>

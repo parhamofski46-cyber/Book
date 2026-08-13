@@ -2971,3 +2971,26 @@ p {
   margin-top: 0.9rem;
   font-size: 0.9rem;
 }
+
+/* لینک ورود مدیر در فوتر.
+   عمداً کم‌رنگ و کوچک است: برای مالک سایت لازم است ولی نباید توجه مشتری را
+   بگیرد. هیچ نام کاربری/رمزی کنارش نوشته نمی‌شود — صفحه عمومی است. */
+.admin-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--ink-faint);
+  font-size: 0.82rem;
+  opacity: 0.75;
+  min-height: var(--tap);
+  padding-inline: 0.2rem;
+}
+.admin-link:hover,
+.admin-link:focus-visible {
+  color: var(--copper, var(--ink));
+  opacity: 1;
+}
+.admin-link .ico {
+  width: 14px;
+  height: 14px;
+}

@@ -5,8 +5,14 @@
 <meta name="theme-color" content="#a8431a">
 <link rel="canonical" href="<%= canonical %>">
 
-<!-- فونت اصلی از قبل بارگذاری می‌شود تا متن بدون تأخیر نمایش داده شود -->
+<!-- فونت‌ها از قبل بارگذاری می‌شوند تا متن بدون تأخیر نمایش داده شود.
+     هر دو وزن لازم‌اند: Regular برای متن، و Bold که بیشترین استفاده را دارد
+     (عنوان‌ها، دکمه‌ها، قیمت‌ها). قبلاً فقط Regular preload می‌شد و متن‌های
+     درشت با تأخیر و یک پرش کوتاه جایگزین می‌شدند.
+     وزن Black عمداً preload نمی‌شود: فقط چند عنوان از آن استفاده می‌کنند و
+     اضافه‌کردنش ۳۲ کیلوبایت دیگر را به مسیر بحرانی می‌آورد. -->
 <link rel="preload" href="/fonts/Vazirmatn-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Vazirmatn-Bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/style.css?v=<%= assetVersion.css %>">
 <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/img/favicon.svg">
