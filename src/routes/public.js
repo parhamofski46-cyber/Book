@@ -5,6 +5,7 @@ const { site, defaultMapEmbed } = require('../config/site');
 const { getSetting } = require('../db');
 const q = require('../db/queries');
 const { truncate } = require('../utils/view-helpers');
+const articles = require('../content/articles');
 
 const router = express.Router();
 
@@ -191,6 +192,46 @@ router.get('/calculator', (req, res) => {
   });
 });
 
+// ------------------------------------------------------------------ مقالات
+/**
+ * مقاله‌ها از فایل خوانده می‌شوند (src/content/articles.js)، نه از دیتابیس.
+ * دلیلش در همان فایل توضیح داده شده: متن‌های بلندِ کم‌تغییر که باید زیر گیت
+ * بمانند و با هر دیپلوی همراه بروند.
+ */
+router.get('/blog', (req, res) => {
+  cachePublic(res, 900);
+  res.render('public/blog', {
+    title: 'مقالات آهن‌آلات و مصالح | راهنمای خرید و اجرا — فولاد ایمان',
+    metaDescription: truncate(
+      'راهنمای خرید و اجرا: وزن و سایز قوطی و پروفیل، رابیس و سقف کاذب، ورق گالوانیزه ' +
+        'و شیروانی، عایق، ایزوگام، فنس و فرفورژه. نوشته‌ی فولاد ایمان، علی‌آباد کتول.'
+    ),
+    articles: articles.listArticles(),
+  });
+});
+
+router.get('/blog/:slug', (req, res, next) => {
+  const article = articles.getArticle(req.params.slug);
+  if (!article) return next();
+
+  cachePublic(res, 900);
+
+  // محصولات مرتبط از روی دسته‌هایی که مقاله به آن‌ها اشاره کرده
+  const relatedProducts = [];
+  (article.related || []).forEach((slug) => {
+    const cat = q.getCategoryBySlug(slug);
+    if (cat) relatedProducts.push(...q.listProducts({ category: cat.slug, limit: 3 }));
+  });
+
+  res.render('public/article', {
+    title: `${article.title} — ${site.shortName}`,
+    metaDescription: truncate(article.excerpt),
+    article,
+    related: articles.relatedArticles(article),
+    relatedProducts: relatedProducts.slice(0, 6),
+  });
+});
+
 // ------------------------------------------------------ صفحه‌ی جزئیات محصول
 router.get('/product/:slug', (req, res, next) => {
   const product = q.getProductBySlug(req.params.slug);
@@ -280,11 +321,19 @@ router.get('/sitemap.xml', (req, res) => {
     { loc: '/products', priority: '0.9', changefreq: 'weekly' },
     { loc: '/forge', priority: '0.9', changefreq: 'weekly' },
     { loc: '/calculator', priority: '0.8', changefreq: 'monthly' },
+    { loc: '/blog', priority: '0.8', changefreq: 'weekly' },
     { loc: '/about', priority: '0.7', changefreq: 'monthly' },
     { loc: '/reviews', priority: '0.7', changefreq: 'monthly' },
     { loc: '/contact', priority: '0.6', changefreq: 'monthly' },
   ];
 
+  for (const a of articles.listArticles()) {
+    urls.push({
+      loc: `/blog/${encodeURIComponent(a.slug)}`,
+      priority: '0.7',
+      changefreq: 'monthly',
+    });
+  }
   for (const c of q.listCategories()) {
     urls.push({
       loc: `/category/${encodeURIComponent(c.slug)}`,

@@ -1,0 +1,44 @@
+<%
+/**
+ * رندر بدنه‌ی مقاله از روی بلوک‌های ساختاریافته.
+ *
+ * چرا بلوک و نه HTML خام: متن مقاله‌ها داده است، نه قالب. با بلوک، تایپوگرافی
+ * همه‌ی مقاله‌ها یکدست می‌ماند و هیچ راهی برای تزریق HTML ناخواسته باز
+ * نمی‌شود، چون همه‌ی متن‌ها با تگ escape-کننده چاپ می‌شوند نه با تگ خام.
+ *
+ * ⚠️ داخل بلوک EJS هرگز رشته‌ی پایان‌بند را ننویس (حتی داخل کامنت). یک‌بار
+ * در همین توضیح، نمونه‌ی تگ EJS را عیناً نوشتیم و موتور قالب بلوک را همان‌جا
+ * بسته حساب کرد؛ نتیجه‌اش خطای «Could not find matching close tag» و ۵۰۰
+ * شدن همه‌ی صفحه‌های مقاله بود.
+ */
+%>
+<% blocks.forEach(function (b) { %>
+  <% if (b.t === 'h2') { %>
+    <h2 id="<%= String(b.x).replace(/\s+/g, '-') %>"><%= b.x %></h2>
+  <% } else if (b.t === 'h3') { %>
+    <h3><%= b.x %></h3>
+  <% } else if (b.t === 'p') { %>
+    <p><%= b.x %></p>
+  <% } else if (b.t === 'ul') { %>
+    <ul><% b.x.forEach(function (i) { %><li><%= i %></li><% }); %></ul>
+  <% } else if (b.t === 'ol') { %>
+    <ol><% b.x.forEach(function (i) { %><li><%= i %></li><% }); %></ol>
+  <% } else if (b.t === 'note') { %>
+    <aside class="article-note"><%= b.x %></aside>
+  <% } else if (b.t === 'table') { %>
+    <%# جدول‌ها روی گوشی باید داخل خودشان اسکرول بخورند، وگرنه کل صفحه
+        اسکرول افقی می‌گیرد — همان باگی که قبلاً در سایت رفع شد. %>
+    <div class="table-scroll">
+      <table class="article-table">
+        <thead>
+          <tr><% b.head.forEach(function (h) { %><th><%= h %></th><% }); %></tr>
+        </thead>
+        <tbody>
+          <% b.rows.forEach(function (r) { %>
+            <tr><% r.forEach(function (c) { %><td><%= c %></td><% }); %></tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+<% }); %>
