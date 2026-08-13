@@ -24,7 +24,23 @@ const sharp = require('sharp');
  * که مدیر آپلود کرده با اولین به‌روزرسانی از بین می‌روند.
  */
 const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(__dirname, '..', '..', 'public', 'uploads');
-fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+
+try {
+  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+} catch (err) {
+  // همان دلیل DATA_DIR در src/db/index.js: روی سرویس‌های ابری، مسیرهای
+  // خارج از دیسک متصل‌شده قابل نوشتن نیستند. اینجا برنامه را نمی‌کشیم (خود
+  // سایت بدون آپلود عکس هم کار می‌کند)، فقط واضح در لاگ می‌گوییم چرا آپلود
+  // عکس کار نخواهد کرد.
+  console.error(
+    `\n⚠️  نوشتن در پوشه‌ی عکس‌های آپلودی (${UPLOAD_DIR}) ممکن نشد: ${err.message}\n` +
+      (process.env.UPLOAD_DIR
+        ? '   بررسی کنید دیسکی که به این مسیر وصل کرده‌اید واقعاً متصل و قابل‌نوشتن است.\n'
+        : '   متغیر محیطی UPLOAD_DIR تنظیم نشده — روی سرویس‌های ابری باید یک «دیسک»\n' +
+          '   بسازید و مسیرش را در UPLOAD_DIR بدهید. راهنمای کامل: LIARA.md\n' +
+          '   تا آن موقع، آپلود عکس از پنل کار نمی‌کند؛ بقیه‌ی سایت مشکلی ندارد.\n')
+  );
+}
 
 // سایزهای تولیدی (عرض بر حسب پیکسل)
 const SIZES = {

@@ -11,7 +11,26 @@ const Database = require('better-sqlite3');
  */
 
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', '..', 'data');
-fs.mkdirSync(DATA_DIR, { recursive: true });
+
+try {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+} catch (err) {
+  // روی سرویس‌های ابری (لیارا و مانند آن)، ریشه‌ی برنامه معمولاً فقط-خواندنی
+  // است و فقط مسیرهایی که به یک «دیسک» متصل شده‌اند قابل نوشتن‌اند. اگر
+  // DATA_DIR تنظیم نشده باشد، این خط با یک خطای مبهم (ENOENT/EACCES/EROFS)
+  // کل برنامه را می‌کشد و کاربر فقط یک stack trace فنی می‌بیند، نه راه‌حل.
+  const usingDefault = !process.env.DATA_DIR;
+  console.error(
+    `\n✋ نوشتن در پوشه‌ی داده (${DATA_DIR}) ممکن نشد: ${err.message}\n` +
+      (usingDefault
+        ? '   متغیر محیطی DATA_DIR تنظیم نشده — روی سرویس‌های ابری (لیارا و مانند\n' +
+          '   آن) باید یک «دیسک» بسازید و مسیرش را در DATA_DIR بدهید؛ ریشه‌ی\n' +
+          '   برنامه روی این سرویس‌ها فقط-خواندنی است. راهنمای کامل: LIARA.md\n'
+        : '   بررسی کنید دیسکی که به این مسیر وصل کرده‌اید واقعاً متصل و قابل‌نوشتن\n' +
+          '   است.\n')
+  );
+  process.exit(1);
+}
 
 const DB_PATH = path.join(DATA_DIR, 'shop.db');
 const db = new Database(DB_PATH);
