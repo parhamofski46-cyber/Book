@@ -10,7 +10,7 @@
       "mountTo": "db"
     },
     {
-      "name": "uploads",
+      "name": "upload",
       "mountTo": "user-uploads"
     }
   ]
