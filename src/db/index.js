@@ -28,6 +28,36 @@ const PREFERRED_DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', '.
  * و به‌صورت یک نوار قرمز در پنل مدیریت اعلام می‌شود تا از چشم مالک پنهان
  * نماند. راه‌حل درست همیشه ساختن دیسک است (LIARA.md).
  */
+/**
+ * وقتی ساختن پوشه شکست می‌خورد، حدس زدن علتش از روی یک پیام ENOENT ممکن
+ * نیست: نمی‌دانیم دیسک اصلاً mount نشده، یا mount شده ولی جای دیگری.
+ * این تابع واقعیت فایل‌سیستم را گزارش می‌کند تا از روی لاگ بشود فهمید
+ * دیسک کجاست — بدون نیاز به کنسول و SSH.
+ */
+function diagnose(target) {
+  const lines = [];
+  const parent = path.dirname(target);
+  try {
+    fs.accessSync(parent);
+    let entries;
+    try {
+      entries = fs.readdirSync(parent).slice(0, 25).join('، ') || '(خالی)';
+    } catch (e) {
+      entries = `(خواندنش ممکن نشد: ${e.code})`;
+    }
+    lines.push(`پوشه‌ی والد «${parent}» هست و شامل: ${entries}`);
+    try {
+      fs.accessSync(parent, fs.constants.W_OK);
+      lines.push(`«${parent}» قابل نوشتن است.`);
+    } catch (e) {
+      lines.push(`«${parent}» قابل نوشتن نیست (${e.code}).`);
+    }
+  } catch (e) {
+    lines.push(`پوشه‌ی والد «${parent}» اصلاً وجود ندارد (${e.code}) — یعنی دیسک اینجا mount نشده.`);
+  }
+  return lines;
+}
+
 function pickDataDir() {
   try {
     fs.mkdirSync(PREFERRED_DATA_DIR, { recursive: true });
@@ -67,7 +97,20 @@ const STORAGE_WARNING = picked.temporary
   : null;
 
 if (STORAGE_WARNING) {
-  console.error(`\n⚠️  ${STORAGE_WARNING}\n   سایت بالا می‌آید و کار می‌کند، ولی این وضعیت موقتی است.\n`);
+  console.error(`\n⚠️  ${STORAGE_WARNING}\n   سایت بالا می‌آید و کار می‌کند، ولی این وضعیت موقتی است.`);
+  // گزارش وضعیت واقعی فایل‌سیستم، برای اینکه از روی همین لاگ بشود فهمید
+  // دیسک ساخته‌شده کجا mount شده است.
+  console.error('   ── تشخیص خودکار ──');
+  for (const line of diagnose(PREFERRED_DATA_DIR)) console.error(`   ${line}`);
+  // ریشه‌ی برنامه را هم فهرست می‌کنیم: روی لیارا دیسک‌ها معمولاً داخل /app
+  // سوار می‌شوند، پس نام پوشه‌های آنجا می‌گوید دیسک واقعاً کجا رفته.
+  const appRoot = path.join(__dirname, '..', '..');
+  try {
+    console.error(`   محتوای ریشه‌ی برنامه «${appRoot}»: ${fs.readdirSync(appRoot).slice(0, 30).join('، ')}`);
+  } catch (e) {
+    console.error(`   ریشه‌ی برنامه خوانده نشد: ${e.code}`);
+  }
+  console.error('');
 }
 
 const DB_PATH = path.join(DATA_DIR, 'shop.db');
