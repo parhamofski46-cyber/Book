@@ -55,6 +55,7 @@ const ASSET_VERSION = {
   css: assetHash('css/style.css'),
   js: assetHash('js/main.js'),
   admin: assetHash('css/admin.css'),
+  calc: assetHash('js/calc.js'),
 };
 
 // وقتی پشت nginx / لیارا / آروان و ... اجرا می‌شود، آی‌پی و https درست تشخیص داده شود

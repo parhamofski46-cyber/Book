@@ -171,6 +171,26 @@ router.get('/forge', (req, res, next) => {
   });
 });
 
+// ------------------------------------------------- محاسبه‌گر وزن آهن
+/**
+ * صفحه‌ی محاسبه‌ی وزن مقاطع فولادی.
+ *
+ * کاملاً سمت مرورگر حساب می‌شود (public/js/calc.js) و هیچ داده‌ای از سرور
+ * نمی‌خواهد، پس اینجا فقط قالب رندر می‌شود. برای سئو ارزش زیادی دارد:
+ * «وزن قوطی»، «محاسبه وزن آهن» و مانند آن‌ها جست‌وجوی پرحجم‌اند و مشتری را
+ * درست سر بزنگاهِ تصمیم خرید به سایت می‌آورند.
+ */
+router.get('/calculator', (req, res) => {
+  cachePublic(res);
+  res.render('public/calculator', {
+    title: 'محاسبه‌گر وزن آهن | وزن قوطی، نبشی، لوله، میلگرد و ورق — فولاد ایمان',
+    metaDescription: truncate(
+      'محاسبه‌ی آنلاین وزن آهن: قوطی، نبشی، لوله، میلگرد، تسمه و ورق. ابعاد را وارد کنید ' +
+        'تا وزن هر شاخه و وزن کل بار را ببینید. فولاد ایمان، علی‌آباد کتول و گرگان.'
+    ),
+  });
+});
+
 // ------------------------------------------------------ صفحه‌ی جزئیات محصول
 router.get('/product/:slug', (req, res, next) => {
   const product = q.getProductBySlug(req.params.slug);
@@ -259,6 +279,7 @@ router.get('/sitemap.xml', (req, res) => {
     { loc: '/', priority: '1.0', changefreq: 'weekly' },
     { loc: '/products', priority: '0.9', changefreq: 'weekly' },
     { loc: '/forge', priority: '0.9', changefreq: 'weekly' },
+    { loc: '/calculator', priority: '0.8', changefreq: 'monthly' },
     { loc: '/about', priority: '0.7', changefreq: 'monthly' },
     { loc: '/reviews', priority: '0.7', changefreq: 'monthly' },
     { loc: '/contact', priority: '0.6', changefreq: 'monthly' },
