@@ -83,6 +83,7 @@ function categoryIcon(name) {
   if (/ایزوگام|قیر|عایق|پشم|فوم/.test(n)) return 'roll';
   if (/میلگرد|تیرآهن/.test(n)) return 'layers';
   if (/گل|طرح/.test(n)) return 'scroll';
+  if (/ابزار|مصالح|متفرقه|الکترود|چوب/.test(n)) return 'wrench';
   return 'box';
 }
 
@@ -103,6 +104,7 @@ function categoryArt(name) {
   if (/فنس|حصار|توری|تور/.test(n)) return 'fence';
   if (/ایزوگام|قیر|عایق|پشم|فوم/.test(n)) return 'izogam';
   if (/گل|طرح/.test(n)) return 'ferforzhe';
+  if (/ابزار|مصالح|متفرقه|الکترود|چوب/.test(n)) return 'abzar';
   return 'default';
 }
 

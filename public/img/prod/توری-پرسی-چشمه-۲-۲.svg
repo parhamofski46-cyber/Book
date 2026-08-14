@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img">
+  <defs>
+    <pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0v20" fill="none" stroke="#A8431A" stroke-width=".5" opacity=".07"/>
+    </pattern>
+    <radialGradient id="glow" cx="78%" cy="18%" r="70%">
+      <stop offset="0" stop-color="#C0763C" stop-opacity=".16"/>
+      <stop offset="1" stop-color="#C0763C" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="300" fill="#FBF7F3"/>
+  <rect width="400" height="300" fill="url(#g)"/>
+  <rect width="400" height="300" fill="url(#glow)"/>
+  <g fill="none" stroke="#A8431A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+
+    <path d="M96.0 74 V226 M112.0 74 V226 M128.0 74 V226 M144.0 74 V226 M160.0 74 V226 M176.0 74 V226 M192.0 74 V226 M208.0 74 V226 M224.0 74 V226 M240.0 74 V226 M256.0 74 V226 M272.0 74 V226 M288.0 74 V226 M304.0 74 V226 M96 74.0 H304 M96 90.0 H304 M96 106.0 H304 M96 122.0 H304 M96 138.0 H304 M96 154.0 H304 M96 170.0 H304 M96 186.0 H304 M96 202.0 H304 M96 218.0 H304" stroke="#C0763C" stroke-width="1.9"/>
+    <rect x="96" y="74" width="208" height="152" rx="2"/>
+    <path d="M96 244 H304" stroke="#C0763C" stroke-width="1.6" opacity=".55"/>
+    <path d="M96 238v12M304 238v12" stroke="#C0763C" stroke-width="1.6" opacity=".55"/>
+  </g>
+</svg>
