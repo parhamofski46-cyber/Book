@@ -19,7 +19,7 @@ const zoomImg = zoomable ? h.productImage(product, 'large') : null;
     <span class="sr-only"><%= product.name %></span>
   </a>
 
-  <div class="card-media <%= img.isPlaceholder ? 'placeholder' : '' %>">
+  <div class="card-media <%= img.isPlaceholder ? 'placeholder' : '' %> <%= img.isCutout ? 'cutout' : '' %>">
     <img
       src="<%= img.src %>"
       <% if (img.srcset) { %>srcset="<%= img.srcset %>" sizes="(max-width: 560px) 45vw, (max-width: 900px) 30vw, 260px"<% } %>

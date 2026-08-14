@@ -88,10 +88,45 @@ function listProducts(opts = {}) {
   const sql = `${PRODUCT_SELECT}
     ${where.length ? `WHERE ${where.join(' AND ')}` : ''}
     ORDER BY p.in_stock DESC, p.sort_order, p.id DESC
-    ${opts.limit ? 'LIMIT @limit' : ''}`;
+    ${opts.limit ? 'LIMIT @limit' : ''}
+    ${opts.limit && opts.offset ? 'OFFSET @offset' : ''}`;
 
   if (opts.limit) params.limit = opts.limit;
+  if (opts.limit && opts.offset) params.offset = opts.offset;
   return db.prepare(sql).all(params);
+}
+
+/**
+ * شمارش محصولات با همان فیلترهای listProducts.
+ *
+ * برای صفحه‌بندی لازم است: دسته‌ی فرفورژه صدها مدل دارد و نمایش همه در یک
+ * صفحه، صفحه‌ای چند ده هزار پیکسلی می‌سازد که روی گوشی عملاً غیرقابل استفاده
+ * است. برای اینکه شرط‌ها دو جا از هم دور نیفتند، همان‌ها اینجا تکرار شده‌اند.
+ */
+function countProducts(opts = {}) {
+  const where = [];
+  const params = {};
+
+  if (!opts.includeInactive) where.push('p.is_active = 1');
+  if (opts.category) {
+    where.push('c.slug = @category');
+    params.category = opts.category;
+  }
+  if (opts.subcategory) {
+    where.push('s.slug = @subcategory');
+    params.subcategory = opts.subcategory;
+  }
+  if (opts.onlyInStock) where.push('p.in_stock = 1');
+  if (opts.q) {
+    where.push('(p.name LIKE @q OR p.summary LIKE @q OR p.description LIKE @q)');
+    params.q = `%${opts.q}%`;
+  }
+
+  const sql = `SELECT COUNT(*) n FROM products p
+    JOIN categories c ON c.id = p.category_id
+    LEFT JOIN subcategories s ON s.id = p.subcategory_id
+    ${where.length ? `WHERE ${where.join(' AND ')}` : ''}`;
+  return db.prepare(sql).get(params).n;
 }
 
 const getProductBySlug = (slug) =>
@@ -166,6 +201,7 @@ module.exports = {
   listSubcategories,
   listAllSubcategories,
   listProducts,
+  countProducts,
   getProductBySlug,
   getProductById,
   listProductImages,

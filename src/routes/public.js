@@ -92,11 +92,23 @@ function renderProductList(req, res, category) {
   const search = (req.query.q || '').trim().slice(0, 60);
   const onlyInStock = req.query.stock === '1';
 
-  const products = q.listProducts({
+  // صفحه‌بندی. دسته‌ی فرفورژه صدها مدل دارد؛ بدون این، صفحه ده‌ها هزار پیکسل
+  // بلند می‌شد و روی گوشی نه باز می‌شد نه قابل پیمایش بود.
+  const PER_PAGE = 48;
+  const filters = {
     category: category ? category.slug : undefined,
     subcategory: req.query.sub || undefined,
     q: search || undefined,
     onlyInStock,
+  };
+  const total = q.countProducts(filters);
+  const pages = Math.max(1, Math.ceil(total / PER_PAGE));
+  const page = Math.min(Math.max(1, parseInt(req.query.page, 10) || 1), pages);
+
+  const products = q.listProducts({
+    ...filters,
+    limit: PER_PAGE,
+    offset: (page - 1) * PER_PAGE,
   });
 
   const cityLine = 'علی‌آباد کتول و گرگان';
@@ -119,6 +131,10 @@ function renderProductList(req, res, category) {
     products,
     search,
     onlyInStock,
+    page,
+    pages,
+    total,
+    perPage: PER_PAGE,
     // منوی سایز فقط جایی نشان داده می‌شود که به کار می‌آید: فهرست کل
     // محصولات و خود دسته‌ی قوطی. روی دسته‌های دیگر فقط شلوغی است.
     ghouti: (() => {
@@ -157,7 +173,17 @@ router.get('/forge', (req, res, next) => {
   cachePublic(res);
   const subs = q.listSubcategories(featured.id);
 
+  // گالری هم صفحه‌بندی می‌شود: کاتالوگ صدها مدل دارد و نمایش یک‌جا، هم صفحه
+  // را غیرقابل استفاده می‌کرد هم صدها تصویر را به مرورگر تحمیل می‌کرد.
+  const PER_PAGE = 60;
+  const totalForge = q.countProducts({ category: featured.slug });
+  const forgePages = Math.max(1, Math.ceil(totalForge / PER_PAGE));
+  const forgePage = Math.min(Math.max(1, parseInt(req.query.page, 10) || 1), forgePages);
+
   res.render('public/forge', {
+    page: forgePage,
+    pages: forgePages,
+    total: totalForge,
     title: `فرفورژه گرگان و علی‌آباد کتول | بیش از ۱۰۰۰ مدل گل و طرح — درب، پنجره و نرده`,
     metaDescription: truncate(
       'گالری فرفورژه گرگان و علی‌آباد کتول: گل و طرح‌های آماده‌ی فولاد ایمان برای نرده، درب ' +
@@ -168,7 +194,11 @@ router.get('/forge', (req, res, next) => {
       ...s,
       products: q.listProducts({ category: featured.slug, subcategory: s.slug }),
     })),
-    others: q.listProducts({ category: featured.slug }).filter((p) => !p.subcategory_id),
+    others: q.listProducts({
+      category: featured.slug,
+      limit: PER_PAGE,
+      offset: (forgePage - 1) * PER_PAGE,
+    }).filter((p) => !p.subcategory_id),
   });
 });
 

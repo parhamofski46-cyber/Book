@@ -3285,3 +3285,58 @@ p {
 .article-cta h2 {
   margin-top: 0;
 }
+
+/* صفحه‌بندی فهرست محصولات — دسته‌ی فرفورژه صدها مدل دارد */
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 2rem 0 0;
+}
+.pager-btn,
+.pager-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap);
+  min-width: var(--tap);
+  padding: 0 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+.pager-btn:hover,
+.pager-num:hover {
+  border-color: var(--copper);
+  color: var(--copper);
+}
+.pager-num.is-active {
+  background: var(--copper);
+  border-color: var(--copper);
+  color: #fff;
+}
+.pager-btn.is-off {
+  opacity: 0.4;
+  pointer-events: none;
+}
+.pager-gap {
+  color: var(--ink-faint);
+  padding: 0 0.2rem;
+}
+
+/* طرح‌های بریده‌ی کاتالوگ فرفورژه.
+   نسبت ابعادشان از پنل‌های خیلی باریک و بلند تا قطعات کاملاً پهن فرق می‌کند،
+   پس cover سر و ته کار را می‌بُرید. contain کل طرح را نشان می‌دهد و چون
+   تصویرها پس‌زمینه‌ی شفاف دارند، روی زمینه‌ی کرم تمیز می‌نشینند. */
+.card-media.cutout {
+  background: var(--bg);
+}
+.card-media.cutout img {
+  object-fit: contain;
+  padding: 0.5rem;
+}

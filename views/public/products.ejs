@@ -115,7 +115,9 @@ if (category) {
             فقط کالاهای موجود
           </label>
           <button class="btn btn-ghost btn-sm" type="submit">جست‌وجو</button>
-          <span class="result-count"><%= h.toFaDigits(products.length) %> محصول</span>
+          <span class="result-count">
+            <%= h.toFaDigits(total) %> محصول<% if (pages > 1) { %> — صفحه <%= h.toFaDigits(page) %> از <%= h.toFaDigits(pages) %><% } %>
+          </span>
         </form>
       </div>
 
@@ -125,6 +127,14 @@ if (category) {
             <%- include('../partials/product-card', { product: product, eager: i < 4, hideCategory: !!category }) %>
           <% }); %>
         </div>
+
+        <%- include('../partials/pagination', {
+              page: page, pages: pages,
+              baseUrl: (category ? '/category/' + encodeURIComponent(category.slug) : '/products')
+                + (search ? '?q=' + encodeURIComponent(search) : '')
+                + (onlyInStock ? (search ? '&' : '?') + 'stock=1' : '')
+                + (activeSub ? ((search || onlyInStock) ? '&' : '?') + 'sub=' + encodeURIComponent(activeSub) : '')
+            }) %>
       <% } else { %>
         <div class="empty">
           <%- icon('box', '') %>

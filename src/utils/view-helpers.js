@@ -9,6 +9,50 @@ const { productPhoto } = require('./photos');
  * توابع کمکی که در قالب‌ها (EJS) استفاده می‌شوند.
  */
 
+/**
+ * تصویر مدل فرفورژه از کاتالوگ.
+ *
+ * نگاشت از روی «کد» انجام می‌شود: محصولی به نام «کد ۵۸۱۷» به فایل
+ * public/img/forge/5817.webp می‌رسد. جدول ابعاد از forge-models.json خوانده
+ * می‌شود تا srcset عرض واقعی فایل را اعلام کند — بدون آن، مرورگر تصویر
+ * ۱۲۰ پیکسلی را برای جای ۴۰۰ پیکسلی کش می‌آورد و تار می‌شود.
+ */
+const FORGE_DIMS = (() => {
+  try {
+    const rows = require('../content/forge-models.json');
+    const map = new Map();
+    rows.forEach((r) => map.set(String(r.code), r));
+    return map;
+  } catch (err) {
+    return new Map();
+  }
+})();
+
+const FA_TO_EN = { '۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9' };
+
+function forgeImage(product) {
+  const name = String(product.name || '');
+  const m = name.match(/^کد\s+([۰-۹0-9]+)$/);
+  if (!m) return null;
+  const code = m[1].replace(/[۰-۹]/g, (d) => FA_TO_EN[d]);
+  const row = FORGE_DIMS.get(code);
+  if (!row) return null;
+  const src = `/img/forge/${code}.webp`;
+  return {
+    src,
+    // یک فایل بیشتر نداریم، پس srcset فقط همان را با عرض واقعی اعلام می‌کند
+    srcset: `${src} ${row.w}w`,
+    alt: `گل فرفورژه کد ${toFaDigits(code)}${row.size ? ` — اندازه ${row.size} سانتی‌متر` : ''} — فولاد ایمان`,
+    isPlaceholder: false,
+    isArt: false,
+    isPhoto: true,
+    // طرح‌های کاتالوگ بریده‌شده‌اند و نسبت ابعادشان از ۵۹×۴۳۸ تا کاملاً پهن
+    // فرق می‌کند. با object-fit: cover سر و ته پنل‌های بلند بریده می‌شد، پس
+    // کارت باید contain استفاده کند.
+    isCutout: true,
+  };
+}
+
 /** تبدیل کاراکترهای خطرناک HTML — برای درج امن متن کاربر داخل صفحه */
 function esc(str) {
   return String(str ?? '')
@@ -53,7 +97,13 @@ function productImage(product, size = 'medium') {
     };
   }
 
-  // ۲) عکس واقعی کالا
+  // ۲) عکس کاتالوگ فرفورژه — نام محصول «کد ۵۸۱۷» است و فایلش
+  // public/img/forge/5817.webp. ارقام فارسی به لاتین برمی‌گردند چون نام
+  // فایل‌ها لاتین است.
+  const forge = forgeImage(product);
+  if (forge) return forge;
+
+  // ۳) عکس واقعی کالا
   const photo = productPhoto(product);
   if (photo) {
     return {

@@ -74,13 +74,16 @@
       <% if (others.length) { %>
         <section class="section">
           <div class="section-head">
-            <div class="section-title"><h2>سایر المان‌های فرفورژه</h2></div>
+            <div class="section-title"><h2>گالری مدل‌ها</h2></div>
+            <span class="result-count"><%= h.toFaDigits(total) %> مدل<% if (pages > 1) { %> — صفحه <%= h.toFaDigits(page) %> از <%= h.toFaDigits(pages) %><% } %></span>
           </div>
           <div class="product-grid">
             <% others.forEach(function (product) { %>
               <%- include('../partials/product-card', { product: product, zoomable: true, hideCategory: true }) %>
             <% }); %>
           </div>
+
+          <%- include('../partials/pagination', { page: page, pages: pages, baseUrl: '/forge' }) %>
         </section>
       <% } %>
 
