@@ -46,6 +46,9 @@ const site = {
   },
   areaServed: ['علی‌آباد کتول', 'گرگان', 'استان گلستان', 'کردکوی', 'رامیان', 'آزادشهر', 'فاضل‌آباد'],
   geo: { lat: 36.9061, lng: 54.8514 }, // مختصات تقریبی علی‌آباد کتول
+  // مختصات دقیق درِ مغازه. اگر پرش کنید، هم نقشه و هم دکمه‌ی مسیریابی
+  // مستقیم به همین نقطه می‌روند. خالی بودنش یعنی از آدرس متنی استفاده شود.
+  mapPoint: '',
 
   openingHours: 'شنبه تا پنجشنبه، ۸ صبح تا ۸ شب',
 
@@ -118,19 +121,81 @@ function activeChannels(productName) {
 }
 
 /**
- * کد iframe نقشه — پیش‌فرضی که بدون هیچ تنظیمی از پنل کار می‌کند.
+ * نقشه‌ی فروشگاه.
  *
- * چرا مختصات تقریبی (site.geo، مرکز شهر) استفاده نمی‌شود: آن عدد فقط برای
- * داده‌ی ساختاریافته‌ی گوگل (Schema.org) کافی است، ولی برای پین روی نقشه
- * می‌تواند مشتری را به وسط شهر بفرستد نه جلوی مغازه — گمراه‌کننده است.
- * به‌جایش از آدرس متنی کامل به‌عنوان عبارت جست‌وجو استفاده می‌شود؛ همان چیزی
- * که اگر مشتری خودش آدرس را در گوگل مپ جست‌وجو کند می‌بیند، نه مختصات
- * حدسی. مالک هر وقت خواست از پنل → «متن‌ها و آمار» → «نقشه» می‌تواند کد
- * iframe واقعی (لینک نشان یا پین دقیق گوگل مپ) را جایگزین همین پیش‌فرض کند.
+ * ⚠️ مقداری که مدیر در پنل وارد می‌کند می‌تواند هر شکلی باشد و قبلاً فقط
+ * «کد iframe» پذیرفته می‌شد. کاربر مختصات را وارد کرد و چون قالب مقدار را
+ * خام چاپ می‌کرد، به‌جای نقشه دو عدد وسط صفحه نوشته شد.
+ *
+ * حالا هر چهار حالت پذیرفته می‌شود:
+ *   • کد کامل <iframe…> از گوگل مپ یا نشان
+ *   • لینک گوگل مپ (هر شکلی که مختصات در آن باشد)
+ *   • مختصات خام: «36.9061, 54.8514»
+ *   • هر متن دیگر → به‌عنوان عبارت جست‌وجوی آدرس
  */
-function defaultMapEmbed() {
-  const q = encodeURIComponent(`${site.address.full}، ${site.address.province}`);
-  const src = `https://www.google.com/maps?q=${q}&z=15&output=embed`;
+
+/** استخراج مختصات از هر متنی که کاربر داده باشد */
+function parseCoords(text) {
+  const t = String(text || '').replace(/[۰-۹]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+  // الگوی @lat,lng در لینک گوگل، یا q=lat,lng، یا خودِ «lat, lng»
+  const m =
+    t.match(/@(-?\d{1,3}\.\d+),\s*(-?\d{1,3}\.\d+)/) ||
+    t.match(/[?&]q=(-?\d{1,3}\.\d+),\s*(-?\d{1,3}\.\d+)/) ||
+    t.match(/^\s*(-?\d{1,3}\.\d+)\s*[,،]\s*(-?\d{1,3}\.\d+)\s*$/);
+  if (!m) return null;
+  const lat = parseFloat(m[1]);
+  const lng = parseFloat(m[2]);
+  if (!isFinite(lat) || !isFinite(lng)) return null;
+  if (Math.abs(lat) > 90 || Math.abs(lng) > 180) return null;
+  return { lat, lng };
+}
+
+/** عبارت جست‌وجوی آدرس کامل فروشگاه */
+function addressQuery() {
+  return `${site.address.full}، ${site.address.province}`;
+}
+
+/**
+ * لینک «مسیریابی» — با کلیک، گوگل مپ مسیر را از موقعیت فعلی کاربر تا
+ * فروشگاه نشان می‌دهد. اگر مختصات دقیق داشته باشیم از آن استفاده می‌کنیم،
+ * وگرنه از آدرس متنی.
+ */
+function mapDirectionsUrl(raw) {
+  const c = parseCoords(raw) || parseCoords(site.mapPoint) || null;
+  const dest = c ? `${c.lat},${c.lng}` : addressQuery();
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(dest)}`;
+}
+
+/** آدرس باز کردن نقشه در گوگل مپ (نه مسیریابی، فقط نمایش محل) */
+function mapPlaceUrl(raw) {
+  const c = parseCoords(raw) || parseCoords(site.mapPoint) || null;
+  const q = c ? `${c.lat},${c.lng}` : addressQuery();
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+}
+
+/**
+ * کد iframe نقشه بر اساس چیزی که مدیر وارد کرده.
+ * اگر چیزی وارد نشده باشد، مختصات ثابت site.mapPoint و در نبودش آدرس متنی
+ * استفاده می‌شود — یعنی سایت همیشه نقشه دارد.
+ */
+function mapEmbedFrom(raw) {
+  const text = String(raw || '').trim();
+
+  // ۱) کد iframe آماده — فقط از میزبان‌های نقشه‌ی مجاز، تا هر HTML دلخواهی
+  // وارد صفحه نشود
+  if (/^<iframe/i.test(text)) {
+    const src = (text.match(/src=["']([^"']+)["']/i) || [])[1] || '';
+    if (/^https:\/\/(www\.)?(google\.com|maps\.google\.com|neshan\.org|www\.neshan\.org)\//i.test(src)) {
+      return text;
+    }
+    // میزبان ناشناس: به‌جای چاپ HTML خام، به حالت پیش‌فرض برمی‌گردیم
+  }
+
+  const c = parseCoords(text) || parseCoords(site.mapPoint);
+  const src = c
+    ? `https://www.google.com/maps?q=${c.lat},${c.lng}&z=17&hl=fa&output=embed`
+    : `https://www.google.com/maps?q=${encodeURIComponent(addressQuery())}&z=15&hl=fa&output=embed`;
+
   return (
     `<iframe src="${src}" width="100%" height="320" style="border:0" ` +
     `loading="lazy" referrerpolicy="no-referrer-when-downgrade" ` +
@@ -138,4 +203,18 @@ function defaultMapEmbed() {
   );
 }
 
-module.exports = { site, inquiryLink, activeChannels, defaultMapEmbed };
+/** سازگاری با کد قبلی */
+function defaultMapEmbed() {
+  return mapEmbedFrom('');
+}
+
+module.exports = {
+  site,
+  inquiryLink,
+  activeChannels,
+  defaultMapEmbed,
+  mapEmbedFrom,
+  mapDirectionsUrl,
+  mapPlaceUrl,
+  parseCoords,
+};

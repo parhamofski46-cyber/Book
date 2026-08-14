@@ -3340,3 +3340,14 @@ p {
   object-fit: contain;
   padding: 0.5rem;
 }
+
+/* دکمه‌های زیر نقشه.
+   نقشه‌ی جاسازی‌شده خودش مسیریابی نمی‌دهد؛ این لینک‌ها در اپ گوگل مپ گوشی
+   باز می‌شوند و مسیر را از موقعیت فعلی مشتری تا مغازه می‌کشند. */
+.map-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+}

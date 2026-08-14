@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const { site, defaultMapEmbed } = require('../config/site');
+const { site, mapEmbedFrom, mapDirectionsUrl, mapPlaceUrl } = require('../config/site');
 const { getSetting } = require('../db');
 const q = require('../db/queries');
 const { truncate } = require('../utils/view-helpers');
@@ -310,7 +310,9 @@ router.get('/about', (req, res) => {
         `و عرضه‌ی آهن‌آلات ساختمانی با ارسال به گرگان و سراسر گلستان. آدرس: ${site.address.full}.`
     ),
     aboutText: getSetting('about_text', ''),
-    mapEmbed: getSetting('map_embed', '') || defaultMapEmbed(),
+    mapEmbed: mapEmbedFrom(getSetting('map_embed', '')),
+    mapDirections: mapDirectionsUrl(getSetting('map_embed', '')),
+    mapPlace: mapPlaceUrl(getSetting('map_embed', '')),
     statCategoryCount: q.listCategories().length,
   });
 });
@@ -340,7 +342,9 @@ router.get('/contact', (req, res) => {
     metaDescription: truncate(
       `شماره تماس و واتساپ ${site.name} برای استعلام قیمت آهن‌آلات و سفارش فرفورژه در علی‌آباد کتول و گرگان.`
     ),
-    mapEmbed: getSetting('map_embed', '') || defaultMapEmbed(),
+    mapEmbed: mapEmbedFrom(getSetting('map_embed', '')),
+    mapDirections: mapDirectionsUrl(getSetting('map_embed', '')),
+    mapPlace: mapPlaceUrl(getSetting('map_embed', '')),
   });
 });
 

@@ -88,6 +88,14 @@ const faqSchema = {
           <div class="map-frame">
             <% if (mapEmbed) { %>
               <%- mapEmbed %>
+              <div class="map-actions">
+                <a class="btn btn-primary" href="<%= mapDirections %>" target="_blank" rel="noopener">
+                  <%- icon('map') %> مسیریابی تا فروشگاه
+                </a>
+                <a class="btn btn-ghost btn-sm" href="<%= mapPlace %>" target="_blank" rel="noopener">
+                  باز کردن در گوگل مپ
+                </a>
+              </div>
             <% } else { %>
               <div class="map-placeholder">
                 <%- icon('map', '') %>
