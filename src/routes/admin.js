@@ -13,6 +13,13 @@ const { slugify, uniqueSlug } = require('../utils/slug');
 const router = express.Router();
 
 /**
+ * هش ساختگی با همان هزینه‌ی هش‌های واقعی (۱۲).
+ * فقط برای این است که مسیر «کاربر پیدا نشد» هم دقیقاً همان‌قدر زمان ببرد که
+ * مسیر «رمز غلط» می‌برد — جلوگیری از حدس‌زدن نام کاربری از روی زمان پاسخ.
+ */
+const DUMMY_HASH = bcrypt.hashSync('a-password-that-is-never-valid', 12);
+
+/**
  * پنل مدیریت
  * ------------------------------------------------------------------
  * همه‌ی کارهای مدیر (افزودن محصول، تغییر موجودی، آپلود عکس) از طریق
@@ -56,7 +63,16 @@ router.post('/login', loginLimiter, express.urlencoded({ extended: false }), csr
   const nextUrl = String(req.body.next || '/admin');
 
   const admin = db.prepare('SELECT * FROM admins WHERE username = ?').get(username);
-  const ok = admin && bcrypt.compareSync(password, admin.password_hash);
+
+  // اگر کاربر پیدا نشد، باز هم یک مقایسه‌ی bcrypt روی هش ساختگی انجام
+  // می‌دهیم. بدون این کار، پاسخِ «نام کاربری وجود ندارد» چند ده برابر
+  // سریع‌تر از «رمز غلط» برمی‌گشت (bcrypt عمداً کند است) و مهاجم فقط با
+  // اندازه‌گیری زمانِ پاسخ می‌فهمید کدام نام کاربری واقعی است — بعد همه‌ی
+  // تلاشش را روی همان یکی متمرکز می‌کرد. پیام خطا از قبل مبهم بود، این
+  // زمان‌بندی را هم مبهم می‌کند.
+  const ok = admin
+    ? bcrypt.compareSync(password, admin.password_hash)
+    : (bcrypt.compareSync(password, DUMMY_HASH), false);
 
   if (!ok) {
     return res.status(401).render('admin/login', {

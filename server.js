@@ -8,7 +8,7 @@ const express = require('express');
 const helmet = require('helmet');
 const compression = require('compression');
 const session = require('express-session');
-const SQLiteStore = require('connect-sqlite3')(session);
+const SqliteSessionStore = require('./src/db/session-store');
 
 const fs = require('fs');
 
@@ -120,7 +120,7 @@ app.use(express.urlencoded({ extended: false, limit: '1mb' }));
 // تا با ری‌استارت شدن سرور، کاربر از پنل بیرون نیفتد.
 app.use(
   session({
-    store: new SQLiteStore({ db: 'sessions.db', dir: DATA_DIR }),
+    store: new SqliteSessionStore(),
     secret: secretInfo.secret,
     resave: false,
     saveUninitialized: false,
