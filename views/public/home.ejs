@@ -76,10 +76,16 @@
             <a class="cat-card <%= cat.is_featured ? 'featured' : '' %>"
                href="/category/<%= encodeURIComponent(cat.slug) %>"
                style="--i:<%= i %>">
-              <% const catPh = categoryPhoto(cat.name); %>
+              <%# عکس کارت دسته، به ترتیب اولویت:
+                  ۱) عکس اختصاصی دسته در public/img/catphoto
+                  ۲) عکس یکی از محصولات همان دسته (catCovers) — پس وقتی مالک
+                     از پنل برای محصولی عکس آپلود کند، کارت دسته هم عکس‌دار
+                     می‌شود بدون اینکه کدی عوض شود
+                  ۳) تصویرسازی خطی دسته %>
+              <% const catPh = categoryPhoto(cat.name) || (catCovers && catCovers[cat.id]); %>
               <span class="cat-art <%= catPh ? 'is-photo' : '' %>">
                 <img src="<%= catPh ? catPh.src : categoryArtUrl(cat.name) %>"
-                     <% if (catPh) { %>srcset="<%= catPh.srcset %>" sizes="(max-width:600px) 92vw, 380px"<% } %>
+                     <% if (catPh && catPh.srcset) { %>srcset="<%= catPh.srcset %>" sizes="(max-width:600px) 92vw, 380px"<% } %>
                      alt="" width="400" height="300" loading="lazy" decoding="async">
               </span>
               <span class="cat-meta">

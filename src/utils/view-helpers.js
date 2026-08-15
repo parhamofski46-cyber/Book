@@ -149,4 +149,55 @@ function jsonLd(obj) {
   return JSON.stringify(obj).replace(/</g, '\\u003c');
 }
 
-module.exports = { esc, truncate, productImage, stockLabel, imageUrl, imageSrcset, toFaDigits, jsonLd };
+/**
+ * عکس کارت دسته‌ها.
+ *
+ * ورودی نتیجه‌ی `categoryCoverCandidates()` است (حداکثر ۸ محصول برای هر
+ * دسته، عکس‌دارها اول). برای هر دسته اولین محصولی برنده می‌شود که واقعاً
+ * عکس دارد — آپلود مدیر یا عکس واقعی کالا.
+ *
+ * دو چیز عمداً رد می‌شوند:
+ *  • `isPlaceholder` یعنی محصول عکس ندارد و به تصویرسازی خطی رسیده؛ همان
+ *    چیزی است که می‌خواهیم از آن فرار کنیم، پس سراغ نامزد بعدی می‌رویم.
+ *  • `isCutout` عکس تک‌گل فرفورژه روی زمینه‌ی سفید است؛ کارت دسته با
+ *    `object-fit: cover` برشش می‌دهد و بد دیده می‌شود.
+ *
+ * @param {Array} candidates خروجی q.categoryCoverCandidates()
+ * @returns {Object} نگاشت شناسه‌ی دسته → همان ساختار خروجی productImage()
+ */
+function categoryCover(candidates) {
+  const usable = Object.create(null); // شناسه‌ی دسته → [{row, img}]
+  (candidates || []).forEach(function (row) {
+    const img = productImage(row, 'medium');
+    if (img.isPlaceholder || img.isCutout) return;
+    (usable[row.category_id] || (usable[row.category_id] = [])).push({ row: row, img: img });
+  });
+
+  const out = Object.create(null);
+  Object.keys(usable).forEach(function (id) {
+    const list = usable[id];
+    // واژه‌های معنادار نام دسته؛ «و» و پرانتز کنار گذاشته می‌شوند
+    const words = String(list[0].row.category_name || '')
+      .split(/[\s،()]+/)
+      .filter(function (w) { return w.length > 2; });
+
+    // امتیازدهی، بالاترین امتیاز برنده (در تساوی، اولین محصول دسته):
+    //  ۲ = عکس آپلودی مدیر (همیشه از عکس عمومی کالا مناسب‌تر است)
+    //  ۱ = نام محصول با نام دسته هم‌ریشه است. بدون این، کارت «ایزوگام و
+    //      عایق» عکس «پشم شیشه» را می‌گرفت که گویای دسته نیست.
+    let best = null;
+    let bestScore = -1;
+    list.forEach(function (c) {
+      const score = (c.row.image ? 2 : 0) +
+        (words.some(function (w) { return c.row.name.indexOf(w) !== -1; }) ? 1 : 0);
+      if (score > bestScore) {
+        bestScore = score;
+        best = c;
+      }
+    });
+    out[id] = best.img;
+  });
+  return out;
+}
+
+module.exports = { esc, truncate, productImage, categoryCover, stockLabel, imageUrl, imageSrcset, toFaDigits, jsonLd };

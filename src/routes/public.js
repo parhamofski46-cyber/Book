@@ -4,7 +4,7 @@ const express = require('express');
 const { site, mapEmbedFrom, mapDirectionsUrl, mapPlaceUrl } = require('../config/site');
 const { getSetting } = require('../db');
 const q = require('../db/queries');
-const { truncate } = require('../utils/view-helpers');
+const { truncate, categoryCover } = require('../utils/view-helpers');
 const articles = require('../content/articles');
 
 const router = express.Router();
@@ -35,6 +35,8 @@ router.get('/', (req, res) => {
     metaDescription: truncate(site.description),
     categories,
     gridCategories,
+    // عکس کارت هر دسته از محصولات همان دسته می‌آید (پایین را ببین)
+    catCovers: categoryCover(q.categoryCoverCandidates()),
     featuredCategory: featured,
     latest: q.listProducts({ limit: 6 }),
     forgeProducts: featured ? q.listProducts({ category: featured.slug, limit: 4 }) : [],

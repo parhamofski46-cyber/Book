@@ -21,6 +21,48 @@ const listCategories = () =>
     )
     .all();
 
+/**
+ * نامزدهای «عکس روی کارت دسته».
+ *
+ * کارت هر دسته باید عکس واقعی نشان بدهد، نه تصویرسازی خطی. به‌جای اینکه
+ * برای هر دسته یک فایل جدا دستی بسازیم، از عکس محصولات همان دسته استفاده
+ * می‌کنیم — پس وقتی مالک از پنل برای یک محصول عکس آپلود کرد، کارت دسته هم
+ * خودش عکس‌دار می‌شود و هیچ کدی لازم نیست عوض شود.
+ *
+ * برای هر دسته حداکثر ۴۰ نامزد برمی‌گردد؛ محصولاتی که عکس آپلودی دارند اول
+ * می‌آیند. انتخاب نهایی در `categoryCover()` انجام می‌شود، چون آنجاست که
+ * می‌دانیم کدام محصول واقعاً عکس دارد (آپلود، عکس کاتالوگ، یا عکس کالا).
+ *
+ * چرا ۴۰ و نه یک عدد کوچک‌تر؟ با سقف ۸، کارت «پیچ و یراق‌آلات» بی‌عکس
+ * می‌ماند: تنها محصول عکس‌دارِ آن دسته «پیچ سرمته» است و با sort_order ۱۰
+ * بیرون از پنجره می‌افتاد. ۴۰ از بزرگ‌ترین دسته‌ی غیرفرفورژه هم بیشتر است.
+ * سقف لازم است چون دسته‌ی فرفورژه صدها محصول دارد و پیمایش همه‌شان برای
+ * پیدا کردن یک عکس، هر بار بارگذاری صفحه‌ی اصلی را بی‌دلیل سنگین می‌کند.
+ */
+const categoryCoverCandidates = () =>
+  db
+    .prepare(
+      `WITH ranked AS (
+         SELECT p.id, p.category_id, p.name, p.slug,
+                ROW_NUMBER() OVER (PARTITION BY p.category_id
+                                   ORDER BY p.sort_order, p.id) AS rn
+           FROM products p
+          WHERE p.is_active = 1
+       )
+       SELECT r.category_id, r.name, r.slug, c.name AS category_name,
+              (SELECT basename FROM product_images i
+                WHERE i.product_id = r.id ORDER BY i.sort_order, i.id LIMIT 1) AS image,
+              (SELECT alt FROM product_images i
+                WHERE i.product_id = r.id ORDER BY i.sort_order, i.id LIMIT 1) AS image_alt,
+              (SELECT width FROM product_images i
+                WHERE i.product_id = r.id ORDER BY i.sort_order, i.id LIMIT 1) AS image_width
+         FROM ranked r
+         JOIN categories c ON c.id = r.category_id
+        WHERE r.rn <= 40
+        ORDER BY r.category_id, r.rn`
+    )
+    .all();
+
 const getCategoryBySlug = (slug) =>
   db.prepare('SELECT * FROM categories WHERE slug = ?').get(slug);
 
@@ -196,6 +238,7 @@ const adminStats = () => ({
 
 module.exports = {
   listCategories,
+  categoryCoverCandidates,
   getCategoryBySlug,
   getCategoryById,
   listSubcategories,
