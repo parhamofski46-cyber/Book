@@ -77,7 +77,7 @@ function categoryIcon(name) {
   if (/پیچ|یراق|قفل|لولا|مهره/.test(n)) return 'wrench';
   if (/قوطی/.test(n)) return 'tube';
   if (/نبشی|پروفیل/.test(n)) return 'angle';
-  if (/رابیس|رابیتس|مش/.test(n)) return 'mesh';
+  if (/رابیتس|رابیتس|مش/.test(n)) return 'mesh';
   if (/گوزن|شاخ/.test(n)) return 'spikes';
   if (/فنس|حصار|توری|تور/.test(n)) return 'fence';
   if (/ایزوگام|قیر|عایق|پشم|فوم/.test(n)) return 'roll';
@@ -99,7 +99,7 @@ function categoryArt(name) {
   if (/پیچ|یراق|قفل|لولا|مهره/.test(n)) return 'pich';
   if (/قوطی/.test(n)) return 'qooti';
   if (/نبشی|پروفیل/.test(n)) return 'nabshi';
-  if (/رابیس|رابیتس|مش/.test(n)) return 'rabits';
+  if (/رابیتس|رابیتس|مش/.test(n)) return 'rabits';
   if (/گوزن|شاخ/.test(n)) return 'shakh';
   if (/فنس|حصار|توری|تور/.test(n)) return 'fence';
   if (/ایزوگام|قیر|عایق|پشم|فوم/.test(n)) return 'izogam';

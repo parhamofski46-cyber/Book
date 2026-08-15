@@ -8,6 +8,16 @@ const { db } = require('./index');
  * سرور است، خواندن در حد میکروثانیه طول می‌کشد و صفحه سریع رندر می‌شود.
  */
 
+/**
+ * هم‌ارزسازی املای «رابیس» و «رابیتس» در جست‌وجو.
+ *
+ * نام محصولات در دیتابیس «رابیتس» است، ولی خیلی از مشتری‌ها «رابیس»
+ * می‌نویسند. بدون این، جست‌وجوی «رابیس» هیچ نتیجه‌ای برنمی‌گرداند و مشتری
+ * فکر می‌کند جنس را نداریم. آنچه در کادر جست‌وجو نوشته شده دست‌نخورده
+ * می‌ماند؛ فقط عبارتی که به دیتابیس می‌رود عوض می‌شود.
+ */
+const normalizeQuery = (q) => String(q).replace(/رابیس/g, 'رابیتس');
+
 // ---------------------------------------------------------------- دسته‌ها
 
 const listCategories = () =>
@@ -124,7 +134,7 @@ function listProducts(opts = {}) {
   if (opts.onlyInStock) where.push('p.in_stock = 1');
   if (opts.q) {
     where.push('(p.name LIKE @q OR p.summary LIKE @q OR p.description LIKE @q)');
-    params.q = `%${opts.q}%`;
+    params.q = `%${normalizeQuery(opts.q)}%`;
   }
 
   const sql = `${PRODUCT_SELECT}
@@ -161,7 +171,7 @@ function countProducts(opts = {}) {
   if (opts.onlyInStock) where.push('p.in_stock = 1');
   if (opts.q) {
     where.push('(p.name LIKE @q OR p.summary LIKE @q OR p.description LIKE @q)');
-    params.q = `%${opts.q}%`;
+    params.q = `%${normalizeQuery(opts.q)}%`;
   }
 
   const sql = `SELECT COUNT(*) n FROM products p

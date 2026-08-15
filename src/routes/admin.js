@@ -8,6 +8,7 @@ const { db, getSetting, setSetting } = require('../db');
 const q = require('../db/queries');
 const { requireLogin, csrf, loginLimiter } = require('../middleware/auth');
 const { processUpload, deleteImageFiles } = require('../services/images');
+const captcha = require('../services/captcha');
 const { slugify, uniqueSlug } = require('../utils/slug');
 
 const router = express.Router();
@@ -54,6 +55,7 @@ router.get('/login', csrf, (req, res) => {
     title: 'ورود به پنل مدیریت',
     error: null,
     next: req.query.next || '/admin',
+    captcha: captcha.issue(req.session),
   });
 });
 
@@ -61,6 +63,24 @@ router.post('/login', loginLimiter, express.urlencoded({ extended: false }), csr
   const username = String(req.body.username || '').trim();
   const password = String(req.body.password || '');
   const nextUrl = String(req.body.next || '/admin');
+
+  // پاسخ ناموفق: همیشه با یک پرسش امنیتی تازه. پرسش قبلی چه درست جواب
+  // داده شده باشد چه غلط، مصرف شده و دیگر معتبر نیست.
+  const fail = (message) =>
+    res.status(401).render('admin/login', {
+      title: 'ورود به پنل مدیریت',
+      error: message,
+      next: nextUrl,
+      captcha: captcha.issue(req.session),
+    });
+
+  // کپچا قبل از bcrypt سنجیده می‌شود. این ترتیب عمدی است: bcrypt با
+  // ۱۲ دور، هر درخواست را حدود ۰.۳ ثانیه از پردازنده می‌گیرد. اگر اول
+  // رمز بررسی می‌شد، مهاجم می‌توانست بدون حل کپچا هم سرور را با
+  // درخواست‌های پیاپی مشغول کند.
+  if (!captcha.verify(req.session, req.body.captcha)) {
+    return fail('پاسخ پرسش امنیتی درست نیست. لطفاً دوباره امتحان کنید.');
+  }
 
   const admin = db.prepare('SELECT * FROM admins WHERE username = ?').get(username);
 
@@ -74,13 +94,7 @@ router.post('/login', loginLimiter, express.urlencoded({ extended: false }), csr
     ? bcrypt.compareSync(password, admin.password_hash)
     : (bcrypt.compareSync(password, DUMMY_HASH), false);
 
-  if (!ok) {
-    return res.status(401).render('admin/login', {
-      title: 'ورود به پنل مدیریت',
-      error: 'نام کاربری یا رمز عبور درست نیست.',
-      next: nextUrl,
-    });
-  }
+  if (!ok) return fail('نام کاربری یا رمز عبور درست نیست.');
 
   // جلوگیری از session fixation: شناسه‌ی نشست بعد از ورود عوض می‌شود
   req.session.regenerate((err) => {

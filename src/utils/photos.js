@@ -45,8 +45,8 @@ try {
  */
 const RULES = [
   { key: null, test: (name, cat) => /فرفورژه/.test(cat) },
-  { key: 'sim-rabis', test: (name) => /سیم/.test(name) && /رابیس|رابیتس/.test(name) },
-  { key: 'rabis', test: (name, cat) => /رابیس|رابیتس/.test(cat) || /رابیس|رابیتس/.test(name) },
+  { key: 'sim-rabis', test: (name) => /سیم/.test(name) && /رابیتس|رابیتس/.test(name) },
+  { key: 'rabis', test: (name, cat) => /رابیتس|رابیتس/.test(cat) || /رابیتس|رابیتس/.test(name) },
   { key: 'shakh-gozni', test: (name, cat) => /شاخ\s*گوزنی/.test(cat) || /شاخ\s*گوزنی/.test(name) },
   { key: 'pich-sarmateh', test: (name) => /پیچ\s*سرمته/.test(name) },
   { key: 'izogam', test: (name) => /ایزوگام/.test(name) },

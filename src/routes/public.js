@@ -15,6 +15,39 @@ const router = express.Router();
  * مستقیم از SQLite می‌خوانند؛ چیزی در مرورگر بارگذاری نمی‌شود که سرعت را بگیرد.
  */
 
+/**
+ * آدرس‌های قدیمی با املای «رابیس» → «رابیتس» (انتقال دائمی ۳۰۱).
+ *
+ * املای محصول و دسته به خواست مالک عوض شد و چون اسلاگ‌ها فارسی‌اند، آدرس
+ * دسته و همه‌ی محصولاتش هم عوض شد. بدون این قانون، هر لینکی که مشتری
+ * ذخیره کرده یا گوگل ایندکس کرده بود ۴۰۴ می‌شد.
+ *
+ * ۳۰۱ (نه ۳۰۲) عمدی است: به گوگل می‌گوید آدرس برای همیشه جابه‌جا شده و
+ * اعتبار سئوی صفحه‌ی قدیمی به صفحه‌ی جدید منتقل شود.
+ */
+router.use(function (req, res, next) {
+  let decoded;
+  try {
+    decoded = decodeURIComponent(req.path);
+  } catch (err) {
+    return next(); // آدرس خراب — بگذار مسیر عادی ۴۰۴ بدهد
+  }
+  // پارامتر قدیمی ?cat=رابیس هم اصلاح می‌شود تا مسیر /products خودش دسته را
+  // پیدا کند و ۳۰۱ همیشگی‌اش را به آدرس تمیز بدهد.
+  if (typeof req.query.cat === 'string' && req.query.cat.indexOf('رابیس') !== -1) {
+    req.query.cat = req.query.cat.replace(/رابیس/g, 'رابیتس');
+  }
+  if (decoded.indexOf('رابیس') === -1) return next();
+
+  const target = decoded
+    .replace(/رابیس/g, 'رابیتس')
+    .split('/')
+    .map(encodeURIComponent)
+    .join('/');
+  const qs = req.originalUrl.slice(req.path.length); // رشته‌ی پرس‌وجو، اگر بود
+  res.redirect(301, target + qs);
+});
+
 // کش کوتاه سمت مرورگر + ETag ⇒ بازدید دوم تقریباً آنی باز می‌شود
 function cachePublic(res, seconds = 300) {
   res.set('Cache-Control', `public, max-age=0, s-maxage=${seconds}, must-revalidate`);
@@ -235,7 +268,7 @@ router.get('/blog', (req, res) => {
   res.render('public/blog', {
     title: 'مقالات آهن‌آلات و مصالح | راهنمای خرید و اجرا — فولاد ایمان',
     metaDescription: truncate(
-      'راهنمای خرید و اجرا: وزن و سایز قوطی و پروفیل، رابیس و سقف کاذب، ورق گالوانیزه ' +
+      'راهنمای خرید و اجرا: وزن و سایز قوطی و پروفیل، رابیتس و سقف کاذب، ورق گالوانیزه ' +
         'و شیروانی، عایق، ایزوگام، فنس و فرفورژه. نوشته‌ی فولاد ایمان، علی‌آباد کتول.'
     ),
     articles: articles.listArticles(),

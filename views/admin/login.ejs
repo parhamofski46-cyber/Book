@@ -41,6 +41,22 @@
              required dir="ltr">
     </div>
 
+    <%# پرسش امنیتی. تصویر SVG است و مستقیم داخل صفحه می‌آید (نه با <img>)
+        تا نه درخواست اضافه‌ای به سرور بخورد و نه با کش مرورگر قاطی شود.
+        جوابش فقط در نشست سرور است و هرگز به مرورگر فرستاده نمی‌شود. %>
+    <div class="field">
+      <label for="captcha"><%= captcha.label %></label>
+      <div class="captcha-row">
+        <%- captcha.svg %>
+        <input type="text" id="captcha" name="captcha" inputmode="numeric"
+               autocomplete="off" required dir="ltr" maxlength="3"
+               aria-describedby="captcha-hint">
+      </div>
+      <small id="captcha-hint" class="captcha-hint">
+        اگر تصویر خوانا نیست، <a href="/admin/login">صفحه را تازه کنید</a> تا پرسش تازه‌ای بیاید.
+      </small>
+    </div>
+
     <button class="btn btn-primary btn-lg btn-block" type="submit">ورود</button>
 
     <a class="back" href="/">بازگشت به سایت</a>

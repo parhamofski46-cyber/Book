@@ -557,3 +557,34 @@ tr:hover td {
   padding: 0.1em 0.4em;
   font-size: 0.85em;
 }
+
+/* ═══════════════════════════════════════════ پرسش امنیتی صفحه‌ی ورود */
+.captcha-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+/* تصویر عرض ثابت خودش را دارد؛ روی گوشی‌های باریک اجازه‌ی کوچک‌شدن
+   می‌گیرد تا کادر ورودی از صفحه بیرون نزند. */
+.captcha-img {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 62%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid var(--line, rgba(0, 0, 0, 0.12));
+  background: #f6f1ea; /* همان زمینه‌ای که خود SVG می‌کشد */
+}
+.captcha-row input {
+  flex: 1 1 5rem;
+  min-width: 0;
+  text-align: center;
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+}
+.captcha-hint {
+  display: block;
+  margin-top: 0.45rem;
+  font-size: 0.82rem;
+  opacity: 0.75;
+}
