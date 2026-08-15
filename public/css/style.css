@@ -459,7 +459,15 @@ p {
     box-shadow: 0 18px 40px rgba(28, 28, 30, 0.16);
     padding: 0.7rem 0.9rem 1.1rem;
     transform: translateY(-130%);
-    transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+    /* منوی بسته فقط جابه‌جا نشده — «پنهان» هم هست.
+       بدون visibility، هشت لینک منو با کلید Tab و برای صفحه‌خوان همچنان
+       در دسترس می‌مانند: کاربر کیبورد فوکوس را روی چیزی می‌برد که اصلاً
+       دیده نمی‌شود. تأخیر ۰.۳۲ ثانیه‌ای روی visibility باعث می‌شود انیمیشن
+       بسته‌شدن کامل دیده شود و بعد پنهان شود. */
+    visibility: hidden;
+    transition:
+      transform 0.32s cubic-bezier(0.32, 0.72, 0, 1),
+      visibility 0s linear 0.32s;
     max-height: calc(100vh - var(--header-h)); /* پشتیبان برای مرورگرهای بدون dvh */
     max-height: calc(100dvh - var(--header-h));
     overflow-y: auto;
@@ -467,6 +475,10 @@ p {
   }
   .nav.open {
     transform: translateY(0);
+    visibility: visible;
+    transition:
+      transform 0.32s cubic-bezier(0.32, 0.72, 0, 1),
+      visibility 0s linear 0s;
   }
   .nav a {
     display: flex;
@@ -3350,4 +3362,80 @@ p {
   align-items: center;
   gap: 0.6rem;
   margin-top: 0.9rem;
+}
+
+/* ====================================================================
+   ترنزیشن بین صفحه‌ها
+   --------------------------------------------------------------------
+   سایت چند-صفحه‌ای است (هر صفحه از سرور می‌آید)، پس به‌جای تبدیل کل سایت
+   به یک اپ جاوااسکریپتی — که چند صد کیلوبایت به هر صفحه اضافه می‌کرد —
+   از View Transitions مرورگر استفاده می‌شود: صفر بایت جاوااسکریپت.
+   مرورگرهایی که پشتیبانی نمی‌کنند، مثل قبل بدون انیمیشن جابه‌جا می‌شوند.
+   ==================================================================== */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root) {
+  animation: fade-out 0.16s ease both;
+}
+::view-transition-new(root) {
+  animation: page-in 0.26s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+@keyframes fade-out {
+  to { opacity: 0; }
+}
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* هدر و دکمه‌های شناور نباید با صفحه محو شوند؛ ثابت می‌مانند تا حس
+   «اپ» بدهد نه «بارگذاری دوباره». */
+.site-header {
+  view-transition-name: site-header;
+}
+.float-cta {
+  view-transition-name: float-cta;
+}
+
+/* برای مرورگرهای بدون View Transitions، یک ورود نرم ساده.
+   فقط opacity و transform است، پس هیچ جابه‌جایی چیدمان (layout shift)
+   ایجاد نمی‌کند. */
+@supports not (view-transition-name: none) {
+  main {
+    animation: page-in 0.26s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+}
+
+/* ------------------------------- انیمیشن باز شدن منوی موبایل */
+@media (max-width: 900px) {
+  /* آیتم‌ها یکی‌یکی می‌آیند، نه همه با هم — حرکت طبیعی‌تر دیده می‌شود.
+     تأخیر عمداً کوتاه است تا منو کند به نظر نرسد. */
+  .nav.open > a,
+  .nav.open .nav-actions {
+    animation: nav-item-in 0.26s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+  .nav.open > a:nth-child(1)  { animation-delay: 0.04s; }
+  .nav.open > a:nth-child(2)  { animation-delay: 0.07s; }
+  .nav.open > a:nth-child(3)  { animation-delay: 0.10s; }
+  .nav.open > a:nth-child(4)  { animation-delay: 0.13s; }
+  .nav.open > a:nth-child(5)  { animation-delay: 0.16s; }
+  .nav.open > a:nth-child(6)  { animation-delay: 0.19s; }
+  .nav.open > a:nth-child(7)  { animation-delay: 0.22s; }
+  .nav.open .nav-actions      { animation-delay: 0.25s; }
+}
+@keyframes nav-item-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* همه‌ی موارد بالا برای کسی که «کاهش انیمیشن» را روشن کرده خاموش می‌شود */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  main,
+  .nav.open > a,
+  .nav.open .nav-actions {
+    animation: none !important;
+  }
 }

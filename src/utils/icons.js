@@ -108,6 +108,38 @@ function categoryArt(name) {
   return 'default';
 }
 
+
+/**
+ * عکس واقعی دسته (اگر داشته باشیم).
+ *
+ * تصویرسازی خطی برای زمانی بود که عکس واقعی نداشتیم. حالا برای چند دسته
+ * عکس واقعی انبار هست و همان باید نشان داده شود — مشتری محلی به عکس واقعی
+ * خیلی بیشتر از طرح خطی اعتماد می‌کند.
+ *
+ * برمی‌گرداند { src, srcset } یا null اگر عکسی برای این دسته نداریم.
+ * عرض‌ها از روی فایل واقعی خوانده می‌شوند تا srcset دروغ نگوید (منبع عکس
+ * قوطی فقط ۲۸۰ پیکسل است؛ اگر ۸۰۰ اعلام کنیم مرورگر همان فایل کوچک را
+ * برای جای بزرگ برمی‌دارد و تار می‌شود).
+ */
+const CAT_PHOTOS = (() => {
+  try {
+    return require('../content/category-photos.json');
+  } catch (err) {
+    return {};
+  }
+})();
+
+function categoryPhoto(name) {
+  const key = categoryArt(name);
+  const widths = CAT_PHOTOS[key];
+  if (!widths || !widths.length) return null;
+  const largest = widths[widths.length - 1];
+  return {
+    src: `/img/catphoto/${key}-${largest}.webp`,
+    srcset: widths.map((w) => `/img/catphoto/${key}-${w}.webp ${w}w`).join(', '),
+  };
+}
+
 /** آدرس تصویر دسته */
 const categoryArtUrl = (name) => `/img/cat/${categoryArt(name)}.svg`;
 
@@ -149,4 +181,4 @@ function icon(name, className = 'ico') {
   return `<svg class="${className}" viewBox="0 0 24 24" aria-hidden="true" ${attrs}><path d="${d}"/></svg>`;
 }
 
-module.exports = { icon, categoryIcon, categoryArt, categoryArtUrl, productArtUrl, paths };
+module.exports = { icon, categoryIcon, categoryArt, categoryArtUrl, categoryPhoto, productArtUrl, paths };

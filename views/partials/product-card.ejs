@@ -27,7 +27,7 @@ const zoomImg = zoomable ? h.productImage(product, 'large') : null;
       width="400" height="300"
       loading="<%= eagerLoad ? 'eager' : 'lazy' %>"
       decoding="async"
-      <%= eagerLoad ? 'fetchpriority="high"' : '' %>>
+      <% if (eagerLoad) { %>fetchpriority="high"<% } %>>
     <span class="badge badge-<%= stock.cls %>"><%= stock.text %></span>
     <% if (product.subcategory_name) { %>
       <span class="badge-sub"><%= product.subcategory_name %></span>

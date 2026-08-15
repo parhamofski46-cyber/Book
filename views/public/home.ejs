@@ -35,7 +35,7 @@
         <div class="hero-badges">
           <span><%- icon('check') %> قیمت روز و شفاف</span>
           <span><%- icon('truck') %> ارسال به گرگان و شهرهای اطراف</span>
-          <span><%- icon('scroll') %> بیش از ۱۰۰۰ مدل فرفورژه‌ی آماده</span>
+          <span><%- icon('scroll') %> بیش از ۶۰۰ مدل فرفورژه‌ی آماده</span>
           <span><%- icon('layers') %> تولیدکننده‌ی ورق گالوانیزه</span>
         </div>
         </div>
@@ -43,11 +43,17 @@
         <!-- ترکیب تصویری هیرو: چهار دسته‌ی شاخص، هم تزئین است هم میان‌بر -->
         <div class="hero-art" aria-hidden="true">
           <%
-          const heroPicks = ['گل و طرح‌های فرفورژه', 'ورق گالوانیزه', 'قوطی', 'فنس و توری'];
-          heroPicks.forEach(function (nm, i) { %>
+          /* این چهار کاشی، اولین چیزی است که بازدیدکننده می‌بیند. هر چهار
+             دسته عکس واقعی انبار دارند، پس طرح خطی استفاده نمی‌شود —
+             عکس واقعی برای مشتری محلی خیلی باورپذیرتر است. */
+          const heroPicks = ['گل و طرح‌های فرفورژه', 'ورق گالوانیزه', 'قوطی', 'شاخ گوزنی'];
+          heroPicks.forEach(function (nm, i) {
+            const ph = categoryPhoto(nm); %>
             <span class="hero-tile hero-tile-<%= i + 1 %>">
-              <img src="<%= categoryArtUrl(nm) %>" alt="" width="400" height="300"
-                   <%= i === 0 ? 'fetchpriority="high"' : 'loading="lazy"' %> decoding="async">
+              <img src="<%= ph ? ph.src : categoryArtUrl(nm) %>"
+                   <% if (ph) { %>srcset="<%= ph.srcset %>" sizes="(max-width:900px) 45vw, 300px"<% } %>
+                   alt="" width="400" height="300"
+                   <% if (i === 0) { %>fetchpriority="high"<% } else { %>loading="lazy"<% } %> decoding="async">
             </span>
           <% }); %>
         </div>
@@ -70,9 +76,11 @@
             <a class="cat-card <%= cat.is_featured ? 'featured' : '' %>"
                href="/category/<%= encodeURIComponent(cat.slug) %>"
                style="--i:<%= i %>">
-              <span class="cat-art">
-                <img src="<%= categoryArtUrl(cat.name) %>" alt=""
-                     width="400" height="300" loading="lazy" decoding="async">
+              <% const catPh = categoryPhoto(cat.name); %>
+              <span class="cat-art <%= catPh ? 'is-photo' : '' %>">
+                <img src="<%= catPh ? catPh.src : categoryArtUrl(cat.name) %>"
+                     <% if (catPh) { %>srcset="<%= catPh.srcset %>" sizes="(max-width:600px) 92vw, 380px"<% } %>
+                     alt="" width="400" height="300" loading="lazy" decoding="async">
               </span>
               <span class="cat-meta">
                 <b><%= cat.name %></b>
@@ -110,7 +118,7 @@
     <section class="section" id="forge">
       <div class="wrap">
         <div class="section-head center">
-          <span class="eyebrow">بیش از ۱۰۰۰ مدل، آماده‌ی تحویل</span>
+          <span class="eyebrow">بیش از ۶۰۰ مدل، آماده‌ی تحویل</span>
           <div class="section-title"><h2>گل و طرح‌های فرفورژه</h2></div>
           <p>
             برای درب، پنجره و نرده. آنچه اینجا می‌بینید فقط چند نمونه است؛ انبار ما در

@@ -18,7 +18,7 @@ const { resolveSessionSecret, describeSecretSource } = require('./src/config/ses
 const queries = require('./src/db/queries');
 const { seedAll } = require('./src/db/seed');
 const helpers = require('./src/utils/view-helpers');
-const { icon, categoryIcon, categoryArtUrl } = require('./src/utils/icons');
+const { icon, categoryIcon, categoryArtUrl, categoryPhoto } = require('./src/utils/icons');
 const { UPLOAD_DIR, UPLOAD_WARNING } = require('./src/services/images');
 
 // ---------------------------------------------------------------- راه‌اندازی
@@ -155,6 +155,7 @@ app.use((req, res, next) => {
   res.locals.icon = icon;
   res.locals.categoryIcon = categoryIcon;
   res.locals.categoryArtUrl = categoryArtUrl;
+  res.locals.categoryPhoto = categoryPhoto;
   res.locals.setting = getSetting;
   // خلاصه‌ی امتیاز مشتریان — در داده‌ی ساختاریافته‌ی همه‌ی صفحات استفاده می‌شود
   res.locals.reviewSummary = queries.testimonialSummary();
