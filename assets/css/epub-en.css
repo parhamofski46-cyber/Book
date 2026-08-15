@@ -1,0 +1,374 @@
+/* English edition — EPUB 3 stylesheet.
+ *
+ * The English text would survive on reader defaults; the embedded faces are here
+ * to keep the edition looking like the same book as its Persian twin.
+ */
+
+@font-face {
+  font-family: "EB Garamond";
+  font-weight: 400;
+  font-style: normal;
+  src: url("../fonts/EBGaramond-Regular.ttf");
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-weight: 500;
+  font-style: normal;
+  src: url("../fonts/EBGaramond-Medium.ttf");
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-weight: 400;
+  font-style: italic;
+  src: url("../fonts/EBGaramond-Italic.ttf");
+}
+@font-face {
+  font-family: "Cormorant Garamond";
+  font-weight: 400;
+  font-style: normal;
+  src: url("../fonts/CormorantGaramond-Regular.ttf");
+}
+@font-face {
+  font-family: "Cormorant Garamond";
+  font-weight: 600;
+  font-style: normal;
+  src: url("../fonts/CormorantGaramond-SemiBold.ttf");
+}
+@font-face {
+  font-family: "Cormorant Garamond";
+  font-weight: 400;
+  font-style: italic;
+  src: url("../fonts/CormorantGaramond-Italic.ttf");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 300;
+  font-style: normal;
+  src: url("../fonts/Inter-Light.ttf");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 400;
+  font-style: normal;
+  src: url("../fonts/Inter-Regular.ttf");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 600;
+  font-style: normal;
+  src: url("../fonts/Inter-SemiBold.ttf");
+}
+
+html,
+body {
+  text-align: justify;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: 1em;
+  line-height: 1.6;
+  color: #151c24;
+  padding: 0 0.6em;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+p {
+  margin: 0 0 1.05em;
+  text-indent: 0;
+  widows: 2;
+  orphans: 2;
+}
+
+/* ── Headings ─────────────────────────────────────────── */
+
+h1,
+h2 {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 400;
+  text-align: center;
+  page-break-after: avoid;
+  break-after: avoid;
+  line-height: 1.3;
+}
+
+/* The separator only exists so the generated navigation reads
+   "Chapter One — Nights"; on the page the two halves stack. */
+.numsep {
+  display: none;
+}
+
+.front-h,
+.chapter-h {
+  page-break-before: always;
+  break-before: page;
+  margin: 2.4em 0 2em;
+}
+
+.chapter-num,
+.front-name {
+  display: block;
+  font-family: "Inter", sans-serif;
+  font-weight: 300;
+  font-size: 0.62em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8a7340;
+  margin-bottom: 1em;
+}
+
+.chapter-title {
+  display: block;
+  font-size: 1.9em;
+  line-height: 1.25;
+  color: #151c24;
+}
+
+.front-name {
+  font-size: 0.8em;
+  color: #8a7340;
+}
+
+/* ── Part dividers ────────────────────────────────────── */
+
+.part-h {
+  page-break-before: always;
+  break-before: page;
+  margin: 3.4em 0 1.2em;
+}
+
+.part-label {
+  display: block;
+  font-family: "Inter", sans-serif;
+  font-weight: 300;
+  font-size: 0.6em;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #8a7340;
+  margin-bottom: 1.2em;
+}
+
+.part-name {
+  display: block;
+  font-size: 2.6em;
+  line-height: 1.2;
+  color: #8e6b1c;
+}
+
+.part-mark {
+  display: block;
+  width: 54px;
+  height: auto;
+  margin: 1.4em auto 1.2em;
+}
+
+.part-note {
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-weight: 300;
+  font-size: 0.85em;
+  color: #6b7581;
+  margin: 0 0 3em;
+}
+
+/* ── Front and back matter ────────────────────────────── */
+
+.epigraph {
+  margin: 3.5em auto;
+  text-align: center;
+}
+
+.epigraph p {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 1.25em;
+  line-height: 1.6;
+  color: #414b55;
+  text-align: center;
+}
+
+.epigraph .src {
+  font-family: "Inter", sans-serif;
+  font-size: 0.72em;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #7a8590;
+}
+
+.colophon,
+.the-end {
+  page-break-before: always;
+  break-before: page;
+  text-align: center;
+  margin-top: 4em;
+  font-family: "Inter", sans-serif;
+  font-weight: 300;
+  font-size: 0.85em;
+  line-height: 2;
+  color: #414b55;
+}
+
+.colophon p,
+.the-end p {
+  text-align: center;
+}
+
+.the-end h4 {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 400;
+  font-size: 2em;
+  color: #8e6b1c;
+  margin: 0 0 0.5em;
+}
+
+/* ── Ornaments and scene breaks ───────────────────────── */
+
+.orn {
+  width: 46px;
+  height: 1px;
+  background: #b8801e;
+  margin: 1.6em auto;
+}
+
+/* The screen edition drew the accent from a CSS custom property; EPUB readers
+   cannot be relied on for those, so the part accent arrives as a real class. */
+.brk {
+  text-align: center;
+  margin: 2em 0;
+  font-size: 0.62em;
+  letter-spacing: 1.2em;
+  text-indent: 1.2em;
+  color: #b8801e;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.brk.p1 {
+  color: #b8801e;
+}
+.brk.p2 {
+  color: #2a5766;
+}
+.brk.p3 {
+  color: #8e2f24;
+}
+
+/* ── Drop cap ─────────────────────────────────────────── */
+
+.lead::first-letter {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 3.1em;
+  line-height: 0.9;
+  float: left;
+  color: #b8801e;
+  padding-right: 0.06em;
+}
+
+/* ── Documents inside the story ───────────────────────── */
+/* These four blocks have to read as objects — a letter, a diary, a ledger line,
+   a list of names — not as body text. They stay whole across page breaks. */
+
+.letter {
+  background: #e6e0d3;
+  border: 1px solid rgba(138, 110, 50, 0.3);
+  padding: 1.4em 1.2em;
+  margin: 1.8em 0;
+  font-size: 1em;
+  line-height: 1.75;
+  color: #2c2a21;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.letter p {
+  margin: 0 0 1em;
+}
+
+.letter .sign {
+  text-align: right;
+  font-family: "Inter", sans-serif;
+  font-size: 0.78em;
+  color: #6b6450;
+  margin: 0;
+}
+
+.journal {
+  border-left: 2px solid #b8801e;
+  padding: 0 0 0 1em;
+  margin: 1.6em 0;
+  font-size: 0.97em;
+  line-height: 1.75;
+  color: #414b55;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.journal p {
+  margin: 0 0 0.9em;
+}
+
+.ledger {
+  background: #e6e0d3;
+  border-left: 2px solid #b8801e;
+  padding: 0.85em 1.1em;
+  margin: 1.7em 0;
+  font-family: "Inter", sans-serif;
+  font-size: 0.85em;
+  line-height: 1.8;
+  color: #414b55;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.names {
+  margin: 1.4em 0;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.names ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-size: 0.92em;
+  line-height: 2.1;
+  color: #414b55;
+}
+
+.names li {
+  text-align: center;
+}
+
+.names .me {
+  color: #8e2f24;
+  font-weight: 600;
+}
+
+/* ── The interlude ────────────────────────────────────── */
+/* Set apart from the chapters around it. Reader themes routinely override
+   background colour, so the interlude leans on rules and colour it can keep. */
+
+.midbreak-h .chapter-title,
+.midbreak-h .chapter-num {
+  color: #8a6a24;
+}
+
+.midbreak {
+  border-top: 1px solid rgba(138, 110, 50, 0.4);
+  border-bottom: 1px solid rgba(138, 110, 50, 0.4);
+  padding: 1.6em 0;
+  margin: 0 0 2em;
+}
+
+.midbreak .journal {
+  border-left-color: #8a6a24;
+}
+
+.midbreak .lead::first-letter {
+  color: #8a6a24;
+}

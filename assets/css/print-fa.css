@@ -1,0 +1,46 @@
+/* Persian edition — print interior. Loaded after print-common.css. */
+
+@media print {
+  html,
+  body {
+    font-size: 10.5pt;
+    line-height: 1.95;
+  }
+
+  /* The screen edition opens each chapter with a floated ::first-letter drop
+     cap. That works in Latin script and breaks Persian: the initial letter is
+     lifted out of the word, so «هر» sets as «ه» plus a stranded «ر» and the
+     joined form is lost. Cancelled here — the opening paragraph is marked by
+     size instead, which costs nothing and keeps the word intact. */
+  .lead::first-letter,
+  .midbreak .lead::first-letter {
+    float: none !important;
+    font-family: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    margin: 0 !important;
+    color: inherit !important;
+  }
+
+  .lead {
+    font-size: 1.06em;
+  }
+
+  .cover-title {
+    font-size: 2.9rem !important;
+  }
+
+  .part h2 {
+    font-size: 2.1rem !important;
+  }
+
+  .chapter h3 {
+    font-size: 1.45rem !important;
+  }
+
+  .letter,
+  .journal,
+  .ledger {
+    font-size: 0.94em;
+  }
+}

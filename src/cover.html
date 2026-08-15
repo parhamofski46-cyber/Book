@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>جلد کتاب — مردی که دخترش را فراموش کرد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700;900&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--gold:#D9AE55;--ink:#0A0F16}
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:#0A0F16;color:#B8C6D2;
+    font-family:"Vazirmatn",system-ui,sans-serif;
+    display:flex;flex-direction:column;align-items:center;
+    padding:24px 16px 56px;min-height:100vh;
+  }
+  h1{font-size:.95rem;font-weight:400;letter-spacing:normal;color:#7B8C9B;margin:0 0 18px}
+  .stage{
+    width:100%;max-width:430px;
+    box-shadow:0 30px 70px rgba(0,0,0,.72), 0 0 0 1px rgba(217,174,85,.14);
+    border-radius:3px;overflow:hidden;background:#070C12;
+  }
+  canvas{display:block;width:100%;height:auto}
+  .bar{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;justify-content:center}
+  button{
+    font-family:inherit;font-size:.9rem;font-weight:600;
+    padding:.72rem 1.5rem;border-radius:100px;cursor:pointer;
+    border:1px solid var(--gold);background:var(--gold);color:#10161E;
+    transition:.15s;
+  }
+  button.ghost{background:transparent;color:var(--gold)}
+  button:hover{filter:brightness(1.12)}
+  button:focus-visible{outline:2px solid #fff;outline-offset:3px}
+  .hint{margin-top:16px;font-size:.78rem;font-weight:300;color:#5E7183;text-align:center;line-height:2;max-width:400px}
+  .swatches{display:flex;gap:8px;margin-top:18px}
+  .sw{width:34px;height:34px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.15s}
+  .sw[aria-pressed="true"]{border-color:#fff}
+</style>
+</head>
+<body>
+
+<h1>جلد کتاب — ۱۶۰۰ × ۲۵۶۰ پیکسل</h1>
+
+<div class="stage"><canvas id="c" width="1600" height="2560"></canvas></div>
+
+<div class="swatches" id="sw">
+  <button class="sw" data-theme="night"  style="background:#17384A" title="شبِ باران" aria-pressed="true"></button>
+  <button class="sw" data-theme="ember"  style="background:#3B2417" title="کهربا" aria-pressed="false"></button>
+  <button class="sw" data-theme="ash"    style="background:#252C33" title="خاکستر" aria-pressed="false"></button>
+</div>
+
+<div class="bar" style="margin-top:14px">
+  <button class="ghost" id="lang">English / فارسی</button>
+</div>
+
+<div class="bar">
+  <button id="dl">دانلود PNG با کیفیت کامل</button>
+  <button class="ghost" id="dl2">نسخهٔ کوچک (وب)</button>
+</div>
+
+<p class="hint">فایل خروجی دقیقاً اندازهٔ استاندارد آمازون KDP و گام‌رود است. سه حالت رنگی را امتحان کن و هرکدام را خواستی دانلود کن.</p>
+
+<script>
+const c = document.getElementById('c');
+const x = c.getContext('2d');
+const W = 1600, H = 2560;
+
+const THEMES = {
+  night: { bgIn:'#17384A', bgMid:'#0E1E2B', bgOut:'#04080C', liquid1:'#FBE0A0', liquid2:'#D9A036', liquid3:'#84500F', gold:'#E8C67F', sub:'#8FA7B8', glow:'rgba(238,190,96,' },
+  ember: { bgIn:'#3B2417', bgMid:'#22130C', bgOut:'#090504', liquid1:'#FFE6B0', liquid2:'#EAAE44', liquid3:'#94560F', gold:'#F2D294', sub:'#B3907A', glow:'rgba(255,196,104,' },
+  ash:   { bgIn:'#252C33', bgMid:'#15191E', bgOut:'#06080A', liquid1:'#F0E7D4', liquid2:'#C3B189', liquid3:'#6B5E41', gold:'#DBD0B7', sub:'#8E979F', glow:'rgba(228,216,186,' }
+};
+let theme = 'night';
+let lang = 'fa';
+const AUTHOR = { fa: 'محمدپرهام پلنگ سنگدوینی', en: 'MOHAMMADPARHAM PALANGSANGDOVINI' };
+const TITLES = { fa: ['مردی که','دخترش را','فراموش کرد'],
+                 en: ['The Man Who','Forgot His','Daughter'] };
+const EYEBROW = { fa: 'رمان', en: 'A NOVEL' };
+const TAG1 = { fa: 'هرچه بخواهی از یاد ببری، از تو می‌خریم',
+               en: 'Whatever you want to forget, we will buy from you' };
+const TAG2 = { fa: 'اما یکی باید حملش کند', en: 'but someone has to carry it' };
+
+/* ── seeded noise so redraws look identical ── */
+let seed = 20260812;
+function rnd(){ seed = (seed*1664525 + 1013904223) % 4294967296; return seed/4294967296; }
+
+function draw(){
+  const T = THEMES[theme];
+  seed = 20260812;
+  x.clearRect(0,0,W,H);
+
+  /* background */
+  const g = x.createRadialGradient(W/2, H*0.44, 60, W/2, H*0.44, H*0.82);
+  g.addColorStop(0, T.bgIn); g.addColorStop(0.46, T.bgMid); g.addColorStop(1, T.bgOut);
+  x.fillStyle = g; x.fillRect(0,0,W,H);
+
+  /* rain */
+  x.save(); x.globalAlpha = 0.16; x.strokeStyle = '#CFE3F0'; x.lineCap='round';
+  for(let i=0;i<230;i++){
+    const px = rnd()*W*1.25 - W*0.15, py = rnd()*H, len = 60+rnd()*150, w = 0.6+rnd()*1.5;
+    x.lineWidth = w; x.globalAlpha = 0.05 + rnd()*0.16;
+    x.beginPath(); x.moveTo(px,py); x.lineTo(px-42, py+len); x.stroke();
+  }
+  x.restore();
+
+  /* glow behind vial */
+  const cx = W/2, cy = 1120;
+  const gl = x.createRadialGradient(cx, cy, 20, cx, cy, 620);
+  gl.addColorStop(0, T.glow+'0.42)'); gl.addColorStop(0.42, T.glow+'0.14)'); gl.addColorStop(1, T.glow+'0)');
+  x.fillStyle = gl; x.fillRect(cx-660, cy-660, 1320, 1320);
+
+  drawVial(cx, cy, T);
+
+  /* vignette */
+  const v = x.createRadialGradient(W/2, H/2, H*0.30, W/2, H/2, H*0.78);
+  v.addColorStop(0,'rgba(0,0,0,0)'); v.addColorStop(1,'rgba(0,0,0,0.62)');
+  x.fillStyle = v; x.fillRect(0,0,W,H);
+
+  /* frame */
+  x.strokeStyle = 'rgba(217,174,85,0.34)'; x.lineWidth = 2.5;
+  x.strokeRect(62,62,W-124,H-124);
+  x.strokeStyle = 'rgba(217,174,85,0.15)'; x.lineWidth = 1.5;
+  x.strokeRect(80,80,W-160,H-160);
+
+  drawType(T);
+}
+
+function drawVial(cx, cy, T){
+  const bodyW = 300, bodyTop = cy-330, bodyBot = cy+430;
+  const neckW = 132, neckTop = bodyTop-190;
+  const liqTop = cy-52;
+
+  /* cork */
+  x.fillStyle = '#5B4728';
+  roundRect(cx-neckW/2-16, neckTop-108, neckW+32, 96, 12); x.fill();
+  x.strokeStyle = 'rgba(158,126,78,.85)'; x.lineWidth=3;
+  roundRect(cx-neckW/2-16, neckTop-108, neckW+32, 96, 12); x.stroke();
+  x.fillStyle = '#3E301B';
+  roundRect(cx-neckW/2-4, neckTop-18, neckW+8, 26, 6); x.fill();
+
+  /* glass body path */
+  x.beginPath();
+  x.moveTo(cx-neckW/2, neckTop);
+  x.lineTo(cx-neckW/2, bodyTop-60);
+  x.lineTo(cx-bodyW/2, bodyTop+40);
+  x.lineTo(cx-bodyW/2, bodyBot-46);
+  x.quadraticCurveTo(cx-bodyW/2, bodyBot, cx-bodyW/2+46, bodyBot);
+  x.lineTo(cx+bodyW/2-46, bodyBot);
+  x.quadraticCurveTo(cx+bodyW/2, bodyBot, cx+bodyW/2, bodyBot-46);
+  x.lineTo(cx+bodyW/2, bodyTop+40);
+  x.lineTo(cx+neckW/2, bodyTop-60);
+  x.lineTo(cx+neckW/2, neckTop);
+  x.closePath();
+
+  const gg = x.createLinearGradient(cx-bodyW/2, neckTop, cx+bodyW/2, bodyBot);
+  gg.addColorStop(0,'rgba(214,238,250,.20)');
+  gg.addColorStop(.5,'rgba(150,182,203,.06)');
+  gg.addColorStop(1,'rgba(214,238,250,.16)');
+  x.fillStyle = gg; x.fill();
+  x.strokeStyle = 'rgba(219,240,252,.55)'; x.lineWidth = 4; x.stroke();
+
+  /* liquid (clipped to body) */
+  x.save();
+  x.beginPath();
+  x.moveTo(cx-bodyW/2, liqTop);
+  x.lineTo(cx-bodyW/2, bodyBot-46);
+  x.quadraticCurveTo(cx-bodyW/2, bodyBot, cx-bodyW/2+46, bodyBot);
+  x.lineTo(cx+bodyW/2-46, bodyBot);
+  x.quadraticCurveTo(cx+bodyW/2, bodyBot, cx+bodyW/2, bodyBot-46);
+  x.lineTo(cx+bodyW/2, liqTop);
+  x.closePath();
+  x.clip();
+
+  const lg = x.createLinearGradient(cx, liqTop, cx, bodyBot);
+  lg.addColorStop(0, T.liquid1); lg.addColorStop(.5, T.liquid2); lg.addColorStop(1, T.liquid3);
+  x.fillStyle = lg; x.fillRect(cx-bodyW/2, liqTop, bodyW, bodyBot-liqTop);
+
+  drawChild(cx, bodyBot-56, T);
+
+  x.restore();
+
+  /* meniscus */
+  x.beginPath(); x.ellipse(cx, liqTop, bodyW/2, 22, 0, 0, Math.PI*2);
+  x.fillStyle = 'rgba(255,240,205,.9)'; x.fill();
+
+  /* highlights */
+  x.strokeStyle='rgba(255,255,255,.30)'; x.lineWidth=13; x.lineCap='round';
+  x.beginPath(); x.moveTo(cx-92, bodyTop+90); x.lineTo(cx-92, bodyBot-110); x.stroke();
+  x.strokeStyle='rgba(255,255,255,.10)'; x.lineWidth=8;
+  x.beginPath(); x.moveTo(cx+104, bodyTop+230); x.lineTo(cx+104, bodyBot-160); x.stroke();
+}
+
+/* small girl silhouette, holding one shoe */
+function drawChild(cx, baseY, T){
+  x.save();
+  x.globalAlpha = .84;
+  x.fillStyle = '#2A1B05';
+  const s = 1.0, hy = baseY - 232*s;
+
+  /* shadow */
+  x.save(); x.globalAlpha=.30; x.beginPath();
+  x.ellipse(cx, baseY+6, 118, 22, 0, 0, Math.PI*2); x.fill(); x.restore();
+
+  /* head */
+  x.beginPath(); x.arc(cx, hy, 41*s, 0, Math.PI*2); x.fill();
+  /* hair bun */
+  x.beginPath(); x.arc(cx+34*s, hy-24*s, 17*s, 0, Math.PI*2); x.fill();
+
+  /* dress */
+  x.beginPath();
+  x.moveTo(cx-33*s, hy+38*s);
+  x.quadraticCurveTo(cx, hy+22*s, cx+33*s, hy+38*s);
+  x.lineTo(cx+72*s, baseY-56*s);
+  x.quadraticCurveTo(cx, baseY-34*s, cx-72*s, baseY-56*s);
+  x.closePath(); x.fill();
+
+  /* legs */
+  x.fillRect(cx-30*s, baseY-58*s, 21*s, 58*s);
+  x.fillRect(cx+10*s, baseY-58*s, 21*s, 58*s);
+
+  /* right arm reaching down-out with shoe */
+  x.strokeStyle = '#2A1B05'; x.lineWidth = 17*s; x.lineCap='round';
+  x.beginPath(); x.moveTo(cx+30*s, hy+58*s); x.lineTo(cx+86*s, hy+150*s); x.stroke();
+  /* left arm */
+  x.beginPath(); x.moveTo(cx-30*s, hy+58*s); x.lineTo(cx-62*s, hy+146*s); x.stroke();
+
+  /* the shoe */
+  x.fillStyle = '#1C1103';
+  x.beginPath();
+  x.moveTo(cx+66*s, hy+156*s);
+  x.lineTo(cx+120*s, hy+156*s);
+  x.quadraticCurveTo(cx+134*s, hy+156*s, cx+134*s, hy+172*s);
+  x.lineTo(cx+134*s, hy+184*s);
+  x.quadraticCurveTo(cx+134*s, hy+192*s, cx+122*s, hy+192*s);
+  x.lineTo(cx+66*s, hy+192*s);
+  x.quadraticCurveTo(cx+56*s, hy+192*s, cx+58*s, hy+178*s);
+  x.closePath(); x.fill();
+
+  x.restore();
+}
+
+function drawType(T){
+  x.textAlign = 'center';
+  x.direction = 'rtl';
+
+  /* eyebrow */
+  x.fillStyle = T.sub;
+  x.font = '400 42px Vazirmatn, sans-serif';
+  x.letterSpacing = '0px';
+  x.fillText(EYEBROW[lang], W/2, 268);
+
+  /* title */
+  const lines = TITLES[lang];
+  x.font = '900 148px Vazirmatn, sans-serif';
+  const tg = x.createLinearGradient(0, 1660, 0, 2160);
+  tg.addColorStop(0, '#FFF0C9'); tg.addColorStop(.48, T.gold); tg.addColorStop(1, '#A87F32');
+  x.fillStyle = tg;
+  x.shadowColor = 'rgba(0,0,0,.65)'; x.shadowBlur = 34; x.shadowOffsetY = 8;
+  let y = 1742;
+  for(const ln of lines){ x.fillText(ln, W/2, y); y += 196; }
+  x.shadowBlur = 0; x.shadowOffsetY = 0;
+
+  /* author */
+  x.fillStyle = T.gold;
+  x.font = (lang==='fa' ? '400 58px' : '400 40px') + ' Vazirmatn, sans-serif';
+  if(lang==='en') x.letterSpacing = '10px';
+  x.fillText(AUTHOR[lang], W/2, 2246);
+  x.letterSpacing = '0px';
+
+  /* rule */
+  x.strokeStyle = 'rgba(217,174,85,.58)'; x.lineWidth = 2.5;
+  x.beginPath(); x.moveTo(W/2-88, 2306); x.lineTo(W/2+88, 2306); x.stroke();
+
+  /* subtitle — two lines, generous foot margin */
+  x.fillStyle = T.sub;
+  x.font = '400 46px Vazirmatn, sans-serif';
+  x.fillText(TAG1[lang], W/2, 2378);
+  x.fillStyle = 'rgba(255,255,255,.34)';
+  x.font = '300 38px Vazirmatn, sans-serif';
+  x.fillText(TAG2[lang], W/2, 2442);
+
+  /* imprint — nastaliq */
+  x.fillStyle = 'rgba(217,174,85,.72)';
+  x.font = '400 46px "Noto Nastaliq Urdu", serif';
+  x.fillText('فراموشخانه', W/2, 400);
+}
+
+function roundRect(rx, ry, rw, rh, r){
+  x.beginPath();
+  x.moveTo(rx+r, ry);
+  x.arcTo(rx+rw, ry, rx+rw, ry+rh, r);
+  x.arcTo(rx+rw, ry+rh, rx, ry+rh, r);
+  x.arcTo(rx, ry+rh, rx, ry, r);
+  x.arcTo(rx, ry, rx+rw, ry, r);
+  x.closePath();
+}
+
+/* ── boot ── */
+async function boot(){
+  try{
+    await document.fonts.load('900 148px Vazirmatn');
+    await document.fonts.load('300 44px Vazirmatn');
+    await document.fonts.load('400 46px "Noto Nastaliq Urdu"');
+    await document.fonts.ready;
+  }catch(e){ /* fall back to system fonts */ }
+  draw();
+}
+boot();
+
+document.getElementById('sw').addEventListener('click', e=>{
+  const b = e.target.closest('.sw'); if(!b) return;
+  theme = b.dataset.theme;
+  document.querySelectorAll('.sw').forEach(s=>s.setAttribute('aria-pressed', s===b));
+  draw();
+});
+
+function save(scale, name){
+  if(scale === 1){
+    c.toBlob(b=>download(b,name),'image/png');
+    return;
+  }
+  const t = document.createElement('canvas');
+  t.width = Math.round(W*scale); t.height = Math.round(H*scale);
+  t.getContext('2d').drawImage(c,0,0,t.width,t.height);
+  t.toBlob(b=>download(b,name),'image/png');
+}
+function download(blob, name){
+  const u = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = u; a.download = name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(u), 4000);
+}
+document.getElementById('lang').onclick = ()=>{ lang = (lang==='fa'?'en':'fa'); draw(); };
+document.getElementById('dl').onclick  = ()=> save(1,    'cover-1600x2560-'+lang+'-'+theme+'.png');
+document.getElementById('dl2').onclick = ()=> save(0.375,'cover-600x960-'+lang+'-'+theme+'.png');
+</script>
+</body>
+</html>

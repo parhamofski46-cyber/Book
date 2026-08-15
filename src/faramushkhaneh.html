@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مردی که دخترش را فراموش کرد — محمدپرهام پلنگ سنگدوینی</title>
+<meta name="author" content="محمدپرهام پلنگ سنگدوینی">
+<meta name="description" content="رمانی دربارهٔ مغازه‌ای که خاطره می‌خرد، و مردی که پشت پیشخوانش ایستاده.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;700&family=Vazirmatn:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#151C24;
+  --ink-soft:#414B55;
+  --paper:#EFEAE0;
+  --paper-deep:#E6E0D3;
+  --night:#0A1620;
+  --night-2:#122430;
+  --amber:#B8801E;
+  --amber-lite:#E3B155;
+  --rain:#2A5766;
+  --madder:#8E2F24;
+  --rule:rgba(22,30,40,.16);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Noto Naskh Arabic",serif;
+  font-size:19px;
+  line-height:2.15;
+  text-align:justify;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:41rem;margin:0 auto;padding:0 1.6rem}
+p{margin:0 0 1.25em}
+
+/* ── COVER ───────────────────────────── */
+.cover{
+  position:relative;min-height:100svh;
+  background:
+    radial-gradient(120% 80% at 50% 42%, #1E2C3A 0%, #101823 45%, #070C12 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;text-align:center;
+  padding:4.5rem 1.6rem 3.5rem;
+}
+.rain{position:absolute;inset:0;opacity:.32;pointer-events:none;
+  background-image:repeating-linear-gradient(102deg,transparent 0 13px,rgba(178,205,220,.16) 13px 14px);
+}
+.cover-frame{
+  position:absolute;inset:1.6rem;border:1px solid rgba(197,150,58,.32);
+  pointer-events:none;
+}
+.cover-frame::after{
+  content:"";position:absolute;inset:7px;border:1px solid rgba(197,150,58,.14);
+}
+.vial-wrap{position:relative;z-index:2;margin-bottom:1.6rem}
+.glow{
+  position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);
+  width:290px;height:290px;border-radius:50%;
+  background:radial-gradient(circle,rgba(226,175,74,.34) 0%,rgba(226,175,74,.10) 38%,transparent 68%);
+  animation:breathe 7s ease-in-out infinite;
+}
+@keyframes breathe{0%,100%{opacity:.75;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.09)}}
+.cover-title{
+  position:relative;z-index:2;
+  font-family:"Noto Nastaliq Urdu",serif;
+  font-size:clamp(3rem,13vw,5.4rem);
+  line-height:2.1;
+  color:#EBC672;
+  margin:0;
+  text-shadow:0 0 34px rgba(226,175,74,.34);
+}
+.cover-rule{position:relative;z-index:2;width:78px;height:1px;background:rgba(197,150,58,.6);margin:1.1rem auto 1.5rem}
+.cover-sub{
+  position:relative;z-index:2;
+  font-family:"Vazirmatn",sans-serif;font-weight:400;
+  font-size:clamp(.82rem,3.6vw,1rem);line-height:2.15;
+  color:#93A8B8;max-width:min(24rem,88vw);margin:0 auto;
+  overflow-wrap:break-word;
+}
+.cover-foot{
+  position:relative;z-index:2;margin-top:2.6rem;
+  font-family:"Vazirmatn",sans-serif;font-weight:300;
+  font-size:clamp(.68rem,2.8vw,.8rem);color:#657A8B;
+}
+
+/* ── EPIGRAPH ────────────────────────── */
+.epigraph{
+  background:var(--paper-deep);padding:5.5rem 0;text-align:center;
+}
+.epigraph p{
+  font-family:"Noto Nastaliq Urdu",serif;font-size:1.15rem;line-height:2.6;
+  color:var(--ink-soft);max-width:30rem;margin:0 auto 1.4rem;text-align:center;
+}
+.epigraph .src{font-family:"Vazirmatn",sans-serif;font-size:.78rem;letter-spacing:normal;color:#7A8590}
+
+/* ── PART DIVIDER ────────────────────── */
+.part{
+  padding:6.5rem 1.5rem;text-align:center;
+  background:linear-gradient(180deg,var(--night) 0%,var(--night-2) 100%);
+  color:#C6D2DB;margin:0;
+}
+.part .label{
+  font-family:"Vazirmatn",sans-serif;font-weight:300;
+  font-size:.75rem;letter-spacing:normal;color:#6D8393;margin-bottom:1.4rem;
+}
+.part h2{
+  font-family:"Noto Nastaliq Urdu",serif;font-weight:400;
+  font-size:clamp(2.1rem,7vw,3rem);line-height:2;margin:.4rem 0 1.5rem;color:#E4D3A8;
+}
+.part .note{font-family:"Vazirmatn",sans-serif;font-weight:300;font-size:.9rem;color:#7E93A2}
+.part svg{display:block;margin:0 auto 1.6rem}
+
+/* ── CHAPTERS ────────────────────────── */
+.chapter{padding:4.6rem 0 1rem}
+.chapter-head{text-align:center;margin-bottom:3rem}
+.chapter-num{
+  font-family:"Vazirmatn",sans-serif;font-weight:300;
+  font-size:.74rem;letter-spacing:normal;color:var(--accent,var(--amber));
+  margin-bottom:.9rem;
+}
+.chapter-head h3{
+  font-family:"Noto Nastaliq Urdu",serif;font-weight:400;
+  font-size:clamp(1.5rem,5.2vw,2.1rem);line-height:2.2;
+  margin:0 0 1.1rem;color:var(--ink);
+}
+.orn{width:46px;height:1px;background:var(--accent,var(--amber));opacity:.55;margin:0 auto}
+
+.p1{--accent:var(--amber)}
+.p2{--accent:var(--rain)}
+.p3{--accent:var(--madder)}
+
+.lead::first-letter{
+  font-family:"Noto Nastaliq Urdu",serif;
+  font-size:2.5em;line-height:.8;float:right;
+  margin:.22em .08em 0 .22em;color:var(--accent,var(--amber));
+}
+.brk{text-align:center;margin:2.4rem 0;color:var(--accent,var(--amber));opacity:.5;letter-spacing:normal;font-size:.7rem}
+
+/* dialogue & special blocks */
+.said{margin:0 0 1.05em}
+.ledger{
+  background:var(--paper-deep);border-right:2px solid var(--accent,var(--amber));
+  padding:1.1rem 1.3rem;margin:2rem 0;
+  font-family:"Vazirmatn",sans-serif;font-size:.92rem;line-height:2.1;color:var(--ink-soft);
+}
+.letter{
+  background:#E6E3D8;padding:2.2rem 1.8rem;margin:2.2rem 0;
+  border:1px solid rgba(138,110,50,.28);
+  font-size:1.02rem;line-height:2.3;color:#2C2A21;
+}
+.letter p{margin:0 0 1.15em}
+.letter .sign{text-align:left;font-family:"Vazirmatn",sans-serif;font-size:.86rem;color:#6B6450;margin:0}
+.names{list-style:none;padding:0;margin:1.6rem 0;text-align:center;
+  font-family:"Vazirmatn",sans-serif;font-size:1rem;line-height:2.5;color:var(--ink-soft)}
+.names li.me{color:var(--madder);font-weight:600}
+
+.end{
+  background:var(--night);color:#C6D2DB;text-align:center;padding:6rem 1.5rem;
+}
+.end h4{font-family:"Noto Nastaliq Urdu",serif;font-weight:400;font-size:2rem;color:#E4D3A8;margin:0 0 .6rem;line-height:2}
+.end p{font-family:"Vazirmatn",sans-serif;font-weight:300;font-size:.86rem;color:#6D8393;margin:0;text-align:center}
+
+
+.shelf{position:absolute;top:0;left:0;right:0;height:44%;display:flex;justify-content:center;align-items:flex-end;
+  gap:26px;opacity:.20;pointer-events:none}
+.shelf span{display:block;width:11px;height:26px;border-radius:2px 2px 3px 3px;
+  background:linear-gradient(180deg,rgba(226,175,74,.9),rgba(226,175,74,.15));}
+.shelf span:nth-child(odd){height:34px;opacity:.7}
+.shelf span:nth-child(3n){height:20px;opacity:.5}
+.cover-author{position:relative;z-index:2;font-family:"Vazirmatn",sans-serif;font-weight:400;
+  font-size:clamp(.86rem,3.6vw,1.02rem);color:#C9AE74;margin:0 0 1.5rem;opacity:.95}
+.cover-eyebrow{position:relative;z-index:2;font-family:"Vazirmatn",sans-serif;font-weight:400;
+  font-size:.82rem;color:#8299AA;margin-bottom:1.2rem;opacity:.9}
+.cover-title{line-height:1.7!important;font-size:clamp(1.95rem,8.6vw,3.4rem)!important;max-width:92vw;margin-inline:auto!important}
+.cover-sub span{display:block;margin-top:.55rem;color:#6E8395;font-size:.9em}
+
+
+.midbreak{background:linear-gradient(180deg,#131C27 0%,#0E1620 100%);padding:4.4rem 0 5rem;color:#B9C7D2}
+.midbreak .wrap{max-width:38rem}
+.midbreak .chapter-head{margin-bottom:2.4rem}
+.midbreak .chapter-num{color:#9A7C3C}
+.midbreak h3{color:#E4D3A8!important}
+.midbreak .orn{background:#9A7C3C}
+.midbreak p{color:#B9C7D2}
+.midbreak em{color:#E4D3A8;font-style:normal}
+.midbreak .lead::first-letter{color:#D9B96A}
+.midbreak .journal{border-right:2px solid #9A7C3C;padding:0 1.2rem;margin:1.8rem 0;color:#CBD6DF}
+.midbreak .brk{color:#9A7C3C}
+
+
+.toc{font-family:"Vazirmatn",sans-serif;font-size:.95rem;line-height:2.3;text-align:right}
+.toc-part{color:var(--amber);font-weight:600;font-size:.86rem;letter-spacing:normal;margin:1.6rem 0 .4rem}
+.toc ol{margin:0;padding-inline-start:1.6rem;color:var(--ink-soft)}
+.toc li{padding:.05rem 0}
+
+@media (max-width:430px){
+  .cover{padding:3.4rem 1.2rem 2.6rem}
+  .vial-wrap svg{width:88px;height:auto}
+  .glow{width:210px;height:210px}
+  .cover-rule{margin:.9rem auto 1.2rem}
+  .cover-foot{margin-top:2rem}
+}
+@media (max-height:700px){
+  .cover{padding:2.6rem 1.2rem 2.2rem}
+  .vial-wrap svg{width:80px;height:auto}
+}
+@media (max-width:600px){
+  body{font-size:17.5px;line-height:2.05}
+  .wrap{padding:0 1.2rem}
+  .chapter{padding:3.4rem 0 .5rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ══════════ COVER ══════════ -->
+<section class="cover">
+  <div class="rain"></div>
+  <div class="cover-frame"></div>
+
+  <div class="shelf" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <div class="vial-wrap">
+    <div class="glow"></div>
+    <svg width="118" height="230" viewBox="0 0 118 230" fill="none" aria-hidden="true" style="position:relative;z-index:2">
+      <defs>
+        <linearGradient id="fill" x1="59" y1="106" x2="59" y2="216" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#F3D083"/><stop offset=".55" stop-color="#D79E33"/><stop offset="1" stop-color="#8E5A11"/>
+        </linearGradient>
+        <linearGradient id="glass" x1="20" y1="20" x2="98" y2="220" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#DCEEF8" stop-opacity=".34"/><stop offset=".5" stop-color="#9DBACB" stop-opacity=".10"/><stop offset="1" stop-color="#DCEEF8" stop-opacity=".26"/>
+        </linearGradient>
+        <clipPath id="inside"><path d="M28 106h62v92a10 10 0 0 1-10 10H38a10 10 0 0 1-10-10v-92z"/></clipPath>
+      </defs>
+
+      <rect x="42" y="8" width="34" height="21" rx="4" fill="#5E4A2C"/>
+      <rect x="42.8" y="8.8" width="32.4" height="19.4" rx="3.4" stroke="#94764A" stroke-width="1.5"/>
+      <rect x="46" y="27" width="26" height="6" rx="2" fill="#4A3A22"/>
+
+      <path d="M38 33h42v16l10 22v127a10 10 0 0 1-10 10H38a10 10 0 0 1-10-10V71l10-22V33z" fill="url(#glass)" stroke="rgba(214,236,248,.55)" stroke-width="1.8"/>
+      <path d="M28 106h62v92a10 10 0 0 1-10 10H38a10 10 0 0 1-10-10v-92z" fill="url(#fill)"/>
+      <ellipse cx="59" cy="106" rx="31" ry="5.5" fill="#F7DC9C" opacity=".9"/>
+
+      <g clip-path="url(#inside)" opacity=".82">
+        <g transform="translate(59,196)">
+          <circle cx="0" cy="-44" r="8.4" fill="#3A2708"/>
+          <path d="M-8 -34c0-2 3.4-3.4 8-3.4s8 1.4 8 3.4l3.4 24c.4 2.8-1.4 4.4-4 4.4h-14.8c-2.6 0-4.4-1.6-4-4.4L-8 -34z" fill="#3A2708"/>
+          <path d="M-6.4 -10l-2.4 20h4.6l2.2-20zM6.4 -10l2.4 20h-4.6l-2.2-20z" fill="#3A2708"/>
+          <path d="M9.6 -30c3.4 3 5.4 7.6 5.6 12.4" stroke="#3A2708" stroke-width="3.2" stroke-linecap="round"/>
+          <path d="M12 -16.5c3.4 0 6.2 1.1 6.2 3.1v3.2c0 1.1-1.1 1.8-2.6 1.8h-7c-1.5 0-2.6-.7-2.6-1.8v-3.2c0-2 2.6-3.1 6-3.1z" fill="#241804"/>
+        </g>
+        <ellipse cx="59" cy="200" rx="34" ry="7" fill="#8E5A11" opacity=".5"/>
+      </g>
+
+      <path d="M43 52v150" stroke="rgba(255,255,255,.30)" stroke-width="4" stroke-linecap="round"/>
+      <path d="M78 120v70" stroke="rgba(255,255,255,.12)" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <div class="cover-eyebrow">رمان</div>
+  <h1 class="cover-title">مردی که<br>دخترش را<br>فراموش کرد</h1>
+  <div class="cover-rule"></div>
+  <p class="cover-author">محمدپرهام پلنگ سنگدوینی</p>
+  <p class="cover-sub">هرچه بخواهی از یاد ببری، از تو می‌خریم<span>اما یکی باید حملش کند</span></p>
+  <div class="cover-foot">فراموشخانه · کوچهٔ سنگی</div>
+</section>
+
+<!-- ══════════ EPIGRAPH ══════════ -->
+<section class="epigraph">
+  <div class="wrap">
+    <p>«آدم‌ها زیر آفتاب تحمل می‌کنند، پسرم.<br>زیر باران کم می‌آورند.»</p>
+    <div class="src">دلارام فیروز</div>
+  </div>
+</section>
+
+<!-- ══════════ CONTENTS ══════════ -->
+<section class="chapter p1" style="padding-bottom:2.5rem">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فهرست</div>
+      <div class="orn"></div>
+    </div>
+    <div class="toc">
+      <p class="toc-part">پیش‌درآمد</p>
+      <p class="toc-part">دفتر اول — مغازه‌دار</p>
+      <ol>
+        <li>مشتریِ ساعت سه</li><li>سه قانون</li><li>شب‌ها</li>
+        <li>عشقی که فروخته نمی‌شود</li><li>زنی که آمد بچه‌اش را بفروشد</li>
+        <li>دختری که آمد چیزی پس بخرد</li><li>آنچه در دفتر نیست</li>
+      </ol>
+      <p class="toc-part">دفتر دوم — دختر</p>
+      <ol start="8">
+        <li>نه‌سالگی</li><li>خانه‌ای با دو غایب</li><li>شانزده‌سالگی</li>
+        <li>پنجشنبه‌ها</li><li>تصمیم</li>
+      </ol>
+      <p class="toc-part">دفتر سوم — معامله</p>
+      <ol start="13">
+        <li>جناب فرهود</li><li>آقای شکوهی نام خودش را گم می‌کند</li><li>طبقهٔ زیرزمین</li>
+        <li>نامهٔ دلارام فیروز</li><li>آنچه سوگند می‌داند</li>
+      </ol>
+      <p class="toc-part">میان‌پرده — شش صفحه</p>
+      <ol start="18">
+        <li>خانهٔ خیابان یازدهم</li><li>شبی که شیشه‌ها شکستند</li><li>بهای بازگشت</li>
+        <li>آخرین معامله</li><li>چهار ماه</li><li>مردی که هر روز می‌آید</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PROLOGUE ══════════ -->
+<section class="chapter p1">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">پیش‌درآمد</div>
+      <div class="orn"></div>
+    </div>
+    <p class="lead">هر شهری یک مغازه دارد که آدرسش را بلند نمی‌گویند.</p>
+    <p>نه از سر بدجنسی — از سر شرم. آدرس فراموشخانه را زیر گوش می‌گویند، آن هم به کسی که آن‌قدر داغان شده باشد که شرم دیگر برایش خرج نداشته باشد. می‌گویند: آخر کوچهٔ سنگی، بعد از خیاطی، دری چوبی که زنگ ندارد. در می‌زنی. مردی می‌آید. هرچه بخواهی از یاد ببری، از تو می‌خرد.</p>
+    <p>و طرف مقابل می‌خندد. همه اولش می‌خندند.</p>
+    <p>بعد شبی می‌رسد که ساعت سه‌ونیم بامداد چشم باز می‌کند، و پیش از آنکه به خودش فرصت فکر کردن بدهد، می‌بیند کفش‌هایش را پوشیده است.</p>
+    <p>این کتاب دربارهٔ آن مغازه نیست.</p>
+    <p>دربارهٔ کسی است که پشت پیشخوان می‌ایستد.</p>
+  </div>
+</section>
+
+<!-- ══════════ PART ONE ══════════ -->
+<section class="part">
+  <svg width="54" height="106" viewBox="0 0 96 188" fill="none" aria-hidden="true">
+    <rect x="34" y="10" width="28" height="17" rx="3" fill="#6B5433"/>
+    <path d="M30 27h36v14l10 20v112a8 8 0 0 1-8 8H28a8 8 0 0 1-8-8V61l10-20V27z" fill="rgba(190,222,238,.08)" stroke="rgba(206,231,244,.42)" stroke-width="2"/>
+    <path d="M23 62h50v111a8 8 0 0 1-8 8H31a8 8 0 0 1-8-8V62z" fill="#C08A21" opacity=".85"/>
+  </svg>
+  <div class="label">دفتر اول</div>
+  <h2>مغازه‌دار</h2>
+  <div class="note">شیشه پر است</div>
+</section>
+
+<!-- ── CH 1 ── -->
+<section class="chapter p1">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل یک</div>
+      <h3>مشتریِ ساعت سه</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">باران که می‌آمد، کار و بار نریمان سکه بود.</p>
+    <p>این را خودش کشف نکرده بود. خانم فیروز، مغازه‌دار پیش از او، همان ماه‌های اول گفته بود و بعد مرده بود و جمله مانده بود. نریمان او را فقط یک تابستان شناخت؛ اما بعضی جمله‌ها از خود آدم بیشتر عمر می‌کنند.</p>
+    <p>آن روز از صبح باران می‌آمد. نریمان پشت پیشخوان نشسته بود و شیشه‌های خالی را با پارچه‌ای که سی سال قدمت داشت برق می‌انداخت. مغازه بزرگ نبود — چهار در پنج، سقفی بلند، دیوارهایی که تا آخرین سانتیمتر قفسه بودند. روی قفسه‌ها، ردیف پشت ردیف، هزاران شیشهٔ کوچک با درپوش چوبی. بعضی روشن، به رنگ چای کم‌رنگ. بعضی تیره. و چندتایی آن بالا، آن‌قدر سیاه که نور را می‌خوردند و پس نمی‌دادند.</p>
+    <p>زنگولهٔ بالای در تکان خورد. آقای شکوهی بود، با چتری که یک پره‌اش شکسته بود و برای همین شانهٔ چپش همیشه خیس می‌ماند.</p>
+    <p class="said">«سلام آقا نریمان. خوبی؟»</p>
+    <p class="said">«خوبم. شما؟»</p>
+    <p class="said">«نه.» چتر را کنار در گذاشت. «یه چیزی دارم. کوچیکه.»</p>
+    <p class="said">«همیشه کوچیکه.»</p>
+    <p>روی چهارپایهٔ مقابل پیشخوان نشست و انگشت‌هایش را در هم قفل کرد؛ مردی پنجاه‌وچند ساله با صورتی که انگار همیشه وسط یک معذرت‌خواهی گیر کرده بود.</p>
+    <p class="said">«دیروز تو اتوبوس یه خانمی بلند شد جاشو بهم داد. فکر کرد پیرم.»</p>
+    <p>نریمان منتظر ماند.</p>
+    <p class="said">«نشستم.» شکوهی به دست‌هایش نگاه کرد. «همین. نشستم و تا آخر خط برنگشتم نگاهش کنم. بیست‌وچهار ساعته دارم به این فکر می‌کنم که نشستم.»</p>
+    <p class="said">«می‌دونین که این چیزی نیست.»</p>
+    <p class="said">«برای تو چیزی نیست.»</p>
+    <p>نریمان نفس کشید. هفتهٔ سوم پیاپی بود. هفتهٔ پیش: زنگ خانهٔ همسایه را زده بود و در نرفته بود و تا شب عذاب کشیده بود. هفتهٔ قبل‌تر: در عروسی خواهرزاده‌اش، وسط آواز، فالش خوانده بود و همه شنیده بودند.</p>
+    <p class="said">«یه شیشهٔ کوچیک.» اسکناس‌های مچاله را روی پیشخوان گذاشت. «قیمتشو خودت بگو.»</p>
+    <p>مغازه پول نمی‌گرفت؛ پول می‌داد. اما شکوهی از روز اول اصرار داشت برعکسش کند و نریمان دیگر بحث نمی‌کرد.</p>
+    <div class="brk">◆</div>
+    <p>اتاق پشتی هیچ نداشت جز دو صندلی روبه‌روی هم، میزی کوتاه، و شیشه‌ای خالی روی میز.</p>
+    <p class="said">«بگین.»</p>
+    <p>و شکوهی گفت. زن، اتوبوس، شانهٔ خیس، شرم.</p>
+    <p>نریمان گوش داد — نه آن گوش دادنی که آدم‌ها در مهمانی بلدند؛ آن یکی. آن که خانم فیروز اسمش را گذاشته بود <em>بلعیدن</em>: باید آن‌قدر کامل بشنوی که در سینهٔ صاحبش جایی برای خاطره باقی نماند. باید صحنه را طوری در خودت بسازی که مال تو شود. باید بوی اتوبوس را بشنوی. باید شرم مردی را که نمی‌شناسی، مثل شرم خودت، در گلویت حس کنی.</p>
+    <p>وقتی حرف تمام شد، بخاری کم‌رنگ از دهان شکوهی بیرون آمد، در هوا چرخید، و آرام در شیشه نشست؛ مثل شبنمی که یادش رفته باشد کجا باید بنشیند.</p>
+    <p>نریمان درپوش را گذاشت.</p>
+    <p>شکوهی لحظه‌ای ساکت ماند. بعد سر بلند کرد و لبخند زد — لبخند سبکِ آدمی که کوله‌اش را زمین گذاشته.</p>
+    <p class="said">«عجب بارونی.»</p>
+    <p class="said">«آره.»</p>
+    <p class="said">«خب. من برم. کاری نداری؟»</p>
+    <p>رفت. چتر شکسته را هم برد.</p>
+    <p>نریمان شیشه را به قفسهٔ سمت چپ برد، ردیف چهارم، جایی که شیشه‌های آقای شکوهی کنار هم چیده شده بودند.</p>
+    <p>سی‌وهفت‌تا.</p>
+    <p>نگاهشان کرد: سی‌وهفت تکهٔ کوچک از مردی که هر هفته لبخندزنان از این در بیرون می‌رفت و هر بار کمی کمتر از خودش را با خودش می‌برد.</p>
+  </div>
+</section>
+
+<!-- ── CH 2 ── -->
+<section class="chapter p1">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل دو</div>
+      <h3>سه قانون</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">پسر بیست‌وچند ساله بود، از آن‌هایی که هرچه عصبانی‌ترند مؤدب‌تر می‌شوند.</p>
+    <p class="said">«شنیدم شما می‌تونین کمک کنین.»</p>
+    <p class="said">«بشین.»</p>
+    <p>نشست. پالتویش را در نیاورد.</p>
+    <p class="said">«چقدر طول می‌کشه؟»</p>
+    <p class="said">«بستگی داره. اول قانون‌ها.»</p>
+    <p class="said">«قانون؟»</p>
+    <p>نریمان سه انگشت بالا آورد؛ عادتی که مثل خود مغازه از خانم فیروز به ارث برده بود.</p>
+    <p class="said">«یک: فقط خاطرهٔ خودت رو می‌تونی بفروشی. خاطرهٔ پدرت، بچه‌ت، معشوقه‌ت — نه. حتی اگه خودتم توش باشی.»</p>
+    <p>انگشت دوم.</p>
+    <p class="said">«دو، و این مهم‌ترینه: خاطره ریشه داره. مثل چغندر نیست که از خاک بکشیش بیرون و بقیهٔ زمین سر جاش بمونه. مثل ریشهٔ درخته. وقتی می‌کشیش، هرچی بهش چسبیده میاد. تو می‌گی می‌خوام روزی که فلانی ولم کرد یادم بره؛ من درش میارم و ممکنه با خودش کل اون آدمو ببره. اسمش، صداش، سه سالی که با هم بودین، آهنگی که با هم گوش می‌دادین. ممکنم هست فقط همون یه روز بره. از قبل معلوم نیست. هیچ‌وقت معلوم نیست.»</p>
+    <p>پسر خندید؛ خندهٔ خشک. «یعنی قمار.»</p>
+    <p class="said">«یعنی جراحی. با چشم بسته.»</p>
+    <p class="said">«سه؟»</p>
+    <p>نریمان انگشت سوم را پایین آورد و کف دست‌ها را روی پیشخوان گذاشت.</p>
+    <p class="said">«سه: معامله برگشت نداره. هیچ‌وقت. هیچ‌کس. اینو دوبار بشنو، چون آدم‌ها این یکی رو باور نمی‌کنن تا وقتی دیر بشه.»</p>
+    <p>پسر مدتی قفسه‌ها را نگاه کرد.</p>
+    <p class="said">«اونا چی‌ان؟»</p>
+    <p class="said">«مال بقیه.»</p>
+    <p class="said">«نگهشون می‌داری؟»</p>
+    <p class="said">«مجبورم.»</p>
+    <p class="said">«چرا نمی‌ریزیشون تو فاضلاب؟»</p>
+    <p class="said">«چون اون‌وقت شهر پر می‌شه از آدم‌هایی که وسط خیابون گریه‌شون می‌گیره و نمی‌دونن چرا.»</p>
+    <div class="brk">◆</div>
+    <p>پسر به اتاق پشتی آمد. نشست. و گفت.</p>
+    <p>از برادرش گفت. از روزی که فهمید برادر بزرگ‌ترش سال‌ها به اسم او از پدرشان پول می‌گرفته. از نگاه پدر، که وقتی حقیقت را شنید عوض نشد — و همین عوض‌نشدن بود که کمرش را شکست.</p>
+    <p>نریمان بلعید.</p>
+    <p>بخار این‌بار غلیظ‌تر بیرون آمد؛ کش‌دار، مثل دودی که نمی‌خواهد اتاق را ترک کند. ته شیشه نشست و لایه‌ای تیره ساخت.</p>
+    <p>پسر پلک زد. «تموم شد؟»</p>
+    <p class="said">«آره.»</p>
+    <p>بلند شد، تا دم در رفت، بعد ایستاد و برگشت. صورتش عوض شده بود.</p>
+    <p class="said">«ببخشید... من چرا اومدم اینجا؟»</p>
+    <p class="said">«یه معامله کردیم.»</p>
+    <p class="said">«چه معامله‌ای؟» و بعد، با صدایی که ناگهان بچگانه شده بود: «من برادر داشتم؟»</p>
+    <p>نریمان جواب نداد.</p>
+    <p>پسر شانه بالا انداخت، دستی به پیشانی کشید و زیر باران رفت. سبک. رها. خالی.</p>
+    <p>نریمان شیشه را برداشت. سنگین بود. ریشه‌دار بود. یک برادر کامل، با سی سالش، با تولدها و دعواها و شب‌های بی‌خوابی‌اش، حالا در چهار سانتیمتر شیشه جا شده بود.</p>
+    <p>آن شب نریمان خواب برادری را دید که هرگز نداشت.</p>
+    <p>و صبح که بیدار شد، چند ثانیه طول کشید تا یادش بیاید که ندارد.</p>
+  </div>
+</section>
+
+<!-- ── CH 3 ── -->
+<section class="chapter p1">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل سه</div>
+      <h3>شب‌ها</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">روزها مغازه‌دار بود. شب‌ها انبار.</p>
+    <p>این را هیچ‌کس به او نگفته بود؛ سال دوم خودش فهمید. خاطره‌ها در شیشه نمی‌مانند. نشت می‌کنند، مثل بویی که از در بستهٔ آشپزخانه بیرون می‌زند. و کسی که طبقهٔ بالای این مغازه بخوابد، هر شب مهمان آدم‌هایی است که هرگز ندیده.</p>
+    <p>شب‌های خوب هم بود.</p>
+    <p>عروسی زنی در سال ۶۲ که کفشش را جا گذاشته بود و تمام شب پابرهنه رقصیده بود. مردی که دوچرخه‌سواری یاد می‌گرفت و پدرش پشت زین را رها کرده بود و او تا آخر کوچه نفهمیده بود. دختری که اولین بار در عمرش دریا را دیده بود و از ترس جیغ کشیده بود و بعد خندیده بود و هر دو صدا در یک نفس جا شده بود.</p>
+    <p>نریمان این‌ها را دوست داشت. بی‌آنکه به کسی بگوید، برای بعضی شیشه‌ها جای بهتری روی قفسه انتخاب می‌کرد.</p>
+    <p>اما شب‌های بد بیشتر بودند.</p>
+    <p>روشش را پیدا کرده بود: بیدار می‌شد، آب می‌خورد، پنجره را باز می‌کرد و بلند می‌گفت: «این مال من نیست.»</p>
+    <p>گاهی جواب می‌داد. گاهی نه.</p>
+    <p>صبح‌ها آینه چیزی می‌گفت که دوست نداشت بشنود. پنجاه‌ودو ساله بود و شصت‌وپنج نشان می‌داد. موهایش از شقیقه به بالا سفید نشده بود — خاکستری شده بود؛ رنگ چیزی که سوخته.</p>
+    <p>خانم فیروز هم آخرش همین شکلی شده بود.</p>
+    <div class="brk">◆</div>
+    <p>بالای یکی از قفسه‌ها، بیرون از دسترس، دفتر معاملات بود: سیاه، جلدچرمی، قطور. نریمان هفته‌ای یک‌بار بازش می‌کرد، اسم‌ها را می‌خواند، شیشه‌ها را تطبیق می‌داد. کار بیهوده‌ای بود؛ کسی از او حساب نمی‌خواست. اما آدمی که چیزی برای فراموش نکردن ندارد، دنبال تشریفات می‌گردد.</p>
+    <p>و چیزی در آن دفتر بود که سال‌ها آزارش می‌داد.</p>
+    <p>میان صفحهٔ ۲۰۷ و ۲۰۸، شش صفحه بریده شده بود.</p>
+    <p>نه کنده‌شده — بریده. با تیغ. صاف. کار کسی که نمی‌خواسته معلوم شود چیزی برداشته.</p>
+    <p>نریمان انگشت روی لبهٔ بریدگی می‌کشید و هر بار یک فکر مسخره به سرش می‌زد:</p>
+    <p><em>این کار خودم بوده.</em></p>
+    <p>بعد دفتر را می‌بست، پایین می‌رفت، کرکره را بالا می‌داد و منتظر باران می‌ماند.</p>
+  </div>
+</section>
+
+<!-- ── CH 4 ── -->
+<section class="chapter p1">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل چهار</div>
+      <h3>عشقی که فروخته نمی‌شود</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">خانم مروارید هفته‌ای دو بار می‌آمد و هرگز چیزی نمی‌فروخت.</p>
+    <p>هفتاد ساله بود، همیشه روسری یاسی داشت، و همیشه شیرینی می‌آورد تا نریمان تعارف کند و او بگوید «نه بابا، قندم» و بعد بخورد.</p>
+    <p class="said">«آقا نریمان. تصمیمو گرفتم.»</p>
+    <p class="said">«باشه.»</p>
+    <p class="said">«این دفعه جدی گرفتم.»</p>
+    <p class="said">«همیشه جدیه.»</p>
+    <p>نشست. دست‌های چروکیده را روی زانو گذاشت.</p>
+    <p class="said">«شونزده ساله رفته. شونزده سال. صبح که بیدار می‌شم دستمو دراز می‌کنم اون‌ور تخت. شونزده ساله. مثل احمق‌ها.» خندید. «می‌خوام دیگه دوستش نداشته باشم. خسته شدم.»</p>
+    <p>نریمان چای ریخت. لیوان را جوری گذاشت که دستهٔ لیوان سمت دست راست پیرزن باشد؛ کاری که دو سال بود بی‌آنکه دربارهٔ‌اش حرفی بزنند انجام می‌داد.</p>
+    <p class="said">«فقط عشقشو ببر. بقیه‌شو نگه دار. خاطره‌ها بمونه، فقط اون تیکه‌ای که درد می‌کنه رو بردار.»</p>
+    <p class="said">«خانم مروارید، صد بار گفتم. اون تیکه‌ای که درد می‌کنه، همونیه که دوستش داری. دوتا نیست. یه چیزه.»</p>
+    <p class="said">«خب پس همه‌شو ببر.»</p>
+    <p class="said">«مطمئنی؟»</p>
+    <p class="said">«آره.»</p>
+    <p class="said">«پس بیا اتاق پشتی.»</p>
+    <p>بلند شد. سه قدم رفت. بعد ایستاد — همان‌جا که همیشه می‌ایستاد، جایی که تختهٔ کف زمین صدا می‌داد — و به سقف نگاه کرد.</p>
+    <p class="said">«اسمش که یادم می‌ره؟»</p>
+    <p class="said">«احتمالاً.»</p>
+    <p class="said">«صداش؟»</p>
+    <p class="said">«احتمالاً.»</p>
+    <p class="said">«اون شبی که تو ایستگاه جا موندیم و تا صبح تو سالن انتظار حرف زدیم و گفت اگه هیچ قطاری نیاد من ناراحت نمی‌شم؟»</p>
+    <p>نریمان جواب نداد.</p>
+    <p>خانم مروارید برگشت. نشست. چایش را برداشت.</p>
+    <p class="said">«چایت خوش‌رنگه امروز.»</p>
+    <p class="said">«ممنون.»</p>
+    <p class="said">«هفتهٔ دیگه میام.»</p>
+    <p class="said">«می‌دونم.»</p>
+    <p>و همیشه، بعد از رفتنش، نریمان مدتی به در بسته نگاه می‌کرد و به این فکر می‌کرد که تنها آدم سالم این شهر همین پیرزنی است که هفته‌ای دو بار می‌آید تا از فروختن پشیمان شود.</p>
+    <p>و بعد به این فکر می‌کرد که خودش، احتمالاً، سالم نیست.</p>
+  </div>
+</section>
+
+
+<!-- ── NEW: THE WOMAN ── -->
+<section class="chapter p1">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل پنج</div>
+      <h3>زنی که آمد بچه‌اش را بفروشد</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">سی‌ودو ساله بود و شبیه کسی بود که چند هفته است نخوابیده و دیگر برایش مهم نیست که معلوم است.</p>
+    <p>ایستاده حرف زد. ننشست. نریمان دو بار تعارف کرد و بار سوم بی‌خیال شد؛ بعضی آدم‌ها اگر بنشینند می‌شکنند و خودشان این را می‌دانند.</p>
+    <p class="said">«می‌خوام پسرمو فراموش کنم.»</p>
+    <p>نریمان دستش را از روی پارچه برنداشت.</p>
+    <p class="said">«چند وقته؟»</p>
+    <p class="said">«چهل‌ودو روز.»</p>
+    <p>چهل‌ودو روز. نه «یک ماه و نیم». آدم‌هایی که می‌شمارند، هنوز وسط ماجرا هستند.</p>
+    <p class="said">«بشینین.»</p>
+    <p class="said">«نمی‌خوام بشینم. می‌خوام کارو بکنین و برم.»</p>
+    <p>نریمان سه انگشت را بالا آورد و قانون‌ها را گفت. تا رسید به دوم، زن حرفش را قطع کرد.</p>
+    <p class="said">«ریشه یعنی چی؟»</p>
+    <p class="said">«یعنی اگه بگی می‌خوام روز تشییع یادم بره، ممکنه کل بچه‌تو ببره. اسمش. صداش. چهار سالی که داشتینش. عکس‌هاش تو گوشیتون می‌مونه و شما نمی‌دونین این بچه کیه.»</p>
+    <p>زن نگاهش کرد. لبخند نزد، اما چیزی در صورتش شبیه لبخند شد.</p>
+    <p class="said">«خب؟»</p>
+    <p class="said">«چی خب؟»</p>
+    <p class="said">«فکر کردین این تهدیده؟» صدایش بالا نرفت. «آقا، من چهل‌ودو روزه صبح‌ها قبل از اینکه چشمم باز شه یادم میاد. هر روز صبح، دو ثانیه، حالم خوبه. بعد یادم میاد. می‌فهمین؟ من روزی یه بار بچه‌مو از دست می‌دم.»</p>
+    <p>مغازه ساکت بود.</p>
+    <p class="said">«شما دارین بهم می‌گین ممکنه همه‌شو ببرین. من دارم بهتون می‌گم لطفاً ببرین.»</p>
+    <div class="brk">◆</div>
+    <p>نریمان مدتی طولانی ساکت ماند. بعد کاری کرد که سال‌ها بود نمی‌کرد: از پشت پیشخوان بیرون آمد و روی چهارپایه نشست، هم‌قدِ زنی که ایستاده بود.</p>
+    <p class="said">«یه چیزی رو باید بدونین.» گفت. «اون دو ثانیه‌ای که صبح‌ها حالتون خوبه — اون مال بچه‌تونه. اون خودِ اونه. اگه ببرمش، اون دو ثانیه هم می‌ره.»</p>
+    <p class="said">«خوبه.»</p>
+    <p class="said">«نه، خوب نیست. چون بعدش صبح‌ها بیدار می‌شین و حالتون <em>خوب نیست</em> و دلیلشو نمی‌دونین. اسمش می‌شه افسردگی. می‌رین دکتر و دکتر می‌پرسه اتفاقی افتاده و شما می‌گین نه.»</p>
+    <p>زن پلک زد.</p>
+    <p class="said">«درد بی‌دلیل بدتر از درد بادلیله. اینو من نمی‌گم؛ دوهزارتا شیشهٔ اون بالا می‌گن.»</p>
+    <p>سکوت.</p>
+    <p>و بعد زن، برای اولین بار، نشست. آرام. مثل کسی که پاهایش دیگر قرار نبود نگهش دارند.</p>
+    <p class="said">«پس چیکار کنم؟»</p>
+    <p>و نریمان — مغازه‌دار فراموشخانه، مردی که بیست سال بود کارش خریدن بود — گفت:</p>
+    <p class="said">«هیچی. صبر کنین. یه سال، دو سال. اون دو ثانیه یه روز می‌شه پنج دقیقه. بعد نیم روز. تموم نمی‌شه، ولی جا باز می‌کنه.»</p>
+    <p class="said">«شما از کجا می‌دونین؟»</p>
+    <p>نریمان دهانش را باز کرد تا جواب بدهد و فهمید جوابی ندارد؛ نه از این جهت که نمی‌دانست — از این جهت که وقتی دنبال منبعِ این دانستن گشت، پشت آن شیشهٔ مات چیزی تکان خورد و کنار رفت.</p>
+    <p class="said">«نمی‌دونم.» گفت. «ولی می‌دونم.»</p>
+    <div class="brk">◆</div>
+    <p>زن رفت. در که بسته شد، نریمان مدتی به چهارپایهٔ خالی نگاه کرد.</p>
+    <p>شب، بالای پله‌ها، یک فکر آمد سراغش که تا صبح ولش نکرد: بیست سال بود که هزار نفر آمده بودند و هزار بار او گفته بود «بشین» و «بگو» و «تموم شد». امروز اولین باری بود که کسی را برگردانده بود.</p>
+    <p>و به‌جای سبکی، چیزی شبیه شرم حس می‌کرد.</p>
+    <p>انگار امروز، بعد از بیست سال، فهمیده بود که هزار نفر قبلی را می‌شد برگرداند.</p>
+  </div>
+</section>
+
+<!-- ── CH 5 ── -->
+<section class="chapter p1">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل شش</div>
+      <h3>دختری که آمد چیزی پس بخرد</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">چهاردهم آذر بود که در باز شد و او آمد.</p>
+    <p>بیست‌ونه ساله. کوتاه‌قد. کاپشن نظامی گشادی که اندازه‌اش نبود و بوی مردانه می‌داد. موهایش را محکم بسته بود — از آن بستن‌هایی که آدم پیش از دعوا می‌کند.</p>
+    <p class="said">«بفرمایید.»</p>
+    <p>مستقیم آمد جلوی پیشخوان. به قفسه‌ها نگاه نکرد. کسی که برای اولین بار وارد این مغازه می‌شود، همیشه به قفسه‌ها نگاه می‌کند.</p>
+    <p class="said">«اومدم یه چیزی بخرم.»</p>
+    <p class="said">«اینجا نمی‌فروشیم. فقط می‌خریم.»</p>
+    <p class="said">«می‌دونم.»</p>
+    <p class="said">«پس چی می‌خوای؟»</p>
+    <p class="said">«یه خاطره رو پس بگیرم.»</p>
+    <p>نریمان نشست و پارچه را روی پیشخوان گذاشت.</p>
+    <p class="said">«قانون سوم رو شنیدی؟»</p>
+    <p class="said">«همه قانون سوم رو شنیدن.»</p>
+    <p class="said">«پس جوابمو می‌دونی.»</p>
+    <p>دختر از جیب کاپشن کاغذی درآورد؛ تاخورده، پوسیده، لبه‌ها از بس دست‌به‌دست شده بود نرم شده بودند. با خودکار آبی رویش نوشته بودند:</p>
+    <div class="ledger">فراموشخانه — کوچهٔ سنگی، بعد از خیاطی. در چوبی.</div>
+    <p class="said">«این خط مادرمه.»</p>
+    <p>نریمان به کاغذ نگاه کرد و نه به دختر.</p>
+    <p class="said">«بیست سال پیش اومد اینجا. یه چیزی فروخت. می‌خوام بخرمش.»</p>
+    <p class="said">«اگه مادرت فروخته، فقط خودش می‌تونه—»</p>
+    <p class="said">«مادرم داره می‌میره.»</p>
+    <p>صدایش بالا نرفت. صاف ماند، که بدتر بود.</p>
+    <p class="said">«چهار ماه، شاید کمتر. یه چیزی فروخت که نباید می‌فروخت و بیست ساله دارم می‌بینم از تو داره می‌پوسه بی‌آنکه بدونه چرا. می‌خوام قبل از رفتنش پسش بگیره.»</p>
+    <p class="said">«چی فروخته؟»</p>
+    <p>مکث کرد. برای اولین بار چیزی در فکش لرزید.</p>
+    <p class="said">«خواهرمو.»</p>
+    <p>باران روی شیشه می‌کوبید.</p>
+    <p class="said">«اسمش نازلی بود. شش سالش بود، من نه سالم. تصادف شد، مادرم اومد اینجا و گفت می‌خوام روز تصادفو فراموش کنم.» نفس کشید. «ریشه‌ش کل نازلی رو برد.»</p>
+    <p>مشت نریمان روی پیشخوان بسته شد.</p>
+    <p class="said">«زنی که بچه‌شو گم کرده باشه گریه می‌کنه. مادر من گریه نمی‌کنه. مادر من بیست ساله عکس نازلی رو تو کشو پیدا می‌کنه و می‌گه این بچه کیه، چقدر شبیه توئه.» آب دهانش را قورت داد. «و هر بار من باید انتخاب کنم بگم یا نگم. و هر بار نمی‌گم. چون اگه بگم فقط یه بار داغ‌دار می‌شه — دوباره از اول. اونم تو چهار ماه آخر عمرش.»</p>
+    <p>سکوت طولانی شد. آن نوع سکوتی که در آن آدم صدای گذشتن ماشین‌های خیابان اصلی را می‌شنود.</p>
+    <p class="said">«اسم مادرت؟»</p>
+    <p class="said">«فرشته آذرنگ.»</p>
+    <p>نریمان بلند شد و به طرف نردبان رفت. «برو خونه. فردا بیا.»</p>
+    <p class="said">«یعنی قبول—»</p>
+    <p class="said">«یعنی برو خونه.»</p>
+    <p>دختر تا چارچوب در رفت. ایستاد. دستش روی دستگیره ماند.</p>
+    <p class="said">«اسم من سوگنده.»</p>
+    <p>و رفت.</p>
+    <div class="brk">◆</div>
+    <p>در که بسته شد، مغازه ساکت ماند.</p>
+    <p>نریمان دستش را روی پلهٔ نردبان گذاشت و متوجه شد لب‌هایش دارند تکان می‌خورند. داشت اسم را تکرار می‌کرد. آرام، پشت سر هم، مثل کسی که کلمه‌ای به زبان بیگانه را مزه‌مزه می‌کند تا بفهمد چرا در دهانش آشناست.</p>
+    <p>سوگند. سوگند. سوگند.</p>
+    <p>هیچ چیز نیامد.</p>
+    <p>و این هیچ‌چیز، بعد از بیست سال، اولین بار بود که دردش گرفت.</p>
+  </div>
+</section>
+
+<!-- ── CH 6 ── -->
+<section class="chapter p1">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل هفت</div>
+      <h3>آنچه در دفتر نیست</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">آن شب دفتر را باز کرد و رفت به سال ۱۳۸۳.</p>
+    <p>آذرنگ، فرشته. صفحهٔ ۲۰۶. با خط ریز و مورب خانم فیروز:</p>
+    <div class="ledger">۲۹ بهمن ۸۳ — آذرنگ، فرشته. ۳۴ ساله.<br>«روز تصادف.»<br>ریشهٔ عمیق. هشدار داده شد. اصرار کرد.<br>قفسهٔ ۹، ردیف ۲.</div>
+    <p>نردبان را برد به قفسهٔ نه. ردیف دو را از اول تا آخر گشت. دوبار. سه‌بار.</p>
+    <p>نبود.</p>
+    <p>و جای خالی هم نبود؛ شیشه‌ها به هم چسبیده بودند، مرتب، انگار هرگز چیزی آنجا نبوده. کسی که نمی‌دانست، هرگز نمی‌فهمید.</p>
+    <p>برگشت سراغ دفتر. ورق زد. صفحهٔ ۲۰۷. بعد شش لبهٔ بریده. بعد ۲۱۴.</p>
+    <p>میان ۲۹ بهمن ۸۳ و ۱۹ خرداد ۸۴، چهار ماه از تاریخ این مغازه با تیغ برداشته شده بود.</p>
+    <p>نریمان دفتر را بست و به دست‌هایش نگاه کرد.</p>
+    <p>خانم فیروز تابستان ۸۴ مرده بود. و نریمان از ۸۴ اینجا بود.</p>
+    <p>یک سؤال ساده در سرش شکل گرفت. سؤالی که هر آدمی روی زمین در نصف ثانیه جوابش را می‌دهد.</p>
+    <p><em>من قبلش کجا بودم؟</em></p>
+    <p>روی پلهٔ اول نشست.</p>
+    <p>می‌دانست چطور نان بپزد، پس یک‌جایی یاد گرفته بود. می‌دانست چطور با بچه حرف بزند، پس یک‌جایی بچه‌ای بوده. زبان بلد بود، شهر را بلد بود، اسم خیابان‌ها را بلد بود.</p>
+    <p>اما وقتی می‌خواست پیش از سال ۸۴ را به یاد بیاورد، چیزی مثل شیشهٔ مات جلو می‌آمد. نه سیاهی — شیشهٔ مات. پشتش چیزی بود. حرکت می‌کرد.</p>
+    <p>بیست دقیقه فکر کرد.</p>
+    <p>و بعد کاری کرد که بیست سال نکرده بود: بلند شد، رفت جلوی آینهٔ کوچک بالای دستشویی مغازه ایستاد، و از خودش پرسید:</p>
+    <p class="said">«تو کی هستی؟»</p>
+    <p>مردی خاکستری در آینه نگاهش کرد و جوابی نداشت.</p>
+  </div>
+</section>
+
+<!-- ══════════ PART TWO ══════════ -->
+<section class="part">
+  <svg width="54" height="106" viewBox="0 0 96 188" fill="none" aria-hidden="true">
+    <rect x="34" y="10" width="28" height="17" rx="3" fill="#6B5433"/>
+    <path d="M30 27h36v14l10 20v112a8 8 0 0 1-8 8H28a8 8 0 0 1-8-8V61l10-20V27z" fill="rgba(190,222,238,.08)" stroke="rgba(206,231,244,.42)" stroke-width="2"/>
+    <path d="M23 96h50v77a8 8 0 0 1-8 8H31a8 8 0 0 1-8-8V96z" fill="#2C5866" opacity=".9"/>
+  </svg>
+  <div class="label">دفتر دوم</div>
+  <h2>دختر</h2>
+  <div class="note">بیست سالی که کسی ندید</div>
+</section>
+
+<!-- ── CH 7 ── -->
+<section class="chapter p2">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل هشت</div>
+      <h3>نه‌سالگی</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">صبح‌ها بوی نان می‌آمد و این یعنی همه‌چیز سر جایش است.</p>
+    <p>سوگند این را از مادرش یاد نگرفته بود؛ خودش کشف کرده بود. سال‌ها بعد، وقتی از او می‌پرسیدند کِی فهمیدی که خانه‌تان خراب شده، می‌گفت: آن صبحی که رفتم پایین و بوی نان نمی‌آمد.</p>
+    <p>چهار ماه از تصادف گذشته بود.</p>
+    <p>در آن چهار ماه، خانه یاد گرفته بود چطور دور یک اسم راه برود بی‌آنکه پایش به آن بخورد. کسی <em>نازلی</em> نمی‌گفت. اتاق نازلی می‌شد «اون اتاق». کفش‌های نازلی رفته بودند، اما جای کفش‌ها روی جاکفشی مانده بود؛ یک مستطیل تمیز روی چوب غبارگرفته.</p>
+    <p>سوگند نه سالش بود و بلد شده بود گریه نکند، چون دیده بود گریه‌کردنش مادرش را از پا می‌اندازد. یاد گرفته بود شب‌ها زیر پتو، بی‌صدا، با مشت جلوی دهانش. یاد گرفته بود صبح‌ها صورتش را با آب سرد بشوید تا قرمزی چشم‌ها برود.</p>
+    <p>نه سالش بود و رژیم شغلی داشت: نگهبان.</p>
+    <div class="brk">◆</div>
+    <p>و پدرش، در آن چهار ماه، ساکت شده بود.</p>
+    <p>نه از آن سکوت‌های ترسناک. سکوت مهربان. می‌نشست، گوش می‌داد، سر تکان می‌داد. مشقش را نگاه می‌کرد. یک بار برایش قایق کاغذی درست کرد و توی جوی آب انداخت و تا سر کوچه دنبالش دویدند.</p>
+    <p>سوگند بعدها فهمید آن قایق، آخرین چیزی بود که پدرش برای دخترش ساخت.</p>
+    <p>آن هفته پدر چند بار دیر آمد خانه. یک شب لباسش خیس بود. یک شب کاغذی در جیبش بود که سوگند ندید و مادرش دید و چیزی نگفت.</p>
+    <div class="brk">◆</div>
+    <p>و بعد آن صبح آمد.</p>
+    <p>سوگند از پله‌ها پایین رفت. بوی نان نمی‌آمد. آشپزخانه روشن بود و پدرش وسط آشپزخانه ایستاده بود، با پیراهن دیشب، و به قوری نگاه می‌کرد؛ همان‌طور که آدم به وسیله‌ای نگاه می‌کند که نمی‌داند مال کیست.</p>
+    <p class="said">«سلام بابا.»</p>
+    <p>پدرش برگشت.</p>
+    <p>و نگاهش کرد.</p>
+    <p>سوگند تمام عمرش سعی کرد آن نگاه را برای کسی توصیف کند و نتوانست. بدجنس نبود. سرد نبود. اگر سرد بود، تحمل‌کردنی‌تر می‌شد. آن نگاه <em>مؤدب</em> بود. نگاه مردی که در مهمانی به بچهٔ صاحب‌خانه لبخند می‌زند.</p>
+    <p>پدرش لبخند زد و گفت:</p>
+    <p class="said">«سلام دخترم. مامانت کجاست؟»</p>
+    <p>و بعد، وقتی مادر از راهرو آمد، رو کرد به او و با همان لبخند، با همان صدای معمولی، همان صدایی که با آن قصه می‌گفت و شوخی می‌کرد، پرسید:</p>
+    <p class="said">«فرشته... این بچه کیه؟»</p>
+    <div class="brk">◆</div>
+    <p>چیزی که در آن لحظه شکست، صدا نداشت.</p>
+    <p>سوگند بعدها هزار بار این صحنه را در سرش پخش کرد و هر بار روی یک جزئیات دیگر ایستاد. روی اینکه شیر آب باز مانده بود. روی اینکه مادرش دستش را به لبهٔ کابینت گرفت و ناخنش شکست و تا یک ماه آن ناخن شکسته بود و کسی درستش نکرد. روی اینکه خودش، نه‌ساله، اولین چیزی که به ذهنش رسید این بود که <em>حتماً کار اشتباهی کردم</em>.</p>
+    <p>بچه‌ها همیشه فکر می‌کنند تقصیر خودشان است. این نه از حماقت است؛ از این است که ترجیح می‌دهند دنیایی داشته باشند که در آن، اگر خوب باشی، اتفاق بد نمی‌افتد.</p>
+    <p>سوگند آن روز به مدرسه نرفت.</p>
+    <p>در راهرو نشست و از لای در نگاه کرد که مادرش عکس‌ها را می‌آورد و جلوی پدرش می‌گذارد و پدرش با احترام و علاقه‌ای وحشتناک نگاهشان می‌کند و می‌گوید: «چه دختر بامزه‌ایه.»</p>
+    <p>پدرش دو هفته ماند.</p>
+    <p>دو هفته‌ای که سوگند تمامش را صرف یک نقشه کرد: اگر آن‌قدر شبیه دختری بشوم که او یادش رفته، شاید یادش بیاید. موهایش را همان‌طور بست که در عکس‌ها بود. همان لباس را پوشید. رفت جلویش و اسمش را گفت، بلند، دوبار.</p>
+    <p>پدرش دستی روی سرش کشید — مثل کسی که به گربهٔ همسایه دست می‌کشد — و گفت: «آفرین.»</p>
+    <p>شب چهاردهم، پدرش رفت.</p>
+    <p>سوگند بیدار بود. صدای در را شنید. تا پنجره دوید و دید که مردی در انتهای کوچه، زیر تیر چراغ برق، ایستاده و بالا را نگاه می‌کند؛ نه پنجرهٔ او را — سقف را، آسمان را، چیزی را که آنجا نبود.</p>
+    <p>بعد رفت.</p>
+    <p>سوگند تا صبح پشت پنجره ماند، چون فکر می‌کرد اگر بس نکند، اگر یک ثانیه هم چشم برندارد، شاید مرد برگردد.</p>
+    <p>این اولین شبِ نگهبانی‌اش بود.</p>
+    <p>بیست سال طول کشید.</p>
+  </div>
+</section>
+
+<!-- ── CH 8 ── -->
+<section class="chapter p2">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل نه</div>
+      <h3>خانه‌ای با دو غایب</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">مادرش به همه گفت که پدر مرده است.</p>
+    <p>سوگند هیچ‌وقت تصحیحش نکرد. یازده سالش بود که فهمید چرا: چون «مرده» یک کلمه است که مردم بلدند با آن چه کار کنند. برایش شکلات می‌آورند، سرشان را تکان می‌دهند، بعد از شش ماه فراموش می‌کنند و زندگی ادامه پیدا می‌کند. اما «رفت و مرا نشناخت» کلمه‌ای نیست که کسی بلد باشد با آن چه کند. آدم‌ها فقط می‌ترسند و فاصله می‌گیرند.</p>
+    <p>پس سوگند یاد گرفت دروغ مادرش را حمل کند. این هم شغل دومش شد.</p>
+    <div class="brk">◆</div>
+    <p>مادرش، فرشته آذرنگ، زن عجیبی شده بود.</p>
+    <p>نه دیوانه. برعکس: بیش از حد عادی. سر کار می‌رفت، غذا می‌پخت، قبض‌ها را می‌داد، عید خانه‌تکانی می‌کرد. اگر کسی از بیرون نگاه می‌کرد می‌گفت زنی است که با شرافت از یک مصیبت عبور کرده.</p>
+    <p>ولی یک جای کارش خالی بود، مثل اتاقی در خانه که دیوارش را کشیده باشند رویش.</p>
+    <p>مثلاً وقتی چهار تا تخم‌مرغ می‌شکست برای سه نفری که دیگر سه نفر نبودند. مثلاً وقتی جلوی کفش‌فروشی می‌ایستاد و به کفش‌های بچگانه نگاه می‌کرد و بعد سرش را تکان می‌داد و می‌گفت «حواسم پرت شد». مثلاً وقتی موقع خواب دستش را دراز می‌کرد و چراغ اتاقی را که کسی در آن نبود خاموش می‌کرد.</p>
+    <p>سوگند به این‌ها می‌گفت <em>جای پا</em>. نازلی رفته بود، اما جای پایش در مادرش مانده بود؛ و مادرش هر روز، بی‌آنکه بداند، در آن‌ها پا می‌گذاشت و لنگ می‌زد.</p>
+    <div class="brk">◆</div>
+    <p>یک بار — سیزده ساله بود — طاقت نیاورد.</p>
+    <p>عکس را از کشو درآورد و روی میز آشپزخانه گذاشت. عکسِ دو دختر روی پله‌های حیاط، یکی بزرگ‌تر با لبخند نصفه، یکی کوچک‌تر با کفش چپ در دست.</p>
+    <p class="said">«مامان، این کیه؟»</p>
+    <p>مادرش نگاه کرد. خم شد. با انگشت روی صورت بچهٔ کوچک‌تر کشید.</p>
+    <p class="said">«چه بچهٔ نازیه.» گفت. «چقدر شبیه توئه. دخترخالته؟»</p>
+    <p>و سوگند دهانش را باز کرد.</p>
+    <p>و بست.</p>
+    <p>و آن شب، برای اولین بار بعد از چهار سال، مثل بچه‌ها گریه کرد — نه از غم، از خشم — و بعد صورتش را شست و عکس را برد و در کشو گذاشت، سر جای اولش، زیر شناسنامه‌ها.</p>
+    <p>آن شب یک تصمیم گرفت که تا بیست‌ونه سالگی همراهش ماند:</p>
+    <p><em>من یادم می‌ماند. به‌جای هر سه‌تاشان.</em></p>
+    <p>و مثل هر تصمیم بزرگی که آدم در سیزده‌سالگی می‌گیرد، این یکی هم شکل عشق داشت و کار زندان را می‌کرد.</p>
+  </div>
+</section>
+
+<!-- ── CH 9 ── -->
+<section class="chapter p2">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل ده</div>
+      <h3>شانزده‌سالگی</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">کاغذ را تصادفی پیدا کرد، پشت قاب عکس عروسی.</p>
+    <p>خط مادرش بود. سه کلمه و یک آدرس. کوچهٔ سنگی، بعد از خیاطی، در چوبی.</p>
+    <p>سوگند شانزده ساله بود و باهوش‌تر از آن که فکر کند این یک آدرس معمولی است، چون آدم آدرس خیاطی را پشت قاب عکس عروسی‌اش قایم نمی‌کند.</p>
+    <p>سه هفته طول کشید تا کوچه را پیدا کند. آن روزها هنوز باید از آدم‌ها می‌پرسیدی، و آدم‌ها وقتی اسم آن مغازه را می‌شنیدند یک جور خاصی نگاهت می‌کردند: نصف دلسوزی، نصف اینکه چه زود.</p>
+    <p>پنجشنبه، ساعت پنج بعدازظهر، رسید سر کوچه.</p>
+    <p>و ایستاد.</p>
+    <p>مغازه ته کوچه بود. چراغش روشن بود. پشت شیشهٔ بخارگرفته، یک نفر پشت پیشخوان تکان می‌خورد.</p>
+    <p>سوگند شروع کرد به راه رفتن. بیست قدم. پانزده. ده.</p>
+    <p>و بعد مرد سرش را بلند کرد.</p>
+    <p>موهایش خاکستری بود. لاغرتر شده بود. اما فک، اما شانه‌ها، اما آن حرکتی که با شست به گوشهٔ ابرو می‌کرد وقتی فکر می‌کرد—</p>
+    <p>سوگند سر جایش خشک شد.</p>
+    <p>سه متر با در فاصله داشت.</p>
+    <p>و در آن سه متر، در همان چند ثانیه، تمام آن چیزی که از نه‌سالگی تا آن روز ساخته بود فرو ریخت. چون تا آن روز، پدرش یک <em>ماجرا</em> بود. یک بی‌عدالتی. چیزی که در سرش با آن حرف می‌زد و در سرش جوابش را می‌داد و همیشه در آن گفت‌وگوها، آخرش، پدر می‌فهمید و پشیمان می‌شد و بغلش می‌کرد.</p>
+    <p>اما این مرد پشت شیشه، ماجرا نبود. یک آدم بود که داشت لیوان می‌شست.</p>
+    <p>و اگر در می‌زد، آن آدم برمی‌گشت و می‌گفت: <em>بفرمایید؟</em></p>
+    <p>سوگند بعدها فکر کرد که آدم‌ها معمولاً از حقیقت نمی‌ترسند. از این می‌ترسند که حقیقت را امتحان کنند و ببازند و بعد دیگر حتی امیدِ نتیجهٔ دیگر را هم نداشته باشند. تا وقتی در نزده‌ای، هر دو جواب ممکن است.</p>
+    <p>برگشت.</p>
+    <p>تا سر خیابان راه رفت، سوار اتوبوس شد، ته اتوبوس نشست، و تا خانه گریه کرد؛ آرام، رو به شیشه، طوری که هیچ‌کس نفهمد.</p>
+    <p>و همان شب، پشت جلد دفتر ریاضی‌اش، با خودکار آبی نوشت:</p>
+    <div class="ledger">پنجشنبه. چراغ روشن بود.</div>
+  </div>
+</section>
+
+<!-- ── CH 10 ── -->
+<section class="chapter p2">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل یازده</div>
+      <h3>پنجشنبه‌ها</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">سیزده سال طول کشید. یعنی ششصد و چند پنجشنبه.</p>
+    <p>مسیرش همیشه یکی بود: اتوبوس تا میدان، پیاده تا خیابان اصلی، بعد کوچهٔ سنگی. تا نبش کوچه می‌آمد، به دیوار تکیه می‌داد، و نگاه می‌کرد که چراغ روشن است یا نه.</p>
+    <p>اگر روشن بود، ده دقیقه می‌ماند و برمی‌گشت.</p>
+    <p>اگر خاموش بود، بیشتر می‌ماند.</p>
+    <p>هیچ‌وقت در نزد.</p>
+    <div class="brk">◆</div>
+    <p>در آن سیزده سال، سوگند بزرگ شد؛ همان‌طور که آدم‌ها در حاشیهٔ یک انتظار بزرگ می‌شوند. دانشگاه رفت و نصفه رها کرد. در دو جا کار کرد. یک بار عاشق شد و پسر بعد از یک سال گفت «تو یه جاییت همیشه اینجا نیست» و راست می‌گفت و سوگند نتوانست بگوید آن جا کجاست.</p>
+    <p>دوستانش می‌گفتند باید بروی جلو. می‌گفتند بابات مُرده — چون همه فکر می‌کردند مرده — می‌گفتند نمی‌شه که تا آخر عمر.</p>
+    <p>و سوگند سر تکان می‌داد و پنجشنبه می‌رفت سر کوچه.</p>
+    <p>گاهی از خودش بدش می‌آمد. گاهی برای خودش توضیح می‌ساخت: می‌روم چون باید مطمئن باشم زنده است، چون یک روز مادرم می‌پرسد، چون شاید یک روز حالش بد شود و کسی نباشد.</p>
+    <p>هیچ‌کدام راست نبود.</p>
+    <p>حقیقت ساده‌تر و بی‌آبروتر بود: تا وقتی آن چراغ روشن بود، سوگند دختر یک نفر بود. کسی در این شهر بود که — هرچند نمی‌دانست — پدرش حساب می‌شد. اگر در می‌زد و آن مرد نمی‌شناختش، این آخرین ذره هم می‌رفت.</p>
+    <p>پس نمی‌زد. و می‌آمد. و باز نمی‌زد.</p>
+    <p>آدم می‌تواند سیزده سال از یک زخم تغذیه کند، به شرطی که هرگز نگذارد ببندد.</p>
+    <div class="brk">◆</div>
+    <p>یک پنجشنبه — بیست‌ودو ساله بود — چراغ خاموش بود و در نیمه‌باز.</p>
+    <p>سوگند تا دم در رفت. صدای شکستن چیزی از داخل آمد و بعد صدای مردی که فحش داد.</p>
+    <p>فحش نمی‌داد. پدرش هیچ‌وقت فحش نمی‌داد.</p>
+    <p>سوگند ایستاد و به این فکر کرد که آن مرد داخل، بیست سال است دارد کسی می‌شود که او نمی‌شناسد. که همان‌قدر که پدرش او را از دست داده، او هم دارد کسی را از دست می‌دهد که هر پنجشنبه می‌آید سراغش. که شاید هر دویشان دارند یک آدم مرده را نگه می‌دارند.</p>
+    <p>برگشت.</p>
+    <p>و آن هفته، برای اولین بار، در دفترش ننوشت.</p>
+  </div>
+</section>
+
+<!-- ── CH 11 ── -->
+<section class="chapter p2">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل دوازده</div>
+      <h3>تصمیم</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">آبان بود که مادرش گفت چیزی نیست.</p>
+    <p>سوگند بلد بود مادرش کِی می‌گوید چیزی نیست. همان لحنی که با آن گفته بود بابا مرده.</p>
+    <p>دو هفته بعد، در راهروی یک بیمارستان، پزشکی جوان با مهربانی خسته‌ای برایش توضیح داد که چقدر وقت مانده. سوگند سر تکان داد، تشکر کرد، رفت پایین، در پارکینگ ایستاد و بیست دقیقه به یک ستون بتنی نگاه کرد.</p>
+    <p>بعد اتوبوس گرفت و رفت خانه و شام درست کرد.</p>
+    <div class="brk">◆</div>
+    <p>آن شب مادرش سر میز نشسته بود و برنج را با چنگال جابه‌جا می‌کرد.</p>
+    <p class="said">«سوگند.»</p>
+    <p class="said">«جانم.»</p>
+    <p class="said">«یه چیزی هست که نمی‌دونم چیه.»</p>
+    <p>سوگند دستش از حرکت ایستاد.</p>
+    <p class="said">«یه چیزی گم کردم.» مادرش به بشقاب نگاه می‌کرد. «نمی‌دونم چی. ولی هست. مثل وقتی از خونه میای بیرون و مطمئنی یه چیزی رو جا گذاشتی و هرچی فکر می‌کنی یادت نمیاد چی.» سرش را بلند کرد و لبخند زد؛ لبخندی که سوگند بیست سال بود می‌دیدش و هر بار یک تکه از او را می‌کند. «بیست ساله دارم از خونه میام بیرون، مادر.»</p>
+    <p>سوگند بلند شد، ظرف‌ها را برد آشپزخانه، شیر آب را باز کرد تا صدا بدهد، و همان‌جا، رو به دیوار، دستش را گذاشت جلوی دهانش.</p>
+    <p>چهار ماه.</p>
+    <p>یعنی مادرش قرار بود با آن جای خالی بمیرد. یعنی آخرین فکر آن زن، در آخرین اتاق، این بود که یک چیزی را جا گذاشته و هرگز نفهمید چه.</p>
+    <p>و سوگند تنها کسی روی زمین بود که می‌دانست چه.</p>
+    <div class="brk">◆</div>
+    <p>آن شب تا صبح روی زمین اتاقش نشست و کاغذ تاخورده را از پشت قاب درآورد.</p>
+    <p>سیزده سال بود که همراهش بود. لبه‌هایش نرم شده بود.</p>
+    <p>و برای اولین بار، مسئله دیگر پدرش نبود.</p>
+    <p>این تفاوت را باید می‌فهمید تا بتواند از خانه بیرون برود: سیزده سال، هر پنجشنبه، برای <em>خودش</em> رفته بود. برای آن ذرهٔ دختربودن. و به همین دلیل هیچ‌وقت نتوانسته بود در بزند — چون هرچه از خودت بخواهی، ترس هم از خودت می‌آید.</p>
+    <p>اما این‌بار برای خودش نمی‌رفت.</p>
+    <p>سوگند صبح موهایش را بست. محکم. کاپشن پدرش را — تنها چیزی که از او مانده بود، و آن هم فقط چون در جالباسی جا مانده بود — پوشید.</p>
+    <p>و رفت.</p>
+    <p>سر کوچه، همان جای همیشگی، به دیوار تکیه داد.</p>
+    <p>چراغ روشن بود.</p>
+    <p>سوگند نگاه کرد و برای بار سیصدوچندم فکر کرد که می‌تواند برگردد. که هنوز دیر نشده. که تا در نزده، هر دو جواب ممکن است.</p>
+    <p>بعد از دیوار جدا شد و راه افتاد.</p>
+    <p>بیست قدم. پانزده. ده. سه.</p>
+    <p>دستش را بالا آورد.</p>
+    <p>و در زد.</p>
+  </div>
+</section>
+
+
+<!-- ══════════ PART THREE ══════════ -->
+<section class="part">
+  <svg width="54" height="106" viewBox="0 0 96 188" fill="none" aria-hidden="true">
+    <rect x="34" y="10" width="28" height="17" rx="3" fill="#6B5433"/>
+    <path d="M30 27h36v14l10 20v112a8 8 0 0 1-8 8H28a8 8 0 0 1-8-8V61l10-20V27z" fill="rgba(190,222,238,.08)" stroke="rgba(206,231,244,.42)" stroke-width="2"/>
+    <path d="M23 152h50v21a8 8 0 0 1-8 8H31a8 8 0 0 1-8-8v-21z" fill="#8A2E28" opacity=".95"/>
+  </svg>
+  <div class="label">دفتر سوم</div>
+  <h2>معامله</h2>
+  <div class="note">شیشه تقریباً خالی است</div>
+</section>
+
+<!-- ── CH 12 ── -->
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل سیزده</div>
+      <h3>جناب فرهود</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">مردی که فردایش آمد چتر نداشت و خیس هم نبود؛ راننده‌اش تا دم در آورده بودش.</p>
+    <p>کت‌وشلوار خاکستری، ساعت گران، و آن نوع خوش‌رویی که آدم را می‌ترساند چون هیچ‌وقت خاموش نمی‌شد.</p>
+    <p class="said">«آقای نریمان صدر. بالاخره.» دست دراز کرد. «فرهود. کیوان فرهود.»</p>
+    <p>نریمان دست نداد. «مشتری‌این؟»</p>
+    <p class="said">«شریک.» دور مغازه چرخید. «خدای من. چندتاست؟»</p>
+    <p class="said">«نمی‌شمرم.»</p>
+    <p class="said">«چرا؟»</p>
+    <p class="said">«چون عدد نیستن.»</p>
+    <p>فرهود خندید و به پیشخوان تکیه داد.</p>
+    <p class="said">«می‌دونی مشکل اینجا چیه؟ مقیاس نداره. روزی چند مشتری داری؟ سه‌تا؟ و باید ساعت‌ها بشینی گوش بدی. حیفه. تو معدن طلا داری و با قاشق چایخوری می‌کَنی.»</p>
+    <p class="said">«پیشنهادت؟»</p>
+    <p class="said">«شعبه. سیستم. اپراتور آموزش‌دیده.» دست‌هایش را باز کرد. «هر شهر یکی. تعرفهٔ مشخص: خاطرهٔ سبک، متوسط، سنگین. بیمه طرف قرارداد بشه. کی تو این مملکت درد نداره؟ همه دارن. ما فقط داریم خدمات می‌دیم.»</p>
+    <p class="said">«شیشه‌ها کجا می‌ره؟»</p>
+    <p class="said">«انبار مرکزی. من روش نگهداری بهتری دارم. صنعتی. سردخونه. تو با نردبون چوبی کار می‌کنی، مرد.»</p>
+    <p class="said">«کی نگهشون می‌داره؟»</p>
+    <p class="said">«گفتم که، انبار—»</p>
+    <p class="said">«نه.» نریمان بلند شد. «<em>کی؟</em> کدوم آدم؟ اینا تو شیشه نمی‌مونن. نشت می‌کنن. یکی باید شب‌ها بالا سرشون بخوابه و خوابشونو ببینه. من دوهزارتا دارم؛ نگاه کن به من. صد هزارتا رو کی می‌خوابه؟»</p>
+    <p>لبخند فرهود سر جایش ماند، اما چیزی پشتش تکان خورد.</p>
+    <p class="said">«جالبه. این قسمتشو نشنیده بودم.»</p>
+    <p class="said">«چون کسی رو نداشتی که ازش بپرسی.»</p>
+    <p>فرهود مدتی به قفسه‌ها نگاه کرد. بعد چیزی گفت که نریمان انتظارش را نداشت.</p>
+    <p class="said">«من هفت بار رفتم.»</p>
+    <p class="said">«کجا؟»</p>
+    <p class="said">«جاهایی مثل اینجا. تو کشورهای مختلف. آدمایی که ادعا می‌کردن بلدن.» ساعتش را صاف کرد؛ اولین حرکت غیرحرفه‌ای‌اش. «هیچ‌کدوم نتونستن. یه چیزی هست که نوزده ساله دارم حملش می‌کنم و هیچ‌کس نتونسته ازم بگیردش.»</p>
+    <p class="said">«چون بلد نبودن؟»</p>
+    <p class="said">«چون—» لبخندش برگشت، سفت‌تر از قبل. «شاید بعضی چیزا رو نمی‌شه گفت. و چیزی که نگی، فروخته نمی‌شه.»</p>
+    <p>نریمان نگاهش کرد. برای اولین بار، این مرد شبیه مشتری‌ها شده بود.</p>
+    <p class="said">«می‌تونم بشینم پای حرفت. مجانی.»</p>
+    <p class="said">«نه.» فرهود کارتش را روی پیشخوان گذاشت. «من نیومدم اینجا مشتری بشم. اومدم صاحب بشم.» تا در رفت. «فکراتو بکن. من صبورم — تا یه حدی.»</p>
+    <p>رفت.</p>
+    <p>نریمان کارت را برنداشت. عصر که سوگند آمد، کارت هنوز همان‌جا بود.</p>
+  </div>
+</section>
+
+<!-- ── CH 13 ── -->
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل چهارده</div>
+      <h3>آقای شکوهی نام خودش را گم می‌کند</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">پنجشنبه بود که شکوهی آمد و نتوانست بگوید چه می‌خواهد بفروشد.</p>
+    <p>روی چهارپایه نشست، انگشت‌ها را قفل کرد، دهانش را باز کرد و بست.</p>
+    <p class="said">«یه چیزی بود.»</p>
+    <p class="said">«اشکال نداره.»</p>
+    <p class="said">«نه، یه چیزی بود. مهم بود. تو راه یادم بود.» با کف دست به پیشانی زد. «لعنتی.»</p>
+    <p class="said">«آقای شکوهی. اسم شما چیه؟»</p>
+    <p>نگاهش کرد. لبخند زد؛ همان لبخند معذرت‌خواهانه. «چه سؤال مسخره‌ای.»</p>
+    <p class="said">«بگین.»</p>
+    <p>و آقای شکوهی دهانش را باز کرد، و چیزی نیامد.</p>
+    <p>سکوتی که آمد، سکوت اتاق عمل بود.</p>
+    <p>نریمان از پشت پیشخوان بیرون آمد، کنارش نشست، دست روی شانهٔ خیسش گذاشت — همان شانهٔ چپ، همان چتر شکسته.</p>
+    <p class="said">«اسم شما کامران شکوهیه. متولد تیر. تو ادارهٔ ثبت کار می‌کردین و بازنشسته شدین. یه خواهرزاده دارین که عروسیش پنج سال پیش بود و شما اونجا آواز خوندین.»</p>
+    <p class="said">«آره.» تندتند سر تکان داد، مثل کسی که به قایق چنگ می‌زند. «آره. کامران. کامران.»</p>
+    <p class="said">«از هفتهٔ دیگه دیگه نیاین.»</p>
+    <p>نگاهش کرد.</p>
+    <p class="said">«جدی می‌گم. دیگه ازتون چیزی نمی‌خرم.»</p>
+    <p class="said">«چرا؟»</p>
+    <p>نریمان به قفسهٔ سمت چپ اشاره کرد. ردیف چهارم.</p>
+    <p class="said">«اونا شرم‌های شما نیستن، آقای شکوهی. اونا <em>خودِ</em> شمان. هر آدمی از هزارتا لحظهٔ خجالت‌آور ساخته شده. اون شرم‌ها چسبیه که آدمو به آدمای دیگه وصل می‌کنه؛ برای همینه که وجود دارن. اگه همه‌شو در بیاری، چیزی که می‌مونه آدم نیست. یه اتاق خالیه.»</p>
+    <p>شکوهی مدتی سی‌وهفت شیشه را نگاه کرد.</p>
+    <p class="said">«می‌شه پسشون بگیرم؟»</p>
+    <p>و نریمان — که هزار بار این سؤال را شنیده بود و هزار بار یک جواب داده بود — این‌بار مکث کرد.</p>
+    <p class="said">«نه.»</p>
+    <p>مرد بلند شد. چتر شکسته را برداشت.</p>
+    <p class="said">«خداحافظ آقای... ببخشید، اسم شما چی بود؟»</p>
+    <p class="said">«نریمان.»</p>
+    <p class="said">«خداحافظ آقا نریمان.»</p>
+    <p>در که بسته شد، نریمان به کارت ویزیت روی پیشخوان نگاه کرد، بعد به قفسه‌ها، بعد به دست‌های خودش.</p>
+    <p>چند هفته پیش، وقتی آن زن را برگردانده بود، برای اولین بار از خودش پرسیده بود که این مغازه دارد به آدم‌ها کمک می‌کند یا آرام‌آرام می‌خوردشان. آن سؤال از آن روز نرفته بود؛ فقط منتظر مانده بود تا کسی نام خودش را گم کند و برگردد.</p>
+    <p>و بعد فکر سردتری آمد: <em>اگر شکوهی سی‌وهفت‌تا فروخت و اسمش را گم کرد، من که دوهزارتا خوابیده‌ام چه گم کرده‌ام؟</em></p>
+  </div>
+</section>
+
+<!-- ── CH 14 ── -->
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل پانزده</div>
+      <h3>طبقهٔ زیرزمین</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">دریچه زیر فرش بود و بیست سال بود بازش نکرده بود.</p>
+    <p>خانم فیروز، هفتهٔ آخر، با انگشت به آن اشاره کرده بود: «اون پایین چیزهاییه که نباید فروخته می‌شد. نرو تا وقتی مجبور نشدی. اون‌وقت خودت می‌فهمی.»</p>
+    <p>چراغ‌قوه را روشن کرد و پایین رفت.</p>
+    <p>سرد بود. بوی خاک و چوب کهنه. و ته فضا، یک قفسهٔ کوچک. فقط یکی. با پارچهٔ سفیدی رویش.</p>
+    <p>پارچه را کنار زد.</p>
+    <p>این شیشه‌ها برچسب داشتند. برچسب واقعی. با اسم.</p>
+    <ul class="names">
+      <li>دلارام فیروز</li>
+      <li>رحیم دستغیب</li>
+      <li>مینو صفار</li>
+      <li>فرشته آذرنگ</li>
+      <li class="me">نریمان صدر</li>
+    </ul>
+    <p>قلبش ایستاد و بعد، با تأخیر، دوباره راه افتاد.</p>
+    <p>اسم خودش. با خط خانم فیروز.</p>
+    <p>شیشه را برداشت. سنگین بود — سنگین‌تر از هر چیزی که تا حالا در دست گرفته بود. مایع درونش سیاه نبود؛ طلایی بود. طلایی کدر، مثل عسلی که سال‌ها مانده باشد.</p>
+    <p>کنارش لوله‌ای کاغذی بود، بسته با نخ. روی نخ برچسبی: <em>برای هر کس که این را پیدا کرد.</em></p>
+    <p>نریمان روی پلهٔ زیرزمین نشست و نخ را باز کرد.</p>
+  </div>
+</section>
+
+<!-- ── CH 15 ── -->
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل شانزده</div>
+      <h3>نامهٔ دلارام فیروز</h3>
+      <div class="orn"></div>
+    </div>
+
+    <div class="letter">
+      <p>هر که هستی، حالا فهمیده‌ای که چیزی از تو کم است.</p>
+      <p>پس کوتاه می‌نویسم. مغازه‌دار فراموشخانه انتخاب نمی‌شود. ساخته می‌شود.</p>
+      <p>این مغازه قانون چهارمی دارد که به مشتری نمی‌گوییم، چون اگر بگوییم دیگر کسی نمی‌آید: هر خاطره‌ای که فروخته می‌شود، باید کسی حملش کند. ما دلال نیستیم. ما اسکله‌ایم. بار روی ما خالی می‌شود.</p>
+      <p>و کسی که بار هزار نفر را برمی‌دارد، باید جای خالی داشته باشد. آدمِ پر ظرفیت ندارد. برای همین مغازه‌دار همیشه کسی است که خودش، یک بار، سنگین‌ترین چیزش را فروخته و نمی‌داند چه فروخته است.</p>
+      <p>من هم فروختم. سال ۵۴. سی سال است هر صبح برای کسی که نمی‌دانم کیست دلم تنگ می‌شود. گاهی وسط کار می‌ایستم و به در نگاه می‌کنم. نمی‌دانم منتظر کی‌ام.</p>
+      <p>شیشه‌ای که اسم خودت رویش است، همان چیزی است که فروختی. مال توست. حق داری برش داری. اما بدان:</p>
+      <p>اگر پسش بگیری، دیگر مغازه‌دار نیستی. کسی که پر است نمی‌تواند بلعنده باشد. همان روز باید در را ببندی.</p>
+      <p>و در این شهر هزار نفرند که شب‌هایشان به این بسته است که یکی، جایی، بارشان را روی دوش دارد. اگر در بسته شود، خاطره‌ای که نگهدارنده ندارد برمی‌گردد سراغ صاحبش. یک‌جا. بی‌هشدار. تصورش را بکن: زنی که چهل سال پیش بچه‌اش را فروخت تا زنده بماند، یک بعدازظهر ساده، وسط نان خریدن، همه‌اش را پس بگیرد.</p>
+      <p>من نتوانستم. سی سال شیشه‌ام را نگاه کردم و برنداشتم. نمی‌گویم کار درستی کردم. می‌گویم نتوانستم.</p>
+      <p>یک چیز دیگر، و بعد تنهایت می‌گذارم.</p>
+      <p>روزی کسی می‌آید و می‌خواهد خاطرهٔ آدم دیگری را پس بگیرد. ممکن است. اما رایگان نیست؛ قانون این مغازه دادوستد است، نه بخشش. برای بازگشتِ یک خاطره، کسی باید هم‌وزنش چیزی بدهد. و آن کس، صاحب خاطره نیست — کسی است که می‌خواهدش.</p>
+      <p>به او همین را بگو، بعد ساکت شو و بگذار خودش تصمیم بگیرد. تو حق نداری این تصمیم را برای کسی بگیری.</p>
+      <p>من یک بار گرفتم. برای مردی که خیلی جوان بود و خیلی داغان و آمده بود یک روز بارانی را بفروشد. دیدم چه چیزی به ریشه‌اش چسبیده. دیدم و نگفتم، چون فکر کردم دارم رحم می‌کنم.</p>
+      <p>و تا امروز خودم را نبخشیده‌ام.</p>
+      <p class="sign">دلارام فیروز — مرداد ۱۳۸۴</p>
+    </div>
+
+    <p>نریمان نامه را دوبار خواند.</p>
+    <p>بعد شیشهٔ اسم خودش را در نور چراغ‌قوه بالا آورد. مایع طلایی آرام تکان خورد؛ مثل کسی که در خواب پهلو عوض می‌کند.</p>
+    <p><em>مردی که خیلی جوان بود.</em></p>
+    <p>دستش دور شیشه محکم شد.</p>
+    <p>و بعد باز شد.</p>
+    <p>بالا آمد. دریچه را بست. فرش را انداخت. رفت پشت پیشخوان و تا صبح نشست، و تمام آن شب یک چیز را فهمید و از فهمیدنش نتوانست فرار کند: کسی که بیست سال بار این شهر را برداشته بود، خودش یک بار جایی چیزی گذاشته و رفته بود.</p>
+  </div>
+</section>
+
+<!-- ── CH 16 ── -->
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل هفده</div>
+      <h3>آنچه سوگند می‌داند</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">صبح، ساعت هفت، سوگند در زد.</p>
+    <p>نریمان در را باز کرد. لباس دیروز تنش بود.</p>
+    <p class="said">«چیزی پیدا کردی؟»</p>
+    <p class="said">«بشین.»</p>
+    <p>شیشه‌ای را روی پیشخوان گذاشت. برچسب: <em>فرشته آذرنگ.</em></p>
+    <p>سوگند دست دراز کرد و نگه داشت، انگار شیشه داغ باشد.</p>
+    <p class="said">«خواهرت اینجاست.»</p>
+    <p class="said">«همه‌ش؟»</p>
+    <p class="said">«همه‌ش.»</p>
+    <p>نفس عمیقی کشید. «چقدر؟»</p>
+    <p class="said">«پول نیست.»</p>
+    <p class="said">«پس چی؟»</p>
+    <p>نریمان قانون را گفت، همان‌طور که خانم فیروز نوشته بود: خاطره برمی‌گردد اگر کسی که می‌خواهدش هم‌وزنش بدهد. نه پول. نه سال عمر. خاطره در برابر خاطره. و وزن بی‌رحم است: نازلیِ شش‌ساله با تمام شش سالش، سنگین‌ترین چیزی است که در این مغازه هست.</p>
+    <p class="said">«یه چیز دیگه هم هست.» گفت. «و این یکی رو باید خوب بفهمی.»</p>
+    <p class="said">«بگو.»</p>
+    <p class="said">«تو بیست ساله نازلی رو یادته. بیست ساله می‌تونستی بشینی جلوی مادرت و همه‌شو تعریف کنی. چرا نکردی؟»</p>
+    <p class="said">«چون می‌ترسیدم.»</p>
+    <p class="said">«نه.» نریمان سر تکان داد. «چون فایده نداشت. صد بارم تعریف می‌کردی، مادرت فقط یه قصه می‌شنید. مثل قصهٔ بچهٔ همسایه. غصه می‌خورد و می‌رفت.» انگشتش را روی شیشه گذاشت. «چیزی که تو مغازه در میاد، با حرف زدنِ معمولی برنمی‌گرده. فقط یه چیز می‌تونه برش گردونه: کسی که خودش <em>حاملشه</em> بشینه و بگه.»</p>
+    <p>سوگند به شیشه نگاه کرد و کم‌کم فهمید.</p>
+    <p class="said">«یعنی اول باید بیاد تو من.»</p>
+    <p class="said">«آره.»</p>
+    <p class="said">«و بعد که برای مادرم گفتم...»</p>
+    <p class="said">«از تو می‌ره.» صدایش پایین آمد. «حمل کردن یعنی همین. یه نفر داره. دو نفر نه. اگه بدیش به مادرت، مالِ مادرت می‌شه و دیگه مال تو نیست.»</p>
+    <p>مغازه ساکت شد.</p>
+    <p class="said">«پس من نازلی رو هم از دست می‌دم.»</p>
+    <p class="said">«آره.»</p>
+    <p class="said">«یعنی من باید چی بدم؟»</p>
+    <p class="said">«چیزی به همون سنگینی.»</p>
+    <p class="said">«سنگین‌ترین چیز من خود نازلیه.»</p>
+    <p class="said">«می‌دونم.»</p>
+    <p>سوگند بلند شد، رفت کنار پنجره، مدتی کوچه را نگاه کرد. از این‌طرف شیشه، کوچه کوچک‌تر به نظر می‌رسید.</p>
+    <p class="said">«یه چیز دیگه هم هست که سنگینه.»</p>
+    <p class="said">«چی؟»</p>
+    <p>برگشت. و نگاهش، برای اولین بار در این چند روز، مستقیم در چشم‌های نریمان نشست.</p>
+    <p class="said">«بابام.»</p>
+    <p>نریمان تکان نخورد.</p>
+    <p class="said">«بابام تو اون تصادف نمرد. زنده موند.» صدایش همان صافیِ ترسناک را داشت. «چهار ماه بعدش گم شد. نه اینکه فرار کرده باشه — گم شد. من نه سالم بود و یه روز صبح رفتم تو آشپزخونه و دیدم بابام وایساده داره منو نگاه می‌کنه؛ همون‌جوری که آدم بچهٔ همسایه رو نگاه می‌کنه.»</p>
+    <p>صدای چکهٔ ناودان از بیرون می‌آمد.</p>
+    <p class="said">«از مادرم پرسید این بچه کیه.»</p>
+    <p>نریمان دستش را روی پیشخوان گذاشت تا نلرزد.</p>
+    <p class="said">«دو هفته موند. بعد رفت. مادرم بیست سال گفت مرده. نه سالم بود ولی احمق نبودم. شونزده سالگی پیداش کردم.» مکث. «سیزده ساله هفته‌ای یه بار میام تو این کوچه و از دور نگاه می‌کنم چراغ مغازه روشنه یا نه.»</p>
+    <p>نریمان چشم بست.</p>
+    <p>و در تاریکی پشت پلک‌هایش، برای اولین بار در بیست سال، چیزی از پشت آن شیشهٔ مات حرکت کرد؛ نه تصویر، نه صدا — یک <em>وزن</em>. وزن چیزی روی شانه. وزن بچه‌ای که خوابش برده و باید تا اتاق بردش.</p>
+    <p class="said">«اسم من سوگند صدره.»</p>
+    <p>باران گرفت.</p>
+    <p class="said">«و شما پدر منی.»</p>
+    <div class="brk">◆</div>
+    <p>نریمان چشم باز کرد.</p>
+    <p>و کاری کرد که سوگند در هیچ‌کدام از آن سیصد پنجشنبه تصورش را نکرده بود. نه گریه کرد، نه انکار کرد، نه بغلش کرد.</p>
+    <p>بلند شد، رفت پشت پیشخوان، دفتر سیاه را آورد، گذاشت جلوی سوگند و بازش کرد روی صفحه‌ای که شش لبهٔ بریده داشت.</p>
+    <p class="said">«بهار ۸۴.» انگشتش را روی بریدگی کشید. «یه نفر این چهار ماه رو از تاریخ این مغازه بریده. با تیغ.»</p>
+    <p>سوگند به کاغذ بریده نگاه کرد.</p>
+    <p class="said">«چرا داری اینو نشونم می‌دی؟»</p>
+    <p class="said">«چون می‌خوام بدونی با کی داری معامله می‌کنی.» صدایش خالی بود. «من نمی‌دونم پدرتم. حرفتو باور می‌کنم، ولی <em>نمی‌دونم</em>. برای من تو یه مشتری‌ای که یه چیزی می‌خواد و یه چیزی داره.» انگشتش روی صفحه ماند. «و این آدمی که این صفحه‌ها رو بریده، احتمالاً من بودم. یعنی من قبلاً یه بار چیزی رو ازت گرفتم و روش سرپوش گذاشتم.»</p>
+    <p>سکوت.</p>
+    <p class="said">«پس اگه اومدی اینجا که ازم چیزی بگیری که آدم‌ها به پدرشون می‌گن، من ندارم.» گفت. «فقط اینو دارم: مغازه‌ای که کار می‌کنه.»</p>
+    <p>و سوگند — که سیزده سال با آن کاغذ تاخورده در جیبش راه رفته بود — سرش را تکان داد و گفت:</p>
+    <p class="said">«همینو می‌خوام.»</p>
+    <div class="brk">◆</div>
+    <p>آن شب سوگند نرفت.</p>
+    <p>بی‌آنکه دربارهٔ‌اش حرف بزنند، رفت بالا و روی تشک اضافه‌ای که بیست سال بود کسی رویش نخوابیده بود دراز کشید. نریمان چیزی نگفت. صبح، دو لیوان چای روی پیشخوان بود.</p>
+    <p>آدم‌ها همیشه با کلمه به هم نزدیک نمی‌شوند. گاهی فقط یک لیوان اضافه است.</p>
+  </div>
+</section>
+
+
+<!-- ══════════ INTERLUDE ══════════ -->
+<section class="chapter midbreak p1">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">میان‌پرده</div>
+      <h3>شش صفحه</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">این شش صفحه را هیچ‌کس نخواند. نه نریمان، نه سوگند. دلارام فیروز آن‌ها را برید و سوزاند، اما پیش از سوزاندن، عین‌شان را در دفترچهٔ خودش نوشت؛ و آن دفترچه تا امروز در جایی است که کسی نگاه نمی‌کند.</p>
+    <p>پس فقط ما می‌دانیم.</p>
+    <div class="brk">◆</div>
+
+    <div class="journal">
+      <p><em>۲۹ بهمن ۸۳.</em> زنی آمد. سی‌وچهار ساله. آذرنگ. بچه‌اش را چهارراه بلوار برده. می‌خواست روز تصادف را بفروشد.</p>
+      <p>هشدار دادم. مثل همیشه. گفتم ریشه دارد. گفت می‌دانم. گفتم ممکن است خود بچه را ببرد. گفت اگر ببرد، خدا را شکر.</p>
+      <p>گرفتم. ریشه‌اش تا بن رفت. بچه کامل آمد بیرون؛ شش سال، تر و تمیز، مثل درختی که با خاکش بکَنی.</p>
+      <p>زن از در که رفت بیرون، سبک بود. سبک‌ترین آدمی که امسال دیده‌ام.</p>
+      <p>و من ایستادم و به شیشه نگاه کردم و به خودم گفتم: خب، کارَت را کردی.</p>
+    </div>
+
+    <p>و بعد، سه ماه و نیم چیزی ننوشت. دفترچه خالی است. فقط یک خط، وسط اسفند، بی‌تاریخ: <em>امشب باز خواب آن بچه را دیدم. کفش چپش دستش بود.</em></p>
+    <div class="brk">◆</div>
+
+    <div class="journal">
+      <p><em>۱۱ اردیبهشت ۸۴.</em> مردی آمد. جوان. سی‌وچند. اسمش را گفت: صدر. هفته‌ای است که هر شب می‌آید سر کوچه و برمی‌گردد؛ دیده‌امش. امشب آمد تو.</p>
+      <p>گفت زنش نه — دخترش. گفت بچه‌ام جلوی چشمم رفت. گفت من رانندگی می‌کردم.</p>
+      <p>این را چهار بار گفت. <em>من رانندگی می‌کردم.</em></p>
+      <p>گفت نمی‌خواهم بمیرم و نمی‌توانم زندگی کنم و یک راه سوم می‌خواهم.</p>
+      <p>قانون‌ها را گفتم. تا دوم که رسیدم، حرفم را قطع کرد و گفت هرچه می‌خواهد ببرد.</p>
+      <p>و من — و این را می‌نویسم چون باید یک جا نوشته شود — <em>نگاه کردم و ریشه را دیدم.</em></p>
+      <p>سی سال است این کار را می‌کنم. من ریشه را پیش از کندن می‌بینم؛ مثل ماما که پیش از تولد می‌فهمد بچه چرخیده.</p>
+      <p>به روزِ او که نگاه کردم، دیدم یک دختربچه به آن چسبیده. محکم. با تمام وزنش.</p>
+      <p>و من فکر کردم همان بچه است. همان که رفته.</p>
+      <p>فکر کردم: خدایا، این مرد دارد بچهٔ مرده‌اش را می‌فروشد و هیچ‌کس در دنیا از این ضرر نمی‌کند.</p>
+      <p>فکر کردم دارم رحم می‌کنم.</p>
+      <p>گرفتم.</p>
+    </div>
+
+    <p>در دفترچه، بعد از این، خط‌ها لرزان‌تر می‌شود.</p>
+
+    <div class="journal">
+      <p><em>۱۹ خرداد ۸۴.</em> امروز فهمیدم.</p>
+      <p>مرد سه هفته است اینجا کار می‌کند. جایی برای رفتن نداشت. کمکم می‌کند، قفسه‌ها را مرتب می‌کند، و شب‌ها بالا می‌خوابد و صبح‌ها می‌گوید خواب آدم‌های غریبه را دیده و می‌خندد؛ خنده‌ای که هنوز نمی‌داند چیست.</p>
+      <p>امروز زنی آمد شیشه‌اش را که نه، سراغ نشانی‌ای را بگیرد؛ خانمی از همان محله. حرف که می‌زد گفت طفلکی آن خانم آذرنگ، هم بچه‌اش رفت هم شوهرش گذاشت رفت، حالا مانده با آن دختر بزرگه تنها.</p>
+      <p>گفتم: دختر بزرگه؟</p>
+      <p>گفت: نه ساله. سوگند.</p>
+      <p>دفتر را باز کردم. ۲۹ بهمن، آذرنگ. ۱۱ اردیبهشت، صدر. یک خانه. یک تصادف. دو معامله. و من هر دو را خودم گرفته‌ام.</p>
+      <p>و آن دختربچه‌ای که به ریشهٔ آن مرد چسبیده بود و من فکر کردم مرده است—</p>
+      <p>زنده بود.</p>
+      <p>زنده است.</p>
+      <p>و امروز صبح، در خانه‌ای در این شهر، از خواب بیدار شد و پدرش نشناختش، و من این کار را کردم.</p>
+    </div>
+
+    <p>در حاشیهٔ همین صفحه، با مدادی که فشار زیاد رویش آمده و کاغذ را کنده، یک جمله هست:</p>
+    <div class="journal"><p><em>سی سال قانون دوم را برای مردم خواندم و امروز فهمیدم قانون دوم برای من نوشته شده بود.</em></p></div>
+    <div class="brk">◆</div>
+
+    <div class="journal">
+      <p><em>۲۱ خرداد.</em> دو شب فکر کردم. سه راه دارم.</p>
+      <p>یک: شیشه‌اش را بدهم و بگویم. اما آن‌وقت مردی که بچه‌اش را زیر گرفته، همه‌اش را یک‌جا پس می‌گیرد، و من او را دیده‌ام؛ آن شب اولی که سر کوچه ایستاده بود دیده‌ام. برنمی‌گردد. این کار قتل است، با شیشه.</p>
+      <p>دو: هیچ نگویم و بگذارم برود. اما کجا برود؟ مردی که نمی‌داند چه گم کرده، تا آخر عمر می‌گردد.</p>
+      <p>سه: نگهش دارم.</p>
+      <p>راه سوم را انتخاب کردم و می‌دانم که برای خودم انتخاب کردم، نه برای او. چون من پیر شده‌ام و این مغازه یکی را می‌خواهد و او خالی است و خالی‌ها را همین‌جا نگه می‌دارند.</p>
+      <p>پس بگذار روشن بنویسم، چون کسی این را نخواهد خواند و لااقل کاغذ بداند:</p>
+      <p>من از این مرد یک دختر گرفتم، و بعد او را استخدام کردم که تا آخر عمرش پشت پیشخوانی بایستد که آن دختر در آن گم شده.</p>
+      <p>صفحه‌ها را می‌برم. اگر روزی دفتر را بخواند، نباید نخ را پیدا کند.</p>
+      <p>و شیشه‌اش را می‌گذارم پایین، جایی که خودم سی سال است شیشهٔ خودم را نگاه می‌کنم و برنمی‌دارم.</p>
+      <p>شاید او شجاع‌تر از من باشد.</p>
+      <p>شاید هم نه. اکثرمان نیستیم.</p>
+    </div>
+
+    <p>آخرین چیزی که دلارام فیروز در آن دفترچه نوشت، شش هفته پیش از مرگش بود و ربطی به هیچ‌کدام این‌ها نداشت — یا داشت.</p>
+    <div class="journal"><p><em>یک روز دختری می‌آید و چیزی می‌خواهد که ما نداریم. آن روز دیگر من نیستم. امیدوارم هرکه پشت پیشخوان است، راستش را بگوید. هرچه هم که باشد.</em></p></div>
+  </div>
+</section>
+
+<!-- ── NEW: THE HOUSE ── -->
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل هجده</div>
+      <h3>خانهٔ خیابان یازدهم</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">آن شب نریمان کرکره را پایین کشید و کاری کرد که بیست سال نکرده بود: از کوچهٔ سنگی بیرون رفت و به مقصدی رفت که مغازه نبود.</p>
+    <p>نشانی را از دفتر برداشته بود. کنار اسم فرشته آذرنگ، با خط ریز خانم فیروز.</p>
+    <p>چهل دقیقه پیاده رفت. باران بند آمده بود و آسفالت بوی چیزی می‌داد که آدم را به گذشته‌ای می‌برد که مال خودش نیست.</p>
+    <p>خانه، خانه‌ای دو طبقه در انتهای یک خیابان معمولی بود، با نردهٔ آبی و یک درخت توت که نصفش را هرس کرده بودند.</p>
+    <p>نریمان آن‌طرف خیابان ایستاد.</p>
+    <div class="brk">◆</div>
+    <p>مدتی طولانی چیزی نشد.</p>
+    <p>او آنجا ایستاد و به یک خانه نگاه کرد و منتظر ماند که چیزی در سینه‌اش اتفاق بیفتد.</p>
+    <p>هیچ اتفاقی نیفتاد.</p>
+    <p>خانه، خانه بود. نرده آبی بود. درخت هرس‌شده بود.</p>
+    <p>و نریمان صدر، ایستاده در پیاده‌روی روبه‌روی خانه‌ای که — اگر آن دختر راست می‌گفت — بیست سال پیش صبحانه‌اش را در آن خورده بود، هیچ حس نکرد.</p>
+    <p>این را باید فهمید تا فهمید بعدش چه کرد: درد نبود. <em>نبودِ</em> درد بود. مثل اینکه دستت را روی اجاق بگذاری و هیچ نشود، و همان هیچ‌نشدن، خبر بدهد که چیزی در تو مرده.</p>
+    <div class="brk">◆</div>
+    <p>ساعت نزدیک نه بود که چراغ اتاق بالا روشن شد.</p>
+    <p>زنی جلوی پنجره آمد. لاغر. روسری به سر. پرده را کنار زد و بیرون را نگاه کرد؛ نه به او — به بالا، به آسمان، به چیزی که آنجا نبود.</p>
+    <p>نریمان صورتش را دید.</p>
+    <p>و باز هیچ.</p>
+    <p>نه اسمی آمد، نه بویی، نه صدایی. یک زن ناشناس پشت یک پنجرهٔ ناشناس، که ظاهراً همسر او بوده، و ظاهراً روزی صبح‌ها کنارش بیدار می‌شده.</p>
+    <p>زن پرده را انداخت. چراغ خاموش شد.</p>
+    <p>و نریمان همان‌جا ماند.</p>
+    <div class="brk">◆</div>
+    <p>در راه برگشت، همه‌چیز را در سرش کنار هم گذاشت؛ آرام، مثل کسی که بار یک وانت را می‌بندد.</p>
+    <p>دختری بیست‌ونه ساله سیزده سال سر یک کوچه ایستاده بود.</p>
+    <p>زنی داشت با یک جای خالی می‌مرد.</p>
+    <p>و او، مردی که وسط این دو نفر بود، هیچ نداشت. نه خاطره‌ای، نه اشکی، نه حتی حق شریک‌شدن در این عزا.</p>
+    <p>سوگند فکر می‌کرد آمده پدرش را پس بگیرد. اما پدری در کار نبود که پس گرفته شود؛ فقط مردی بود که تصادفاً همان بدن را داشت.</p>
+    <p>و همین — دقیقاً همین — بود که تصمیم را گرفت.</p>
+    <p>چون مردی که چیزی برای احساس‌کردن ندارد، لااقل می‌تواند کاری بکند. و کاری که او می‌توانست بکند، در تمام دنیا فقط یک نفر می‌توانست بکند: پشت آن پیشخوان بایستد و یک خواهر شش‌ساله را از قفسهٔ نه پایین بیاورد.</p>
+    <p>وقتی به کوچهٔ سنگی رسید، ساعت از یک گذشته بود.</p>
+    <p>چراغ مغازه روشن بود. سوگند بیدار مانده بود.</p>
+    <p>نریمان لحظه‌ای سر کوچه ایستاد و به آن چراغ نگاه کرد — همان‌طور که یک نفر دیگر، سیزده سال، هر پنجشنبه ایستاده بود.</p>
+    <p>و بعد راه افتاد و در را باز کرد.</p>
+  </div>
+</section>
+
+<!-- ── CH 17 ── -->
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل نوزده</div>
+      <h3>شبی که شیشه‌ها شکستند</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">آن‌ها را نریمان صدا نزد. فرهود خودش آمد؛ شب، با چهار نفر و یک کامیونت.</p>
+    <p class="said">«یه بار پرسیدم. مؤدبانه.» پشت سرش مردها جعبه‌های خالی را می‌آوردند تو. «جواب ندادی. من صبورم، نه صبور. فرق دارن.»</p>
+    <p class="said">«اینا وسیله نیستن.»</p>
+    <p class="said">«نگفتم وسیله. گفتم موجودی.»</p>
+    <p>سوگند از پلهٔ طبقهٔ بالا پایین آمد. «برو بیرون.»</p>
+    <p>فرهود نگاهش کرد. «دخترته؟»</p>
+    <p>نریمان چیزی نگفت. نمی‌توانست بگوید.</p>
+    <p>بعد همه‌چیز سریع شد.</p>
+    <p>یکی از مردها نردبان را کشید و نردبان به قفسهٔ هفت خورد. سه شیشه از ردیف بالا افتاد.</p>
+    <p>صدای شکستن آن‌قدر معمولی بود که یک لحظه هیچ‌کس نترسید.</p>
+    <p>بعد بخار بلند شد.</p>
+    <p>اول کم‌رنگ. بعد پرحجم. و بعد اتاق پر شد از چیزی که هوا نبود؛ یک وزن، یک فشار، یک صدای بی‌صدا.</p>
+    <p>مردی که نردبان را کشیده بود وسط مغازه ایستاد و شروع کرد به گریه — بلند، بی‌شرم، مثل بچه‌ای که گم شده باشد. «مامان؟ مامان؟»</p>
+    <p>یکی دیگر روی زانو افتاد و دست‌ها را جلوی صورتش گرفت و تکرار کرد: «من نبودم. من نبودم. من نبودم.»</p>
+    <p>فرهود عقب رفت. رنگش پریده بود. «این چه کوفتیه؟»</p>
+    <p class="said">«این همون چیزیه که می‌خواستی صنعتیش کنی.» نریمان جلو آمد. «اینا آدمای مُرده‌ن که برگشتن. اینا شرم و ترس و عشق آدماییه که همین الان اون بیرون دارن راحت زندگی می‌کنن. یه شیشه شکست، جناب فرهود. <em>یه</em> شیشه.»</p>
+    <p>فرهود به مردهایش نگاه کرد. بعد به قفسه‌ها. هزارها.</p>
+    <p>و بعد کاری کرد که نریمان بعدها فهمید عاقلانه‌ترین کار عمر آن مرد بود: برگشت و رفت.</p>
+    <p>دم در ایستاد. بی‌آنکه سر بچرخاند گفت:</p>
+    <p class="said">«نوزده سال حملش کردم. حالا فهمیدم چرا هیچ‌کس نتونست ازم بگیردش.»</p>
+    <p>و رفت.</p>
+    <p>سوگند مردها را یکی‌یکی از بازو گرفت و تا کوچه کشید، جایی که هوا هوا بود.</p>
+    <div class="brk">◆</div>
+    <p>برگشت. نریمان وسط بخار ایستاده بود و نفس می‌کشید — عمیق، آرام، مثل کسی که دارد کاری می‌کند.</p>
+    <p class="said">«چیکار می‌کنی؟»</p>
+    <p class="said">«جمعشون می‌کنم.» صدایش خش داشت. «اگه نبلعمشون، تا صبح می‌رن تو کوچه.»</p>
+    <p class="said">«اینا مال تو نیست.»</p>
+    <p>نریمان نگاهش کرد و — برای اولین بار — خندید؛ خندهٔ کوچکی که سوگند فکر نمی‌کرد روی این صورت جا شود.</p>
+    <p class="said">«دخترجان، هیچ‌کدوم اینا هیچ‌وقت مال من نبوده.»</p>
+    <p>سه ساعت طول کشید.</p>
+    <p>سوگند تمام سه ساعت روی پله نشست و نگاه کرد. دید که مردی وسط اتاق ایستاده و مادرِ یک غریبه را می‌بلعد. دید که شانه‌هایش پایین می‌آید. دید که یک بار زانویش تا خورد و دستش را به قفسه گرفت و بعد صاف ایستاد و ادامه داد.</p>
+    <p>وقتی تمام شد، آسمان داشت خاکستری می‌شد. نریمان لبهٔ پیشخوان را گرفته بود تا سرپا بماند. سوگند بازویش را گرفت و کمکش کرد بنشیند، و در همان لحظه دید که دست‌های این مرد، دست‌های مردی پنجاه‌ودو ساله، در عرض یک شب دست‌های پیرمردی شده‌اند.</p>
+    <p class="said">«چند وقت دیگه می‌تونی این کارو بکنی؟»</p>
+    <p>نریمان به سقف نگاه کرد و جواب نداد.</p>
+    <p>و همین جواب بود.</p>
+  </div>
+</section>
+
+<!-- ── CH 18 ── -->
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل بیست</div>
+      <h3>بهای بازگشت</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">سه روز بعد، دو طرف میز اتاق پشتی نشستند.</p>
+    <p>شیشهٔ فرشته آذرنگ وسط میز بود و شیشه‌ای خالی کنارش.</p>
+    <p>نریمان قانون را کامل گفت. بی هیچ نرمی. همان‌طور که خانم فیروز خواسته بود: بگو، بعد ساکت شو.</p>
+    <p class="said">«می‌خوای نازلی برگرده به مادرت. وزنش بیست سال و شش سالِ یه بچه‌ست. تنها چیزی که به همون وزنه و مال خودته—»</p>
+    <p class="said">«می‌دونم چیه.»</p>
+    <p class="said">«بگو.»</p>
+    <p>سوگند به شیشهٔ خالی نگاه کرد.</p>
+    <p class="said">«تو.»</p>
+    <p class="said">«بیست سالی که هفته‌ای یه بار اومدی این کوچه.» صدایش را ثابت نگه داشت. «تمام اون شب‌ها. آشپزخونه، نه سالگی. شونزده سالگی که پیدام کردی. کینه‌ت. امیدت. اینکه اصلاً بابا داری. همه‌ش می‌ره. و ریشه‌ش ممکنه چیزای دیگه‌ای هم ببره که هیچ‌کدوممون نمی‌دونیم.»</p>
+    <p class="said">«و نازلی؟»</p>
+    <p class="said">«نازلی هم، شبی که بدیش به مادرت.» نریمان دست‌هایش را روی میز گذاشت. «سوگند، بشمار. تو داری هر دوتاشونو می‌دی. آخرش تو می‌مونی و یه مغازه.»</p>
+    <p>سوگند مدتی طولانی به شیشهٔ خالی نگاه کرد.</p>
+    <p class="said">«مادرم چی می‌مونه براش؟»</p>
+    <p class="said">«همه‌چی. چهار ماه.»</p>
+    <p class="said">«خب پس حساب درسته.»</p>
+    <p class="said">«و تو؟»</p>
+    <p class="said">«من چی؟»</p>
+    <p class="said">«تو یادت میاد؟»</p>
+    <p>اینجا جایی بود که نباید دروغ می‌گفت.</p>
+    <p class="said">«شیشهٔ من پایینه. اگه برش دارم همه‌چی برمی‌گرده. تو رو یادم میاد.» نفس کشید. «ولی اون‌وقت دیگه نمی‌تونم مغازه‌دار باشم. و اگه نباشم، هزار نفر تو این شهر یه روز صبح، وسط نون خریدن، همهٔ چیزایی که فروختن می‌ریزه سرشون.»</p>
+    <p class="said">«پس یکی باید پشت این پیشخون بمونه.»</p>
+    <p class="said">«آره.»</p>
+    <p class="said">«یکی که خالی باشه.»</p>
+    <p class="said">«آره.»</p>
+    <p>سکوت طولانی شد. باران، مثل تمام این کتاب، می‌آمد.</p>
+    <p class="said">«بابا.»</p>
+    <p>نریمان چشم بست. اولین باری بود که این کلمه را می‌شنید و آخرین باری بود که می‌شنید، و هر دو می‌دانستند.</p>
+    <p class="said">«می‌دونی چرا بیست سال اومدم؟» گفت سوگند. «اولش فکر می‌کردم برای اینکه یه روز منو بشناسی. بعد فهمیدم نه. اومدم چون تنها کسی که تو دنیا نازلی رو یادش بود من بودم. و می‌ترسیدم بمیرم و اون کامل تموم بشه.» شیشه را برداشت. «حالا مادرم می‌تونه یادش بمونه. چهار ماه. ولی یادش می‌مونه.»</p>
+    <p class="said">«و تو منو یادت نمی‌مونه.»</p>
+    <p class="said">«تو بیست ساله منو یادت نیست.» لبخند زد؛ و لبخندش، برای یک ثانیه، شبیه لبخند خانم مروارید بود. «فقط داریم بی‌حساب می‌شیم.»</p>
+    <p>نریمان دست‌هایش را روی میز گذاشت. پیر بودند. خیلی پیرتر از پنجاه‌ودو سال.</p>
+    <p class="said">«این معاملهٔ خیلی بدیه، سوگند.»</p>
+    <p class="said">«همهٔ معامله‌های این مغازه بدن.» بلند شد و به هزار شیشه نگاه کرد؛ هزار آدم، هزار شب که یکی باید بخوابدشان. «ولی یکی باید انجامشون بده.»</p>
+    <p>و بعد، آرام‌تر:</p>
+    <p class="said">«یه چیزی ازت می‌خوام.»</p>
+    <p class="said">«بگو.»</p>
+    <p class="said">«بعدش... یه چیزی دربارهٔ من بهم بگو. هر روز. مهم نیست باور کنم یا نه.» شانه بالا انداخت، انگار چیز کوچکی خواسته باشد. «فقط نذار هیچ‌کس هیچ‌وقت کاملاً تموم شه. اینو یاد گرفتم از بیست سال وایسادن سر یه کوچه.»</p>
+    <p>نریمان نگاهش کرد.</p>
+    <p class="said">«قول می‌دم.»</p>
+  </div>
+</section>
+
+<!-- ── CH 19 ── -->
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل بیست‌ویک</div>
+      <h3>آخرین معامله</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">ساعت پنج بعدازظهر بود.</p>
+    <p>اول شیشهٔ فرشته آذرنگ. سوگند نشست، درپوش را برداشت، و بویی بلند شد که تمام اتاق را پر کرد: بوی کلاس اول دبستان، بوی موی خیس بچه، بوی یک بعدازظهر بهاری در سال ۸۳.</p>
+    <p>نریمان بلعیدن را برعکس کرد؛ کاری که هرگز نکرده بود و خانم فیروز فقط یک بار توضیحش داده بود. به‌جای آنکه گوش بدهی، <em>بگو.</em> کلمه به کلمه. بی کم، بی سانسور، بی مهربانی. آن‌قدر کامل بگو که خاطره جا عوض کند.</p>
+    <p>و گفت.</p>
+    <p>نازلی را گفت. تولد شش‌سالگی و کیک با دو رنگ روبان. صدایی که «س» را کامل ادا نمی‌کرد. عادت مسخره‌اش که همیشه کفش چپ را اول می‌پوشید. آن بازی احمقانه‌ای که با خواهر بزرگ‌ترش داشتند و هیچ‌کس دیگر قاعده‌اش را نمی‌فهمید.</p>
+    <p>و بعد، بی‌رحم، خود روز را: چهارراه، باران، صدای ترمز، و بعد سکوتی که بیست سال طول کشید.</p>
+    <p>سوگند گریه نکرد. مشت‌هایش را روی میز گذاشته بود و می‌گذاشت بیاید تو.</p>
+    <p>وقتی تمام شد، شیشه خالی بود و سوگند نازلی را داشت — نه فقط سهم خودش؛ سهم مادرش را هم. حالا او حاملش بود، تا وقتی برساندش به فرشته آذرنگ.</p>
+    <div class="brk">◆</div>
+    <p>بعد نوبت دومی شد.</p>
+    <p class="said">«آماده‌ای؟»</p>
+    <p class="said">«نه.» لبخند زد. «شروع کن.»</p>
+    <p>و نریمان شروع نکرد.</p>
+    <p>دستش روی شیشهٔ خالی ماند و برنداشتش. سوگند منتظر ماند. یک دقیقه گذشت.</p>
+    <p class="said">«نمی‌کنم.»</p>
+    <p class="said">«چی؟»</p>
+    <p class="said">«نمی‌کنم.» شیشه را هل داد کنار. «بیست سال هزار نفر اومدن اینجا و من یه بارم نگفتم نه. امروز می‌گم.»</p>
+    <p>سوگند بلند شد. «تو حق نداری—»</p>
+    <p class="said">«می‌دونم که حق ندارم.» صدایش بلند شد؛ اولین باری بود که سوگند این صدا را از او می‌شنید. «قانون این مغازه‌ست: تصمیمو خودت می‌گیری. خانم فیروز نوشته و راست نوشته. ولی من قانون رو دارم می‌شکنم، چون یه چیزی رو می‌دونم که تو نمی‌دونی.»</p>
+    <p class="said">«چی؟»</p>
+    <p class="said">«من می‌دونم اون‌ور این معامله چه شکلیه.» به قفسه‌ها اشاره کرد. «من بیست ساله دارم آدمایی رو نگاه می‌کنم که سبک از این در می‌رن بیرون. همه‌شون فکر می‌کنن دارن یه بار زمین می‌ذارن. هیچ‌کدوم نمی‌فهمن که دارن خودشونو زمین می‌ذارن.» به او نگاه کرد. «تو الان تنها آدمی هستی تو این مغازه که چیزی داره. من ندارم. مادرت نداره. نازلی که اصلاً نیست. فقط تو.»</p>
+    <p>سکوت.</p>
+    <p class="said">«پس بشین سر جات و بذار مادرت با همون جای خالی بمیره. آدم‌ها همیشه با جای خالی می‌میرن. این فاجعه نیست. این زندگیه.»</p>
+    <div class="brk">◆</div>
+    <p>سوگند مدتی طولانی ایستاد.</p>
+    <p>بعد کاری کرد که نریمان انتظارش را نداشت: خم شد، شیشهٔ خالی را از روی میز برداشت، و گذاشتش وسط، دقیقاً همان‌جا که بود.</p>
+    <p class="said">«یه سؤال ازت می‌پرسم.» گفت. «راستشو بگو، بعدش هرچی گفتی همون می‌شه.»</p>
+    <p class="said">«بپرس.»</p>
+    <p class="said">«اگه جای من بودی چیکار می‌کردی؟»</p>
+    <p>و نریمان صدر، مردی که بیست سال بود پشت این پیشخوان می‌ایستاد و به آدم‌ها می‌گفت که خاطره ریشه دارد، دهانش را باز کرد تا بگوید نمی‌دانم.</p>
+    <p>و نتوانست.</p>
+    <p>چون جواب را می‌دانست. جوابش بیست سال پیش، در یک شب بارانی، پشت همین در ایستاده بود و بعد آمده بود تو.</p>
+    <p class="said">«همین کارو می‌کردم.» گفت.</p>
+    <p class="said">«پس بردار.»</p>
+    <p>نریمان شیشه را برداشت.</p>
+    <p>و شروع کرد به گفتن.</p>
+    <p>از نه‌سالگی. از آشپزخانه‌ای که بوی نان نمی‌داد. از مردی که او را مثل بچهٔ همسایه نگاه کرد و مؤدب بود، و اینکه مؤدب‌بودنش بدترین قسمتش بود. از قایق کاغذی. از شبی که پشت پنجره ماند تا صبح. از سیزده‌سالگی و عکس روی میز آشپزخانه. از شانزده‌سالگی و سه متری که نتوانست برود. از تمام پنجشنبه‌ها؛ از پنجشنبه‌های بارانی، از پنجشنبه‌ای که مریض بود و باز رفت، از پنجشنبه‌ای که چراغ خاموش بود و تا صبح نخوابید. از پسری که گفت یه جاییت همیشه اینجا نیست. از وقتی تصمیم گرفت متنفر باشد و نتوانست. از فامیلی‌اش که همیشه صدر مانده بود و هرگز عوضش نکرده بود، حتی وقتی می‌توانست.</p>
+    <p>بخار بلند شد؛ غلیظ، طلایی، آن‌قدر که سایه‌شان روی دیوار تکان خورد.</p>
+    <p>در شیشه نشست.</p>
+    <p>نریمان درپوش را نگذاشت. شیشه را برداشت، به دهانش نزدیک کرد، و — چون قانون همین بود، چون یکی باید حملش می‌کرد — نوشید.</p>
+    <div class="brk">◆</div>
+    <p>و در همان ثانیه، در همان یک ثانیه، دو چیز اتفاق افتاد.</p>
+    <p>سوگند سر بلند کرد، به مرد روبه‌رویش نگاه کرد، و ندانست کیست.</p>
+    <p>و نریمان صدر، برای اولین بار در بیست سال، دخترش را شناخت.</p>
+    <p>نه از راه شیشهٔ زیرزمین؛ آن هنوز آن پایین بود، زیر پارچهٔ سفید، دست‌نخورده. از این راه شناخت: بیست سال عشق یک‌طرفهٔ دختری که هفته‌ای یک بار می‌آمد و فقط نگاه می‌کرد چراغ روشن است یا نه، حالا در سینهٔ او بود.</p>
+    <p>می‌دانست چقدر دوستش داشته‌اند. تک‌تک پنجشنبه‌ها را می‌دانست. می‌دانست که یک بار، شانزده‌سالگی، سه متر مانده بود.</p>
+    <p>و کسی که این عشق را ساخته بود، آن‌طرف میز نشسته بود و مؤدبانه می‌پرسید:</p>
+    <p class="said">«ببخشید... من چرا اینجام؟»</p>
+    <p>نریمان دهانش را باز کرد. صدایش بیرون نیامد.</p>
+    <p>بار دوم آمد:</p>
+    <p class="said">«تو مغازه‌دار جدیدی.»</p>
+  </div>
+</section>
+
+<!-- ── CH 20 ── -->
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل بیست‌ودو</div>
+      <h3>چهار ماه</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">همان شب سوگند رفت خانهٔ مادرش، چون در دفتر مغازه نوشته شده بود که باید برود.</p>
+    <p>خط خودش بود. کاغذی که در جیب کاپشن پیدا کرده بود، تاخورده، لبه‌ها نرم:</p>
+    <div class="ledger">امشب برو پیش مامان. هرچی تو سرت هست دربارهٔ نازلی، بهش بگو. تا آخرش. نترس.<br>— خودت</div>
+    <p>در طول راه سعی کرد بفهمد چرا این یادداشت را نوشته و چرا سرش پر است از خاطرات خواهری که — می‌دانست — بیست سال بود درباره‌اش با کسی حرف نزده. اما نمی‌ترسید. آدم وقتی خودش برای خودش نامه می‌نویسد، یک جور اعتمادی هست که توضیح نمی‌خواهد.</p>
+    <div class="brk">◆</div>
+    <p>مادرش روی مبل بود، با پتوی روی زانو، و تلویزیون بی‌صدا روشن بود.</p>
+    <p class="said">«مامان.»</p>
+    <p class="said">«جانم.»</p>
+    <p>سوگند کنارش نشست. عکس را از کشو درآورد و روی میز گذاشت. دو دختر روی پله‌های حیاط. یکی بزرگ‌تر با لبخند نصفه. یکی کوچک‌تر با کفش چپ در دست.</p>
+    <p class="said">«می‌خوام یه چیزی بگم و می‌خوام تا آخرش گوش بدی.»</p>
+    <p>و گفت.</p>
+    <p>از تولد شش‌سالگی گفت. از کیک با دو رنگ روبان. از صدایی که «س» را کامل ادا نمی‌کرد. از کفش چپ. از آن بازی احمقانه‌ای که هیچ‌کس قاعده‌اش را نمی‌فهمید.</p>
+    <p>و بعد، چون یادداشت گفته بود تا آخرش، از چهارراه گفت. از باران. از صدای ترمز.</p>
+    <p>مادرش اول گیج نگاه می‌کرد؛ مثل کسی که در زبان بیگانه‌ای نشسته باشد.</p>
+    <p>بعد دستش رفت روی عکس.</p>
+    <p>بعد چیزی در صورتش جابه‌جا شد — نه یک‌باره؛ آرام، مثل آبی که زیر در می‌آید.</p>
+    <p>و بعد فرشته آذرنگ، پنجاه‌وچهار ساله، برای اولین بار در بیست سال، اسم دختر کوچکش را گفت.</p>
+    <p>و بعد شکست.</p>
+    <div class="brk">◆</div>
+    <p>آن شب طولانی بود.</p>
+    <p>سوگند تا صبح کنارش نشست. مادرش گریه می‌کرد و می‌ایستاد و می‌پرسید و باز گریه می‌کرد. یک بار عصبانی شد و پرسید چرا زودتر نگفتی و سوگند جوابی نداشت. یک بار خندید — از آن خنده‌های وسط گریه — چون یادش آمد که نازلی از پیاز متنفر بود و مثل بازیگرهای تئاتر ادای غش‌کردن درمی‌آورد.</p>
+    <p>نزدیک صبح، آرام شد. عکس در دستش بود.</p>
+    <p class="said">«چهار ماه.» گفت.</p>
+    <p class="said">«چهار ماه.»</p>
+    <p class="said">«کمه.»</p>
+    <p class="said">«آره.»</p>
+    <p>مادرش سرش را به شانهٔ او تکیه داد.</p>
+    <p class="said">«ولی از هیچی بیشتره.»</p>
+    <div class="brk">◆</div>
+    <p>فرشته آذرنگ صد و نوزده روز بعد مرد؛ در خانهٔ خودش، صبح، با دخترش کنارش.</p>
+    <p>در آن صد و نوزده روز، چیزی را انجام داد که سوگند بعدها فهمید تنها دلیل واقعی این تمام ماجرا بوده: <em>سوگواری کرد</em>. با تمام بدنش. بی‌آبرو و کامل. اسم بچه‌اش را بلند گفت. برایش گریه کرد. برای آدم‌های فامیل تعریفش کرد. یک روز حتی خندید و گفت «چه شیطون بود.»</p>
+    <p>و روز آخر، وقتی دیگر حرف زدن سخت شده بود، دست سوگند را گرفت و گفت:</p>
+    <p class="said">«دوتا داشتم.»</p>
+    <p>همین. سه کلمه.</p>
+    <p>و سوگند دست مادرش را فشرد و گفت «می‌دونم، مامان» — و نمی‌دانست. سه ماه بود که نمی‌دانست. اما یاد گرفته بود که وقتی کسی چیزی را حمل می‌کند، بی‌آنکه بفهمی کمکش کنی.</p>
+    <p>سوگند بیرون آمد و در راهروی خانه ایستاد.</p>
+    <p>عکس هنوز روی مبل بود. برش داشت. دو دختر روی پله‌های حیاط؛ یکی بزرگ‌تر با لبخند نصفه، یکی کوچک‌تر با کفشی در دست.</p>
+    <p>به بچهٔ کوچک‌تر نگاه کرد.</p>
+    <p>و منتظر ماند.</p>
+    <p>هیچ نیامد. نه اسمی، نه صدایی، نه آن بازی احمقانه‌ای که چند ماه پیش هنوز قاعده‌اش را بلد بود. فقط بچه‌ای در یک عکس قدیمی، که خیلی شبیه او بود.</p>
+    <p>آن شب — شبِ صد و نوزدهم، در آشپزخانهٔ آن خانه — سوگند حرفش را تمام کرده بود و نازلی از او رفته بود؛ همان‌طور که قرار بود برود، همان‌طور که یک نفر جلوتر برایش گفته بود.</p>
+    <p>و مادرش، تا آخرین روز، دوتا داشت.</p>
+  </div>
+</section>
+
+<!-- ── CH 21 ── -->
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div class="chapter-num">فصل بیست‌وسه</div>
+      <h3>مردی که هر روز می‌آید</h3>
+      <div class="orn"></div>
+    </div>
+
+    <p class="lead">مغازه چهار ماه بعد از آن بعدازظهر باز شد؛ هفتهٔ بعد از خاک‌سپاری فرشته آذرنگ.</p>
+    <p>در آن چهار ماه کرکره پایین بود و هر روز صبح، دختری کلید می‌انداخت، شیشه‌ها را گردگیری می‌کرد، و بعد می‌رفت خانه‌ای در خیابان یازدهم تا کنار مادرش بنشیند. مغازه صبر کرد. مغازه‌ها بلدند صبر کنند.</p>
+    <p>پشت پیشخوان دختری بیست‌ونه ساله می‌نشیند، با کاپشن نظامی گشاد و موهایی که محکم بسته. سه قانون را حفظ است. نردبان چوبی را یاد گرفته. شب‌ها خواب آدم‌های ناشناس را می‌بیند و صبح‌ها پنجره را باز می‌کند و می‌گوید: «این مال من نیست.»</p>
+    <p>خانم مروارید هفته‌ای دو بار می‌آید، شیرینی می‌آورد، می‌گوید این‌بار تصمیمش را گرفته، و نمی‌گیرد. سوگند بی‌آنکه بداند چرا، لیوان چای را جوری می‌گذارد که دسته‌اش سمت دست راست پیرزن باشد.</p>
+    <p>آقای شکوهی گاهی می‌آید، مؤدب، با چتر شکسته، و می‌پرسد آیا قبلاً همدیگر را دیده‌اند. سوگند می‌گوید بله، آقای کامران شکوهی، شما مشتری قدیمی این مغازه‌اید. و او خوشحال می‌شود که یک نفر اسمش را می‌داند.</p>
+    <div class="brk">◆</div>
+    <p>هفتهٔ دوم، سوگند دریچهٔ زیر فرش را پیدا کرد.</p>
+    <p>پایین رفت. پارچهٔ سفید را کنار زد. برچسب‌ها را خواند. پنج اسم.</p>
+    <p>روی آخری انگشتش ماند.</p>
+    <p><em>نریمان صدر.</em></p>
+    <p>فامیلی خودش بود. مکث کرد و منتظر ماند ببیند چیزی می‌آید یا نه — همان‌طور که آدم روی یک زخم قدیمی فشار می‌دهد تا ببیند هنوز درد دارد.</p>
+    <p>چیزی نیامد.</p>
+    <p>شانه بالا انداخت. در این شهر هزارتا صدر هست.</p>
+    <p>پارچه را برگرداند و بالا آمد.</p>
+    <div class="brk">◆</div>
+    <p>و هر روز، ساعت پنج بعدازظهر، مردی می‌آید.</p>
+    <p>پیر است. موهایش خاکستری است؛ رنگ چیزی که سوخته. از سر کوچه دو چای می‌خرد، یکی را روی پیشخوان می‌گذارد و می‌گوید بفرمایید.</p>
+    <p>اولش سوگند فکر کرد مشتری است. بعد فکر کرد ولگرد است. حالا دیگر فکر نمی‌کند؛ فقط چای را برمی‌دارد.</p>
+    <p>مرد روی چهارپایه می‌نشیند و شروع می‌کند به حرف زدن. همیشه دربارهٔ یک نفر.</p>
+    <p class="said">«یه دختر داشتم.» می‌گوید. «دوتا داشتم، فکر کنم. یکیشون یه چیزی با کفشش بود — نه. اون یکی رفته. اون یکی رو دیگه ندارم.» می‌خندد؛ خنده‌ای که ته آن چیزی نیست. «ببخشید. یکیشو گم کردم و نمی‌دونم کدوم.»</p>
+    <p class="said">«اشکالی نداره.»</p>
+    <p class="said">«اسمش سوگند بود. یه بار، نه سالش بود، صبح اومد تو آشپزخونه و من...» همیشه اینجا مکث می‌کند. «من نشناختمش.»</p>
+    <p class="said">«چرا؟»</p>
+    <p class="said">«چون احمق بودم. چون فکر می‌کردم می‌شه درد رو از آدم جدا کرد و آدم سر جاش بمونه.»</p>
+    <p>سوگند چایش را می‌نوشد.</p>
+    <p class="said">«هفته‌ای یه بار میومد تو این کوچه.» مرد به در نگاه می‌کند. «بیست سال. فقط نگاه می‌کرد چراغ روشنه یا نه. هیچ‌وقت در نزد.»</p>
+    <p class="said">«چرا نزد؟»</p>
+    <p class="said">«چون می‌ترسید.»</p>
+    <p class="said">«از چی؟»</p>
+    <p>مرد سر بلند می‌کند و به دختر پشت پیشخوان نگاه می‌کند — به دخترش، که نمی‌داند دختر اوست — و لبخند می‌زند؛ لبخندی که دیگر هیچ‌کس در این شهر معنایش را نمی‌فهمد.</p>
+    <p class="said">«از اینکه در بزنه و من بگم: شما؟»</p>
+    <p>سکوت.</p>
+    <p class="said">«شما هر روز میاین اینجا و دربارهٔ اون حرف می‌زنین.» می‌گوید سوگند. «چرا؟»</p>
+    <p class="said">«چون تنها کسی که تو دنیا یادش هست، منم.» چای را برمی‌دارد. «و می‌ترسم بمیرم و اون کامل تموم بشه.»</p>
+    <p>سوگند مدتی نگاهش می‌کند. چیزی در سینه‌اش تکان می‌خورد که اسمی برایش ندارد و فردا هم نخواهد داشت، و پس‌فردا هم؛ ولی هر روز ساعت پنج، دوباره تکان می‌خورد.</p>
+    <p class="said">«اسمش چی بود؟» می‌پرسد. «گفتین ولی حواسم نبود.»</p>
+    <p>و مرد، انگار که سؤال بزرگی از او پرسیده باشند، صاف می‌نشیند و با دقت، مثل کسی که چیز باارزشی را روی میز می‌گذارد، می‌گوید:</p>
+    <p class="said">«سوگند.»</p>
+    <p class="said">«اسم قشنگیه.»</p>
+    <p class="said">«آره.» سر تکان می‌دهد. «آره، هست.»</p>
+    <div class="brk">◆</div>
+    <p>بیرون باران می‌گیرد. یعنی فردا کار و بار سکه است.</p>
+    <p>مرد بلند می‌شود، لیوان خالی را روی پیشخوان می‌گذارد، و می‌رود طرف در.</p>
+    <p class="said">«فردا میاین؟»</p>
+    <p>و مرد، همان‌طور که چتر را باز می‌کند، بی‌آنکه برگردد، می‌گوید:</p>
+    <p class="said">«هر روز میام.»</p>
+  </div>
+</section>
+
+<section class="chapter p1" style="padding:4rem 0 4.5rem;background:var(--paper-deep)">
+  <div class="wrap" style="text-align:center">
+    <div class="orn" style="margin-bottom:2rem"></div>
+    <p style="font-family:'Vazirmatn',sans-serif;font-size:.92rem;line-height:2.4;color:var(--ink-soft)">
+      <strong style="color:var(--ink)">مردی که دخترش را فراموش کرد</strong><br>
+      نوشتهٔ محمدپرهام پلنگ سنگدوینی<br><br>
+      تمام حقوق این اثر برای نویسنده محفوظ است.
+    </p>
+  </div>
+</section>
+
+<section class="end">
+  <h4>پایان</h4>
+  <p>فراموشخانه</p>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Man Who Forgot His Daughter — Mohammadparham Palangsangdovini</title>
+<meta name="author" content="Mohammadparham Palangsangdovini">
+<meta name="description" content="A novel about a shop that buys memories, and the man who stands behind its counter.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#151C24; --ink-soft:#414B55;
+  --paper:#EFEAE0; --paper-deep:#E6E0D3;
+  --night:#0A1620; --night-2:#122430;
+  --amber:#B8801E; --rain:#2A5766; --madder:#8E2F24;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"EB Garamond",Georgia,serif;font-size:20px;line-height:1.78;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:38rem;margin:0 auto;padding:0 1.6rem}
+p{margin:0 0 1.15em}
+
+/* COVER */
+.cover{position:relative;min-height:100svh;
+  background:radial-gradient(120% 80% at 50% 42%,#17384A 0%,#0E1E2B 46%,#04080C 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;text-align:center;padding:4.5rem 1.6rem 3.5rem}
+.rain{position:absolute;inset:0;opacity:.30;pointer-events:none;
+  background-image:repeating-linear-gradient(102deg,transparent 0 13px,rgba(178,205,220,.15) 13px 14px)}
+.cover-frame{position:absolute;inset:1.6rem;border:1px solid rgba(217,174,85,.30);pointer-events:none}
+.cover-frame::after{content:"";position:absolute;inset:7px;border:1px solid rgba(217,174,85,.13)}
+.vial-wrap{position:relative;z-index:2;margin-bottom:1.7rem}
+.glow{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);
+  width:290px;height:290px;border-radius:50%;
+  background:radial-gradient(circle,rgba(238,190,96,.34) 0%,rgba(238,190,96,.10) 38%,transparent 68%);
+  animation:breathe 7s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.75;transform:translate(-50%,-50%) scale(1)}
+  50%{opacity:1;transform:translate(-50%,-50%) scale(1.09)}}
+.cover-author{position:relative;z-index:2;font-family:"Inter",sans-serif;font-weight:400;
+  font-size:clamp(.68rem,2.9vw,.8rem);letter-spacing:.2em;color:#C9AE74;margin:0 0 1.5rem}
+.cover-eyebrow{position:relative;z-index:2;font-family:"Inter",sans-serif;font-weight:400;
+  font-size:.72rem;letter-spacing:.34em;color:#8299AA;margin-bottom:1.3rem}
+.cover-title{position:relative;z-index:2;font-family:"Cormorant Garamond",serif;font-weight:400;
+  font-size:clamp(2.3rem,10vw,4.1rem);line-height:1.08;color:#E8C67F;margin:0;
+  text-shadow:0 0 34px rgba(226,175,74,.30);max-width:92vw}
+.cover-rule{position:relative;z-index:2;width:78px;height:1px;background:rgba(217,174,85,.6);
+  margin:1.5rem auto 1.4rem}
+.cover-sub{position:relative;z-index:2;font-family:"Inter",sans-serif;font-weight:300;
+  font-size:clamp(.8rem,3.4vw,.95rem);line-height:1.9;color:#93A8B8;
+  max-width:min(25rem,88vw);margin:0 auto}
+.cover-sub span{display:block;margin-top:.5rem;color:#6E8395;font-size:.92em}
+.cover-foot{position:relative;z-index:2;margin-top:2.6rem;font-family:"Inter",sans-serif;
+  font-weight:300;font-size:clamp(.64rem,2.6vw,.74rem);letter-spacing:.22em;color:#657A8B}
+
+/* EPIGRAPH */
+.epigraph{background:var(--paper-deep);padding:5.5rem 0;text-align:center}
+.epigraph p{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.5rem;
+  line-height:1.6;color:var(--ink-soft);max-width:28rem;margin:0 auto 1.3rem}
+.epigraph .src{font-family:"Inter",sans-serif;font-size:.7rem;letter-spacing:.2em;
+  text-transform:uppercase;color:#7A8590}
+
+/* PART DIVIDER */
+.part{padding:6.5rem 1.5rem;text-align:center;
+  background:linear-gradient(180deg,var(--night) 0%,var(--night-2) 100%);color:#C6D2DB}
+.part .label{font-family:"Inter",sans-serif;font-weight:300;font-size:.68rem;
+  letter-spacing:.36em;text-transform:uppercase;color:#6D8393;margin-bottom:1.2rem}
+.part h2{font-family:"Cormorant Garamond",serif;font-weight:400;
+  font-size:clamp(2.2rem,8vw,3.2rem);line-height:1.1;margin:.3rem 0 1.3rem;color:#E4D3A8}
+.part .note{font-family:"Inter",sans-serif;font-weight:300;font-size:.84rem;
+  font-style:normal;color:#7E93A2}
+.part svg{display:block;margin:0 auto 1.6rem}
+
+/* CHAPTERS */
+.chapter{padding:4.8rem 0 1rem}
+.chapter-head{text-align:center;margin-bottom:2.9rem}
+.chapter-num{font-family:"Inter",sans-serif;font-weight:300;font-size:.68rem;
+  letter-spacing:.32em;text-transform:uppercase;color:var(--accent,var(--amber));margin-bottom:.85rem}
+.chapter-head h3{font-family:"Cormorant Garamond",serif;font-weight:400;
+  font-size:clamp(1.7rem,6vw,2.4rem);line-height:1.2;margin:0 0 1.1rem;color:var(--ink)}
+.orn{width:46px;height:1px;background:var(--accent,var(--amber));opacity:.55;margin:0 auto}
+.p1{--accent:var(--amber)} .p2{--accent:var(--rain)} .p3{--accent:var(--madder)}
+.lead::first-letter{font-family:"Cormorant Garamond",serif;font-size:3.4em;line-height:.82;
+  float:left;margin:.06em .09em -.02em 0;color:var(--accent,var(--amber));font-weight:600}
+.brk{text-align:center;margin:2.3rem 0;color:var(--accent,var(--amber));opacity:.5;
+  letter-spacing:1.2em;font-size:.62rem}
+.ledger{background:var(--paper-deep);border-left:2px solid var(--accent,var(--amber));
+  padding:1rem 1.3rem;margin:1.9rem 0;font-family:"Inter",sans-serif;font-size:.9rem;
+  line-height:1.85;color:var(--ink-soft)}
+.letter{background:#E6E0D3;padding:2.2rem 1.8rem;margin:2.1rem 0;
+  border:1px solid rgba(138,110,50,.26);font-size:1.02rem;line-height:1.85;color:#2C2A21}
+.letter p{margin:0 0 1.1em}
+.letter .sign{text-align:right;font-family:"Inter",sans-serif;font-size:.82rem;color:#6B6450;margin:0}
+.names{list-style:none;padding:0;margin:1.5rem 0;text-align:center;
+  font-family:"Inter",sans-serif;font-size:.98rem;line-height:2.2;color:var(--ink-soft)}
+.names li.me{color:var(--madder);font-weight:600}
+.toc{font-family:"Inter",sans-serif;font-size:.9rem;line-height:1.95}
+.toc-part{color:var(--amber);font-weight:600;font-size:.76rem;letter-spacing:.14em;
+  text-transform:uppercase;margin:1.5rem 0 .4rem}
+.toc ol{margin:0;padding-left:1.5rem;color:var(--ink-soft)}
+.midbreak{background:linear-gradient(180deg,#122430 0%,#0A1620 100%);padding:4.4rem 0 5rem;color:#B9C7D2}
+.midbreak .wrap{max-width:36rem}
+.midbreak .chapter-num{color:#9A7C3C}
+.midbreak h3{color:#E4D3A8!important}
+.midbreak .orn{background:#9A7C3C}
+.midbreak p{color:#B9C7D2}
+.midbreak em{color:#E4D3A8}
+.midbreak .lead::first-letter{color:#D9B96A}
+.midbreak .journal{border-left:2px solid #9A7C3C;padding:0 1.2rem;margin:1.7rem 0;color:#CBD6DF}
+.midbreak .brk{color:#9A7C3C}
+.end{background:var(--night);color:#C6D2DB;text-align:center;padding:6rem 1.5rem}
+.end h4{font-family:"Cormorant Garamond",serif;font-weight:400;font-size:2.1rem;
+  color:#E4D3A8;margin:0 0 .5rem}
+.end p{font-family:"Inter",sans-serif;font-weight:300;font-size:.78rem;
+  letter-spacing:.2em;color:#6D8393;margin:0}
+
+@media (max-width:430px){
+  .cover{padding:3.4rem 1.2rem 2.6rem}
+  .vial-wrap svg{width:88px;height:auto}
+  .glow{width:210px;height:210px}
+  .cover-foot{margin-top:2rem}
+}
+@media (max-width:600px){ body{font-size:18.5px;line-height:1.72} .wrap{padding:0 1.25rem}
+  .chapter{padding:3.4rem 0 .5rem} }
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="rain"></div><div class="cover-frame"></div>
+  <div class="vial-wrap">
+    <div class="glow"></div>
+    <svg width="104" height="204" viewBox="0 0 118 230" fill="none" aria-hidden="true" style="position:relative;z-index:2">
+      <defs>
+        <linearGradient id="f" x1="59" y1="106" x2="59" y2="216" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FBE0A0"/><stop offset=".55" stop-color="#D9A036"/><stop offset="1" stop-color="#84500F"/>
+        </linearGradient>
+        <clipPath id="ins"><path d="M28 106h62v92a10 10 0 0 1-10 10H38a10 10 0 0 1-10-10v-92z"/></clipPath>
+      </defs>
+      <rect x="42" y="8" width="34" height="21" rx="4" fill="#5E4A2C"/>
+      <rect x="46" y="27" width="26" height="6" rx="2" fill="#4A3A22"/>
+      <path d="M38 33h42v16l10 22v127a10 10 0 0 1-10 10H38a10 10 0 0 1-10-10V71l10-22V33z"
+            fill="rgba(200,228,244,.12)" stroke="rgba(219,240,252,.52)" stroke-width="2.4"/>
+      <path d="M28 106h62v92a10 10 0 0 1-10 10H38a10 10 0 0 1-10-10v-92z" fill="url(#f)"/>
+      <ellipse cx="59" cy="106" rx="31" ry="5" fill="#F7DC9C" opacity=".9"/>
+      <g clip-path="url(#ins)" opacity=".84" fill="#2A1B05">
+        <circle cx="59" cy="152" r="9"/>
+        <path d="M50 164c0-2 4-3 9-3s9 1 9 3l4 26c.4 3-1.5 5-4 5H50c-2.6 0-4.4-2-4-5l4-26z"/>
+        <rect x="52" y="192" width="5" height="14"/><rect x="61" y="192" width="5" height="14"/>
+        <path d="M70 172c2 4 3 8 3 12" stroke="#2A1B05" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+        <path d="M70 186h9c2 0 3 1 3 3v3c0 1-1 2-2 2h-10c-1 0-2-1-2-2v-3c0-2 1-3 2-3z"/>
+      </g>
+      <path d="M43 52v150" stroke="rgba(255,255,255,.28)" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="cover-eyebrow">A NOVEL</div>
+  <h1 class="cover-title">The Man Who<br>Forgot His<br>Daughter</h1>
+  <div class="cover-rule"></div>
+  <p class="cover-author">MOHAMMADPARHAM PALANGSANGDOVINI</p>
+  <p class="cover-sub">Whatever you want to forget, we will buy from you
+    <span>— but someone has to carry it</span></p>
+  <div class="cover-foot">THE FORGETTING HOUSE · STONE LANE</div>
+</section>
+
+<section class="epigraph">
+  <div class="wrap">
+    <p>“People endure under the sun, my boy.<br>It's under the rain that they give in.”</p>
+    <div class="src">Dalaram Firouz</div>
+  </div>
+</section>
+
+<section class="chapter p1" style="padding-bottom:2.5rem">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Contents</div><div class="orn"></div></div>
+    <div class="toc">
+      <p class="toc-part">Prologue</p>
+      <p class="toc-part">Book One — The Shopkeeper</p>
+      <ol><li>The Three O'Clock Customer</li><li>Three Rules</li><li>Nights</li>
+        <li>A Love That Will Not Be Sold</li><li>The Woman Who Came to Sell Her Son</li>
+        <li>The Girl Who Came to Buy Something Back</li><li>What Is Not in the Ledger</li></ol>
+      <p class="toc-part">Book Two — The Daughter</p>
+      <ol start="8"><li>Nine</li><li>A House with Two Absences</li><li>Sixteen</li>
+        <li>Thursdays</li><li>The Decision</li></ol>
+      <p class="toc-part">Book Three — The Trade</p>
+      <ol start="13"><li>Mr. Farhoud</li><li>Mr. Shokouhi Loses His Own Name</li>
+        <li>The Cellar</li><li>Dalaram Firouz's Letter</li><li>What Sogand Knows</li></ol>
+      <p class="toc-part">Interlude — Six Pages</p>
+      <ol start="18"><li>The House on Eleventh Street</li><li>The Night the Vials Broke</li>
+        <li>The Price of Return</li><li>The Last Transaction</li><li>Four Months</li>
+        <li>The Man Who Comes Every Day</li></ol>
+    </div>
+  </div>
+</section>
+
+<section class="chapter p1">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Prologue</div><div class="orn"></div></div>
+    <p class="lead">Every city has a shop whose address nobody says out loud.</p>
+    <p>Not out of malice — out of shame. The address of the Forgetting House is passed in a murmur, and only to someone already wrecked enough that shame has stopped costing them anything. They say: the end of Stone Lane, past the tailor's, a wooden door with no bell. You knock. A man comes. Whatever you want to forget, he will buy from you.</p>
+    <p>And the listener laughs. Everyone laughs, at first.</p>
+    <p>Then comes a night when they open their eyes at half past three, and before they can give themselves time to think, they find their shoes already on.</p>
+    <p>This book is not about that shop.</p>
+    <p>It is about the man who stands behind the counter.</p>
+  </div>
+</section>
+
+<section class="part">
+  <svg width="54" height="106" viewBox="0 0 96 188" fill="none" aria-hidden="true">
+    <rect x="34" y="10" width="28" height="17" rx="3" fill="#6B5433"/>
+    <path d="M30 27h36v14l10 20v112a8 8 0 0 1-8 8H28a8 8 0 0 1-8-8V61l10-20V27z"
+          fill="rgba(190,222,238,.08)" stroke="rgba(206,231,244,.42)" stroke-width="2"/>
+    <path d="M23 62h50v111a8 8 0 0 1-8 8H31a8 8 0 0 1-8-8V62z" fill="#B8801E" opacity=".88"/>
+  </svg>
+  <div class="label">Book One</div><h2>The Shopkeeper</h2>
+  <div class="note">The vial is full</div>
+</section>
+
+<section class="chapter p1">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter One</div>
+      <h3>The Three O'Clock Customer</h3><div class="orn"></div></div>
+    <p class="lead">When it rained, Nariman did good business.</p>
+    <p>He hadn't worked that out himself. Mrs. Firouz, the shopkeeper before him, had said it in those first months, and then she had died, and the sentence had stayed. Nariman knew her for a single summer; but some sentences outlive the person who made them.</p>
+    <p>That day it had rained since morning. Nariman sat behind the counter polishing empty vials with a cloth thirty years old. The shop was not large — four metres by five, a high ceiling, walls that were shelving to their last centimetre. And on the shelves, row behind row, thousands of small vials with wooden stoppers. Some pale as weak tea. Some dark. And a few, high up, so black they ate the light and gave nothing back.</p>
+    <p>The bell above the door shifted. It was Mr. Shokouhi, with an umbrella that had one broken rib, which was why his left shoulder was always wet.</p>
+    <p>“Evening, Nariman. All right?”</p>
+    <p>“I'm all right. You?”</p>
+    <p>“No.” He set the umbrella by the door. “I've got something. Small one.”</p>
+    <p>“It's always a small one.”</p>
+    <p>He sat on the stool facing the counter and locked his fingers together — a man in his fifties with a face permanently stuck halfway through an apology.</p>
+    <p>“Yesterday on the bus a woman stood up and gave me her seat. She thought I was old.”</p>
+    <p>Nariman waited.</p>
+    <p>“I sat down.” Shokouhi looked at his hands. “That's all. I sat down and I didn't look at her again until the end of the line. I've been thinking about it for twenty-four hours. That I sat down.”</p>
+    <p>“You know that's nothing.”</p>
+    <p>“It's nothing to you.”</p>
+    <p>Nariman breathed out. Three weeks running now. Last week: he'd rung a neighbour's bell and not run away and then felt sick about it until dark. The week before: at his niece's wedding, mid-song, he had gone flat and everyone had heard.</p>
+    <p>“One small vial.” Shokouhi laid crumpled notes on the counter. “You name the price.”</p>
+    <p>The shop did not take money; it paid it. But Shokouhi had insisted on reversing that from the first day, and Nariman had stopped arguing.</p>
+    <div class="brk">◆</div>
+    <p>The back room held nothing but two chairs facing each other, a low table, and an empty vial on the table.</p>
+    <p>“Go on.”</p>
+    <p>And Shokouhi went on. The woman, the bus, the wet shoulder, the shame.</p>
+    <p>Nariman listened — not the listening people manage at parties; the other one. The one Mrs. Firouz had called <em>swallowing</em>. You have to hear it so completely that no room is left for the memory in the chest of the man who owns it. You have to build the scene inside yourself until it becomes yours. You have to smell the bus. You have to feel a stranger's shame in your own throat, like your own.</p>
+    <p>When he had finished, a pale vapour left Shokouhi's mouth, turned once in the air, and settled quietly into the vial, like dew that had forgotten where it was supposed to fall.</p>
+    <p>Nariman put in the stopper.</p>
+    <p>Shokouhi sat still a moment. Then he lifted his head and smiled — the light smile of a man who has set down his pack.</p>
+    <p>“Some rain.”</p>
+    <p>“Yes.”</p>
+    <p>“Right. I'll be off. You need anything?”</p>
+    <p>He left. He took the broken umbrella too.</p>
+    <p>Nariman carried the vial to the left-hand shelf, fourth row, where Mr. Shokouhi's vials stood side by side.</p>
+    <p>Thirty-seven of them.</p>
+    <p>He looked at them: thirty-seven small pieces of a man who walked out of that door smiling every week, and every week carried a little less of himself home.</p>
+  </div>
+</section>
+
+<section class="chapter p1">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Two</div>
+      <h3>Three Rules</h3><div class="orn"></div></div>
+    <p class="lead">The young man was in his twenties, one of those who get more polite the angrier they are.</p>
+    <p>“I heard you can help.”</p>
+    <p>“Sit.”</p>
+    <p>He sat. He kept his coat on.</p>
+    <p>“How long does it take?”</p>
+    <p>“Depends. Rules first.”</p>
+    <p>“Rules?”</p>
+    <p>Nariman raised three fingers — a habit inherited, like the shop itself, from Mrs. Firouz.</p>
+    <p>“One: you can only sell your own memory. Your father's, your child's, your lover's — no. Not even if you're in it.”</p>
+    <p>Second finger.</p>
+    <p>“Two, and this is the one that matters: a memory has roots. It isn't a beetroot you pull out of the ground and the rest of the field stays where it was. It's a tree root. When you pull, everything attached comes with it. You say, I want to forget the day she left me. I take it out, and it may take the whole woman with it. Her name, her voice, the three years you had, the song you played. Or it may take only that one day. There's no telling beforehand. There never is.”</p>
+    <p>The young man laughed, dry. “So it's a gamble.”</p>
+    <p>“It's surgery. With your eyes shut.”</p>
+    <p>“Three?”</p>
+    <p>Nariman lowered the third finger and set both palms on the counter.</p>
+    <p>“Three: there are no returns. Not ever. Not for anyone. Hear that twice, because people don't believe this one until it's too late.”</p>
+    <p>The young man looked at the shelves a while. “What are they?”</p>
+    <p>“Other people's.”</p>
+    <p>“You keep them?”</p>
+    <p>“I have to.”</p>
+    <p>“Why not pour them down the drain?”</p>
+    <p>“Because then the city fills up with people who start crying in the street and don't know why.”</p>
+    <div class="brk">◆</div>
+    <p>The young man came into the back room. He sat. And he told it.</p>
+    <p>He told it about his brother. About the day he learned his older brother had spent years taking money from their father in his name. About his father's face, which did not change when it heard the truth — and it was that not-changing that had broken him.</p>
+    <p>Nariman swallowed it.</p>
+    <p>The vapour came out thicker this time; slow, stringy, like smoke unwilling to leave a room. It settled at the bottom of the vial in a dark layer.</p>
+    <p>The young man blinked. “Is that it?”</p>
+    <p>“That's it.”</p>
+    <p>He stood, went to the door, stopped, turned back. His face had changed.</p>
+    <p>“Sorry — why did I come here?”</p>
+    <p>“We made a transaction.”</p>
+    <p>“What transaction?” And then, in a voice gone suddenly childish: “Did I have a brother?”</p>
+    <p>Nariman did not answer.</p>
+    <p>The young man shrugged, pressed a hand to his forehead, and walked out into the rain. Light. Free. Empty.</p>
+    <p>Nariman picked up the vial. It was heavy. It had roots. An entire brother, with his thirty years, his birthdays and his arguments and his sleepless nights, now fitted into four centimetres of glass.</p>
+    <p>That night Nariman dreamed of a brother he had never had.</p>
+    <p>And in the morning it took him a few seconds to remember that he didn't.</p>
+  </div>
+</section>
+
+<section class="chapter p1">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Three</div>
+      <h3>Nights</h3><div class="orn"></div></div>
+    <p class="lead">By day he was a shopkeeper. By night he was a warehouse.</p>
+    <p>Nobody had told him this; he worked it out in the second year. Memories do not stay in glass. They seep, the way a smell comes out from under a shut kitchen door. And whoever sleeps in the room above this shop is every night the host of people he has never met.</p>
+    <p>There were good nights, too.</p>
+    <p>A woman's wedding in 1983, where she left her shoes somewhere and danced barefoot until dawn. A man learning to ride a bicycle whose father let go of the saddle and who didn't notice until the end of the street. A girl seeing the sea for the first time, screaming in fright and then laughing, both sounds fitting into one breath.</p>
+    <p>Nariman was fond of these. Without telling anyone, he chose better places on the shelf for certain vials.</p>
+    <p>But the bad nights were more.</p>
+    <p>He had found his method: wake, drink water, open the window and say out loud, “This is not mine.”</p>
+    <p>Sometimes it worked. Sometimes not.</p>
+    <p>In the mornings the mirror told him something he did not want to hear. He was fifty-two and looked sixty-five. The hair above his temples had not gone white — it had gone grey; the colour of a thing that has burned.</p>
+    <p>Mrs. Firouz had ended up looking like that too.</p>
+    <div class="brk">◆</div>
+    <p>High on one of the shelves, out of reach, sat the ledger: black, leather-bound, thick. Once a week Nariman opened it, read the names, matched vials to entries. It was pointless work; nobody audited him. But a man with nothing of his own to remember goes looking for ceremony.</p>
+    <p>And there was something in that ledger that had bothered him for years.</p>
+    <p>Between page 207 and page 208, six pages had been cut out.</p>
+    <p>Not torn — cut. With a blade. Straight. The work of someone who did not want it noticed that anything had been taken.</p>
+    <p>Nariman would run a finger along the cut edge, and every time the same absurd thought arrived:</p>
+    <p><em>I did this.</em></p>
+    <p>Then he would shut the ledger, go downstairs, raise the shutter, and wait for rain.</p>
+  </div>
+</section>
+
+<section class="chapter p1">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Four</div>
+      <h3>A Love That Will Not Be Sold</h3><div class="orn"></div></div>
+    <p class="lead">Mrs. Morvarid came twice a week and never sold anything.</p>
+    <p>She was seventy, always in a lilac headscarf, and always brought pastries so that Nariman would offer her one and she could say “oh no, my blood sugar” and then eat it.</p>
+    <p>“Nariman. I've decided.”</p>
+    <p>“All right.”</p>
+    <p>“I mean it this time.”</p>
+    <p>“You always mean it.”</p>
+    <p>She sat. Laid her creased hands on her knees.</p>
+    <p>“Sixteen years he's been gone. Sixteen. I wake up and put my hand out to the other side of the bed. Sixteen years of that. Like an idiot.” She laughed. “I want to stop loving him. I'm tired.”</p>
+    <p>Nariman poured tea. He set the glass down with the handle towards her right hand — something he had done for two years without either of them mentioning it.</p>
+    <p>“Just take the love. Keep the rest. Let me have the memories, only take the part that hurts.”</p>
+    <p>“Mrs. Morvarid, I've said it a hundred times. The part that hurts <em>is</em> the part that loves him. They're not two things. They're one thing.”</p>
+    <p>“Then take all of it.”</p>
+    <p>“You're sure?”</p>
+    <p>“Yes.”</p>
+    <p>“Then come into the back room.”</p>
+    <p>She stood. Took three steps. Then stopped — at the same spot she always stopped, where the floorboard creaked — and looked at the ceiling.</p>
+    <p>“Will I forget his name?”</p>
+    <p>“Probably.”</p>
+    <p>“His voice?”</p>
+    <p>“Probably.”</p>
+    <p>“The night we got stranded at the station and talked in the waiting room until morning, and he said that if no train ever came he wouldn't mind?”</p>
+    <p>Nariman did not answer.</p>
+    <p>Mrs. Morvarid came back. Sat down. Picked up her tea.</p>
+    <p>“Good colour on this today.”</p>
+    <p>“Thank you.”</p>
+    <p>“I'll come next week.”</p>
+    <p>“I know.”</p>
+    <p>And always, after she left, Nariman would look at the shut door and think that the only sane person in this city was the old woman who came twice a week in order to change her mind.</p>
+    <p>And then he would think that he himself, probably, was not.</p>
+  </div>
+</section>
+
+<section class="chapter p1">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Five</div>
+      <h3>The Woman Who Came to Sell Her Son</h3><div class="orn"></div></div>
+    <p class="lead">She was thirty-two and looked like someone who had not slept in weeks and had stopped caring that it showed.</p>
+    <p>She spoke standing. She would not sit. Nariman offered twice and gave up on the third; some people, if they sit, will come apart, and they know it.</p>
+    <p>“I want to forget my son.”</p>
+    <p>Nariman did not take his hand off the cloth.</p>
+    <p>“How long?”</p>
+    <p>“Forty-two days.”</p>
+    <p>Forty-two days. Not <em>about six weeks</em>. People who are still counting are still inside it.</p>
+    <p>“Sit down.”</p>
+    <p>“I don't want to sit down. I want you to do it so I can go.”</p>
+    <p>Nariman raised three fingers and gave her the rules. At the second she cut him off.</p>
+    <p>“What does <em>roots</em> mean?”</p>
+    <p>“It means if you say, take the day of the funeral, it may take the whole child. His name. His voice. The four years you had him. His photographs stay in your phone and you don't know who the boy is.”</p>
+    <p>She looked at him. She did not smile, but something in her face did the work of one.</p>
+    <p>“And?”</p>
+    <p>“And what?”</p>
+    <p>“Did you think that was a threat?” Her voice did not rise. “Sir. For forty-two days, every morning, before my eyes open, I remember. Every morning, for two seconds, I'm fine. Then I remember. Do you understand? I lose my child once a day.”</p>
+    <p>The shop was quiet.</p>
+    <p>“You're telling me you might take all of it. I'm telling you: please take all of it.”</p>
+    <div class="brk">◆</div>
+    <p>Nariman was silent a long time. Then he did something he had not done in years: he came out from behind the counter and sat on the stool, level with a woman who was standing.</p>
+    <p>“There's something you should know,” he said. “Those two seconds in the morning when you're fine — those belong to your son. Those <em>are</em> him. If I take him, they go too.”</p>
+    <p>“Good.”</p>
+    <p>“No, it isn't good. Because afterwards you'll wake up and you <em>won't be fine</em> and you won't know why. They'll call it depression. You'll go to a doctor and the doctor will ask whether something happened, and you'll say no.”</p>
+    <p>She blinked.</p>
+    <p>“Pain with no cause is worse than pain with one. That isn't me talking. That's two thousand vials on that wall.”</p>
+    <p>Silence.</p>
+    <p>And then, for the first time, she sat down. Slowly. Like someone whose legs had stopped agreeing to hold her.</p>
+    <p>“So what do I do?”</p>
+    <p>And Nariman — the shopkeeper of the Forgetting House, a man whose trade for twenty years had been buying — said:</p>
+    <p>“Nothing. Wait. A year. Two. Those two seconds will become five minutes. Then half a day. It doesn't end, but it makes room.”</p>
+    <p>“How would you know?”</p>
+    <p>Nariman opened his mouth to answer and found he had none — not because he didn't know, but because when he went looking for where the knowing came from, something moved behind that frosted glass and slid away.</p>
+    <p>“I don't know,” he said. “But I know.”</p>
+    <div class="brk">◆</div>
+    <p>She left. When the door shut, Nariman looked at the empty stool for a while.</p>
+    <p>That night, upstairs, a thought came and would not leave him until morning: for twenty years a thousand people had come, and a thousand times he had said <em>sit</em> and <em>tell me</em> and <em>it's done</em>. Today was the first time he had sent anyone away.</p>
+    <p>And instead of lightness, what he felt was something like shame.</p>
+    <p>As though today, after twenty years, he had understood that the thousand before her could also have been sent away.</p>
+  </div>
+</section>
+
+<section class="chapter p1">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Six</div>
+      <h3>The Girl Who Came to Buy Something Back</h3><div class="orn"></div></div>
+    <p class="lead">It was the fourteenth of December when the door opened and she came in.</p>
+    <p>Twenty-nine. Short. An oversized army jacket that was not her size and smelled of a man. Her hair pulled back hard — the way people tie it before a fight.</p>
+    <p>“Can I help you.”</p>
+    <p>She came straight to the counter. She did not look at the shelves. Everyone entering this shop for the first time looks at the shelves.</p>
+    <p>“I've come to buy something.”</p>
+    <p>“We don't sell here. We only buy.”</p>
+    <p>“I know.”</p>
+    <p>“Then what do you want?”</p>
+    <p>“A memory. Back.”</p>
+    <p>Nariman sat down and laid the cloth on the counter.</p>
+    <p>“Have you heard the third rule?”</p>
+    <p>“Everyone's heard the third rule.”</p>
+    <p>“Then you know my answer.”</p>
+    <p>She took a piece of paper from her jacket pocket; folded, worn, its edges soft from years of handling. Written on it in blue ballpoint:</p>
+    <div class="ledger">The Forgetting House — Stone Lane, past the tailor's. Wooden door.</div>
+    <p>“That's my mother's handwriting.”</p>
+    <p>Nariman looked at the paper and not at the girl.</p>
+    <p>“She came here twenty years ago. She sold something. I want to buy it.”</p>
+    <p>“If your mother sold it, only she can—”</p>
+    <p>“My mother is dying.”</p>
+    <p>Her voice did not rise. It stayed flat, which was worse.</p>
+    <p>“Four months, maybe less. She sold something she shouldn't have and for twenty years I've watched it rot her from the inside while she has no idea why. I want her to have it back before she goes.”</p>
+    <p>“What did she sell?”</p>
+    <p>She paused. For the first time something shifted in her jaw.</p>
+    <p>“My sister.”</p>
+    <p>Rain struck the window.</p>
+    <p>“Her name was Nazli. She was six. I was nine. There was an accident, and my mother came here and said, take the day of the accident.” She breathed. “The roots took all of Nazli.”</p>
+    <p>Nariman's fist closed on the counter.</p>
+    <p>“A woman who has lost her child cries. My mother doesn't cry. For twenty years my mother has found Nazli's photograph in a drawer and said, who's this little one, doesn't she look like you.” She swallowed. “And every time I have to decide whether to tell her. And every time I don't. Because if I tell her, she only grieves once — from the beginning, again. In the last four months of her life.”</p>
+    <p>The silence went long. The kind in which you can hear cars on the main road.</p>
+    <p>“Your mother's name?”</p>
+    <p>“Fereshteh Azarang.”</p>
+    <p>Nariman stood and went towards the ladder. “Go home. Come tomorrow.”</p>
+    <p>“Does that mean—”</p>
+    <p>“It means go home.”</p>
+    <p>The girl went to the doorframe. Stopped. Her hand stayed on the handle.</p>
+    <p>“My name is Sogand.”</p>
+    <p>And she left.</p>
+    <div class="brk">◆</div>
+    <p>When the door shut, the shop stayed quiet.</p>
+    <p>Nariman put a hand on the rung of the ladder and noticed that his lips were moving. He was repeating the name. Slowly, over and over, like a man tasting a word in a foreign language, trying to work out why it sits so easily in his mouth.</p>
+    <p>Sogand. Sogand. Sogand.</p>
+    <p>Nothing came.</p>
+    <p>And that nothing, after twenty years, was the first one that hurt.</p>
+  </div>
+</section>
+
+<section class="chapter p1">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Seven</div>
+      <h3>What Is Not in the Ledger</h3><div class="orn"></div></div>
+    <p class="lead">That night he opened the ledger and went back twenty years.</p>
+    <p>Azarang, Fereshteh. Page 206. In Mrs. Firouz's small slanted hand:</p>
+    <div class="ledger">18 February — Azarang, Fereshteh. 34.<br>“The day of the accident.”<br>Deep root. Warned. Insisted.<br>Shelf 9, row 2.</div>
+    <p>He took the ladder to shelf nine and searched row two from one end to the other. Twice. Three times.</p>
+    <p>It was not there.</p>
+    <p>And there was no gap either; the vials sat flush against one another, tidy, as though nothing had ever stood between them. Someone who did not know would never have seen it.</p>
+    <p>He went back to the ledger. Turned. Page 207. Then six cut edges. Then 214.</p>
+    <p>Between February and June of that year, four months of this shop's history had been removed with a blade.</p>
+    <p>Nariman closed the ledger and looked at his hands.</p>
+    <p>Mrs. Firouz had died that summer. And Nariman had been here since that summer.</p>
+    <p>A simple question formed in his head. The kind any person on earth answers in half a second.</p>
+    <p><em>Where was I before?</em></p>
+    <p>He sat down on the bottom rung.</p>
+    <p>He knew how to bake bread, so somewhere he had learned. He knew how to talk to a child, so somewhere he had been one. He had a language, he had a city, he knew the names of the streets.</p>
+    <p>But when he tried to reach anything before that summer, something like frosted glass came forward. Not blackness — frosted glass. There was something behind it. It moved.</p>
+    <p>He thought about it for twenty minutes.</p>
+    <p>And then he did what he had not done in twenty years: he stood, went to the small mirror above the shop's washbasin, and asked himself:</p>
+    <p>“Who are you?”</p>
+    <p>A grey man in the glass looked back and had no answer.</p>
+  </div>
+</section>
+
+<section class="part">
+  <svg width="54" height="106" viewBox="0 0 96 188" fill="none" aria-hidden="true">
+    <rect x="34" y="10" width="28" height="17" rx="3" fill="#6B5433"/>
+    <path d="M30 27h36v14l10 20v112a8 8 0 0 1-8 8H28a8 8 0 0 1-8-8V61l10-20V27z"
+          fill="rgba(190,222,238,.08)" stroke="rgba(206,231,244,.42)" stroke-width="2"/>
+    <path d="M23 96h50v77a8 8 0 0 1-8 8H31a8 8 0 0 1-8-8V96z" fill="#2A5766" opacity=".9"/>
+  </svg>
+  <div class="label">Book Two</div><h2>The Daughter</h2>
+  <div class="note">Twenty years nobody watched</div>
+</section>
+
+<section class="chapter p2">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Eight</div>
+      <h3>Nine</h3><div class="orn"></div></div>
+    <p class="lead">In the mornings there was the smell of bread, and that meant everything was where it should be.</p>
+    <p>Sogand had not learned this from her mother; she had discovered it herself. Years later, when people asked when she had known her house was broken, she would say: the morning I came downstairs and there was no smell of bread.</p>
+    <p>Four months had passed since the accident.</p>
+    <p>In those four months the house had learned to walk around a name without touching it. Nobody said <em>Nazli</em>. Nazli's room became <em>that room</em>. Nazli's shoes were gone, but the place where they had stood remained on the shoe rack: a clean rectangle on dusty wood.</p>
+    <p>Sogand was nine and had learned not to cry, because she had seen that her crying took her mother's legs out from under her. She had learned to do it at night, under the blanket, silently, a fist against her mouth. She had learned to wash her face in cold water in the morning so the red would leave her eyes.</p>
+    <p>She was nine and she had a profession: sentry.</p>
+    <div class="brk">◆</div>
+    <p>And her father, in those four months, had gone quiet.</p>
+    <p>Not a frightening quiet. A kind one. He would sit, listen, nod. He looked over her homework. Once he folded her a paper boat and put it in the gutter and they ran after it to the end of the street.</p>
+    <p>Sogand understood later that the boat was the last thing her father ever made for his daughter.</p>
+    <p>That week he came home late several times. One night his clothes were wet. One night there was a piece of paper in his pocket that Sogand did not see and her mother did, and said nothing about.</p>
+    <div class="brk">◆</div>
+    <p>And then that morning came.</p>
+    <p>Sogand went down the stairs. There was no smell of bread. The kitchen light was on and her father was standing in the middle of the room in last night's shirt, looking at the teapot the way a man looks at an object when he isn't sure whose it is.</p>
+    <p>“Morning, Dad.”</p>
+    <p>Her father turned.</p>
+    <p>And looked at her.</p>
+    <p>Sogand spent her whole life trying to describe that look to someone and never managed it. It was not cruel. It was not cold. If it had been cold it would have been easier to bear. That look was <em>polite</em>. The look a man gives the host's child at a party.</p>
+    <p>Her father smiled and said:</p>
+    <p>“Morning, sweetheart. Where's your mum?”</p>
+    <p>And then, when her mother came in from the hall, he turned to her and with the same smile, in the same ordinary voice — the voice he told stories in, the voice he joked in — asked:</p>
+    <p>“Fereshteh. Whose child is this?”</p>
+    <div class="brk">◆</div>
+    <p>What broke in that moment made no sound.</p>
+    <p>Sogand replayed the scene a thousand times afterwards and each time stopped on a different detail. On the tap being left running. On her mother gripping the counter edge and tearing a fingernail, and the nail staying torn for a month because nobody fixed it. On the fact that the first thing that came to her own nine-year-old mind was: <em>I must have done something wrong.</em></p>
+    <p>Children always think it's their fault. This is not stupidity; it is that they would rather live in a world where, if you are good, nothing bad happens.</p>
+    <p>She did not go to school that day.</p>
+    <p>She sat in the hallway and watched through the gap in the door as her mother brought out photographs and set them in front of her father, and her father looked at them with a terrible respect and interest and said, “What a funny little thing she is.”</p>
+    <p>Her father stayed two weeks.</p>
+    <p>Two weeks that Sogand spent entirely on a plan: if I make myself enough like the girl he's forgotten, maybe he'll remember. She tied her hair the way it was in the photographs. She wore the same clothes. She stood in front of him and said her name, loudly, twice.</p>
+    <p>Her father put a hand on her head — the way you pat a neighbour's cat — and said, “Good girl.”</p>
+    <p>On the fourteenth night, her father left.</p>
+    <p>Sogand was awake. She heard the door. She ran to the window and saw a man at the end of the street, under the lamp, standing and looking up; not at her window — at the roof, at the sky, at something that wasn't there.</p>
+    <p>Then he went.</p>
+    <p>Sogand stayed at the window until morning, because she thought that if she didn't stop, if she didn't look away for even a second, the man might come back.</p>
+    <p>This was the first night of her watch.</p>
+    <p>It lasted twenty years.</p>
+  </div>
+</section>
+
+<section class="chapter p2">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Nine</div>
+      <h3>A House with Two Absences</h3><div class="orn"></div></div>
+    <p class="lead">Her mother told everyone that her father had died.</p>
+    <p>Sogand never corrected her. She was eleven when she understood why: because <em>dead</em> is a word people know what to do with. They bring you sweets, they shake their heads, and after six months they forget and life goes on. But <em>he left and did not know me</em> is not a word anyone knows what to do with. People simply get frightened and step back.</p>
+    <p>So Sogand learned to carry her mother's lie. That became her second profession.</p>
+    <div class="brk">◆</div>
+    <p>Her mother, Fereshteh Azarang, had become a strange woman.</p>
+    <p>Not mad. The opposite: excessively ordinary. She went to work, cooked, paid the bills, cleaned the house for New Year. Anyone looking from outside would have said here is a woman who has come through a catastrophe with dignity.</p>
+    <p>But something in her was hollow, like a room in a house they've bricked over.</p>
+    <p>The way she cracked four eggs for three people who were no longer three. The way she stopped outside the shoe shop and looked at children's shoes and then shook her head and said <em>I was miles away</em>. The way, at bedtime, she reached out and switched off the light in a room where nobody was.</p>
+    <p>Sogand called these <em>footprints</em>. Nazli was gone, but her footprints had stayed inside her mother; and every day, without knowing, her mother stepped into them and limped.</p>
+    <div class="brk">◆</div>
+    <p>Once — she was thirteen — she couldn't stand it.</p>
+    <p>She took the photograph out of the drawer and put it on the kitchen table. Two girls on the steps of a yard, the older one with half a smile, the younger with her left shoe in her hand.</p>
+    <p>“Mum. Who's this?”</p>
+    <p>Her mother looked. Leaned closer. Ran a finger over the smaller face.</p>
+    <p>“What a sweet little thing,” she said. “She looks so like you. Is she your cousin?”</p>
+    <p>And Sogand opened her mouth.</p>
+    <p>And closed it.</p>
+    <p>And that night, for the first time in four years, she cried like a child — not from grief, from rage — and then washed her face and took the photograph and put it back in the drawer, in exactly its place, under the identity papers.</p>
+    <p>That night she made a decision that stayed with her until she was twenty-nine:</p>
+    <p><em>I will remember. On behalf of all three of them.</em></p>
+    <p>And like every large decision a person makes at thirteen, it had the shape of love and did the work of a prison.</p>
+  </div>
+</section>
+
+<section class="chapter p2">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Ten</div>
+      <h3>Sixteen</h3><div class="orn"></div></div>
+    <p class="lead">She found the paper by accident, behind the frame of the wedding photograph.</p>
+    <p>Her mother's handwriting. Three words and an address. Stone Lane, past the tailor's, wooden door.</p>
+    <p>Sogand was sixteen and too clever to think it was an ordinary address, because nobody hides the address of a tailor behind their wedding photograph.</p>
+    <p>It took three weeks to find the lane. In those days you still had to ask people, and when people heard the name of that shop they looked at you a particular way: half pity, half <em>so soon?</em></p>
+    <p>Thursday, five in the afternoon, she reached the top of the lane.</p>
+    <p>And stopped.</p>
+    <p>The shop was at the far end. Its light was on. Behind the fogged glass, someone moved behind a counter.</p>
+    <p>Sogand began to walk. Twenty paces. Fifteen. Ten.</p>
+    <p>And then the man lifted his head.</p>
+    <p>His hair had gone grey. He was thinner. But the jaw, but the shoulders, but that movement he made with his thumb at the corner of his eyebrow when he was thinking—</p>
+    <p>Sogand froze where she stood.</p>
+    <p>Three metres from the door.</p>
+    <p>And in those three metres, in those few seconds, everything she had built since she was nine collapsed. Because until that day her father had been a <em>story</em>. An injustice. Something she argued with in her head and answered in her head, and always, at the end of those conversations, he understood and was sorry and put his arms around her.</p>
+    <p>But this man behind the glass was not a story. He was a person washing a glass.</p>
+    <p>And if she knocked, that person would turn around and say: <em>Can I help you?</em></p>
+    <p>Sogand thought, later, that people are not usually afraid of the truth. They are afraid of testing it and losing, and then not even having the hope of a different answer left. As long as you haven't knocked, both answers are possible.</p>
+    <p>She turned back.</p>
+    <p>She walked to the main road, got on a bus, sat at the back, and cried all the way home; quietly, facing the window, so that nobody would know.</p>
+    <p>And that night, on the back cover of her maths exercise book, she wrote in blue ballpoint:</p>
+    <div class="ledger">Thursday. The light was on.</div>
+  </div>
+</section>
+
+<section class="chapter p2">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Eleven</div>
+      <h3>Thursdays</h3><div class="orn"></div></div>
+    <p class="lead">It took thirteen years. Which is to say six hundred and some Thursdays.</p>
+    <p>The route was always the same: bus to the square, on foot to the main road, then Stone Lane. She came as far as the corner, leaned against the wall, and looked to see whether the light was on.</p>
+    <p>If it was on, she stayed ten minutes and went home.</p>
+    <p>If it was off, she stayed longer.</p>
+    <p>She never knocked.</p>
+    <div class="brk">◆</div>
+    <p>In those thirteen years Sogand grew up, the way people grow up in the margin of a large waiting. She started university and left it half-finished. She worked in two places. Once she fell in love and after a year the man said <em>part of you is never here</em>, and he was right, and Sogand could not tell him where that part was.</p>
+    <p>Her friends said she should move on. They said your father's dead — because everyone thought he was — they said you can't do this forever.</p>
+    <p>And Sogand nodded and on Thursday went to the corner of the lane.</p>
+    <p>Sometimes she despised herself for it. Sometimes she built explanations: I go because I need to know he's alive, because one day my mother will ask, because one day he might collapse and there'd be nobody.</p>
+    <p>None of it was true.</p>
+    <p>The truth was simpler and more shameful: as long as that light was on, Sogand was somebody's daughter. There was a man in this city who — though he didn't know it — counted as her father. If she knocked and he did not know her, that last grain would go too.</p>
+    <p>So she didn't knock. And she came. And she didn't knock.</p>
+    <p>A person can feed off a wound for thirteen years, provided they never let it close.</p>
+    <div class="brk">◆</div>
+    <p>One Thursday — she was twenty-two — the light was off and the door was ajar.</p>
+    <p>Sogand went as far as the doorway. From inside came the sound of something breaking, and then a man swearing.</p>
+    <p>He didn't swear. Her father never swore.</p>
+    <p>Sogand stood there and thought that the man inside had spent twenty years becoming someone she did not know. That as much as her father had lost her, she was losing someone too — someone who came every Thursday for him. That perhaps both of them were keeping a dead man alive.</p>
+    <p>She turned back.</p>
+    <p>And that week, for the first time, she wrote nothing in her book.</p>
+  </div>
+</section>
+
+<section class="chapter p2">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Twelve</div>
+      <h3>The Decision</h3><div class="orn"></div></div>
+    <p class="lead">It was November when her mother said it was nothing.</p>
+    <p>Sogand knew exactly when her mother said <em>it's nothing</em>. It was the tone she had used to say <em>your father is dead</em>.</p>
+    <p>Two weeks later, in a hospital corridor, a young doctor explained with tired kindness how much time was left. Sogand nodded, thanked him, went down to the car park, and looked at a concrete pillar for twenty minutes.</p>
+    <p>Then she took the bus home and made dinner.</p>
+    <div class="brk">◆</div>
+    <p>That night her mother sat at the table pushing rice around with a fork.</p>
+    <p>“Sogand.”</p>
+    <p>“Yes.”</p>
+    <p>“There's something and I don't know what it is.”</p>
+    <p>Sogand's hand stopped moving.</p>
+    <p>“I've lost something.” Her mother was looking at her plate. “I don't know what. But it's there. Like when you leave the house and you're certain you've forgotten something and however hard you think you can't remember what.” She lifted her head and smiled — the smile Sogand had been watching for twenty years, the one that took a piece of her every time. “I've been leaving the house for twenty years, love.”</p>
+    <p>Sogand got up, carried the plates to the kitchen, ran the tap so it would make noise, and stood facing the wall with a hand over her mouth.</p>
+    <p>Four months.</p>
+    <p>Which meant her mother was going to die with that hollow in her. Which meant that woman's last thought, in her last room, would be that she had left something behind and never learned what.</p>
+    <p>And Sogand was the only person alive who knew what.</p>
+    <div class="brk">◆</div>
+    <p>That night she sat on her bedroom floor until dawn and took the folded paper out from behind the frame.</p>
+    <p>Thirteen years it had been with her. The edges had gone soft.</p>
+    <p>And for the first time, the question was no longer her father.</p>
+    <p>She had to understand that difference before she could leave the house: for thirteen years, every Thursday, she had gone for <em>herself</em>. For that grain of being somebody's daughter. And that was exactly why she had never been able to knock — because when a thing is for you, the fear comes from you too.</p>
+    <p>This time it was not for her.</p>
+    <p>In the morning Sogand tied her hair back. Hard. She put on her father's jacket — the only thing left of him, and that only because it had been forgotten on a hook.</p>
+    <p>And she went.</p>
+    <p>At the corner of the lane, in the usual place, she leaned against the wall.</p>
+    <p>The light was on.</p>
+    <p>Sogand looked at it and thought, for the six-hundred-and-somethingth time, that she could still turn back. That it wasn't too late. That until you knock, both answers are possible.</p>
+    <p>Then she pushed off the wall and started walking.</p>
+    <p>Twenty paces. Fifteen. Ten. Three.</p>
+    <p>She raised her hand.</p>
+    <p>And knocked.</p>
+  </div>
+</section>
+
+<section class="part">
+  <svg width="54" height="106" viewBox="0 0 96 188" fill="none" aria-hidden="true">
+    <rect x="34" y="10" width="28" height="17" rx="3" fill="#6B5433"/>
+    <path d="M30 27h36v14l10 20v112a8 8 0 0 1-8 8H28a8 8 0 0 1-8-8V61l10-20V27z"
+          fill="rgba(190,222,238,.08)" stroke="rgba(206,231,244,.42)" stroke-width="2"/>
+    <path d="M23 152h50v21a8 8 0 0 1-8 8H31a8 8 0 0 1-8-8v-21z" fill="#8E2F24" opacity=".95"/>
+  </svg>
+  <div class="label">Book Three</div><h2>The Trade</h2>
+  <div class="note">The vial is almost empty</div>
+</section>
+
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Thirteen</div>
+      <h3>Mr. Farhoud</h3><div class="orn"></div></div>
+    <p class="lead">The man who came the next day had no umbrella and was not wet; his driver had brought him to the door.</p>
+    <p>Grey suit, expensive watch, and the kind of affability that frightens people because it never switches off.</p>
+    <p>“Mr. Nariman Sadr. At last.” He put out a hand. “Farhoud. Kayvan Farhoud.”</p>
+    <p>Nariman did not take it. “Are you a customer?”</p>
+    <p>“A partner.” He turned around the shop. “Good God. How many are there?”</p>
+    <p>“I don't count them.”</p>
+    <p>“Why not?”</p>
+    <p>“Because they aren't numbers.”</p>
+    <p>Farhoud laughed and leaned on the counter.</p>
+    <p>“Do you know what's wrong with this place? It doesn't scale. How many customers a day? Three? And you have to sit and listen to each one for hours. It's a waste. You're sitting on a gold mine and mining it with a teaspoon.”</p>
+    <p>“And your proposal?”</p>
+    <p>“Branches. Systems. Trained operators.” He opened his hands. “One in every city. A published tariff: light memory, medium, heavy. Get the insurers on board. Who in this country isn't in pain? Everyone. We'd only be providing a service.”</p>
+    <p>“Where do the vials go?”</p>
+    <p>“Central storage. I have better preservation methods. Industrial. Cold rooms. You're working with a wooden ladder, man.”</p>
+    <p>“Who keeps them?”</p>
+    <p>“I told you, the ware—”</p>
+    <p>“No.” Nariman stood. “<em>Who?</em> Which person? These don't stay in the glass. They seep. Somebody has to sleep above them at night and dream them. I have two thousand; look at me. Who sleeps a hundred thousand?”</p>
+    <p>Farhoud's smile stayed where it was, but something behind it moved.</p>
+    <p>“Interesting. I hadn't heard that part.”</p>
+    <p>“Because you had nobody to ask.”</p>
+    <p>Farhoud looked at the shelves for a while. Then he said something Nariman had not expected.</p>
+    <p>“I've been seven times.”</p>
+    <p>“Where?”</p>
+    <p>“Places like this. In several countries. People who claimed they knew how.” He straightened his watch; his first unprofessional movement. “None of them could. There's something I've been carrying for nineteen years and nobody has been able to take it off me.”</p>
+    <p>“Because they didn't know how?”</p>
+    <p>“Because—” his smile came back, harder than before, “—perhaps some things can't be said. And what you can't say can't be sold.”</p>
+    <p>Nariman looked at him. For the first time, the man had come to resemble a customer.</p>
+    <p>“I could sit and listen. No charge.”</p>
+    <p>“No.” Farhoud laid his card on the counter. “I didn't come here to be a customer. I came to be the owner.” He went to the door. “Think it over. I'm patient — up to a point.”</p>
+    <p>He left.</p>
+    <p>Nariman did not pick up the card. When Sogand came that evening, it was still lying there.</p>
+  </div>
+</section>
+
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Fourteen</div>
+      <h3>Mr. Shokouhi Loses His Own Name</h3><div class="orn"></div></div>
+    <p class="lead">It was a Thursday when Shokouhi came in and could not say what he wanted to sell.</p>
+    <p>He sat on the stool, locked his fingers, opened his mouth and shut it.</p>
+    <p>“There was something.”</p>
+    <p>“It's all right.”</p>
+    <p>“No, there was something. It mattered. I had it on the way here.” He struck his forehead with the flat of his hand. “Damn it.”</p>
+    <p>“Mr. Shokouhi. What's your name?”</p>
+    <p>He looked up. He smiled; the apologetic one. “What a ridiculous question.”</p>
+    <p>“Say it.”</p>
+    <p>And Mr. Shokouhi opened his mouth, and nothing came.</p>
+    <p>The silence that followed was the silence of an operating theatre.</p>
+    <p>Nariman came out from behind the counter, sat beside him, put a hand on his wet shoulder — the left one, the broken umbrella.</p>
+    <p>“Your name is Kamran Shokouhi. You were born in July. You worked at the registry office and you retired. You have a niece whose wedding was five years ago, and you sang at it.”</p>
+    <p>“Yes.” He nodded fast, like a man grabbing at a boat. “Yes. Kamran. Kamran.”</p>
+    <p>“Don't come again from next week.”</p>
+    <p>He looked at him.</p>
+    <p>“I mean it. I won't buy anything from you again.”</p>
+    <p>“Why?”</p>
+    <p>Nariman pointed at the left-hand shelf. Fourth row.</p>
+    <p>“Those aren't your embarrassments, Mr. Shokouhi. Those are <em>you</em>. Every person is made of a thousand humiliating moments. Those moments are the glue that fastens a man to other men; that's what they're for. Take them all out and what's left isn't a person. It's an empty room.”</p>
+    <p>Shokouhi looked at the thirty-seven vials for a while.</p>
+    <p>“Could I have them back?”</p>
+    <p>And Nariman — who had heard that question a thousand times and given one answer a thousand times — paused.</p>
+    <p>“No.”</p>
+    <p>The man stood. Took the broken umbrella.</p>
+    <p>“Goodbye, Mr. — sorry. What was your name?”</p>
+    <p>“Nariman.”</p>
+    <p>“Goodbye, Nariman.”</p>
+    <p>When the door shut, Nariman looked at the business card on the counter, then at the shelves, then at his own hands.</p>
+    <p>A few weeks ago, when he had turned that woman away, he had asked himself for the first time whether this shop helped people or slowly ate them. The question had not left since; it had only been waiting for someone to lose his own name and come back.</p>
+    <p>And then a colder thought arrived: <em>if Shokouhi sold thirty-seven and lost his name, what have I lost, who have slept two thousand?</em></p>
+  </div>
+</section>
+
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Fifteen</div>
+      <h3>The Cellar</h3><div class="orn"></div></div>
+    <p class="lead">The hatch was under the rug and he had not opened it in twenty years.</p>
+    <p>Mrs. Firouz, in her last week, had pointed at it: “Down there are the things that should never have been sold. Don't go until you have to. When you have to, you'll know.”</p>
+    <p>He switched on the torch and went down.</p>
+    <p>It was cold. The smell of earth and old wood. And at the far end, one small shelf. Only one. With a white cloth over it.</p>
+    <p>He drew the cloth aside.</p>
+    <p>These vials had labels. Real ones. With names.</p>
+    <ul class="names">
+      <li>Dalaram Firouz</li><li>Rahim Dastgheib</li><li>Minoo Saffar</li>
+      <li>Fereshteh Azarang</li><li class="me">Nariman Sadr</li>
+    </ul>
+    <p>His heart stopped, and then, late, started again.</p>
+    <p>His own name. In Mrs. Firouz's hand.</p>
+    <p>He picked the vial up. It was heavy — heavier than anything he had ever held. The liquid inside was not black; it was gold. Dull gold, like honey left standing for years.</p>
+    <p>Beside it lay a roll of paper tied with string. On the string, a label: <em>For whoever finds this.</em></p>
+    <p>Nariman sat down on the cellar step and untied it.</p>
+  </div>
+</section>
+
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Sixteen</div>
+      <h3>Dalaram Firouz's Letter</h3><div class="orn"></div></div>
+    <div class="letter">
+      <p>Whoever you are, you have understood by now that something is missing from you.</p>
+      <p>So I shall be brief. The shopkeeper of the Forgetting House is not chosen. He is made.</p>
+      <p>This shop has a fourth rule that we do not tell the customers, because if we did, nobody would come: every memory that is sold must be carried by someone. We are not brokers. We are the quay. The load is set down on us.</p>
+      <p>And a person who takes up the load of a thousand others must have an empty place in him. A full man has no capacity. That is why the shopkeeper is always someone who once sold the heaviest thing he had and does not know what it was.</p>
+      <p>I sold too. Thirty years ago. Every morning I wake missing someone I cannot name. Sometimes I stop in the middle of work and look at the door. I don't know who I am waiting for.</p>
+      <p>The vial with your own name on it is the thing you sold. It is yours. You have the right to take it. But know this:</p>
+      <p>If you take it back, you are no longer the shopkeeper. A man who is full cannot swallow. You would have to shut the door that same day.</p>
+      <p>And there are a thousand people in this city whose nights depend on somebody, somewhere, carrying their load. If the door shuts, a memory with no keeper goes back to its owner. All of it. Without warning. Imagine it: a woman who sold her child forty years ago so that she could go on living, getting it all back on an ordinary afternoon, halfway through buying bread.</p>
+      <p>I could not. For thirty years I looked at my vial and did not take it. I am not saying I did right. I am saying I could not.</p>
+      <p>One more thing, and then I will leave you alone.</p>
+      <p>One day someone will come and want another person's memory back. It is possible. But it is not free; the law of this shop is trade, not mercy. For a memory to return, someone must give something of equal weight. And that someone is not the owner of the memory — it is the person who wants it.</p>
+      <p>Tell them exactly that, then be quiet and let them decide. You have no right to make that decision for anyone.</p>
+      <p>I made it once. For a man who was very young and very wrecked and had come to sell one rainy day. I saw what was clinging to the root of it. I saw, and I said nothing, because I believed I was being merciful.</p>
+      <p>And I have not forgiven myself to this day.</p>
+      <p class="sign">Dalaram Firouz</p>
+    </div>
+    <p>Nariman read the letter twice.</p>
+    <p>Then he held the vial with his own name up in the torchlight. The gold liquid shifted slowly; like someone turning over in their sleep.</p>
+    <p><em>A man who was very young.</em></p>
+    <p>His hand tightened around the glass.</p>
+    <p>And then it opened.</p>
+    <p>He came up. Shut the hatch. Put back the rug. Went behind the counter and sat until morning, and all that night he understood one thing and could not run from it: the man who had carried this city's load for twenty years had once, somewhere, put something down and walked away.</p>
+  </div>
+</section>
+
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Seventeen</div>
+      <h3>What Sogand Knows</h3><div class="orn"></div></div>
+    <p class="lead">At seven in the morning, Sogand knocked.</p>
+    <p>Nariman opened the door in yesterday's clothes.</p>
+    <p>“Did you find anything?”</p>
+    <p>“Sit.”</p>
+    <p>He set a vial on the counter. The label: <em>Fereshteh Azarang.</em></p>
+    <p>Sogand reached out and stopped, as though the glass were hot.</p>
+    <p>“Your sister is here.”</p>
+    <p>“All of her?”</p>
+    <p>“All of her.”</p>
+    <p>She took a long breath. “How much?”</p>
+    <p>“It isn't money.”</p>
+    <p>“Then what?”</p>
+    <p>Nariman gave her the rule, exactly as Mrs. Firouz had written it. A memory returns if the person who wants it gives something of equal weight. Not money. Not years of life. Memory against memory. And the weight is merciless: Nazli at six, with all six of her years, is the heaviest thing in this shop.</p>
+    <p>“So what am I supposed to give?”</p>
+    <p>“Something that weighs the same.”</p>
+    <p>“The heaviest thing I have is Nazli.”</p>
+    <p>“I know.”</p>
+    <p>Sogand stood, went to the window, looked at the lane for a while. From this side of the glass the lane seemed smaller.</p>
+    <p>“There's another thing that's heavy.”</p>
+    <p>“What?”</p>
+    <p>She turned. And for the first time in these few days her eyes went straight into his.</p>
+    <p>“My father.”</p>
+    <p>Nariman did not move.</p>
+    <p>“My father didn't die in that accident. He survived.” Her voice kept its terrible flatness. “Four months later he got lost. Not ran away — lost. I was nine and one morning I went into the kitchen and my father was standing there looking at me the way you look at a neighbour's child.”</p>
+    <p>Outside, the drip of the gutter.</p>
+    <p>“He asked my mother whose child I was.”</p>
+    <p>Nariman put a hand on the counter so that it would not shake.</p>
+    <p>“He stayed two weeks. Then he left. For twenty years my mother said he was dead. I was nine but I wasn't stupid. I found him when I was sixteen.” A pause. “For thirteen years I've come to this lane once a week and looked from the corner to see whether the light was on.”</p>
+    <p>Nariman shut his eyes.</p>
+    <p>And in the dark behind his eyelids, for the first time in twenty years, something moved behind the frosted glass; not a picture, not a sound — a <em>weight</em>. The weight of something on a shoulder. The weight of a child who has fallen asleep and has to be carried to her room.</p>
+    <p>“My name is Sogand Sadr.”</p>
+    <p>The rain came on.</p>
+    <p>“And you are my father.”</p>
+    <div class="brk">◆</div>
+    <p>Nariman opened his eyes.</p>
+    <p>And did something that in none of those six hundred Thursdays Sogand had imagined. He did not weep, or deny it, or take her in his arms.</p>
+    <p>He stood, went behind the counter, brought the black ledger, set it in front of her and opened it to the page with six cut edges.</p>
+    <p>“Spring, twenty years ago.” He ran a finger along the cut. “Somebody took four months out of this shop's history. With a blade.”</p>
+    <p>Sogand looked at the severed paper.</p>
+    <p>“Why are you showing me this?”</p>
+    <p>“Because I want you to know who you're dealing with.” His voice was hollow. “I don't know that I'm your father. I believe you, but I don't <em>know</em>. To me you're a customer who wants something and has something.” His finger stayed on the page. “And the person who cut these pages was probably me. Which means I already took something from you once and then covered it over.”</p>
+    <p>Silence.</p>
+    <p>“So if you came here for the thing people get from their fathers, I don't have it,” he said. “I only have this: a shop that works.”</p>
+    <p>And Sogand — who had walked thirteen years with that folded paper in her pocket — nodded and said:</p>
+    <p>“That's what I want.”</p>
+    <div class="brk">◆</div>
+    <p>That night Sogand did not leave.</p>
+    <p>Without either of them discussing it, she went upstairs and lay down on the spare mattress nobody had slept on in twenty years. Nariman said nothing. In the morning there were two glasses of tea on the counter.</p>
+    <p>People do not always come close to one another with words. Sometimes it is only an extra glass.</p>
+  </div>
+</section>
+
+<section class="chapter midbreak p1">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Interlude</div>
+      <h3>Six Pages</h3><div class="orn"></div></div>
+    <p class="lead">Nobody read these six pages. Not Nariman, not Sogand. Dalaram Firouz cut them out and burned them, but before she burned them she copied them into a notebook of her own; and that notebook is still, to this day, somewhere nobody looks.</p>
+    <p>So only we know.</p>
+    <div class="brk">◆</div>
+    <div class="journal">
+      <p><em>18 February.</em> A woman came. Thirty-four. Azarang. Her child was taken at the boulevard crossroads. She wanted to sell the day of the accident.</p>
+      <p>I warned her. As always. I said it has roots. She said I know. I said it may take the child herself. She said if it does, thank God.</p>
+      <p>I took it. The root went all the way down. The child came out whole; six years of her, clean, like a tree lifted with its soil.</p>
+      <p>When the woman went out of that door she was light. The lightest person I have seen this year.</p>
+      <p>And I stood and looked at the vial and said to myself: well, you did your job.</p>
+    </div>
+    <p>Then, for three and a half months, she wrote nothing. The notebook is empty. Only one line, mid-March, undated: <em>Dreamed of that child again. Her left shoe was in her hand.</em></p>
+    <div class="brk">◆</div>
+    <div class="journal">
+      <p><em>1 May.</em> A man came. Young. Thirty-something. He gave his name: Sadr. For a week now he has come to the top of the lane at night and turned back; I have seen him. Tonight he came in.</p>
+      <p>He said not his wife — his daughter. He said my child went in front of my eyes. He said I was driving.</p>
+      <p>He said that four times. <em>I was driving.</em></p>
+      <p>He said I don't want to die and I can't live and I want a third option.</p>
+      <p>I gave him the rules. When I reached the second he cut me off and said let it take whatever it takes.</p>
+      <p>And I — and I write this because it has to be written somewhere — <em>looked, and saw the root.</em></p>
+      <p>Thirty years I have done this. I see the root before the pulling; the way a midwife knows the child has turned.</p>
+      <p>When I looked at his day, I saw a little girl clinging to it. Hard. With her whole weight.</p>
+      <p>And I thought it was the same child. The one who had gone.</p>
+      <p>I thought: God, this man is selling his dead child and not one soul in the world loses by it.</p>
+      <p>I thought I was being merciful.</p>
+      <p>I took it.</p>
+    </div>
+    <p>After this, in the notebook, the writing grows unsteadier.</p>
+    <div class="journal">
+      <p><em>9 June.</em> Today I understood.</p>
+      <p>The man has worked here three weeks. He had nowhere to go. He helps me, he tidies the shelves, he sleeps upstairs and in the mornings says he dreamed of strangers and laughs; a laugh he does not yet know the meaning of.</p>
+      <p>Today a woman came, not for a vial — for directions; a lady from that same neighbourhood. Talking, she said: poor Mrs. Azarang, lost her child and then her husband walked out on her, and now she's alone with the older girl.</p>
+      <p>I said: the older girl?</p>
+      <p>She said: nine years old. Sogand.</p>
+      <p>I opened the ledger. 18 February, Azarang. 1 May, Sadr. One house. One accident. Two transactions. And I took both of them myself.</p>
+      <p>And the little girl who was clinging to that man's root, whom I took for dead—</p>
+      <p>She was alive.</p>
+      <p>She is alive.</p>
+      <p>And this morning, in a house in this city, she woke and her father did not know her, and I did that.</p>
+    </div>
+    <p>In the margin of that same page, in pencil pressed so hard it has torn the paper, there is one sentence:</p>
+    <div class="journal"><p><em>Thirty years I read the second rule aloud to other people, and today I understood that the second rule was written for me.</em></p></div>
+    <div class="brk">◆</div>
+    <div class="journal">
+      <p><em>11 June.</em> Two nights of thinking. I have three roads.</p>
+      <p>One: give him the vial and tell him. But then a man who ran over his own child gets all of it back at once, and I have seen him; I saw him that first night at the top of the lane. He would not come back from it. That road is murder, with glass.</p>
+      <p>Two: say nothing and let him go. But go where? A man who does not know what he has lost spends the rest of his life searching.</p>
+      <p>Three: keep him.</p>
+      <p>I have chosen the third, and I know I chose it for myself and not for him. Because I am old and this shop wants somebody and he is empty, and the empty ones are kept here.</p>
+      <p>So let me write it plainly, since nobody will read this and at least the paper should know:</p>
+      <p>I took a daughter from this man, and then I employed him to stand for the rest of his life behind the counter she was lost inside.</p>
+      <p>I will cut the pages. If he ever reads the ledger, he must not find the thread.</p>
+      <p>And I will put his vial downstairs, where I have looked at my own for thirty years and not taken it.</p>
+      <p>Perhaps he will be braver than I was.</p>
+      <p>Perhaps not. Most of us are not.</p>
+    </div>
+    <p>The last thing Dalaram Firouz wrote in that notebook was six weeks before her death, and had nothing to do with any of this — or everything.</p>
+    <div class="journal"><p><em>One day a girl will come and ask for something we do not have. I will not be here. I hope whoever is behind the counter tells her the truth. Whatever it costs.</em></p></div>
+  </div>
+</section>
+
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Eighteen</div>
+      <h3>The House on Eleventh Street</h3><div class="orn"></div></div>
+    <p class="lead">That night Nariman pulled down the shutter and did something he had not done in twenty years: he walked out of Stone Lane towards a destination that was not the shop.</p>
+    <p>He had taken the address from the ledger. Beside Fereshteh Azarang's name, in Mrs. Firouz's small hand.</p>
+    <p>He walked forty minutes. The rain had stopped and the asphalt gave off a smell that carries a man back into a past that isn't his.</p>
+    <p>The house was two storeys at the end of an ordinary street, with a blue railing and a mulberry tree cut back to half itself.</p>
+    <p>Nariman stood on the far side of the road.</p>
+    <div class="brk">◆</div>
+    <p>For a long time nothing happened.</p>
+    <p>He stood there and looked at a house and waited for something to occur in his chest.</p>
+    <p>Nothing occurred.</p>
+    <p>The house was a house. The railing was blue. The tree was cut back.</p>
+    <p>And Nariman Sadr, standing on the pavement opposite a house where — if the girl was telling the truth — he had eaten breakfast twenty years ago, felt nothing at all.</p>
+    <p>This is the thing to understand about what he did next: it was not pain. It was the <em>absence</em> of pain. Like putting your hand on a hotplate and having nothing happen, and the nothing tells you something in you has died.</p>
+    <div class="brk">◆</div>
+    <p>It was almost nine when the upstairs light came on.</p>
+    <p>A woman came to the window. Thin. A headscarf. She drew the curtain aside and looked out; not at him — upward, at the sky, at something that wasn't there.</p>
+    <p>Nariman saw her face.</p>
+    <p>And again, nothing.</p>
+    <p>No name came, no smell, no voice. An unknown woman at an unknown window, who had apparently been his wife, and beside whom he had apparently once woken in the mornings.</p>
+    <p>She let the curtain fall. The light went out.</p>
+    <p>And Nariman stayed where he was.</p>
+    <div class="brk">◆</div>
+    <p>On the way back he set it all out in his head; slowly, like a man roping down a load.</p>
+    <p>A woman of twenty-nine had stood at the top of a lane for thirteen years.</p>
+    <p>A woman was dying with a hollow in her.</p>
+    <p>And he, the man standing between the two of them, had nothing. No memory, no tears, not even the right to a share in the mourning.</p>
+    <p>Sogand thought she had come to get her father back. But there was no father to be got back; only a man who happened to have the same body.</p>
+    <p>And that — exactly that — was what decided it.</p>
+    <p>Because a man with nothing to feel can at least still do something. And the thing he could do, out of everyone in the world, only one person could do: stand behind that counter and bring a six-year-old sister down from shelf nine.</p>
+    <p>When he reached Stone Lane it was past one.</p>
+    <p>The shop light was on. Sogand had stayed awake.</p>
+    <p>Nariman stopped for a moment at the top of the lane and looked at that light — the way somebody else had stood and looked at it, every Thursday, for thirteen years.</p>
+    <p>Then he walked down and opened the door.</p>
+  </div>
+</section>
+
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Nineteen</div>
+      <h3>The Night the Vials Broke</h3><div class="orn"></div></div>
+    <p class="lead">Nariman did not call them. Farhoud came on his own; at night, with four men and a small truck.</p>
+    <p>“I asked once. Politely.” Behind him the men were carrying in empty crates. “You didn't answer. I'm patient, not <em>patient</em>. They're different.”</p>
+    <p>“These aren't goods.”</p>
+    <p>“I didn't say goods. I said stock.”</p>
+    <p>Sogand came down the stairs. “Get out.”</p>
+    <p>Farhoud looked at her. “Your daughter?”</p>
+    <p>Nariman said nothing. He could not say it.</p>
+    <p>Then everything happened fast.</p>
+    <p>One of the men dragged the ladder and the ladder struck shelf seven. Three vials fell from the top row.</p>
+    <p>The sound of breaking was so ordinary that for a second nobody was frightened.</p>
+    <p>Then the vapour rose.</p>
+    <p>Pale at first. Then thick. And then the room filled with something that was not air; a weight, a pressure, a soundless sound.</p>
+    <p>The man who had pulled the ladder stood in the middle of the shop and began to cry — loudly, shamelessly, like a child who has been lost. “Mum? Mum?”</p>
+    <p>Another dropped to his knees and put his hands over his face and repeated, “It wasn't me. It wasn't me. It wasn't me.”</p>
+    <p>Farhoud backed away. He had gone white. “What the hell is this?”</p>
+    <p>“This is the thing you wanted to industrialise.” Nariman came forward. “These are dead people, come back. This is the shame and the fear and the love of people who are out there right now living comfortably. One vial broke, Mr. Farhoud. <em>One.</em>”</p>
+    <p>Farhoud looked at his men. Then at the shelves. Thousands.</p>
+    <p>And then he did what Nariman later understood was the single wisest act of that man's life: he turned and left.</p>
+    <p>At the door he stopped. Without turning his head he said:</p>
+    <p>“Nineteen years I've carried it. Now I know why nobody could take it off me.”</p>
+    <p>And he was gone.</p>
+    <p>Sogand took the men by the arm one at a time and pulled them out into the lane, where the air was air.</p>
+    <div class="brk">◆</div>
+    <p>She came back. Nariman was standing in the vapour, breathing — deep, slow, like a man doing work.</p>
+    <p>“What are you doing?”</p>
+    <p>“Collecting them.” His voice had a rasp in it. “If I don't swallow them, they'll be out in the lane by morning.”</p>
+    <p>“These aren't yours.”</p>
+    <p>Nariman looked at her and — for the first time — laughed; a small laugh Sogand had not thought that face could hold.</p>
+    <p>“My girl. Not one of them ever was.”</p>
+    <p>It took three hours.</p>
+    <p>Sogand sat on the stair for all three and watched. She watched a man stand in the middle of a room and swallow a stranger's mother. She watched his shoulders come down. She watched one knee give and his hand go out to the shelf and then watched him straighten and go on.</p>
+    <p>When it was over the sky was going grey. Nariman was holding the counter edge to stay upright. Sogand took his arm and helped him sit, and in that moment saw that this man's hands, the hands of a man of fifty-two, had become an old man's hands in a single night.</p>
+    <p>“How much longer can you do this?”</p>
+    <p>Nariman looked at the ceiling and did not answer.</p>
+    <p>And that was the answer.</p>
+  </div>
+</section>
+
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Twenty</div>
+      <h3>The Price of Return</h3><div class="orn"></div></div>
+    <p class="lead">Three days later they sat on either side of the table in the back room.</p>
+    <p>Fereshteh Azarang's vial stood in the middle, and an empty one beside it.</p>
+    <p>Nariman gave her the rule in full. Without softening. Exactly as Mrs. Firouz had asked: say it, then be quiet.</p>
+    <p>“You want Nazli back for your mother. She weighs twenty years and the six years of a child. The only thing you own that weighs the same—”</p>
+    <p>“I know what it is.”</p>
+    <p>“Say it.”</p>
+    <p>Sogand looked at the empty vial. “You.”</p>
+    <p>“There's one more thing,” he said. “And you need to understand this one properly.”</p>
+    <p>“Go on.”</p>
+    <p>“You've remembered Nazli for twenty years. For twenty years you could have sat down in front of your mother and told her all of it. Why didn't you?”</p>
+    <p>“Because I was afraid.”</p>
+    <p>“No.” Nariman shook his head. “Because it wouldn't have worked. You could have told her a hundred times and your mother would only have heard a story. Like a story about a neighbour's child. She'd have been sad, and she'd have gone on. What comes out in this shop doesn't go back with ordinary talking. Only one thing can put it back: someone who is <em>carrying</em> it sits down and tells it.”</p>
+    <p>Sogand looked at the vial and slowly understood.</p>
+    <p>“So first it has to come into me.”</p>
+    <p>“Yes.”</p>
+    <p>“And then, once I've told my mother—”</p>
+    <p>“It leaves you.” His voice dropped. “That's what carrying means. One person has it. Not two. If you give it to your mother, it becomes hers, and it stops being yours.”</p>
+    <p>The shop went quiet.</p>
+    <p>“So I lose Nazli as well.”</p>
+    <p>“Yes.”</p>
+    <p>“And the twenty years I came to this lane once a week,” he went on, keeping his voice level. “All those nights. The kitchen, at nine years old. Sixteen, when you found me. Your hatred. Your hope. The fact of having a father at all. All of it goes. And the root may take other things neither of us knows about.”</p>
+    <p>“And Nazli?”</p>
+    <p>“Nazli too, the night you give her to your mother.” Nariman put his hands on the table. “Sogand, count it. You're giving both of them. At the end you'll be left with a shop.”</p>
+    <p>Sogand looked at the empty vial for a long time.</p>
+    <p>“And my mother gets what?”</p>
+    <p>“Everything. Four months.”</p>
+    <p>“Then it adds up.”</p>
+    <div class="brk">◆</div>
+    <p>The silence went long. It was raining, as it does throughout this book.</p>
+    <p>“Dad.”</p>
+    <p>Nariman shut his eyes. It was the first time he had heard the word, and the last time he would, and they both knew it.</p>
+    <p>“Do you know why I came for twenty years?” she said. “At first I thought it was so that one day you'd know me. Then I understood it wasn't. I came because I was the only person in the world who remembered Nazli. And I was afraid I'd die and she would end completely.” She picked up the vial. “Now my mother can hold her. Four months. But she'll hold her.”</p>
+    <p>“And you won't remember me.”</p>
+    <p>“You haven't remembered me for twenty years.” She smiled; and for a second the smile looked like Mrs. Morvarid's. “We're only settling up.”</p>
+    <p>Nariman laid his hands flat on the table. They were old. Far older than fifty-two.</p>
+    <p>“This is a very bad transaction, Sogand.”</p>
+    <p>“Every transaction in this shop is bad.” She stood and looked at a thousand vials; a thousand people, a thousand nights somebody has to sleep. “But somebody has to make them.”</p>
+    <p>And then, more quietly:</p>
+    <p>“I want one thing from you.”</p>
+    <p>“Name it.”</p>
+    <p>“Afterwards — tell me something about me. Every day. It doesn't matter whether I believe you.” She shrugged, as though asking for something small. “Just don't let anyone end completely. That's what I learned from thirteen years at the top of a lane.”</p>
+    <p>Nariman looked at her.</p>
+    <p>“I promise.”</p>
+  </div>
+</section>
+
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Twenty-One</div>
+      <h3>The Last Transaction</h3><div class="orn"></div></div>
+    <p class="lead">It was five in the afternoon.</p>
+    <p>Fereshteh Azarang's vial first. Sogand sat, took out the stopper, and a smell rose that filled the whole room: the smell of the first year of school, the smell of a child's wet hair, the smell of a spring afternoon twenty years ago.</p>
+    <p>Nariman reversed the swallowing; a thing he had never done, which Mrs. Firouz had explained to him only once. Instead of listening, <em>speak</em>. Word by word. Nothing left out, nothing softened, no kindness. Say it so completely that the memory changes hands.</p>
+    <p>And he said it.</p>
+    <p>He said Nazli. The sixth birthday and the cake with two colours of ribbon. The voice that couldn't quite manage its S. The ridiculous habit of always putting the left shoe on first. The stupid game she played with her older sister, whose rules nobody else could follow.</p>
+    <p>And then, mercilessly, the day itself: the crossroads, the rain, the sound of the brakes, and then the silence that lasted twenty years.</p>
+    <p>Sogand did not cry. She kept her fists on the table and let it come in.</p>
+    <p>When it was finished the vial was empty and Sogand had Nazli — not only her own share; her mother's too. She was the carrier now, until she could get her to Fereshteh Azarang.</p>
+    <div class="brk">◆</div>
+    <p>Then it was the second one's turn.</p>
+    <p>“Ready?”</p>
+    <p>“No.” She smiled. “Start.”</p>
+    <p>And Nariman did not start.</p>
+    <p>His hand stayed on the empty vial and did not lift it. Sogand waited. A minute passed.</p>
+    <p>“I won't do it.”</p>
+    <p>“What?”</p>
+    <p>“I won't do it.” He pushed the vial aside. “A thousand people have come here in twenty years and not once did I say no. Today I'm saying it.”</p>
+    <p>Sogand stood. “You have no right—”</p>
+    <p>“I know I have no right.” His voice rose; it was the first time Sogand had heard that voice from him. “It's the law of this shop: you make the decision. Mrs. Firouz wrote it and she was right to. But I'm breaking the law, because I know something you don't.”</p>
+    <p>“What?”</p>
+    <p>“I know what the other side of this transaction looks like.” He gestured at the shelves. “Twenty years I've watched people walk out of that door light. Every one of them thinks they're setting down a load. Not one of them understands they're setting down themselves.” He looked at her. “Right now you're the only person in this shop who <em>has</em> anything. I don't. Your mother doesn't. Nazli isn't here at all. Only you.”</p>
+    <p>Silence.</p>
+    <p>“So sit down and let your mother die with the hollow in her. People always die with a hollow in them. It isn't a catastrophe. It's a life.”</p>
+    <div class="brk">◆</div>
+    <p>Sogand stood there a long time.</p>
+    <p>Then she did something he had not expected: she leaned over, picked the empty vial up off the table, and set it back in the middle, exactly where it had been.</p>
+    <p>“I'm going to ask you one question,” she said. “Answer it honestly, and whatever you say, that's what we do.”</p>
+    <p>“Ask.”</p>
+    <p>“If you were me, what would you do?”</p>
+    <p>And Nariman Sadr, a man who for twenty years had stood behind this counter telling people that memory has roots, opened his mouth to say <em>I don't know</em>.</p>
+    <p>And could not.</p>
+    <p>Because he knew the answer. His answer had stood outside this same door on a rainy night twenty years ago, and then had come inside.</p>
+    <p>“I'd do the same thing,” he said.</p>
+    <p>“Then pick it up.”</p>
+    <p>Nariman picked up the vial.</p>
+    <div class="brk">◆</div>
+    <p>And she began to tell it.</p>
+    <p>From nine years old. From a kitchen with no smell of bread. From a man who looked at her like a neighbour's child and was polite, and how the politeness was the worst part. From the paper boat. From the night she stayed at the window until morning. From thirteen, and the photograph on the kitchen table. From sixteen, and the three metres she couldn't cross. From all the Thursdays; the wet ones, the one when she was ill and went anyway, the one when the light was off and she didn't sleep. From the man who said <em>part of you is never here</em>. From deciding to hate him and failing. From the surname that had stayed Sadr, even when she could have changed it.</p>
+    <p>The vapour rose; thick, gold, enough to move their shadows on the wall.</p>
+    <p>It settled in the glass.</p>
+    <p>Nariman did not put in the stopper. He lifted the vial, brought it to his mouth, and — because that was the law, because somebody had to carry it — drank.</p>
+    <div class="brk">◆</div>
+    <p>And in that same second, in that one second, two things happened.</p>
+    <p>Sogand raised her head, looked at the man across the table, and did not know who he was.</p>
+    <p>And Nariman Sadr, for the first time in twenty years, knew his daughter.</p>
+    <p>Not by way of the vial in the cellar; that was still down there, under the white cloth, untouched. He knew her this way: twenty years of the one-sided love of a girl who came once a week and only looked to see whether a light was on, was now inside his chest.</p>
+    <p>He knew how much he had been loved. He knew every single Thursday. He knew that once, at sixteen, she had got within three metres.</p>
+    <p>And the person who had made that love was sitting across the table asking politely:</p>
+    <p>“Sorry — why am I here?”</p>
+    <p>Nariman opened his mouth. No sound came.</p>
+    <p>The second time it came:</p>
+    <p>“You're the new shopkeeper.”</p>
+  </div>
+</section>
+
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Twenty-Two</div>
+      <h3>Four Months</h3><div class="orn"></div></div>
+    <p class="lead">That night Sogand went to her mother's house, because the shop's ledger said she had to.</p>
+    <p>It was her own handwriting. A piece of paper she had found in her jacket pocket, folded, its edges soft:</p>
+    <div class="ledger">Tonight, go to Mum. Everything in your head about Nazli — tell her. All of it. Don't be afraid.<br>— You</div>
+    <p>On the way she tried to work out why she had written it, and why her head was full of memories of a sister she knew — somehow — she had not spoken about to anyone in twenty years. But she was not afraid. When a person writes a letter to themselves, there is a kind of trust in it that needs no explaining.</p>
+    <div class="brk">◆</div>
+    <p>Her mother was on the sofa with a blanket over her knees, the television on with the sound off.</p>
+    <p>“Mum.”</p>
+    <p>“Yes, love.”</p>
+    <p>Sogand sat beside her. She took the photograph out of the drawer and put it on the table. Two girls on the steps of a yard. The older with half a smile. The younger with her left shoe in her hand.</p>
+    <p>“I'm going to tell you something, and I want you to listen to the end.”</p>
+    <p>And she told it.</p>
+    <p>She told her about the sixth birthday. About the cake with two colours of ribbon. About the voice that couldn't quite manage its S. About the left shoe. About the stupid game nobody else could follow.</p>
+    <p>And then, because the note had said all of it, she told her about the crossroads. The rain. The sound of the brakes.</p>
+    <p>Her mother looked bewildered at first; like someone sitting inside a foreign language.</p>
+    <p>Then her hand went onto the photograph.</p>
+    <p>Then something rearranged itself in her face — not all at once; slowly, like water coming under a door.</p>
+    <p>And then Fereshteh Azarang, fifty-four years old, for the first time in twenty years, said her younger daughter's name.</p>
+    <p>And then she broke.</p>
+    <div class="brk">◆</div>
+    <p>It was a long night.</p>
+    <p>Sogand sat with her until morning. Her mother wept and stopped and asked and wept again. Once she got angry and asked why she hadn't been told sooner, and Sogand had no answer. Once she laughed — one of those laughs that come in the middle of crying — because she had remembered that Nazli hated onions and used to fake a theatrical fainting fit over them.</p>
+    <p>Towards dawn she went quiet. The photograph was in her hand.</p>
+    <p>“Four months,” she said.</p>
+    <p>“Four months.”</p>
+    <p>“That's not much.”</p>
+    <p>“No.”</p>
+    <p>Her mother leaned her head on her shoulder.</p>
+    <p>“It's more than nothing.”</p>
+    <div class="brk">◆</div>
+    <p>Fereshteh Azarang died a hundred and nineteen days later; in her own house, in the morning, with her daughter beside her.</p>
+    <p>In those hundred and nineteen days she did the thing that Sogand later understood had been the entire point: she <em>grieved</em>. With her whole body. Shamelessly and completely. She said her child's name out loud. She wept for her. She described her to the relatives. One day she even laughed and said, what a little devil she was.</p>
+    <p>And on the last day, when speaking had become difficult, she took Sogand's hand and said:</p>
+    <p>“I had two.”</p>
+    <p>That was all. Three words.</p>
+    <p>And Sogand pressed her mother's hand and said, <em>I know, Mum</em> — and did not know. She had not known for three months. But she had learned that when somebody is carrying something, you help them without needing to understand it.</p>
+    <div class="brk">◆</div>
+    <p>Sogand came out and stood in the hallway of the house.</p>
+    <p>The photograph was still on the sofa. She picked it up. Two girls on the steps of a yard; the older with half a smile, the younger with a shoe in her hand.</p>
+    <p>She looked at the smaller child.</p>
+    <p>And waited.</p>
+    <p>Nothing came. No name, no voice, not the stupid game whose rules she had still known a few months ago. Only a child in an old photograph, who looked very like her.</p>
+    <p>That night — the hundred and nineteenth, in the kitchen of that house — Sogand had finished speaking and Nazli had gone out of her; exactly as she was meant to, exactly as someone had told her in advance that she would.</p>
+    <p>And her mother, to the last day, had two.</p>
+  </div>
+</section>
+
+<section class="chapter p3">
+  <div class="wrap">
+    <div class="chapter-head"><div class="chapter-num">Chapter Twenty-Three</div>
+      <h3>The Man Who Comes Every Day</h3><div class="orn"></div></div>
+    <p class="lead">The shop opened four months after that afternoon; the week after Fereshteh Azarang was buried.</p>
+    <p>For those four months the shutter stayed down, and every morning a young woman turned the key, dusted the vials, and then went to a house on Eleventh Street to sit beside her mother. The shop waited. Shops know how to wait.</p>
+    <p>Behind the counter now sits a woman of twenty-nine, in an oversized army jacket, her hair pulled back hard. She has the three rules by heart. She has learned the wooden ladder. At night she dreams of strangers, and in the mornings she opens the window and says, “This is not mine.”</p>
+    <p>Mrs. Morvarid comes twice a week, brings pastries, says she has decided this time, and does not. Without knowing why, Sogand sets the tea glass down with the handle towards the old woman's right hand.</p>
+    <p>Mr. Shokouhi comes sometimes, polite, with a broken umbrella, and asks whether they have met before. Sogand says yes, Mr. Kamran Shokouhi, you're an old customer of this shop. And he is pleased that somebody knows his name.</p>
+    <div class="brk">◆</div>
+    <p>In her second week, Sogand found the hatch under the rug.</p>
+    <p>She went down. Drew aside the white cloth. Read the labels. Five names.</p>
+    <p>Her finger stopped on the last one.</p>
+    <p><em>Nariman Sadr.</em></p>
+    <p>Her own surname. She paused and waited to see whether anything would come — the way a person presses an old scar to check whether it still hurts.</p>
+    <p>Nothing came.</p>
+    <p>She shrugged. There are a thousand Sadrs in this city.</p>
+    <p>She put the cloth back and went up.</p>
+    <div class="brk">◆</div>
+    <p>And every day, at five in the afternoon, a man comes.</p>
+    <p>He is old. His hair is grey; the colour of a thing that has burned. He buys two teas at the top of the lane, sets one on the counter and says, here you are.</p>
+    <p>At first Sogand thought he was a customer. Then she thought he was a vagrant. Now she does not think anything; she just takes the tea.</p>
+    <p>The man sits on the stool and starts to talk. Always about one person.</p>
+    <p>“I had a daughter,” he says. “Two, I think. One of them had something to do with a shoe — no. That one's gone. I don't have that one any more.” He laughs; a laugh with nothing under it. “Sorry. I lost one of them and I don't know which.”</p>
+    <p>“It's all right.”</p>
+    <p>“Her name was Sogand. Once, when she was nine, she came into the kitchen in the morning and I—” He always stops here. “I didn't know her.”</p>
+    <p>“Why not?”</p>
+    <p>“Because I was a fool. Because I thought you could take the pain out of a person and leave the person where they were.”</p>
+    <p>Sogand drinks her tea.</p>
+    <p>“She used to come to this lane once a week,” the man says, looking at the door. “Thirteen years. She only looked to see whether the light was on. She never knocked.”</p>
+    <p>“Why not?”</p>
+    <p>“Because she was afraid.”</p>
+    <p>“Of what?”</p>
+    <p>The man lifts his head and looks at the young woman behind the counter — at his daughter, who does not know she is his daughter — and smiles; a smile whose meaning nobody in this city can read any more.</p>
+    <p>“That she'd knock and I'd say: <em>can I help you?</em>”</p>
+    <p>Silence.</p>
+    <p>“You come here every day and talk about her,” Sogand says. “Why?”</p>
+    <p>“Because I'm the only person left in the world who remembers her.” He picks up his tea. “And I'm afraid I'll die and she'll end completely.”</p>
+    <p>Sogand looks at him a while. Something shifts in her chest that she has no name for, and will have no name for tomorrow, or the day after; but every day at five it shifts again.</p>
+    <p>“What was her name?” she asks. “You said it, but I wasn't listening.”</p>
+    <p>And the man, as though he has been asked something enormous, sits up straight and says it carefully, the way you set down a valuable thing on a table:</p>
+    <p>“Sogand.”</p>
+    <p>“That's a lovely name.”</p>
+    <p>“Yes.” He nods. “Yes, it is.”</p>
+    <div class="brk">◆</div>
+    <p>Outside, the rain starts. Which means tomorrow will be busy.</p>
+    <p>The man stands, puts the empty glass on the counter, and goes to the door.</p>
+    <p>“Will you come tomorrow?”</p>
+    <p>And the man, opening his umbrella, without turning round, says:</p>
+    <p>“Every day.”</p>
+  </div>
+</section>
+
+<section class="chapter p1" style="padding:4rem 0 4.5rem;background:var(--paper-deep)">
+  <div class="wrap" style="text-align:center">
+    <div class="orn" style="margin-bottom:2rem"></div>
+    <p style="font-family:'Inter',sans-serif;font-size:.9rem;line-height:2.1;color:var(--ink-soft)">
+      <strong style="color:var(--ink)">The Man Who Forgot His Daughter</strong><br>
+      by Mohammadparham Palangsangdovini<br><br>
+      All rights reserved by the author.
+    </p>
+  </div>
+</section>
+
+<section class="end">
+  <h4>The End</h4>
+  <p>THE FORGETTING HOUSE</p>
+</section>
+
+</body>
+</html>
