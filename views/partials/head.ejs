@@ -15,6 +15,7 @@
 <link rel="preload" href="/fonts/Vazirmatn-Bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/style.css?v=<%= assetVersion.css %>">
 <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="مقالات فولاد ایمان" href="/rss.xml">
 <link rel="apple-touch-icon" href="/img/favicon.svg">
 
 <!-- اشتراک‌گذاری در شبکه‌های اجتماعی و پیام‌رسان‌ها -->
@@ -35,7 +36,31 @@
      اجرا می‌شود تا اگر اسکریپت لود نشد، محتوا همچنان دیده شود -->
 <script nonce="<%= nonce %>">document.documentElement.className += ' js';</script>
 
+<%# تأیید مالکیت سایت در گوگل سرچ کنسول. تا وقتی مالک کد را در تنظیمات
+    نگذاشته، هیچ تگی چاپ نمی‌شود. %>
+<% const gsv = setting('google_site_verification', ''); if (gsv) { %>
+<meta name="google-site-verification" content="<%= gsv %>">
+<% } %>
+
+<%# گوگل آنالیتیکس — فقط اگر مالک شناسه‌ی GA4 را وارد کرده باشد.
+    عمداً پیش‌فرض خاموش است: اسکریپتش سنگین است، داشبوردش از ایران باز
+    نمی‌شود، و آمار محلی سایت (پنل ← آمار بازدید) کار خودش را می‌کند.
+    `nonce` لازم است چون CSP سایت اسکریپت بدون nonce را اجرا نمی‌کند. %>
+<% const ga4 = setting('ga4_id', ''); if (/^G-[A-Za-z0-9_-]+$/.test(ga4)) { %>
+<script async src="https://www.googletagmanager.com/gtag/js?id=<%= encodeURIComponent(ga4) %>" nonce="<%= nonce %>"></script>
+<script nonce="<%= nonce %>">
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '<%= ga4 %>', { anonymize_ip: true });
+</script>
+<% } %>
+
 <!-- کلمات کلیدی محلی برای موتورهای جست‌وجو -->
 <meta name="geo.region" content="IR-37">
 <meta name="geo.placename" content="علی‌آباد کتول، گرگان">
-<meta name="robots" content="index, follow, max-image-preview:large">
+<%# صفحه‌هایی مثل نتیجه‌ی جست‌وجو یا فیلتر موجودی، نسخه‌های تکراری و کم‌ارزش
+    از همان محتوا هستند. اگر گوگل ایندکسشان کند، اعتبار سایت بین ده‌ها آدرس
+    مشابه پخش می‌شود و صفحه‌ی اصلیِ دسته پایین‌تر می‌آید. `noindex, follow`
+    یعنی «این صفحه را ایندکس نکن، ولی لینک‌هایش را دنبال کن». %>
+<meta name="robots" content="<%= typeof robotsMeta !== 'undefined' && robotsMeta ? robotsMeta : 'index, follow, max-image-preview:large' %>">

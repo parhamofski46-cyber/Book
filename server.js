@@ -20,6 +20,7 @@ const { seedAll } = require('./src/db/seed');
 const helpers = require('./src/utils/view-helpers');
 const { icon, categoryIcon, categoryArtUrl, categoryPhoto } = require('./src/utils/icons');
 const { UPLOAD_DIR, UPLOAD_WARNING } = require('./src/services/images');
+const { trackPageView } = require('./src/middleware/stats');
 
 // ---------------------------------------------------------------- راه‌اندازی
 const app = express();
@@ -64,6 +65,23 @@ app.set('trust proxy', 1);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+/**
+ * آیا گوگل آنالیتیکس روشن است؟
+ *
+ * مقدار از دیتابیس می‌آید و مالک می‌تواند هر لحظه از پنل عوضش کند، ولی
+ * CSP روی هر درخواست ساخته می‌شود — پس نمی‌شود هر بار به دیتابیس زد.
+ * چند ثانیه کش می‌کنیم: هم هزینه‌ی خواندن حذف می‌شود، هم تغییرِ تنظیم
+ * خیلی زود اثر می‌کند.
+ */
+let ga4Cache = { at: 0, on: false };
+function ga4Enabled() {
+  const now = Date.now();
+  if (now - ga4Cache.at > 10000) {
+    ga4Cache = { at: now, on: /^G-[A-Za-z0-9_-]+$/.test(getSetting('ga4_id', '')) };
+  }
+  return ga4Cache.on;
+}
+
 app.use(compression());
 
 // امنیت هدرها + CSP با nonce (بدون نیاز به unsafe-inline برای اسکریپت‌ها)
@@ -78,11 +96,27 @@ app.use(
       directives: {
         defaultSrc: ["'self'"],
         baseUri: ["'self'"],
-        scriptSrc: ["'self'", (req, res) => `'nonce-${res.locals.nonce}'`],
+        // دامنه‌های گوگل آنالیتیکس فقط وقتی مجاز می‌شوند که مالک شناسه‌ی
+        // GA4 را در تنظیمات گذاشته باشد. تا آن موقع CSP دقیقاً به همان
+        // سخت‌گیری قبل می‌ماند — برای قابلیتی که استفاده نمی‌شود، در
+        // امنیت باز نمی‌کنیم.
+        scriptSrc: [
+          "'self'",
+          (req, res) => `'nonce-${res.locals.nonce}'`,
+          () => (ga4Enabled() ? 'https://www.googletagmanager.com' : "'self'"),
+        ],
+        connectSrc: [
+          "'self'",
+          () => (ga4Enabled() ? 'https://www.google-analytics.com' : "'self'"),
+          () => (ga4Enabled() ? 'https://region1.google-analytics.com' : "'self'"),
+        ],
+        imgSrc: [
+          "'self'",
+          'data:',
+          () => (ga4Enabled() ? 'https://www.google-analytics.com' : "'self'"),
+        ],
         styleSrc: ["'self'", "'unsafe-inline'"], // برای استایل‌های کوچک درون‌خطی مثل نسبت ابعاد عکس
-        imgSrc: ["'self'", 'data:'],
         fontSrc: ["'self'", 'data:'],
-        connectSrc: ["'self'"],
         // اجازه‌ی جاسازی نقشه‌ی نشان/گوگل در بخش «منطقه‌ی خدمات»
         frameSrc: ["'self'", 'https://maps.google.com', 'https://www.google.com', 'https://neshan.org', 'https://www.neshan.org'],
         formAction: ["'self'"],
@@ -157,6 +191,10 @@ app.use((req, res, next) => {
   res.locals.categoryArtUrl = categoryArtUrl;
   res.locals.categoryPhoto = categoryPhoto;
   res.locals.setting = getSetting;
+  // محتوای سؤال‌های متداول — هم صفحه‌ی /faq و هم «تماس با ما» از آن می‌خوانند
+  res.locals.faqContent = require('./src/content/faq');
+  // شهرهای منطقه‌ی خدمات — فوتر همه‌ی صفحه‌ها به صفحه‌ی هرکدام لینک می‌دهد
+  res.locals.serviceCities = require('./src/content/cities').cities;
   // خلاصه‌ی امتیاز مشتریان — در داده‌ی ساختاریافته‌ی همه‌ی صفحات استفاده می‌شود
   res.locals.reviewSummary = queries.testimonialSummary();
   res.locals.assetVersion = ASSET_VERSION;
@@ -165,7 +203,15 @@ app.use((req, res, next) => {
   res.locals.storageWarning = STORAGE_WARNING;
   res.locals.uploadWarning = UPLOAD_WARNING;
   res.locals.currentPath = req.path;
-  res.locals.canonical = site.url + req.originalUrl.split('?')[0];
+  /* آدرس canonical.
+     شماره‌ی صفحه عمداً نگه داشته می‌شود: اگر صفحه‌ی ۲ گالری به صفحه‌ی ۱
+     canonical بخورد، گوگل محصولاتی را که فقط در صفحه‌ی ۲ دیده می‌شوند
+     ایندکس نمی‌کند — با ۴۹۴ مدل فرفورژه یعنی صدها محصول از نتایج بیرون
+     می‌مانند. بقیه‌ی پارامترها (جست‌وجو، فیلتر) حذف می‌شوند چون محتوای
+     تازه‌ای نمی‌سازند. */
+  const pageNo = parseInt(req.query.page, 10);
+  res.locals.canonical =
+    site.url + req.path + (pageNo > 1 ? '?page=' + pageNo : '');
   next();
 });
 
@@ -199,6 +245,10 @@ app.get('/healthz', (req, res) => {
     res.status(500).json({ ok: false, error: err.message });
   }
 });
+
+// شمارش بازدید صفحه‌ها. بعد از فایل‌های ثابت و قبل از مسیرها می‌نشیند تا
+// نه عکس و CSS شمرده شود و نه چیزی از صفحه‌های واقعی از قلم بیفتد.
+app.use(trackPageView);
 
 // ---------------------------------------------------------------- مسیرها
 app.use('/admin', require('./src/routes/admin'));

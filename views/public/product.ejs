@@ -12,11 +12,15 @@ const productSchema = {
   description: (product.summary || product.description || product.name).slice(0, 300),
   category: product.category_name,
   brand: { '@type': 'Brand', name: site.name },
+  // شناسه‌ی یکتای کالا. گوگل برای تشخیص اینکه دو صفحه از یک کالا حرف
+  // می‌زنند یا دو کالای متفاوت، به همین تکیه می‌کند.
+  sku: 'FI-' + product.id,
   image: [site.url + mainImg.src],
   offers: {
     '@type': 'Offer',
     url: canonical,
     priceCurrency: 'IRR',
+    itemCondition: 'https://schema.org/NewCondition',
     availability: product.in_stock
       ? 'https://schema.org/InStock'
       : 'https://schema.org/OutOfStock',

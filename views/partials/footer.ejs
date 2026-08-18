@@ -29,6 +29,7 @@
           <li><a href="/calculator">محاسبه‌گر وزن آهن</a></li>
           <li><a href="/blog">مقالات و راهنمای خرید</a></li>
           <li><a href="/about">درباره‌ی ما و تضمین‌ها</a></li>
+          <li><a href="/faq">سؤال‌های متداول</a></li>
           <li><a href="/reviews">نظر مشتریان</a></li>
           <li><a href="/contact">تماس و استعلام قیمت</a></li>
         </ul>
@@ -41,6 +42,14 @@
         <p style="font-size:.85rem;color:var(--ink-faint)">
           خدمات‌رسانی در: <%= site.areaServed.join('، ') %>
         </p>
+        <%# لینک به صفحه‌ی اختصاصی هر شهر. لینک داخلی از فوتر یعنی این
+            صفحه‌ها از هر جای سایت یک کلیک فاصله دارند و گوگل هم راحت
+            پیدایشان می‌کند. %>
+        <ul class="footer-links footer-cities">
+          <% serviceCities.forEach(function (c) { %>
+            <li><a href="<%= encodeURI(c.url) %>">آهن‌فروشی <%= c.name %></a></li>
+          <% }); %>
+        </ul>
       </div>
     </div>
 

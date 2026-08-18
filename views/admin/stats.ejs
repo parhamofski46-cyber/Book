@@ -1,0 +1,206 @@
+<%- include('_layout-top') %>
+
+<%
+  /* ── پرکردن روزهای خالی ─────────────────────────────────────────────
+     در دیتابیس فقط روزهایی سطر دارند که بازدید داشته‌اند. اگر همان‌ها را
+     مستقیم بکشیم، نمودار روزهای بی‌بازدید را حذف می‌کند و شیبش دروغ
+     می‌شود. اینجا ۳۰ خانه‌ی پیوسته می‌سازیم و هر روزِ بدون داده صفر
+     می‌گیرد. */
+  const byDay = Object.create(null);
+  data.series.forEach(function (r) { byDay[r.day] = r; });
+
+  const days = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = d.toLocaleDateString('en-CA', { timeZone: 'Asia/Tehran' });
+    const row = byDay[key] || { views: 0, visitors: 0 };
+    days.push({
+      views: row.views,
+      visitors: row.visitors,
+      label: d.toLocaleDateString('fa-IR', { timeZone: 'Asia/Tehran', month: 'long', day: 'numeric' }),
+    });
+  }
+
+  const maxViews = Math.max.apply(null, days.map(function (d) { return d.views; }).concat([1]));
+
+  /* نمودار میله‌ای با SVG خالص — بدون هیچ کتابخانه‌ی نموداری.
+     دلیلش فقط حجم نیست: CSP سایت اسکریپت بیرونی را بلاک می‌کند و
+     کتابخانه‌های نمودار معمولاً به eval یا استایل درون‌خطی نیاز دارند. */
+  const CW = 720, CH = 200, PAD_B = 28, PAD_T = 12;
+  const slot = CW / days.length;
+  const barW = Math.max(4, slot - 5);
+  const plotH = CH - PAD_T - PAD_B;
+
+  const dev = data.devices;
+  const devTotal = (dev.mobile || 0) + (dev.desktop || 0);
+  const mobilePct = devTotal ? Math.round((dev.mobile / devTotal) * 100) : 0;
+
+  /* آدرس صفحه → نام قابل‌فهم. مالک نباید مجبور باشد اسلاگ فارسیِ
+     کدگذاری‌شده را رمزگشایی کند. */
+  function pageLabel(p) {
+    let s;
+    try { s = decodeURIComponent(p); } catch (e) { s = p; }
+    const fixed = {
+      '/': 'صفحه‌ی اصلی', '/products': 'همه‌ی محصولات', '/forge': 'گالری فرفورژه',
+      '/blog': 'فهرست مقالات', '/about': 'درباره‌ی ما', '/contact': 'تماس با ما',
+      '/reviews': 'نظر مشتریان', '/calculator': 'محاسبه‌گر وزن', '/faq': 'سؤال‌های متداول',
+    };
+    if (fixed[s]) return fixed[s];
+    if (s.indexOf('/category/') === 0) return 'دسته: ' + s.slice(10);
+    if (s.indexOf('/product/') === 0) return 'محصول: ' + s.slice(9);
+    if (s.indexOf('/blog/') === 0) return 'مقاله: ' + s.slice(6);
+    if (s.indexOf('/shahr/') === 0) return 'صفحه‌ی شهر: ' + s.slice(7);
+    return s;
+  }
+%>
+
+<div class="page-head">
+  <div>
+    <h1>آمار بازدید سایت</h1>
+    <p class="hint">
+      این آمار روی سرور خودتان جمع می‌شود — بدون گوگل، بدون فیلترشکن، و بدون
+      ذخیره‌ی هیچ اطلاعات شخصی از بازدیدکننده‌ها.
+    </p>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><b><%= h.toFaDigits(data.today.views) %></b><span>بازدید امروز</span></div>
+  <div class="stat"><b><%= h.toFaDigits(data.today.visitors) %></b><span>بازدیدکننده‌ی امروز</span></div>
+  <div class="stat"><b><%= h.toFaDigits(data.yesterday.views) %></b><span>بازدید دیروز</span></div>
+  <div class="stat"><b><%= h.toFaDigits(data.week.views) %></b><span>۷ روز اخیر</span></div>
+  <div class="stat"><b><%= h.toFaDigits(data.month.views) %></b><span>۳۰ روز اخیر</span></div>
+</div>
+
+<% if (data.total.views === 0) { %>
+  <div class="alert alert-info">
+    هنوز بازدیدی ثبت نشده است — شمارش از همین حالا شروع شده. چند ساعت بعد از
+    اینکه سایت در دسترس مردم قرار گرفت، اینجا عدد می‌بینید.
+    <br>
+    بازدید خودتان از پنل مدیریت شمرده نمی‌شود، و ربات‌های موتور جست‌وجو هم کنار
+    گذاشته می‌شوند تا عدد، مشتری واقعی را نشان بدهد.
+  </div>
+<% } %>
+
+<div class="panel">
+  <h2>نمودار ۳۰ روز اخیر</h2>
+  <div class="chart-scroll">
+    <svg class="bar-chart" viewBox="0 0 <%= CW %> <%= CH %>" role="img"
+         aria-label="نمودار بازدید روزانه‌ی سی روز اخیر">
+      <%# خطوط راهنمای افقی %>
+      <% [0, 0.25, 0.5, 0.75, 1].forEach(function (f) {
+           const y = PAD_T + plotH * (1 - f); %>
+        <line x1="0" y1="<%= y.toFixed(1) %>" x2="<%= CW %>" y2="<%= y.toFixed(1) %>"
+              stroke="#e6ddd2" stroke-width="1"/>
+        <%# عدد محور عمودی: صفحه راست‌به‌چپ است و SVG همان جهت را به ارث
+            می‌برد، پس بدون class="num" عدد از x=۴ به سمت چپ کشیده و از
+            لبه‌ی نمودار بریده می‌شود. %>
+        <text class="num" x="4" y="<%= (y - 3).toFixed(1) %>" font-size="10" fill="#9a8b7c"><%= h.toFaDigits(Math.round(maxViews * f)) %></text>
+      <% }); %>
+
+      <% days.forEach(function (d, i) {
+           const hh = d.views ? Math.max(2, (d.views / maxViews) * plotH) : 0;
+           const x = i * slot + (slot - barW) / 2; %>
+        <rect x="<%= x.toFixed(1) %>" y="<%= (PAD_T + plotH - hh).toFixed(1) %>"
+              width="<%= barW.toFixed(1) %>" height="<%= hh.toFixed(1) %>"
+              rx="2" fill="<%= i === days.length - 1 ? '#c0763c' : '#a8552a' %>">
+          <title><%= d.label %> — <%= h.toFaDigits(d.views) %> بازدید، <%= h.toFaDigits(d.visitors) %> بازدیدکننده</title>
+        </rect>
+      <% }); %>
+
+      <%# فقط چند برچسب تاریخ، وگرنه روی هم می‌افتند %>
+      <% days.forEach(function (d, i) {
+           if (i % 6 !== 0 && i !== days.length - 1) return; %>
+        <text x="<%= (i * slot + slot / 2).toFixed(1) %>" y="<%= CH - 8 %>"
+              font-size="10" fill="#7d6f62" text-anchor="middle"><%= d.label %></text>
+      <% }); %>
+    </svg>
+  </div>
+  <p class="hint">برای دیدن عدد دقیق هر روز، نشانگر را روی میله نگه دارید.</p>
+</div>
+
+<div class="panel">
+  <h2>پربازدیدترین صفحه‌ها (۳۰ روز اخیر)</h2>
+  <% if (!data.topPages.length) { %>
+    <p class="hint">هنوز داده‌ای نیست.</p>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>صفحه</th><th>بازدید</th></tr></thead>
+        <tbody>
+          <% data.topPages.forEach(function (p) { %>
+            <tr>
+              <td><a href="<%= p.path %>" target="_blank" rel="noopener"><%= pageLabel(p.path) %></a></td>
+              <td><%= h.toFaDigits(p.views) %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">
+      این فهرست می‌گوید مشتری‌ها دنبال چه هستند. اگر یک دسته بالای جدول است،
+      ارزشش را دارد که عکس و توضیح محصولاتش را کامل‌تر کنید.
+    </p>
+  <% } %>
+</div>
+
+<div class="panel">
+  <h2>مشتری‌ها از کجا می‌آیند؟</h2>
+  <% if (!data.topReferrers.length) { %>
+    <p class="hint">هنوز داده‌ای نیست.</p>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>منبع</th><th>بازدید</th></tr></thead>
+        <tbody>
+          <% data.topReferrers.forEach(function (r) { %>
+            <tr><td dir="auto"><%= r.host %></td><td><%= h.toFaDigits(r.views) %></td></tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">
+      «مستقیم» یعنی آدرس را تایپ کرده‌اند یا از واتساپ و پیام‌رسان آمده‌اند.
+      هرچه <span dir="ltr">google.com</span> در این جدول بالاتر برود، یعنی کار
+      سئو بیشتر جواب داده است.
+    </p>
+  <% } %>
+</div>
+
+<div class="panel">
+  <h2>موبایل یا کامپیوتر؟</h2>
+  <% if (!devTotal) { %>
+    <p class="hint">هنوز داده‌ای نیست.</p>
+  <% } else { %>
+    <div class="split-bar"><span class="split-mobile" style="width:<%= mobilePct %>%"></span></div>
+    <p>
+      <b><%= h.toFaDigits(mobilePct) %>٪</b> با گوشی
+      (<%= h.toFaDigits(dev.mobile) %> بازدید) و
+      <b><%= h.toFaDigits(100 - mobilePct) %>٪</b> با کامپیوتر
+      (<%= h.toFaDigits(dev.desktop) %> بازدید).
+    </p>
+  <% } %>
+</div>
+
+<div class="panel">
+  <h2>گوگل آنالیتیکس</h2>
+  <% if (ga4) { %>
+    <p>
+      فعال است با شناسه‌ی <code dir="ltr"><%= ga4 %></code>. گزارش کامل در
+      <span dir="ltr">analytics.google.com</span> در دسترس است.
+    </p>
+  <% } else { %>
+    <p>
+      فعال نیست. اگر شناسه‌ی <span dir="ltr">GA4</span> دارید، در
+      <a href="/admin/settings">تنظیمات</a> واردش کنید تا کنار همین آمار،
+      گزارش‌های گوگل را هم داشته باشید.
+    </p>
+  <% } %>
+  <p class="hint">
+    ⚠️ داشبورد گوگل آنالیتیکس از داخل ایران باز نمی‌شود و برای دیدنش به
+    فیلترشکن نیاز دارید. آماری که در همین صفحه می‌بینید همیشه در دسترس است.
+  </p>
+</div>
+
+<%- include('_layout-bottom') %>

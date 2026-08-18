@@ -218,6 +218,38 @@ db.exec(`
     count        INTEGER NOT NULL DEFAULT 0,
     window_start INTEGER NOT NULL
   );
+
+  -- ─────────────────────────── آمار بازدید (میزبانی روی خود سرور)
+  -- فقط عددهای جمع‌شده نگه داشته می‌شوند، نه گزارش تک‌تک بازدیدها:
+  -- نه آی‌پی ذخیره می‌شود، نه چیزی که بشود با آن یک نفر را دنبال کرد.
+  -- سبک هم هست؛ حتی با میلیون‌ها بازدید، جدول‌ها چند هزار سطر می‌مانند.
+  CREATE TABLE IF NOT EXISTS stats_daily (
+    day      TEXT PRIMARY KEY,          -- YYYY-MM-DD به وقت تهران
+    views    INTEGER NOT NULL DEFAULT 0,
+    visitors INTEGER NOT NULL DEFAULT 0,
+    mobile   INTEGER NOT NULL DEFAULT 0,
+    desktop  INTEGER NOT NULL DEFAULT 0
+  );
+  CREATE TABLE IF NOT EXISTS stats_pages (
+    day   TEXT NOT NULL,
+    path  TEXT NOT NULL,
+    views INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (day, path)
+  );
+  CREATE TABLE IF NOT EXISTS stats_referrers (
+    day   TEXT NOT NULL,
+    host  TEXT NOT NULL,               -- 'مستقیم' یا دامنه‌ی ارجاع‌دهنده
+    views INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (day, host)
+  );
+  -- برای شمردن «بازدیدکننده‌ی یکتا» در یک روز. token یک هش یک‌طرفه است که
+  -- تاریخ همان روز هم در آن اثر دارد، پس حتی همین هش هم از روزی به روز
+  -- دیگر قابل ردیابی نیست. سطرهای قدیمی خودکار پاک می‌شوند.
+  CREATE TABLE IF NOT EXISTS stats_visitors (
+    day   TEXT NOT NULL,
+    token TEXT NOT NULL,
+    PRIMARY KEY (day, token)
+  );
 `);
 
 /** خواندن یک تنظیم با مقدار پیش‌فرض */

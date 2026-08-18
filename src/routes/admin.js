@@ -9,6 +9,7 @@ const q = require('../db/queries');
 const { requireLogin, csrf, loginLimiter } = require('../middleware/auth');
 const { processUpload, deleteImageFiles } = require('../services/images');
 const captcha = require('../services/captcha');
+const stats = require('../services/stats');
 const { slugify, uniqueSlug } = require('../utils/slug');
 
 const router = express.Router();
@@ -123,6 +124,28 @@ router.get('/', csrf, (req, res) => {
     title: 'پنل مدیریت',
     stats: q.adminStats(),
     recent: q.listProducts({ includeInactive: true, limit: 6 }),
+  });
+});
+
+// ============================================================ آمار بازدید
+
+router.get('/stats', csrf, (req, res) => {
+  // بافر در حافظه را قبل از خواندن خالی می‌کنیم، وگرنه بازدیدهای همین چند
+  // ثانیه‌ی اخیر هنوز در دیتابیس نیستند و مالک فکر می‌کند آمار کار نمی‌کند.
+  stats.flush();
+
+  const range = {
+    today: stats.today(),
+    yesterday: stats.daysAgo(1),
+    from7: stats.daysAgo(6), // شش روز قبل + امروز = هفت روز
+    from30: stats.daysAgo(29),
+  };
+
+  res.render('admin/stats', {
+    title: 'آمار بازدید سایت',
+    range,
+    data: q.visitStats(range),
+    ga4: getSetting('ga4_id', ''),
   });
 });
 
@@ -494,6 +517,9 @@ const SETTING_KEYS = [
   'owner_title',
   'owner_quote',
   'owner_text',
+  // ابزارهای موتور جست‌وجو و آمار
+  'ga4_id',
+  'google_site_verification',
 ];
 
 router.get('/settings', csrf, (req, res) => {

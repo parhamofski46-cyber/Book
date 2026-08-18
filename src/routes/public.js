@@ -5,7 +5,10 @@ const { site, mapEmbedFrom, mapDirectionsUrl, mapPlaceUrl } = require('../config
 const { getSetting } = require('../db');
 const q = require('../db/queries');
 const { truncate, categoryCover } = require('../utils/view-helpers');
+const h = require('../utils/view-helpers');
 const articles = require('../content/articles');
+const faq = require('../content/faq');
+const cities = require('../content/cities');
 
 const router = express.Router();
 
@@ -153,6 +156,9 @@ function renderProductList(req, res, category) {
 
   res.render('public/products', {
     title,
+    // نتیجه‌ی جست‌وجو و فیلتر موجودی ایندکس نمی‌شوند (بالای head.ejs توضیح
+    // داده شده). خودِ دسته و صفحه‌های بعدی‌اش ایندکس می‌شوند.
+    robotsMeta: search || onlyInStock || req.query.sub ? 'noindex, follow' : null,
     metaDescription: category
       ? truncate(
           `خرید ${category.name} در ${cityLine}. ${category.description} ` +
@@ -198,6 +204,78 @@ router.get('/products', (req, res) => {
   }
   const category = req.query.cat ? q.getCategoryBySlug(req.query.cat) : null;
   renderProductList(req, res, category);
+});
+
+// ------------------------------------------------------------ صفحه‌های شهری
+/**
+ * صفحه‌ی اختصاصی هر شهرِ منطقه‌ی خدمات.
+ *
+ * هدف: عبارت‌هایی مثل «آهن فروشی گرگان» یا «ورق گالوانیزه رامیان». آدرس
+ * صفحه هم عمداً همان عبارت است (`/آهن-فروشی-گرگان`).
+ *
+ * ⚠️ این صفحه‌ها فقط وقتی ارزش دارند که متنشان واقعاً متفاوت باشد؛ اگر
+ * روزی خواستی شهر جدیدی اضافه کنی، در `src/content/cities.js` برایش متن
+ * اختصاصی بنویس — کپی کردن متن شهر دیگر، از نظر گوگل صفحه‌ی دروازه‌ای است
+ * و به کل سایت ضرر می‌زند.
+ */
+router.get('/:slug', (req, res, next) => {
+  const city = cities.bySlug(req.params.slug);
+  if (!city) return next();
+
+  cachePublic(res, 3600);
+
+  const all = q.listCategories();
+  // دسته‌های پرتقاضای همان شهر، به همان ترتیبی که در محتوا آمده
+  const popular = city.popular
+    .map((name) => all.find((c) => c.name.indexOf(name) === 0 || name.indexOf(c.name) === 0))
+    .filter(Boolean);
+
+  const serviceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    serviceType: 'فروش آهن‌آلات، ورق گالوانیزه و گل و طرح فرفورژه',
+    provider: { '@type': 'LocalBusiness', name: site.name, telephone: '+' + site.phoneIntl, url: site.url },
+    areaServed: { '@type': 'City', name: city.name, containedInPlace: { '@type': 'State', name: 'استان گلستان' } },
+    url: site.url + encodeURI(city.url),
+  };
+
+  res.render('public/city', {
+    title: `آهن‌فروشی ${city.name} | خرید قوطی، ورق گالوانیزه و فرفورژه — ${site.shortName}`,
+    metaDescription: truncate(
+      `خرید آهن‌آلات در ${city.name}: قوطی و پروفیل، نبشی، رابیتس، فنس و ایزوگام، ` +
+        `ورق گالوانیزه‌ی تولید خودمان و بیش از ۶۰۰ مدل گل و طرح فرفورژه. ` +
+        `${city.home ? 'انبار ما در همین شهر است.' : `ارسال به ${city.name} با قیمت روز.`} ` +
+        `استعلام قیمت در واتساپ: ${site.phone}`
+    ),
+    city,
+    popular,
+    others: cities.cities.filter((c) => c.slug !== city.slug),
+    serviceSchema,
+  });
+});
+
+// --------------------------------------------------------- سؤال‌های متداول
+/**
+ * صفحه‌ی مستقل سؤال‌های متداول.
+ *
+ * چرا صفحه‌ی جدا و نه فقط یک بخش در «تماس با ما»: هر پرسش یک جست‌وجوی
+ * واقعی مردم است («ورق گالوانیزه چند میل است؟»، «فرفورژه نصب هم می‌کنید؟»).
+ * وقتی همه در یک صفحه‌ی موضوعی جمع باشند، گوگل آن صفحه را برای همان
+ * پرسش‌ها بالا می‌آورد و با داده‌ی ساختاریافته‌ی FAQPage می‌تواند پاسخ را
+ * مستقیم زیر نتیجه نشان بدهد.
+ */
+router.get('/faq', (req, res) => {
+  cachePublic(res, 3600);
+  res.render('public/faq', {
+    title: `سؤال‌های متداول | ${site.shortName} — آهن‌آلات و ورق گالوانیزه گرگان و علی‌آباد کتول`,
+    metaDescription: truncate(
+      'پاسخ سؤال‌های پرتکرار درباره‌ی خرید آهن‌آلات در گرگان و علی‌آباد کتول: ' +
+        'استعلام قیمت، هزینه و زمان ارسال، ضخامت و طرح ورق گالوانیزه، ' +
+        'گل و طرح‌های فرفورژه، و آدرس و ساعات کاری فولاد ایمان.'
+    ),
+    GROUPS: faq.GROUPS,
+    faqSchema: faq.faqSchema(faq.allItems()),
+  });
 });
 
 // ------------------------------------------------- بخش ویژه‌ی گل‌های فرفورژه
@@ -383,6 +461,51 @@ router.get('/contact', (req, res) => {
   });
 });
 
+// --------------------------------------------------------------- خوراک RSS
+/**
+ * خوراک RSS مقاله‌ها.
+ *
+ * دو فایده دارد: خزنده‌ها مقاله‌ی تازه را زودتر پیدا می‌کنند، و سایت‌های
+ * تجمیع‌کننده و خبرخوان‌ها می‌توانند مقاله‌ها را بازنشر کنند — که یعنی
+ * لینک ورودی، و لینک ورودی همچنان مهم‌ترین عامل رتبه در گوگل است.
+ */
+router.get('/rss.xml', (req, res) => {
+  cachePublic(res, 3600);
+
+  const esc = (t) =>
+    String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  const items = articles
+    .listArticles()
+    .map((a) => {
+      const url = `${site.url}/blog/${encodeURIComponent(a.slug)}`;
+      return (
+        `    <item>\n` +
+        `      <title>${esc(a.title)}</title>\n` +
+        `      <link>${url}</link>\n` +
+        `      <guid isPermaLink="true">${url}</guid>\n` +
+        `      <description>${esc(a.excerpt)}</description>\n` +
+        `    </item>`
+      );
+    })
+    .join('\n');
+
+  res
+    .type('application/rss+xml; charset=utf-8')
+    .send(
+      `<?xml version="1.0" encoding="UTF-8"?>\n` +
+        `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n` +
+        `  <channel>\n` +
+        `    <title>${esc(site.name)} — مقالات و راهنمای خرید</title>\n` +
+        `    <link>${site.url}/blog</link>\n` +
+        `    <atom:link href="${site.url}/rss.xml" rel="self" type="application/rss+xml"/>\n` +
+        `    <description>${esc('راهنمای خرید آهن‌آلات، ورق گالوانیزه و فرفورژه در گرگان و علی‌آباد کتول')}</description>\n` +
+        `    <language>fa-IR</language>\n` +
+        `${items}\n` +
+        `  </channel>\n</rss>\n`
+    );
+});
+
 // ----------------------------------------------------------- سئو: sitemap
 router.get('/sitemap.xml', (req, res) => {
   const urls = [
@@ -394,7 +517,13 @@ router.get('/sitemap.xml', (req, res) => {
     { loc: '/about', priority: '0.7', changefreq: 'monthly' },
     { loc: '/reviews', priority: '0.7', changefreq: 'monthly' },
     { loc: '/contact', priority: '0.6', changefreq: 'monthly' },
+    { loc: '/faq', priority: '0.7', changefreq: 'monthly' },
   ];
+
+  // صفحه‌های شهری — هدفشان جست‌وجوهای محلی است، پس اولویت بالا می‌گیرند
+  for (const c of cities.cities) {
+    urls.push({ loc: encodeURI(c.url), priority: '0.8', changefreq: 'monthly' });
+  }
 
   for (const a of articles.listArticles()) {
     urls.push({
@@ -411,24 +540,39 @@ router.get('/sitemap.xml', (req, res) => {
     });
   }
   for (const p of q.listProducts()) {
+    // عکس هر محصول هم اعلام می‌شود. گوگل تصاویر، منبع ترافیک جدی برای
+    // کالاهایی مثل «طرح فرفورژه» است که مردم اول با چشم انتخاب می‌کنند.
+    const img = h.productImage(p, 'large');
     urls.push({
       loc: `/product/${encodeURIComponent(p.slug)}`,
       priority: '0.7',
       changefreq: 'weekly',
       lastmod: (p.updated_at || '').slice(0, 10) || undefined,
+      image: img && !img.isPlaceholder ? { url: site.url + img.src, title: p.name } : null,
     });
   }
 
+  // نویسه‌های ویژه‌ی XML در عنوان عکس باید escape شوند، وگرنه یک نام محصول
+  // با علامت & کل نقشه‌ی سایت را برای گوگل نامعتبر می‌کند.
+  const xmlEsc = (t) =>
+    String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
   const xml =
     `<?xml version="1.0" encoding="UTF-8"?>\n` +
-    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n` +
+    `        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n` +
     urls
       .map(
         (u) =>
           `  <url><loc>${site.url}${u.loc}</loc>` +
           (u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : '') +
           `<changefreq>${u.changefreq}</changefreq>` +
-          `<priority>${u.priority}</priority></url>`
+          `<priority>${u.priority}</priority>` +
+          (u.image
+            ? `<image:image><image:loc>${xmlEsc(u.image.url)}</image:loc>` +
+              `<image:title>${xmlEsc(u.image.title)}</image:title></image:image>`
+            : '') +
+          `</url>`
       )
       .join('\n') +
     `\n</urlset>\n`;
@@ -439,7 +583,17 @@ router.get('/sitemap.xml', (req, res) => {
 router.get('/robots.txt', (req, res) => {
   res
     .type('text/plain')
-    .send(`User-agent: *\nAllow: /\nDisallow: /admin\n\nSitemap: ${site.url}/sitemap.xml\n`);
+    .send(
+      `User-agent: *\n` +
+        `Allow: /\n` +
+        `Disallow: /admin\n` +
+        // آدرس‌های فیلتر و جست‌وجو محتوای تازه‌ای نمی‌سازند؛ خزیدنشان فقط
+        // سهمیه‌ی خزش سایت را می‌سوزاند (متای noindex هم روی خودشان هست).
+        `Disallow: /*?q=\n` +
+        `Disallow: /*?stock=\n` +
+        `\n` +
+        `Sitemap: ${site.url}/sitemap.xml\n`
+    );
 });
 
 module.exports = router;

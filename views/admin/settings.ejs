@@ -146,6 +146,41 @@
     </div>
   </div>
 
+  <!-- ============================================ گوگل و آمار -->
+  <div class="panel">
+    <h2>گوگل: ثبت سایت و آمار</h2>
+
+    <div class="field">
+      <label for="google_site_verification">کد تأیید مالکیت گوگل سرچ کنسول</label>
+      <p class="desc">
+        سرچ کنسول ابزار رایگان گوگل است و نشان می‌دهد مردم با چه کلمه‌هایی سایت
+        شما را پیدا می‌کنند. در <span dir="ltr">search.google.com/search-console</span>
+        سایت را اضافه کنید، روش <strong>HTML tag</strong> را انتخاب کنید و فقط
+        مقدار داخل <code dir="ltr">content="..."</code> را اینجا بگذارید.
+        <br>
+        <strong>خالی بگذارید اگر ندارید</strong> — هیچ مشکلی پیش نمی‌آید.
+      </p>
+      <input type="text" id="google_site_verification" name="google_site_verification"
+             dir="ltr" value="<%= values.google_site_verification %>" maxlength="120"
+             placeholder="مثال: AbCdEf123...">
+    </div>
+
+    <div class="field">
+      <label for="ga4_id">شناسه‌ی گوگل آنالیتیکس (GA4)</label>
+      <p class="desc">
+        اگر حساب گوگل آنالیتیکس دارید، شناسه‌اش را که با
+        <code dir="ltr">G-</code> شروع می‌شود اینجا بگذارید.
+        <br>
+        ⚠️ داشبورد گوگل آنالیتیکس از داخل ایران باز نمی‌شود و اسکریپتش سایت را
+        کمی سنگین‌تر می‌کند. <strong>آمار بازدید سایت شما بدون این هم کار
+        می‌کند</strong> — در <a href="/admin/stats">صفحه‌ی آمار بازدید</a>.
+        اگر مطمئن نیستید، خالی بگذارید.
+      </p>
+      <input type="text" id="ga4_id" name="ga4_id" dir="ltr"
+             value="<%= values.ga4_id %>" maxlength="40" placeholder="G-XXXXXXXXXX">
+    </div>
+  </div>
+
   <div class="actions">
     <button class="btn btn-primary btn-lg" type="submit">ذخیره‌ی همه‌ی تغییرات</button>
     <a class="btn btn-ghost" href="/" target="_blank" rel="noopener">دیدن سایت ↗</a>

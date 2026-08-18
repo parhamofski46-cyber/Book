@@ -54,20 +54,33 @@ const VIEWPORTS = [
         await page.waitForTimeout(350);
       }
 
-      // همه‌ی لینک‌های داخلی منو و فوتر
+      // همه‌ی لینک‌های داخلی منو و فوتر، با این که در کدامشان هستند.
+      //
+      // ⚠️ جداکردن منو از فوتر لازم است: در موبایل وقتی منو باز است یک
+      // پرده‌ی تمام‌صفحه (.nav-backdrop) روی بقیه‌ی صفحه می‌افتد و جلوی
+      // کلیک روی فوتر را می‌گیرد — همان‌طور که برای کاربر واقعی هم
+      // می‌گیرد. پس لینک منو با منوی باز آزمایش می‌شود و لینک فوتر با
+      // منوی بسته. قبلاً هر دو با منوی باز کلیک می‌شدند و فقط به این
+      // دلیل خطا نمی‌داد که همان آدرس‌ها در خود منو هم بودند.
       const links = await page.$$eval('#main-nav a, .footer-links a', (els) =>
         els
-          .map((a) => ({ href: a.getAttribute('href'), text: a.textContent.trim() }))
+          .map((a) => ({
+            href: a.getAttribute('href'),
+            text: a.textContent.trim(),
+            inNav: !!a.closest('#main-nav'),
+          }))
           .filter((l) => l.href && l.href.startsWith('/') && !l.href.startsWith('//'))
       );
 
       for (const link of links) {
         await page.goto(BASE + from, { waitUntil: 'domcontentloaded' });
-        if (vp.isMobile) {
+        const needMenu = vp.isMobile && link.inNav;
+        if (needMenu) {
           await page.click('.nav-toggle');
           await page.waitForTimeout(300);
         }
-        const el = page.locator(`a[href="${link.href}"]`).first();
+        const scope = link.inNav ? '#main-nav ' : '.footer-links ';
+        const el = page.locator(`${scope}a[href="${link.href}"]`).first();
         if (!(await el.isVisible())) {
           problems.push(`[${vp.name}] از «${from}» لینک «${link.text}» دیده نمی‌شود`);
           continue;

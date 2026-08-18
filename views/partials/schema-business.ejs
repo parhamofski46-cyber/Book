@@ -13,9 +13,16 @@ const business = {
   description: site.description,
   url: site.url,
   telephone: '+' + site.phoneIntl,
-  image: site.url + '/img/favicon.svg',
+  // عکس باید تصویر واقعی و بزرگ باشد، نه آیکون؛ گوگل برای نتایج غنی
+  // تصویر کوچک یا SVG را نادیده می‌گیرد.
+  image: site.url + '/img/og-cover.jpg',
+  logo: site.url + '/img/og-cover.jpg',
   priceRange: '$$',
   currenciesAccepted: 'IRR',
+  paymentAccepted: 'نقدی، کارت به کارت',
+  slogan: site.tagline,
+  hasMap: 'https://www.google.com/maps/search/?api=1&query=' +
+    encodeURIComponent(site.address.full),
   address: {
     '@type': 'PostalAddress',
     streetAddress: site.address.street,
@@ -61,5 +68,50 @@ if (reviewSummary && reviewSummary.count > 0) {
     worstRating: 1,
   };
 }
+
+/**
+ * فهرست کالاها به‌صورت OfferCatalog.
+ * به گوگل می‌گوید این مغازه دقیقاً چه گروه‌هایی کالا دارد — برای
+ * جست‌وجوهایی مثل «کجا رابیتس بخرم» کمک می‌کند.
+ */
+if (typeof categories !== 'undefined' && categories && categories.length) {
+  business.hasOfferCatalog = {
+    '@type': 'OfferCatalog',
+    name: 'محصولات ' + site.shortName,
+    itemListElement: categories.map(function (c) {
+      return {
+        '@type': 'OfferCatalog',
+        name: c.name,
+        url: site.url + '/category/' + encodeURIComponent(c.slug),
+      };
+    }),
+  };
+}
+
+/**
+ * اسکیمای WebSite با SearchAction.
+ * اگر گوگل این را بپذیرد، زیر نتیجه‌ی سایت یک کادر جست‌وجو نشان می‌دهد که
+ * مستقیم داخل سایت ما جست‌وجو می‌کند — هم فضای بیشتری در نتایج می‌گیریم و
+ * هم کاربر یک قدم زودتر به محصول می‌رسد.
+ */
+const website = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': site.url + '/#website',
+  url: site.url,
+  name: site.name,
+  alternateName: site.shortName,
+  inLanguage: 'fa-IR',
+  publisher: { '@id': site.url + '/#business' },
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: site.url + '/products?q={search_term_string}',
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
 %>
 <script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(business) %></script>
+<script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(website) %></script>

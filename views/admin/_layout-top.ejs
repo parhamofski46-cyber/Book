@@ -25,6 +25,7 @@
 
       <nav class="admin-nav">
         <a href="/admin" class="<%= currentPath === '/' ? 'active' : '' %>">داشبورد</a>
+        <a href="/admin/stats" class="<%= currentPath.indexOf('/stats') === 0 ? 'active' : '' %>">آمار بازدید</a>
         <a href="/admin/products" class="<%= currentPath.indexOf('/products') === 0 ? 'active' : '' %>">محصولات</a>
         <a href="/admin/categories" class="<%= currentPath.indexOf('/categories') === 0 ? 'active' : '' %>">دسته‌بندی‌ها</a>
         <a href="/admin/reviews" class="<%= currentPath.indexOf('/reviews') === 0 ? 'active' : '' %>">نظرات مشتریان</a>

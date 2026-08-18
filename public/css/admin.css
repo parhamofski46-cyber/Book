@@ -588,3 +588,35 @@ tr:hover td {
   font-size: 0.82rem;
   opacity: 0.75;
 }
+
+/* ═══════════════════════════════════════════ صفحه‌ی آمار بازدید */
+/* نمودار عرض ثابت دارد؛ روی گوشی به‌جای فشرده‌شدن، افقی اسکرول می‌شود
+   تا میله‌های سی روز از هم قابل تشخیص بمانند. */
+.chart-scroll {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+.bar-chart {
+  display: block;
+  width: 100%;
+  min-width: 560px;
+  height: auto;
+}
+/* عددهای محور عمودی باید چپ‌به‌راست بمانند، وگرنه در صفحه‌ی راست‌به‌چپ
+   از لبه‌ی نمودار بیرون می‌زنند و بریده می‌شوند. */
+.bar-chart text.num {
+  direction: ltr;
+  text-anchor: start;
+}
+.split-bar {
+  height: 14px;
+  border-radius: 7px;
+  background: #d8cfc4; /* سهم کامپیوتر */
+  overflow: hidden;
+  margin: 0.2rem 0 0.8rem;
+}
+.split-mobile {
+  display: block;
+  height: 100%;
+  background: var(--brand, #a8552a);
+}

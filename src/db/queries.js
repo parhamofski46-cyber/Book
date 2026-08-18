@@ -246,6 +246,70 @@ const adminStats = () => ({
   categories: db.prepare('SELECT COUNT(*) n FROM categories').get().n,
 });
 
+// ------------------------------------------------------------ آمار بازدید
+
+/**
+ * گزارش آمار بازدید برای پنل مدیریت.
+ *
+ * همه‌ی عددها از جدول‌های جمع‌شده‌ی `stats_*` می‌آیند، پس این پرس‌وجو حتی
+ * با سال‌ها داده هم سریع است (چند هزار سطر، نه چند میلیون).
+ *
+ * @param {{today: string, from30: string, from7: string, yesterday: string}} range
+ *        تاریخ‌ها به وقت تهران از `services/stats` می‌آیند، نه از SQLite —
+ *        سرور ممکن است روی UTC باشد و «امروز»ش با امروزِ مالک فرق کند.
+ */
+function visitStats(range) {
+  const sum = (from, to) =>
+    db
+      .prepare(
+        `SELECT COALESCE(SUM(views), 0) AS views, COALESCE(SUM(visitors), 0) AS visitors
+           FROM stats_daily WHERE day >= ? AND day <= ?`
+      )
+      .get(from, to);
+
+  return {
+    today: sum(range.today, range.today),
+    yesterday: sum(range.yesterday, range.yesterday),
+    week: sum(range.from7, range.today),
+    month: sum(range.from30, range.today),
+    total: db
+      .prepare('SELECT COALESCE(SUM(views), 0) AS views, COUNT(*) AS days FROM stats_daily')
+      .get(),
+
+    // نمودار ۳۰ روز اخیر. روزهای بدون بازدید در دیتابیس سطری ندارند؛
+    // پرکردن جای خالی‌شان در قالب انجام می‌شود تا نمودار پیوسته بماند.
+    series: db
+      .prepare(
+        `SELECT day, views, visitors FROM stats_daily
+          WHERE day >= ? AND day <= ? ORDER BY day`
+      )
+      .all(range.from30, range.today),
+
+    topPages: db
+      .prepare(
+        `SELECT path, SUM(views) AS views FROM stats_pages
+          WHERE day >= ? AND day <= ?
+          GROUP BY path ORDER BY views DESC LIMIT 15`
+      )
+      .all(range.from30, range.today),
+
+    topReferrers: db
+      .prepare(
+        `SELECT host, SUM(views) AS views FROM stats_referrers
+          WHERE day >= ? AND day <= ?
+          GROUP BY host ORDER BY views DESC LIMIT 12`
+      )
+      .all(range.from30, range.today),
+
+    devices: db
+      .prepare(
+        `SELECT COALESCE(SUM(mobile), 0) AS mobile, COALESCE(SUM(desktop), 0) AS desktop
+           FROM stats_daily WHERE day >= ? AND day <= ?`
+      )
+      .get(range.from30, range.today),
+  };
+}
+
 module.exports = {
   listCategories,
   categoryCoverCandidates,
@@ -263,4 +327,5 @@ module.exports = {
   getTestimonial,
   testimonialSummary,
   adminStats,
+  visitStats,
 };
