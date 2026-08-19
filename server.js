@@ -137,6 +137,51 @@ app.use(
 );
 
 /**
+ * هشدار ناهماهنگی دامنه.
+ * ==========================================================================
+ *
+ * `SITE_URL` تعیین می‌کند آدرس canonical، نقشه‌ی سایت و تگ‌های اشتراک‌گذاری
+ * چه دامنه‌ای را اعلام کنند. اگر سایت در عمل روی دامنه‌ی دیگری بالا بیاید
+ * (مثلاً `www.fooladiman.ir` ولی `SITE_URL` روی `fooladiman.ir` مانده
+ * باشد)، هیچ خطایی رخ نمی‌دهد و سایت سالم به نظر می‌رسد — ولی هر
+ * canonical به آدرسی اشاره می‌کند که بلافاصله ۳۰۱ می‌خورد. گوگل گیج
+ * می‌شود، سهم خزش هدر می‌رود و رتبه بین دو آدرس تقسیم می‌شود.
+ *
+ * چون این خطا بی‌صدا است، همان‌جایی اعلامش می‌کنیم که هشدار دیسک را:
+ * لاگ سرور (یک‌بار) و کلید `canonicalHost` در `/healthz`.
+ * `www` عمداً نادیده گرفته نمی‌شود — دقیقاً همان تفاوتی است که مشکل‌ساز است.
+ */
+const CANONICAL_HOST = (() => {
+  try {
+    return new URL(site.url).hostname;
+  } catch (err) {
+    return '';
+  }
+})();
+let hostMismatch = null;
+
+app.use((req, res, next) => {
+  const host = req.hostname;
+  if (
+    !hostMismatch &&
+    CANONICAL_HOST &&
+    host &&
+    host !== CANONICAL_HOST &&
+    host !== 'localhost' &&
+    !/^\d+\.\d+\.\d+\.\d+$/.test(host)
+  ) {
+    hostMismatch = `سایت روی «${host}» سرو می‌شود ولی SITE_URL روی «${CANONICAL_HOST}» تنظیم است.`;
+    console.warn(
+      `\n⚠️  ناهماهنگی دامنه: ${hostMismatch}\n` +
+        `   آدرس‌های canonical و نقشه‌ی سایت «${CANONICAL_HOST}» را اعلام می‌کنند،\n` +
+        `   یعنی گوگل به آدرسی هدایت می‌شود که خودش ۳۰۱ می‌خورد.\n` +
+        `   راه‌حل: متغیر محیطی SITE_URL را روی آدرس واقعی سایت بگذارید.\n`
+    );
+  }
+  next();
+});
+
+/**
  * دو محافظ مخصوص HTTPS که فقط روی خودِ HTTPS فرستاده می‌شوند.
  * ==========================================================================
  *
@@ -269,6 +314,12 @@ app.get('/healthz', (req, res) => {
       memoryMb: Math.round(process.memoryUsage().rss / 1048576),
       // اگر ذخیره‌سازی روی حافظه‌ی موقت افتاده باشد، اینجا هم اعلام می‌شود تا
       // بدون ورود به پنل هم بشود از راه دور فهمید دیسک وصل نیست.
+      // اگر دامنه‌ی واقعی با SITE_URL نخواند، اینجا هم دیده می‌شود
+      canonicalHost: {
+        expected: CANONICAL_HOST,
+        ok: !hostMismatch,
+        ...(hostMismatch ? { warning: hostMismatch } : {}),
+      },
       storage: {
         persistent: !STORAGE_WARNING,
         uploadsPersistent: !UPLOAD_WARNING,
