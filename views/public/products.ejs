@@ -52,8 +52,18 @@ if (category) {
 
       <div class="section-head" style="padding-top:1.2rem">
         <div class="section-title">
+          <%# نام شهر عمداً داخل خودِ H1 است، نه فقط در تگ title.
+              جست‌وجوی واقعی مردم «رابیتس گرگان» است نه «رابیتس»؛ وقتی
+              عبارت کامل در تیتر اصلی صفحه باشد، تطابق صفحه با آن جست‌وجو
+              برای گوگل صریح‌تر است. روی صفحه‌های بعدی شماره‌ی صفحه هم
+              می‌آید تا دو صفحه، تیتر یکسان نداشته باشند. %>
           <h1 style="font-size:clamp(1.5rem,1.2rem+1.4vw,2.1rem)">
-            <%= category ? category.name : 'همه‌ی محصولات' %>
+            <% if (category) { %>
+              <%= category.name %> در گرگان و علی‌آباد کتول<%
+                 if (page > 1) { %> — صفحه‌ی <%= h.toFaDigits(page) %><% } %>
+            <% } else { %>
+              همه‌ی محصولات<% if (page > 1) { %> — صفحه‌ی <%= h.toFaDigits(page) %><% } %>
+            <% } %>
           </h1>
         </div>
         <p>
@@ -166,6 +176,44 @@ if (category) {
           </p>
         </div>
       </section>
+      <% } %>
+
+      <%# ── راهنمای خرید دسته ────────────────────────────────────────────
+          چرا اینجا و نه بالای صفحه: مشتری آمده محصول ببیند، نه متن بخواند.
+          محصولات بالا می‌مانند و این متن زیرشان قرار می‌گیرد — هم برای
+          کسی که واقعاً سؤال دارد مفید است و هم صفحه‌ی دسته را از یک گرید
+          خشک به صفحه‌ای تبدیل می‌کند که به جست‌وجوی کاربر جواب می‌دهد.
+
+          ⚠️ فقط روی صفحه‌ی اول و بدون فیلتر نشان داده می‌شود. اگر همین متن
+          روی صفحه‌های ۲ و ۳ هم تکرار شود، گوگل آن‌ها را محتوای تکراری
+          می‌بیند — یعنی دقیقاً برعکس هدف. %>
+      <% if (guide && page === 1 && !search && !activeSub && !onlyInStock) { %>
+        <section class="section category-guide">
+          <div class="section-head">
+            <div class="section-title"><h2><%= guide.title %></h2></div>
+          </div>
+          <div class="article-body">
+            <%- include('../partials/article-blocks', { blocks: guide.blocks }) %>
+          </div>
+          <% if (guideArticles && guideArticles.length) { %>
+            <div class="guide-links">
+              <h3>راهنماهای کامل‌تر درباره‌ی این دسته</h3>
+              <ul>
+                <% guideArticles.forEach(function (a) { %>
+                  <li>
+                    <a href="/blog/<%= encodeURIComponent(a.slug) %>"><%= a.title %></a>
+                    <small><%= a.excerpt %></small>
+                  </li>
+                <% }); %>
+              </ul>
+            </div>
+          <% } %>
+
+          <p class="guide-cta">
+            سؤال دیگری دارید؟ <a href="/faq">صفحه‌ی سؤال‌های متداول</a> را ببینید یا
+            مستقیم در واتساپ بپرسید — همان روز جواب می‌دهیم.
+          </p>
+        </section>
       <% } %>
     </div>
   </main>

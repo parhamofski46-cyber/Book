@@ -3736,3 +3736,52 @@ p {
 .footer-cities a:hover {
   color: var(--copper-bright);
 }
+
+/* ═══════════════════════════════════════════ راهنمای خرید دسته */
+.category-guide {
+  max-width: 74ch; /* طول خط خوانا؛ متن بلند تمام‌عرض خسته‌کننده است */
+  margin-inline: auto;
+}
+.category-guide .article-body h2 {
+  font-size: 1.15rem;
+  margin-top: 1.8rem;
+}
+.guide-cta {
+  margin-top: 1.6rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 12px;
+  background: var(--bg-warm);
+  border-inline-start: 3px solid var(--rust);
+  color: var(--ink-soft);
+}
+
+.guide-links {
+  margin-top: 2rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--line);
+}
+.guide-links h3 {
+  font-size: 1.05rem;
+  margin: 0 0 0.8rem;
+}
+.guide-links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.guide-links li {
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.guide-links li:last-child {
+  border-bottom: 0;
+}
+.guide-links a {
+  font-weight: 700;
+}
+.guide-links small {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--ink-faint);
+  line-height: 1.8;
+}

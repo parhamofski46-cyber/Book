@@ -9,6 +9,7 @@ const h = require('../utils/view-helpers');
 const articles = require('../content/articles');
 const faq = require('../content/faq');
 const cities = require('../content/cities');
+const categoryGuides = require('../content/category-guides');
 
 const router = express.Router();
 
@@ -159,6 +160,15 @@ function renderProductList(req, res, category) {
     // نتیجه‌ی جست‌وجو و فیلتر موجودی ایندکس نمی‌شوند (بالای head.ejs توضیح
     // داده شده). خودِ دسته و صفحه‌های بعدی‌اش ایندکس می‌شوند.
     robotsMeta: search || onlyInStock || req.query.sub ? 'noindex, follow' : null,
+    // راهنمای خرید همان دسته (فقط صفحه‌ی اول — در قالب شرطش هست)
+    guide: category ? categoryGuides.guideFor(category.name) : null,
+    // مقاله‌های مرتبط با این دسته.
+    // لینک مقاله → محصول از قبل بود، ولی مسیر برعکسش نه. لینک داخلی
+    // دوطرفه هم به کاربر کمک می‌کند و هم به گوگل می‌فهماند این صفحه‌ها
+    // یک موضوع مشترک دارند.
+    guideArticles: category
+      ? articles.listArticles().filter((a) => (a.related || []).indexOf(category.slug) !== -1)
+      : [],
     metaDescription: category
       ? truncate(
           `خرید ${category.name} در ${cityLine}. ${category.description} ` +
