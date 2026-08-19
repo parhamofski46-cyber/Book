@@ -1,0 +1,35 @@
+{
+  "name": "alt-text-autopilot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shopify app that automatically writes accessible, SEO-optimised alt text for every product image — forever.",
+  "type": "module",
+  "engines": { "node": ">=20.11" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "worker": "node dist/worker-entry.js",
+    "worker:dev": "tsx watch src/worker-entry.ts",
+    "migrate": "tsx src/db/migrate.ts",
+    "migrate:prod": "node dist/db/migrate.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.72.0",
+    "@hono/node-server": "^1.19.9",
+    "hono": "^4.9.13",
+    "jose": "^6.1.0",
+    "pg": "^8.16.3",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.9",
+    "@types/pg": "^8.15.6",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}
