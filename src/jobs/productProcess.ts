@@ -54,14 +54,25 @@ export async function handleProductProcess(ctx: JobContext): Promise<void> {
   if (images.length === 0) return;
   await imagesRepo.recordDiscovered(shop.id, images);
 
+  // Two things are off limits here.
+  //
   // Images that already carry alt text are left alone unless the merchant
-  // explicitly opted into overwriting. Silently replacing a human's words is
-  // the fastest way to lose a merchant's trust.
-  const candidates = images.filter(
-    (img) => shop.settings.overwriteExisting || !img.altBefore || img.altBefore.trim() === '',
+  // explicitly opted into overwriting — silently replacing a human's words is
+  // the fastest way to lose their trust. And an image the merchant undid stays
+  // undone: re-describing it tomorrow would override an explicit decision.
+  const stored = await imagesRepo.statusFor(
+    shop.id,
+    images.map((i) => i.mediaGid),
   );
+
+  const candidates = images.filter((img) => {
+    if (stored.get(img.mediaGid) === 'reverted') return false;
+    return shop.settings.overwriteExisting || !img.altBefore || img.altBefore.trim() === '';
+  });
+
+  const candidateGids = new Set(candidates.map((c) => c.mediaGid));
   for (const img of images) {
-    if (!candidates.includes(img)) {
+    if (!candidateGids.has(img.mediaGid)) {
       await imagesRepo.markSkipped(shop.id, img.mediaGid, 'already_has_alt', img.altBefore);
     }
   }

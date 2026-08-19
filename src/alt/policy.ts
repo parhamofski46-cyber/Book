@@ -55,12 +55,18 @@ export function sanitiseAltText(raw: string, settings: ShopSettings): SanitiseRe
   return { text, adjustments };
 }
 
-/** Cuts at the last word boundary that fits, so we never end mid-word. */
+/**
+ * Cuts at the last word boundary that fits.
+ *
+ * Losing a whole word always beats emitting a fragment: a screen reader
+ * pronouncing "thre" tells the listener less than nothing. Only text with no
+ * space at all — a single very long token — is cut hard.
+ */
 export function truncateAtWord(text: string, limit: number): string {
   if (text.length <= limit) return text;
   const slice = text.slice(0, limit);
   const lastSpace = slice.lastIndexOf(' ');
-  const cut = lastSpace > limit * 0.6 ? slice.slice(0, lastSpace) : slice;
+  const cut = lastSpace > 0 ? slice.slice(0, lastSpace) : slice;
   return cut.replace(/[\s,;:.\-–—]+$/, '');
 }
 

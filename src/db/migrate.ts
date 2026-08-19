@@ -1,6 +1,6 @@
 import { readdir, readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { pool, query } from './pool.js';
 import { logger } from '../lib/logger.js';
 
@@ -62,8 +62,11 @@ export async function pruneEphemera(): Promise<void> {
   await query("DELETE FROM webhook_events WHERE received_at < now() - INTERVAL '30 days'");
 }
 
-// `npm run migrate` executes this file directly.
-if (process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, '/').split('/').pop()!)) {
+// `npm run migrate` executes this file directly; importing it must not.
+const invokedDirectly =
+  process.argv[1] !== undefined && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+if (invokedDirectly) {
   runMigrations()
     .then(() => pool.end())
     .then(() => process.exit(0))

@@ -83,6 +83,13 @@ export async function markApplied(
   );
 }
 
+/**
+ * Marks an image as deliberately left alone.
+ *
+ * `applied` and `reverted` are terminal: re-processing a product must not
+ * demote work we already did, and must never quietly re-open a change the
+ * merchant chose to undo.
+ */
 export async function markSkipped(
   shopId: number,
   mediaGid: string,
@@ -92,7 +99,8 @@ export async function markSkipped(
   await query(
     `UPDATE images
         SET status = 'skipped', skip_reason = $3, alt_before = $4, error_message = NULL
-      WHERE shop_id = $1 AND media_gid = $2`,
+      WHERE shop_id = $1 AND media_gid = $2
+        AND status NOT IN ('applied', 'reverted')`,
     [shopId, mediaGid, reason, altBefore],
   );
 }
@@ -200,4 +208,22 @@ export async function countPending(shopId: number): Promise<number> {
     [shopId],
   );
   return Number.parseInt(rows[0]?.n ?? '0', 10);
+}
+
+/**
+ * Current stored status for a set of media ids.
+ *
+ * The processor needs this to honour decisions already made — a merchant who
+ * undid a description should not find it back tomorrow.
+ */
+export async function statusFor(
+  shopId: number,
+  mediaGids: readonly string[],
+): Promise<Map<string, ImageStatus>> {
+  if (mediaGids.length === 0) return new Map();
+  const { rows } = await query<{ media_gid: string; status: ImageStatus }>(
+    `SELECT media_gid, status FROM images WHERE shop_id = $1 AND media_gid = ANY($2::text[])`,
+    [shopId, mediaGids],
+  );
+  return new Map(rows.map((r) => [r.media_gid, r.status]));
 }

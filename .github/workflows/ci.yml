@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: alttext_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports: ['5432:5432']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Tests (unit plus integration against Postgres)
+        run: npm test
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/alttext_test
+          DATABASE_SSL: disable
+
+      - name: Build
+        run: npm run build
+
+      - name: Migrations apply to a clean database
+        run: npm run migrate:prod
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/alttext_test
+          DATABASE_SSL: disable
+          APP_URL: https://ci.example.com
+          SHOPIFY_API_KEY: ci
+          SHOPIFY_API_SECRET: ci-secret
+          ANTHROPIC_API_KEY: ci
+          ENCRYPTION_KEY: '0000000000000000000000000000000000000000000000000000000000000000'
+
+      - name: Migrations are idempotent
+        run: npm run migrate:prod
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/alttext_test
+          DATABASE_SSL: disable
+          APP_URL: https://ci.example.com
+          SHOPIFY_API_KEY: ci
+          SHOPIFY_API_SECRET: ci-secret
+          ANTHROPIC_API_KEY: ci
+          ENCRYPTION_KEY: '0000000000000000000000000000000000000000000000000000000000000000'

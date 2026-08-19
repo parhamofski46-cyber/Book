@@ -1,0 +1,54 @@
+# Shopify app configuration.
+#
+# Copy to shopify.app.toml and fill in. `shopify.app.toml` is gitignored
+# because `client_id` ties the file to one specific app in your Partner account.
+#
+# Deploy with:  npx shopify app deploy
+
+name = "Alt Text Autopilot"
+handle = "alt-text-autopilot"
+client_id = "YOUR_CLIENT_ID"
+application_url = "https://your-app.example.com"
+embedded = true
+
+[access_scopes]
+# read_products  — read the catalogue
+# write_products — required alongside write_files for product media
+# write_files    — `fileUpdate` is how alt text is set on current API versions
+scopes = "read_products,write_products,write_files"
+
+[auth]
+redirect_urls = [
+  "https://your-app.example.com/auth/callback"
+]
+
+[webhooks]
+api_version = "2026-07"
+
+  # Mandatory compliance topics. Shopify sends these to every app and rejects
+  # submissions that do not answer them.
+  [[webhooks.subscriptions]]
+  topics = [ "customers/data_request" ]
+  uri = "/webhooks/customers-data-request"
+
+  [[webhooks.subscriptions]]
+  topics = [ "customers/redact" ]
+  uri = "/webhooks/customers-redact"
+
+  [[webhooks.subscriptions]]
+  topics = [ "shop/redact" ]
+  uri = "/webhooks/shop-redact"
+
+  # The app also registers products/create, products/update, app/uninstalled
+  # and app_subscriptions/update over the Admin API at install time, so they
+  # always point at the currently deployed URL.
+
+[app_proxy]
+# Not used — this app has no storefront surface.
+
+[pos]
+embedded = false
+
+[build]
+automatically_update_urls_on_dev = true
+include_config_on_deploy = true
