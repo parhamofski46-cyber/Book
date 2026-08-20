@@ -1,0 +1,123 @@
+name: Build Windows executable
+
+on:
+  push:
+    branches: [claude/currency-arbitrage-software-0dcqkw]
+    paths-ignore: ['**.md']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          architecture: x64
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install "pyinstaller>=6.3"
+
+      - name: Run the test suite
+        env:
+          PYTHONPATH: src
+        run: python -m unittest discover -s tests -v
+
+      - name: Build the executable
+        run: python -m PyInstaller nobitex_arb.spec --noconfirm --clean
+
+      - name: Verify the binary is a Windows executable
+        shell: pwsh
+        run: |
+          $exe = "dist\ArbitrageLab.exe"
+          if (-not (Test-Path $exe)) { throw "the build produced no executable" }
+          $bytes = [System.IO.File]::ReadAllBytes($exe)[0..1]
+          if ([char]$bytes[0] + [char]$bytes[1] -ne "MZ") { throw "not a PE executable" }
+          $mb = [math]::Round((Get-Item $exe).Length / 1MB, 1)
+          Write-Host "ArbitrageLab.exe is $mb MB"
+
+      # The real proof: run the packaged binary on Windows and let it exercise
+      # its own HTTP server, bundled assets and auth. A build that compiles but
+      # cannot serve its own UI is worse than no build at all.
+      - name: Self-test the packaged application
+        shell: pwsh
+        run: |
+          $proc = Start-Process -FilePath "dist\ArbitrageLab.exe" `
+                                -ArgumentList "--selftest" -Wait -PassThru -NoNewWindow
+          if (Test-Path "dist\selftest.log") { Get-Content "dist\selftest.log" }
+          if ($proc.ExitCode -ne 0) { throw "self-test failed with exit code $($proc.ExitCode)" }
+
+      - name: Stage the release files
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path release | Out-Null
+          Copy-Item "dist\ArbitrageLab.exe" release\
+          Copy-Item "config.example.json" release\
+          Copy-Item "README.md" release\
+          $hash = (Get-FileHash "release\ArbitrageLab.exe" -Algorithm SHA256).Hash.ToLower()
+          "$hash  ArbitrageLab.exe" | Out-File -Encoding ascii release\SHA256SUMS.txt
+          Write-Host "SHA256: $hash"
+          "SHA256=$hash" | Out-File -Append -Encoding ascii $env:GITHUB_ENV
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ArbitrageLab-windows
+          path: release/
+          retention-days: 90
+
+      - name: Publish the release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "win-build-$($env:GITHUB_RUN_NUMBER)"
+          $notes = @"
+          Windows build of the Nobitex triangular-arbitrage paper-trading lab.
+
+          **ArbitrageLab.exe** - single file, no installation. Download it, put it
+          in a folder of its own, and double-click. It creates ``config.json`` and a
+          ``data`` folder beside itself on first run.
+
+          Windows SmartScreen will warn that the publisher is unknown, because the
+          file is not code-signed. Choose **More info** then **Run anyway**.
+
+          If the window never opens, run ``ArbitrageLab.exe --selftest`` from a
+          terminal and read ``selftest.log`` next to the executable.
+
+          This build was produced on a Windows runner from commit
+          ``$($env:GITHUB_SHA.Substring(0,7))``. It passed the full test suite and a
+          self-test of the packaged binary before publication.
+
+          SHA-256: ``$($env:SHA256)``
+          "@
+          gh release create $tag release\ArbitrageLab.exe release\SHA256SUMS.txt `
+            --title "ArbitrageLab for Windows (build $($env:GITHUB_RUN_NUMBER))" `
+            --notes $notes --latest
+
+      # Publishes the binary on a dedicated branch as well, so it can be fetched
+      # over plain git where the releases API is not reachable.
+      - name: Publish the binary on the windows-build branch
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan windows-build
+          git rm -rf --cached . | Out-Null
+          Get-ChildItem -Force | Where-Object {
+            $_.Name -notin @('.git', 'release')
+          } | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+          Move-Item release\* . -Force
+          Remove-Item release -Recurse -Force -ErrorAction SilentlyContinue
+          git add -A
+          git commit -m "Windows build from $($env:GITHUB_SHA.Substring(0,7)) (run $($env:GITHUB_RUN_NUMBER))"
+          git push --force origin windows-build

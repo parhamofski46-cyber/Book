@@ -3,10 +3,18 @@
 
 from pathlib import Path
 
-from PyInstaller.utils.hooks import collect_submodules
+from PyInstaller.utils.hooks import collect_data_files, collect_submodules
 
 SPEC_DIR = Path(SPECPATH)
 ICON = SPEC_DIR / "assets" / "icon.ico"
+
+
+def optional_data_files(name):
+    """Package data for an optional dependency, or nothing if it is absent."""
+    try:
+        return collect_data_files(name)
+    except Exception:
+        return []
 
 
 def optional_submodules(name):
@@ -28,7 +36,10 @@ a = Analysis(
     binaries=[],
     # The UI is a real HTML/CSS/JS front end, so those files must travel with
     # the executable; PyInstaller only picks up imported .py modules by itself.
-    datas=[(str(SPEC_DIR / "src" / "nobitex_arb" / "ui" / "static"), "nobitex_arb/ui/static")],
+    datas=[
+        (str(SPEC_DIR / "src" / "nobitex_arb" / "ui" / "static"), "nobitex_arb/ui/static"),
+        *optional_data_files("webview"),   # pywebview ships its own JS bridge
+    ],
     hiddenimports=optional_submodules("webview") + [
         "nobitex_arb.ui.controller",
         "nobitex_arb.ui.server",
