@@ -4,12 +4,14 @@ const express = require('express');
 const multer = require('multer');
 const bcrypt = require('bcryptjs');
 
+const { site } = require('../config/site');
 const { db, getSetting, setSetting } = require('../db');
 const q = require('../db/queries');
 const { requireLogin, csrf, loginLimiter } = require('../middleware/auth');
 const { processUpload, deleteImageFiles } = require('../services/images');
 const captcha = require('../services/captcha');
 const stats = require('../services/stats');
+const QRCode = require('qrcode');
 const { slugify, uniqueSlug } = require('../utils/slug');
 
 const router = express.Router();
@@ -147,6 +149,38 @@ router.get('/stats', csrf, (req, res) => {
     data: q.visitStats(range),
     ga4: getSetting('ga4_id', ''),
   });
+});
+
+// ============================================================ تابلوی مغازه
+
+/**
+ * تابلوی چاپی با کد QR.
+ *
+ * چرا صفحه‌ی پنل و نه اسکریپت خط فرمان: مالک مغازه نباید برای چاپ یک
+ * تابلو، Node اجرا کند. اینجا وارد پنل می‌شود، دکمه‌ی چاپ را می‌زند و
+ * تمام. ضمناً آدرس همیشه از `site.url` می‌آید، پس اگر دامنه عوض شد
+ * تابلو خودش درست می‌ماند.
+ *
+ * کد QR سمت سرور و آفلاین ساخته می‌شود — نه سرویس بیرونی، نه اینترنت.
+ * سطح تصحیح خطا روی H است تا اگر گوشه‌ی برچسب خط بخورد یا کثیف شود،
+ * باز هم خوانده شود؛ برای چیزی که ماه‌ها روی پیشخوان می‌ماند مهم است.
+ */
+router.get('/poster', async (req, res, next) => {
+  try {
+    const qrSvg = await QRCode.toString(site.url, {
+      type: 'svg',
+      errorCorrectionLevel: 'H',
+      margin: 1,
+      color: { dark: '#1c1c1e', light: '#ffffff' },
+    });
+    res.render('admin/poster', {
+      title: 'تابلوی مغازه',
+      qrSvg,
+      prettyUrl: site.url.replace(/^https?:\/\//, ''),
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // ============================================================ محصولات
