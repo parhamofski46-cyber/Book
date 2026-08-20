@@ -25,14 +25,18 @@ function Test-OmniUp {
 function Start-OmniGateway {
     if (Test-OmniUp) { return $true }
 
-    $exe = Get-Command omniroute -ErrorAction SilentlyContinue
-    if (-not $exe) { return $false }
+    if (-not (Get-Command omniroute -ErrorAction SilentlyContinue)) { return $false }
 
     Write-Host "starting OmniRoute on port $($global:OmniPort) ..." -ForegroundColor Cyan
 
+    # npm lays down three shims side by side: an extensionless bash script, a
+    # .cmd and a .ps1. Get-Command can hand back the extensionless one, which
+    # Start-Process cannot launch (it fails with 0x87e10bc6), so go through
+    # cmd.exe and let it resolve the .cmd from PATH.
+    #
     # Runs in its own minimized window rather than a redirected background
     # process: fewer moving parts, and the log stays visible if it misbehaves.
-    Start-Process -FilePath $exe.Source -ArgumentList 'serve' -WindowStyle Minimized
+    Start-Process -FilePath 'cmd.exe' -ArgumentList '/c omniroute serve' -WindowStyle Minimized
 
     for ($i = 0; $i -lt 45; $i++) {
         Start-Sleep -Seconds 1
@@ -54,7 +58,7 @@ function omni {
 
             if (-not (Start-OmniGateway)) {
                 Write-Host "gateway did not come up within 45s." -ForegroundColor Red
-                Write-Host "check the minimized OmniRoute window for the reason." -ForegroundColor Yellow
+                Write-Host "check the minimized cmd window for the reason." -ForegroundColor Yellow
                 return
             }
 
