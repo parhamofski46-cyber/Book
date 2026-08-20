@@ -75,6 +75,7 @@ src/content/faq.js        سؤال‌های متداول (۳۱ پرسش، ۶ گ�
 src/content/cities.js     صفحه‌های شهری برای سئوی محلی
 src/content/category-guides.js ⭐ راهنمای خرید هر دسته (متن یکتای صفحه‌ی دسته)
 docs/معرفی-سایت.md        متن‌های آماده‌ی بازاریابی (واتساپ، دیوار، نشان)
+docs/جذب-مشتری-عمده.md    راهنمای فروش B2B (پیمانکار و جوشکار گلستان)
 src/utils/icons.js        آیکون‌های SVG + نگاشت دسته/محصول به تصویرسازی
 src/utils/photos.js       ⭐ نگاشت محصول → عکس واقعی (public/img/photos)
 src/utils/view-helpers.js توابع قالب (productImage، stockLabel، toFaDigits)
