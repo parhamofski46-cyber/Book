@@ -39,6 +39,7 @@ npm run seed             # ساخت داده‌های اولیه
 npm run reset-password   # بازنشانی رمز پنل
 npm run set-admin -- <کاربر> <رمز>   # تعیین نام کاربری و رمز پنل
 bash scripts/backup.sh   # پشتیبان‌گیری از دیتابیس و عکس‌ها
+node scripts/gen-poster.js           # ساخت تابلوی چاپی مغازه با کد QR
 bash scripts/auto-update.sh          # گرفتن نسخه‌ی جدید از گیت (روی سرور)
 node scripts/import-photos.js <کلید>=<فایل>   # افزودن عکس واقعی کالا
 python3 scripts/gen-captcha-glyphs.py   # بازسازی شکل ارقام کپچا (فقط اگر فونت عوض شد)
@@ -74,6 +75,7 @@ src/middleware/stats.js   ثبت بازدید صفحه‌ها
 src/content/faq.js        سؤال‌های متداول (۳۱ پرسش، ۶ گروه)
 src/content/cities.js     صفحه‌های شهری برای سئوی محلی
 src/content/category-guides.js ⭐ راهنمای خرید هر دسته (متن یکتای صفحه‌ی دسته)
+docs/معرفی-سایت.md        متن‌های آماده‌ی بازاریابی (واتساپ، دیوار، نشان)
 src/utils/icons.js        آیکون‌های SVG + نگاشت دسته/محصول به تصویرسازی
 src/utils/photos.js       ⭐ نگاشت محصول → عکس واقعی (public/img/photos)
 src/utils/view-helpers.js توابع قالب (productImage، stockLabel، toFaDigits)

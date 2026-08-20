@@ -21,3 +21,6 @@ Thumbs.db
 npm-debug.log*
 .vscode/
 .idea/
+
+# پوستر چاپی — با `node scripts/gen-poster.js` بازتولید می‌شود
+public/poster/
