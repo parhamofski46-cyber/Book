@@ -1,0 +1,48 @@
+{
+  "_comment": "Verify fee_rate and min_order_* against your own Nobitex account before trusting any number this produces.",
+  "base_url": "https://api.nobitex.ir",
+  "start_currency": "IRT",
+  "irt_unit": "auto",
+  "markets": [
+    {
+      "symbol": "USDTIRT",
+      "base": "USDT",
+      "quote": "IRT"
+    },
+    {
+      "symbol": "BTCIRT",
+      "base": "BTC",
+      "quote": "IRT"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "base": "BTC",
+      "quote": "USDT"
+    },
+    {
+      "symbol": "ETHIRT",
+      "base": "ETH",
+      "quote": "IRT"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "base": "ETH",
+      "quote": "USDT"
+    }
+  ],
+  "fee_rate": 0.0025,
+  "poll_interval_sec": 3.0,
+  "request_timeout_sec": 10.0,
+  "capital_irt": 100000000,
+  "min_order_irt": 5000000,
+  "max_order_irt": 50000000,
+  "min_profit_bps": 5.0,
+  "cooldown_sec": 15.0,
+  "max_spread_bps": 300.0,
+  "min_depth_multiple": 2.0,
+  "max_sigma_bps": 80.0,
+  "obi_levels": 5,
+  "store_book_levels": 10,
+  "db_path": "data/paper.db",
+  "log_path": "data/run.log"
+}
