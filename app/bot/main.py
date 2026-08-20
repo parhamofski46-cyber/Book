@@ -16,7 +16,7 @@ import app.payments  # noqa: F401  (importing registers every provider)
 from app.bot.handlers import admin, owner, start, subscriber
 from app.bot.middlewares import DatabaseMiddleware, LocaleMiddleware
 from app.config import get_settings
-from app.db.base import init_models
+from app.db.base import assert_schema_ready
 from app.scheduler.jobs import run_all
 
 logging.basicConfig(
@@ -57,7 +57,7 @@ async def main() -> None:
     if not settings.admins:
         log.warning("ADMIN_IDS is empty -- nobody can reach the admin panel")
 
-    await init_models()
+    await assert_schema_ready()
 
     bot = build_bot()
     dp = build_dispatcher()
@@ -74,6 +74,8 @@ async def main() -> None:
         misfire_grace_time=600,
     )
     scheduler.start()
+    me = await bot.me()
+    log.info("starting bot @%s", me.username)
     log.info("sweep scheduled hourly")
 
     try:
