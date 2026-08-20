@@ -7,12 +7,22 @@ makes ``get_provider`` reliable for anything that touches the package at all.
 """
 
 from app.payments import manual_card, paypal, stars, zarinpal  # noqa: F401
-from app.payments.base import Checkout, PaymentProvider, available, format_money, get_provider
+from app.payments.base import (
+    CURRENCY_FOR,
+    Checkout,
+    PaymentProvider,
+    available,
+    format_money,
+    get_provider,
+    supports_currency,
+)
 
 __all__ = [
+    "CURRENCY_FOR",
     "Checkout",
     "PaymentProvider",
     "available",
     "format_money",
     "get_provider",
+    "supports_currency",
 ]

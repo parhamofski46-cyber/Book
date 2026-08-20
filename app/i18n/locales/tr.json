@@ -53,5 +53,7 @@
   "error.not_owner": "Bu işlem yalnızca kanal sahipleri için geçerlidir.",
   "error.not_admin": "Yetkiniz yok.",
   "btn.back": "◀️ Geri",
-  "btn.cancel": "İptal"
+  "btn.cancel": "İptal",
+  "error.plan_unavailable": "⚠️ Bu plan şu anda ödenemiyor — fiyatı, kanalın ödeme yönteminin artık kabul etmediği bir para biriminde ayarlı. Kanal sahibine bildirildi.",
+  "owner.provider.mismatch": "⚠️ Mevcut planlarınızdan <b>{count}</b> tanesi {old} cinsinden, ancak {new} {new_currency} ile tahsil ediyor.\n\n/addplan ile yeniden oluşturana kadar alıcılar ödeme yapamaz."
 }

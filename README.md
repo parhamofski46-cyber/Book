@@ -111,6 +111,7 @@ python -m app.bot.main
 | `/addplan` | owner | create a plan, returns the shareable link |
 | `/channels` | owner | per-channel stats: active, expiring, revenue, renewal rate |
 | `/provider` | owner | choose how to collect payments |
+| `/claims` | owner | confirm or reject payments buyers say they made |
 | `/billing` | owner | plan status and the current invoice |
 | `/referral` | owner | referral link and count |
 | `/language` | anyone | switch language |
@@ -141,16 +142,43 @@ python -m pytest tests/ -q
 python -m ruff check app tests
 ```
 
-31 tests cover the payment lifecycle, platform billing, provider rendering, and
-translation parity (every catalogue must carry the same keys *and* the same
-placeholders — a placeholder that exists in one language and not another
-renders wrong for real users).
+47 tests. Alongside the unit tests, `tests/test_end_to_end.py` drives the real
+services, real SQL and the real hourly sweep with only the Telegram transport
+replaced by a recorder — so purchase, admission, reminder, grace, removal and
+re-subscription are exercised as shipped code.
+
+That end-to-end pass found three bugs that the unit tests did not:
+
+1. **Expiry sweeps crashed on SQLite.** `DateTime(timezone=True)` returns
+   *naive* datetimes on SQLite and aware ones on PostgreSQL, so every
+   `expires_at - now()` raised `TypeError` — reminders and removals would have
+   failed on every run. Fixed with a `UtcDateTime` type that normalises at the
+   column boundary, so this cannot recur on any column.
+2. **Manually-settled payments had no confirmation path.** PayPal and card
+   buyers could tap "I have paid" and nothing in the product could ever let
+   them in. `services/subscriber_payments.py` plus `/claims` closes it, with
+   authorisation resolved from the channel rather than the caller's claim.
+3. **Switching payment provider stranded existing plans.** An owner moving to
+   Stars with rial-priced plans crashed the buyer's checkout; moving to PayPal
+   with Stars-priced plans quoted "150 ⭐" as a PayPal amount. `CURRENCY_FOR` is
+   now the single source of truth, checked when a plan is created, when a
+   provider is switched, and again at checkout.
+
+Translation tests assert every catalogue carries the same keys *and* the same
+placeholders — a placeholder present in one language and missing in another
+renders wrong for real users.
 
 ## Status
 
 Working: schema, payment abstraction with four providers, subscription
 lifecycle, invites and removal, hourly sweeps, five languages, owner flows,
-operator panel, referral credit.
+manual payment confirmation, operator panel, referral credit.
+
+Not verified: anything requiring a live Telegram connection. The bot has never
+held a real token, joined a real channel, or taken a real payment. Every
+Telegram call is exercised against a recorder, which proves the arguments and
+the ordering but not Telegram's acceptance of them. Run it against a test bot
+and a throwaway channel before trusting it with money.
 
 Not built yet: Alembic migrations (tables are created directly at startup — fine
 for development, replace before production), a ZarinPal callback HTTP endpoint

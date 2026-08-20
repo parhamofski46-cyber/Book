@@ -172,8 +172,10 @@ async def confirm_payment(
         session, subscriber_id=sub.subscriber_id, channel_id=sub.channel_id
     )
     base = now
+    extended_from_prior = False
     if prior and prior.id != sub.id and prior.expires_at and prior.expires_at > now:
         base = prior.expires_at
+        extended_from_prior = True
         # Fold the old row into this one so a member never holds two.
         prior.status = SubscriptionStatus.CANCELLED
 
@@ -195,7 +197,7 @@ async def confirm_payment(
             "amount": payment.amount,
             "currency": payment.currency,
             "expires_at": sub.expires_at.isoformat(),
-            "extended_from_prior": base is not now,
+            "extended_from_prior": extended_from_prior,
         },
     )
     return sub

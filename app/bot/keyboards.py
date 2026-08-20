@@ -96,3 +96,21 @@ def pay_invoice_button(locale: str) -> InlineKeyboardMarkup:
             ]
         ]
     )
+
+
+def claim_review(payment_id: int, locale: str) -> InlineKeyboardMarkup:
+    """Owner-facing confirm/reject for a manually settled payment."""
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text=t("admin.invoice.confirm", locale),
+                    callback_data=f"subpay_ok:{payment_id}",
+                ),
+                InlineKeyboardButton(
+                    text=t("admin.invoice.reject", locale),
+                    callback_data=f"subpay_no:{payment_id}",
+                ),
+            ]
+        ]
+    )

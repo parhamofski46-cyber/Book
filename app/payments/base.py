@@ -20,6 +20,21 @@ from app.db.models import ProviderKind
 # Currencies whose smallest unit is the unit itself (no cents).
 ZERO_DECIMAL = {"IRR", "XTR", "JPY", "KRW"}
 
+# The currency each provider settles in. This is the single source of truth:
+# a plan priced in anything else cannot be paid through that provider, and
+# both plan creation and checkout validate against it.
+CURRENCY_FOR: dict[ProviderKind, str] = {
+    ProviderKind.STARS: "XTR",
+    ProviderKind.ZARINPAL: "IRR",
+    ProviderKind.MANUAL_CARD: "IRR",
+    ProviderKind.PAYPAL: "USD",
+}
+
+
+def supports_currency(kind: ProviderKind, currency: str) -> bool:
+    return CURRENCY_FOR[kind] == currency.upper()
+
+
 _SYMBOLS = {"USD": "$", "EUR": "€", "XTR": "⭐"}
 _NAMES = {"IRR": {"en": "IRR", "fa": "ریال"}}
 

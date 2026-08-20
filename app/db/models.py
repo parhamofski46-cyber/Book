@@ -14,7 +14,7 @@ Money rules that shaped this schema:
 from __future__ import annotations
 
 import enum
-from datetime import datetime
+from datetime import UTC, datetime
 
 from sqlalchemy import (
     BigInteger,
@@ -30,8 +30,37 @@ from sqlalchemy import (
     func,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.types import TypeDecorator
 
 from app.db.base import Base
+
+
+class UtcDateTime(TypeDecorator):
+    """A timestamp that is always timezone-aware UTC in Python.
+
+    ``DateTime(timezone=True)`` is a promise the backend does not always keep:
+    PostgreSQL returns aware values, SQLite returns naive ones. Mixing the two
+    makes every ``expires_at - now()`` raise TypeError, which silently breaks
+    the expiry sweeps on one backend and not the other. Normalising here means
+    application code can do date arithmetic without checking first.
+    """
+
+    impl = DateTime(timezone=True)
+    cache_ok = True
+
+    def process_bind_param(self, value: datetime | None, dialect) -> datetime | None:
+        if value is None:
+            return None
+        if value.tzinfo is None:
+            raise ValueError("refusing to store a naive datetime")
+        return value.astimezone(UTC)
+
+    def process_result_value(self, value: datetime | None, dialect) -> datetime | None:
+        if value is None:
+            return None
+        # A naive value came from a backend that dropped the offset; it was
+        # written as UTC, so label it as such rather than guessing local time.
+        return value.replace(tzinfo=UTC) if value.tzinfo is None else value.astimezone(UTC)
 
 
 class SubscriptionStatus(str, enum.Enum):
@@ -65,10 +94,10 @@ class OwnerStatus(str, enum.Enum):
 
 class TimestampMixin:
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), nullable=False
+        UtcDateTime, server_default=func.now(), nullable=False
     )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False
+        UtcDateTime, server_default=func.now(), onupdate=func.now(), nullable=False
     )
 
 
@@ -86,7 +115,7 @@ class Owner(Base, TimestampMixin):
     status: Mapped[OwnerStatus] = mapped_column(
         Enum(OwnerStatus, native_enum=False), default=OwnerStatus.TRIAL, index=True
     )
-    plan_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    plan_expires_at: Mapped[datetime | None] = mapped_column(UtcDateTime)
 
     # Which provider this owner collects subscriber money with, plus the
     # credentials for it. Credentials belong to the owner; we only relay them.
@@ -170,12 +199,12 @@ class Subscription(Base, TimestampMixin):
         default=SubscriptionStatus.PENDING,
         index=True,
     )
-    starts_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
-    expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    starts_at: Mapped[datetime | None] = mapped_column(UtcDateTime)
+    expires_at: Mapped[datetime | None] = mapped_column(UtcDateTime)
 
     # Guards against sending the same reminder twice when a sweep re-runs.
-    reminder_sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
-    removed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    reminder_sent_at: Mapped[datetime | None] = mapped_column(UtcDateTime)
+    removed_at: Mapped[datetime | None] = mapped_column(UtcDateTime)
 
     subscriber: Mapped[Subscriber] = relationship()
     channel: Mapped[ManagedChannel] = relationship()
@@ -202,7 +231,7 @@ class Payment(Base, TimestampMixin):
         Enum(PaymentStatus, native_enum=False), default=PaymentStatus.PENDING, index=True
     )
     raw_payload: Mapped[str | None] = mapped_column(Text)
-    confirmed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    confirmed_at: Mapped[datetime | None] = mapped_column(UtcDateTime)
 
 
 class PlatformInvoice(Base, TimestampMixin):
@@ -221,7 +250,7 @@ class PlatformInvoice(Base, TimestampMixin):
         Enum(PaymentStatus, native_enum=False), default=PaymentStatus.PENDING, index=True
     )
     period_days: Mapped[int] = mapped_column(Integer, default=30)
-    paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    paid_at: Mapped[datetime | None] = mapped_column(UtcDateTime)
     confirmed_by: Mapped[int | None] = mapped_column(BigInteger)  # admin telegram id
     note: Mapped[str | None] = mapped_column(Text)
 
@@ -240,8 +269,8 @@ class InviteLink(Base, TimestampMixin):
     id: Mapped[int] = mapped_column(primary_key=True)
     subscription_id: Mapped[int] = mapped_column(ForeignKey("subscriptions.id"), index=True)
     url: Mapped[str] = mapped_column(String(255))
-    used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
-    revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    used_at: Mapped[datetime | None] = mapped_column(UtcDateTime)
+    revoked_at: Mapped[datetime | None] = mapped_column(UtcDateTime)
 
 
 class AuditLog(Base):
@@ -251,7 +280,7 @@ class AuditLog(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), index=True
+        UtcDateTime, server_default=func.now(), index=True
     )
     actor: Mapped[str] = mapped_column(String(64))       # "system" | "admin:123" | "owner:12"
     action: Mapped[str] = mapped_column(String(64), index=True)

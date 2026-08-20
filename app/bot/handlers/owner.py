@@ -20,15 +20,21 @@ from app.db.models import (
     ManagedChannel,
     Owner,
     OwnerStatus,
+    Payment,
     PaymentStatus,
     Plan,
     PlatformInvoice,
     ProviderKind,
 )
 from app.i18n import t
-from app.payments.base import format_money
+from app.payments.base import CURRENCY_FOR, format_money
 from app.services import billing
 from app.services.membership import bot_can_manage
+from app.services.subscriber_payments import (
+    confirm_claim,
+    pending_claims_for_owner,
+    reject_claim,
+)
 from app.services.subscriptions import audit, channel_stats
 
 router = Router(name="owner")
@@ -150,12 +156,7 @@ async def add_plan_price(
     await state.clear()
 
     owner = await get_owner(session, message.from_user.id)
-    currency = {
-        ProviderKind.STARS: "XTR",
-        ProviderKind.ZARINPAL: "IRR",
-        ProviderKind.MANUAL_CARD: "IRR",
-        ProviderKind.PAYPAL: "USD",
-    }[owner.provider]
+    currency = CURRENCY_FOR[owner.provider]
 
     plan = Plan(
         channel_id=data["channel_id"],
@@ -223,8 +224,33 @@ async def save_provider(call: CallbackQuery, session: AsyncSession, locale: str)
     if owner is None:
         await call.answer(t("error.not_owner", locale), show_alert=True)
         return
+    previous = owner.provider
     owner.provider = kind
     await call.message.edit_text(t("owner.provider.saved", locale, provider=kind.value))
+
+    # Switching settlement currency strands every plan priced in the old one.
+    # Say so now, rather than letting buyers hit it at checkout.
+    stranded = await session.scalar(
+        select(func.count())
+        .select_from(Plan)
+        .join(ManagedChannel, ManagedChannel.id == Plan.channel_id)
+        .where(
+            ManagedChannel.owner_id == owner.id,
+            Plan.is_active.is_(True),
+            Plan.currency != CURRENCY_FOR[kind],
+        )
+    )
+    if stranded:
+        await call.message.answer(
+            t(
+                "owner.provider.mismatch",
+                locale,
+                count=stranded,
+                old=CURRENCY_FOR[previous],
+                new=kind.value,
+                new_currency=CURRENCY_FOR[kind],
+            )
+        )
     await call.answer()
 
 
@@ -326,3 +352,101 @@ async def referral(message: Message, session: AsyncSession, locale: str) -> None
         ),
         disable_web_page_preview=True,
     )
+
+
+@router.message(Command("claims"))
+async def list_claims(message: Message, session: AsyncSession, locale: str) -> None:
+    """Payments buyers say they made that nobody has checked yet."""
+    owner = await _require_owner(message, session, locale)
+    claims = await pending_claims_for_owner(session, owner_id=owner.id)
+    if not claims:
+        await message.answer(t("admin.no_pending", locale))
+        return
+
+    for payment in claims:
+        await message.answer(
+            t(
+                "admin.invoice.item",
+                locale,
+                id=payment.id,
+                owner=payment.provider.value,
+                amount=format_money(payment.amount, payment.currency, locale),
+                created=payment.created_at.strftime(DATE_FMT),
+            ),
+            reply_markup=kb.claim_review(payment.id, locale),
+        )
+
+
+@router.callback_query(F.data.startswith("subpay_ok:"))
+async def confirm_subscriber_payment(
+    call: CallbackQuery, session: AsyncSession, locale: str
+) -> None:
+    owner = await get_owner(session, call.from_user.id)
+    if owner is None:
+        await call.answer(t("error.not_owner", locale), show_alert=True)
+        return
+
+    payment = await session.get(Payment, int(call.data.split(":", 1)[1]))
+    if payment is None:
+        await call.answer(t("error.generic", locale), show_alert=True)
+        return
+
+    try:
+        subscription = await confirm_claim(
+            call.bot,
+            session,
+            payment=payment,
+            actor_telegram_id=call.from_user.id,
+            owner_id=owner.id,
+        )
+    except PermissionError:
+        await call.answer(t("error.not_admin", locale), show_alert=True)
+        return
+
+    if subscription is None:
+        await call.answer("already handled")
+        return
+
+    await call.message.edit_text(
+        t(
+            "admin.invoice.confirmed",
+            locale,
+            id=payment.id,
+            owner=payment.provider.value,
+            expires=subscription.expires_at.strftime(DATE_FMT),
+        )
+    )
+    await call.answer()
+
+
+@router.callback_query(F.data.startswith("subpay_no:"))
+async def reject_subscriber_payment(
+    call: CallbackQuery, session: AsyncSession, locale: str
+) -> None:
+    owner = await get_owner(session, call.from_user.id)
+    if owner is None:
+        await call.answer(t("error.not_owner", locale), show_alert=True)
+        return
+
+    payment = await session.get(Payment, int(call.data.split(":", 1)[1]))
+    if payment is None:
+        await call.answer(t("error.generic", locale), show_alert=True)
+        return
+
+    try:
+        handled = await reject_claim(
+            call.bot,
+            session,
+            payment=payment,
+            actor_telegram_id=call.from_user.id,
+            owner_id=owner.id,
+        )
+    except PermissionError:
+        await call.answer(t("error.not_admin", locale), show_alert=True)
+        return
+
+    if not handled:
+        await call.answer("already handled")
+        return
+    await call.message.edit_text(t("admin.invoice.rejected", locale, id=payment.id))
+    await call.answer()

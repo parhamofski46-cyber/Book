@@ -53,5 +53,7 @@
   "error.not_owner": "This action is only available to channel owners.",
   "error.not_admin": "Not authorised.",
   "btn.back": "◀️ Back",
-  "btn.cancel": "Cancel"
+  "btn.cancel": "Cancel",
+  "error.plan_unavailable": "⚠️ This plan cannot be paid for right now — its price is set in a currency the channel's payment method no longer accepts. The channel owner has been notified.",
+  "owner.provider.mismatch": "⚠️ <b>{count}</b> of your existing plan(s) are priced in {old}, but {new} settles in {new_currency}.\n\nBuyers cannot pay for those plans until you recreate them with /addplan."
 }
