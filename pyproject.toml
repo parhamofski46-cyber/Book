@@ -7,7 +7,6 @@ dependencies = [
     "aiogram>=3.13",
     "SQLAlchemy[asyncio]>=2.0.30",
     "alembic>=1.13",
-    "asyncpg>=0.29",
     "aiosqlite>=0.20",
     "APScheduler>=3.10",
     "pydantic-settings>=2.4",
@@ -25,6 +24,8 @@ build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "pytest-asyncio>=0.24", "ruff>=0.6"]
+# Only needed when DATABASE_URL points at PostgreSQL.
+postgres = ["asyncpg>=0.29"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

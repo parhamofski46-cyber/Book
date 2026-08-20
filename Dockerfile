@@ -8,7 +8,7 @@ WORKDIR /app
 # editing code rebuilds in seconds rather than reinstalling everything.
 COPY pyproject.toml README.md ./
 COPY app ./app
-RUN pip install --no-cache-dir -e .
+RUN pip install --no-cache-dir -e ".[postgres]"
 
 COPY alembic.ini ./
 COPY migrations ./migrations

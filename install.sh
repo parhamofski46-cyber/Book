@@ -10,19 +10,33 @@ die()  { printf '%s✗%s %s\n' "$RED" "$OFF" "$*" >&2; exit 1; }
 
 cd "$(dirname "$0")"
 
+# Termux (Android) needs slightly different advice when something is missing.
+IS_TERMUX=0
+[ -n "${PREFIX:-}" ] && [ -d "${PREFIX:-}/bin" ] && case "$PREFIX" in *com.termux*) IS_TERMUX=1;; esac
+
 say ""
 say "${BOLD}ChanSub setup${OFF}"
 say "─────────────────────────────────────────"
 
 # --- 1. Python -----------------------------------------------------------
-command -v python3 >/dev/null || die "python3 not found. Install Python 3.11 or newer first."
+if ! command -v python3 >/dev/null; then
+    if [ "$IS_TERMUX" = "1" ]; then
+        die "python not found. Run:  pkg install python"
+    fi
+    die "python3 not found. Install Python 3.11 or newer first."
+fi
 PY_OK=$(python3 -c 'import sys; print(1 if sys.version_info >= (3, 11) else 0)')
 [ "$PY_OK" = "1" ] || die "Python 3.11+ required (found $(python3 -V 2>&1 | cut -d" " -f2))."
 ok "Python $(python3 -V 2>&1 | cut -d' ' -f2)"
 
 # --- 2. Virtualenv and dependencies --------------------------------------
 if [ ! -d .venv ]; then
-    python3 -m venv .venv || die "Could not create a virtualenv. On Debian/Ubuntu: sudo apt install python3-venv"
+    if ! python3 -m venv .venv; then
+        if [ "$IS_TERMUX" = "1" ]; then
+            die "Could not create a virtualenv. Run:  pkg install python-pip"
+        fi
+        die "Could not create a virtualenv. On Debian/Ubuntu: sudo apt install python3-venv"
+    fi
 fi
 # shellcheck disable=SC1091
 source .venv/bin/activate
@@ -132,9 +146,11 @@ case "$RESULT" in
     *)
         warn "Could not reach Telegram: ${RESULT#FAIL }"
         say ""
-        say "  If you are in a country where api.telegram.org is blocked, set a"
-        say "  proxy in .env:   TELEGRAM_PROXY=socks5://127.0.0.1:1080"
-        say "  or run the bot on a server outside that network."
+        say "  api.telegram.org is not reachable from this network."
+        say ""
+        say "  On a phone: turn on your VPN and run ./install.sh again."
+        say "  On a server: set a proxy in .env, for example"
+        say "      TELEGRAM_PROXY=socks5://127.0.0.1:1080"
         ;;
 esac
 say ""
