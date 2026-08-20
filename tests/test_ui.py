@@ -216,6 +216,11 @@ class TestServer(unittest.TestCase):
         self.assertNotIn(b"__AUTH_TOKEN__", body)
         self.assertIn(self.server.token.encode(), body)
 
+    def test_hidden_elements_are_actually_hidden(self):
+        """Regression: a class-level `display` beats the UA [hidden] rule."""
+        _, css, _ = self.request("/app.css")
+        self.assertIn(b"[hidden] { display: none !important; }", css)
+
     def test_static_assets_are_served(self):
         for path, ctype in (("/app.css", "text/css"), ("/app.js", "javascript")):
             code, body, headers = self.request(path)

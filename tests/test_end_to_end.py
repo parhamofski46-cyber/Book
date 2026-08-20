@@ -85,6 +85,13 @@ class _Harness:
         self.engine.run_id = self.run_id
         self.store.add_equity(self.run_id, self.t0, self.engine.balance)
 
+    def close(self) -> None:
+        """Windows will not delete a file that is still open, so release the DB."""
+        try:
+            self.store.close()
+        except Exception:
+            pass
+
     def play(self, frames: list[dict]) -> None:
         for i, f in enumerate(frames):
             self.engine.step(f, now=self.t0 + i * 3.0)
@@ -102,18 +109,27 @@ class TestEngineBehaviour(unittest.TestCase):
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
         self.tmp = Path(self._tmp.name)
+        self._harnesses: list[_Harness] = []
+
+    def harness(self, cfg: Config | None = None) -> "_Harness":
+        """Build a harness and register it so tearDown releases its database."""
+        h = _Harness(self.tmp, cfg)
+        self._harnesses.append(h)
+        return h
 
     def tearDown(self):
+        for h in self._harnesses:
+            h.close()
         self._tmp.cleanup()
 
     def test_quiet_market_produces_no_trades(self):
-        h = _Harness(self.tmp)
+        h = self.harness()
         h.play([frame() for _ in range(20)])
         self.assertEqual(h.trades(), [])
         self.assertAlmostEqual(h.engine.balance, h.cfg.capital_irt)
 
     def test_persistent_mispricing_is_captured(self):
-        h = _Harness(self.tmp)
+        h = self.harness()
         # Quiet, then a 1.5% dislocation that lasts long enough to trade.
         h.play([frame()] * 5 + [frame(0.015)] * 4 + [frame()] * 5)
         trades = h.trades()
@@ -125,7 +141,7 @@ class TestEngineBehaviour(unittest.TestCase):
 
     def test_fill_never_uses_the_signal_snapshot(self):
         """The latency model must settle against the *next* frame, not the one that triggered."""
-        h = _Harness(self.tmp)
+        h = self.harness()
         # A one-frame flash: the signal fires, but by settlement the market is normal again.
         h.play([frame()] * 3 + [frame(0.015)] + [frame()] * 4)
         filled = [t for t in h.trades() if t["outcome"] == "filled"]
@@ -136,14 +152,14 @@ class TestEngineBehaviour(unittest.TestCase):
         self.assertLess(t["pnl_irt"], 0, "a vanished edge must be allowed to lose money")
 
     def test_unexecutable_cycle_is_recorded_not_crashed(self):
-        h = _Harness(self.tmp)
+        h = self.harness()
         h.play([frame()] * 2 + [frame(0.015)] + [broken_frame()] + [frame()] * 2)
         outcomes = [t["outcome"] for t in h.trades()]
         self.assertTrue(any(o.startswith("vanished") for o in outcomes), outcomes)
         self.assertAlmostEqual(h.engine.balance, h.cfg.capital_irt)
 
     def test_size_respects_the_configured_cap(self):
-        h = _Harness(self.tmp)
+        h = self.harness()
         h.play([frame()] * 2 + [frame(0.015)] * 4)
         for t in h.trades():
             self.assertLessEqual(t["size_irt"], h.cfg.max_order_irt + 1e-6)
@@ -152,7 +168,7 @@ class TestEngineBehaviour(unittest.TestCase):
     def test_sub_threshold_edge_is_logged_but_skipped(self):
         cfg = make_config(self.tmp)
         cfg.min_profit_bps = 500.0  # demand 5%, far more than the dislocation offers
-        h = _Harness(self.tmp, cfg)
+        h = self.harness(cfg)
         h.play([frame()] * 2 + [frame(0.015)] * 4)
         opps = h.opportunities()
         self.assertTrue(opps, "a positive-edge cycle should still be recorded")
@@ -161,7 +177,7 @@ class TestEngineBehaviour(unittest.TestCase):
         self.assertEqual(h.trades(), [])
 
     def test_snapshots_are_persisted_for_every_symbol(self):
-        h = _Harness(self.tmp)
+        h = self.harness()
         h.play([frame() for _ in range(4)])
         rows = h.store.rows("SELECT COUNT(*) c FROM snapshots WHERE run_id=?", (h.run_id,))
         self.assertEqual(rows[0]["c"], 4 * 3)
@@ -173,8 +189,11 @@ class TestReportAndReplay(unittest.TestCase):
         self.tmp = Path(self._tmp.name)
         self.h = _Harness(self.tmp)
         self.h.play([frame()] * 3 + [frame(0.015)] * 6 + [frame()] * 3)
+        self._extra: list[_Harness] = []
 
     def tearDown(self):
+        for h in (self.h, *self._extra):
+            h.close()
         self._tmp.cleanup()
 
     def test_report_renders_both_formats(self):
@@ -194,6 +213,7 @@ class TestReportAndReplay(unittest.TestCase):
 
     def test_report_survives_a_run_with_no_trades(self):
         h = _Harness(self.tmp, make_config(self.tmp))
+        self._extra.append(h)
         h.play([frame() for _ in range(6)])
         d = collect(h.store, h.run_id)
         self.assertEqual(verdict(d)[0], "NO EDGE FOUND")

@@ -73,6 +73,9 @@
 }
 
 * { box-sizing: border-box; }
+/* A class that sets `display` outranks the user agent's [hidden] rule, which
+   left the stop button on screen while the app was stopped. */
+[hidden] { display: none !important; }
 html, body { height: 100%; }
 body {
   margin: 0;
