@@ -157,6 +157,29 @@ def cmd_replay(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_ui(args: argparse.Namespace) -> int:
+    from .ui.app import main as ui_main
+    return ui_main()
+
+
+def cmd_serve(args: argparse.Namespace) -> int:
+    """Run only the HTTP server -- used by the tests and for headless checks."""
+    import time as _time
+
+    from .ui.controller import AppController
+    from .ui.server import UiServer
+
+    server = UiServer(AppController(args.config), port=args.port)
+    server.start()
+    print(f"{server.url}?token={server.token}", flush=True)
+    try:
+        while True:
+            _time.sleep(0.5)
+    except KeyboardInterrupt:
+        server.stop()
+    return 0
+
+
 def cmd_runs(args: argparse.Namespace) -> int:
     cfg = Config.load(args.config)
     store = Store(cfg.db_path)
@@ -207,6 +230,13 @@ def main(argv: list[str] | None = None) -> int:
 
     ls = sub.add_parser("runs", help="list recorded runs")
     ls.set_defaults(func=cmd_runs)
+
+    ui = sub.add_parser("ui", help="open the desktop application")
+    ui.set_defaults(func=cmd_ui)
+
+    sv = sub.add_parser("serve", help="run the UI server only (no window)")
+    sv.add_argument("--port", type=int, default=0)
+    sv.set_defaults(func=cmd_serve)
 
     args = p.parse_args(argv)
     return args.func(args)

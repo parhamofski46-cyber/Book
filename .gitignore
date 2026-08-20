@@ -4,3 +4,7 @@ __pycache__/
 data/
 reports/
 config.json
+build/
+dist/
+*.spec.bak
+crash.log

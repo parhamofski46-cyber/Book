@@ -58,6 +58,7 @@ def collect(store: Store, run_id: int) -> dict:
     curve = [float(e["balance"]) for e in equity] or [capital]
 
     pnl_summary = stats.summarize(pnls)
+    boot = stats.bootstrap_means(pnls)   # one set of resamples feeds both statistics
     per_trade_ret = [p / capital for p in pnls]
     trades_per_year = (len(filled) / elapsed) * 365 * 86_400 if filled else 0.0
 
@@ -117,8 +118,8 @@ def collect(store: Store, run_id: int) -> dict:
         "total_pnl": total_pnl,
         "total_return": total_pnl / capital,
         "curve": curve,
-        "ci": stats.bootstrap_ci(pnls) if len(pnls) > 1 else (0.0, 0.0),
-        "p_positive": stats.probability_positive(pnls) if len(pnls) > 1 else 0.0,
+        "ci": stats.bootstrap_ci(pnls, means=boot),
+        "p_positive": stats.probability_positive(pnls, means=boot),
         "sharpe": stats.sharpe(per_trade_ret, trades_per_year) if len(pnls) > 1 else 0.0,
         "drawdown": stats.max_drawdown(curve),
         "latency_cost_bps": latency_cost_bps,
@@ -453,3 +454,52 @@ def write_all(store: Store, run_id: int, outdir: str | Path) -> tuple[Path, Path
     txt.write_text(to_text(d), encoding="utf-8")
     htm.write_text(to_html(d), encoding="utf-8")
     return txt, htm
+
+
+def to_json(d: dict) -> dict:
+    """A JSON-safe view of the report, for the desktop UI."""
+    head, body = verdict(d)
+    s: stats.Summary = d["summary"]
+    lo, hi = d["ci"]
+    dd_abs, dd_pct = d["drawdown"]
+    return {
+        "run_id": d["run_id"],
+        "unit": d["unit"],
+        "verdict": {"head": head, "body": body},
+        "started": d["started"],
+        "ended": d["ended"],
+        "hours": d["hours"],
+        "can_annualise": d["can_annualise"],
+        "capital": d["capital"],
+        "fee_rate": d["config"].get("fee_rate", 0.0),
+        "snapshot_count": d["snapshot_count"],
+        "opportunity_count": d["opportunity_count"],
+        "taken_count": d["taken_count"],
+        "vanished_count": d["vanished_count"],
+        "fills": s.n,
+        "wins": s.positive,
+        "hit_rate": s.hit_rate * 100.0,
+        "total_pnl": d["total_pnl"],
+        "total_return_pct": d["total_return"] * 100.0,
+        "mean_pnl": s.mean,
+        "median_pnl": s.median,
+        "stdev_pnl": s.stdev,
+        "best_pnl": s.maximum,
+        "worst_pnl": s.minimum,
+        "ci_low": lo,
+        "ci_high": hi,
+        "p_positive": d["p_positive"] * 100.0,
+        "sharpe": d["sharpe"],
+        "drawdown_abs": dd_abs,
+        "drawdown_pct": dd_pct * 100.0,
+        "latency_cost_bps": d["latency_cost_bps"],
+        "break_even_fee": d["median_break_even_fee"],
+        "obi_corr": d["obi_corr"],
+        "projection": _projection_text(d),
+        "equity": d["curve"],
+        "sensitivity": d["sensitivity"],
+        "triangles": [{"name": k, "n": v["n"], "pnl": v["pnl"]} for k, v in
+                      sorted(d["triangles"].items(), key=lambda kv: -kv[1]["pnl"])],
+        "skip_reasons": [{"reason": r, "count": c} for r, c in d["skip_reasons"]],
+        "pnls": d["pnls"],
+    }

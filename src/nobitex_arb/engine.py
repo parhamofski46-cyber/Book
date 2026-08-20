@@ -18,6 +18,7 @@ from dataclasses import dataclass
 from typing import Mapping
 
 from .config import Config
+from .live import LiveState
 from .microstructure import MarketFilter, Snapshot
 from .models import OrderBook, Triangle
 from .nobitex import FeedError, NobitexFeed, detect_irt_unit
@@ -61,6 +62,13 @@ class PaperEngine:
         self.opportunities = 0
         self.irt_unit = cfg.irt_unit
         self.quiet = False
+        self.live = LiveState()
+        self.live.set(
+            capital=float(cfg.capital_irt),
+            balance=float(cfg.capital_irt),
+            fee_rate=cfg.fee_rate,
+            irt_unit=cfg.irt_unit,
+        )
         self._stop = False
 
     # ------------------------------------------------------------------ run
@@ -85,35 +93,65 @@ class PaperEngine:
         self.store.add_equity(self.run_id, started, self.balance)
         self.store.commit()
 
-        print(f"run #{self.run_id} | {len(self.triangles)} triangles | capital {self._fmt(self.balance)}")
-        for t in self.triangles:
-            print(f"  - {t.path}")
-        print("press Ctrl+C to stop\n", flush=True)
+        self.live.set(running=True, run_id=self.run_id, started_at=started,
+                      balance=self.balance, capital=float(self.cfg.capital_irt),
+                      fee_rate=self.cfg.fee_rate)
+        self.live.push_equity(started, self.balance)
+        self.live.set_triangles({t.name: {"path": t.path, "net_bps": None, "size": 0.0}
+                                 for t in self.triangles})
+        self.live.push_event("run", f"run #{self.run_id} started")
 
+        if not self.quiet:
+            print(f"run #{self.run_id} | {len(self.triangles)} triangles | "
+                  f"capital {self._fmt(self.balance)}")
+            for t in self.triangles:
+                print(f"  - {t.path}")
+            print("press Ctrl+C to stop\n", flush=True)
+
+        symbols = tuple({s for t in self.triangles for s in t.symbols})
         consecutive_failures = 0
+
         while not self._stop:
             if duration_sec is not None and time.time() - started >= duration_sec:
                 break
             cycle_start = time.time()
             try:
-                books = self.feed.fetch(tuple({s for t in self.triangles for s in t.symbols}))
+                books = self.feed.fetch(symbols)
                 consecutive_failures = 0
+                self.live.set(feed_ok=True, last_error="",
+                              feed_success_rate=self.feed.stats.success_rate)
                 self.step(books)
             except FeedError as exc:
                 consecutive_failures += 1
                 log.warning("feed error (%d in a row): %s", consecutive_failures, exc)
-                # Back off so a exchange-side outage does not turn into a request flood.
-                time.sleep(min(60.0, self.cfg.poll_interval_sec * (2 ** min(consecutive_failures, 5))))
+                self.live.set(feed_ok=False, last_error=str(exc),
+                              feed_success_rate=self.feed.stats.success_rate)
+                if consecutive_failures in (1, 5, 20):
+                    self.live.push_event("error", f"connection problem: {exc}")
+                # Back off so an exchange-side outage does not become a request flood.
+                self._sleep(min(60.0, self.cfg.poll_interval_sec * (2 ** min(consecutive_failures, 5))))
                 continue
-            except Exception:
+            except Exception as exc:
                 log.exception("unexpected error in poll loop; continuing")
+                self.live.push_event("error", f"internal error: {exc}")
 
-            elapsed = time.time() - cycle_start
-            time.sleep(max(0.0, self.cfg.poll_interval_sec - elapsed))
+            self._sleep(max(0.0, self.cfg.poll_interval_sec - (time.time() - cycle_start)))
 
         self.store.end_run(self.run_id, time.time())
         self.store.commit()
-        self._print_summary(time.time() - started)
+        self.live.set(running=False, feed_success_rate=self.feed.stats.success_rate)
+        self.live.push_event("run", f"run #{self.run_id} stopped")
+        if not self.quiet:
+            self._print_summary(time.time() - started)
+
+    def _sleep(self, seconds: float) -> None:
+        """Sleep in slices so a stop request is honoured promptly."""
+        deadline = time.time() + seconds
+        while not self._stop and time.time() < deadline:
+            time.sleep(min(0.25, deadline - time.time()))
+
+    def stop(self) -> None:
+        self._stop = True
 
     # ----------------------------------------------------------------- step
 
@@ -123,6 +161,16 @@ class PaperEngine:
         snaps = self.filter.observe(books)
         self._resolve_unit(books)
         self._persist_snapshots(now, books, snaps)
+        self.live.set(polls=self.polls, balance=self.balance, irt_unit=self.irt_unit)
+        self.live.set_markets({
+            sym: {
+                "bid": b.best_bid, "ask": b.best_ask,
+                "spread_bps": snaps[sym].spread_bps, "obi": snaps[sym].obi,
+                "sigma_bps": snaps[sym].sigma_bps, "mid": b.mid,
+                "depth": min(snaps[sym].bid_depth, snaps[sym].ask_depth),
+            }
+            for sym, b in books.items()
+        })
 
         # 1. Settle anything queued on the previous poll, at the new prices.
         if self.pending is not None:
@@ -131,20 +179,30 @@ class PaperEngine:
 
         # 2. Look for a new opportunity.
         if now - self.last_trade_ts < self.cfg.cooldown_sec:
+            self.live.set(cooldown_until=self.last_trade_ts + self.cfg.cooldown_sec)
             self.store.commit()
             self._status(now, None)
             return
 
         best: CycleResult | None = None
+        scan: dict[str, dict] = {}
         for tri in self.triangles:
             cap = min(self.cfg.max_order_irt, self.balance)
             if cap < self.cfg.min_order_irt:
                 continue
             res = best_size(tri, books, self.cfg.fee_rate, self.cfg.min_order_irt, cap)
             if res is None or not res.feasible:
+                scan[tri.name] = {"path": tri.path, "net_bps": None, "size": 0.0,
+                                  "note": (res.reason if res else "no depth")}
                 continue
+            scan[tri.name] = {"path": tri.path, "net_bps": res.profit_bps,
+                              "gross_bps": res.gross_bps, "size": res.start_amount, "note": ""}
             if best is None or res.profit > best.profit:
                 best = res
+        self.live.set_triangles(scan)
+        self.live.push_edge(now, best.profit_bps if best is not None else None)
+        self.live.set(best_edge_bps=best.profit_bps if best is not None else None,
+                      best_triangle=best.triangle.name if best is not None else "")
 
         if best is not None and best.profit_bps > 0:
             self.opportunities += 1
@@ -157,7 +215,15 @@ class PaperEngine:
                     best.max_slippage_bps, int(taken), reason,
                 ),
             )
+            self.live.set(opportunities=self.opportunities)
+            if not taken and reason:
+                self.live.push_event("skip", reason, triangle=best.triangle.name)
             if taken:
+                self.live.push_event(
+                    "signal",
+                    f"{best.triangle.name}: {best.profit_bps:+.1f} bps",
+                    triangle=best.triangle.name, bps=best.profit_bps, size=best.start_amount,
+                )
                 self.pending = PendingOrder(
                     triangle=best.triangle,
                     size=best.start_amount,
@@ -196,6 +262,11 @@ class PaperEngine:
                 ),
             )
             self.last_trade_ts = now
+            self.live.bump("vanished")
+            self.live.push_event(
+                "vanish", f"{order.triangle.name}: opportunity gone before the fill",
+                triangle=order.triangle.name,
+            )
             return
 
         pnl = realized.profit
@@ -218,6 +289,15 @@ class PaperEngine:
         )
         self.store.add_equity(self.run_id, now, self.balance)
         self.last_trade_ts = now
+
+        self.live.set(trades=self.trades, wins=self.wins, balance=self.balance)
+        self.live.push_equity(now, self.balance)
+        self.live.push_event(
+            "fill",
+            f"{order.triangle.name}: {realized.profit_bps:+.1f} bps",
+            triangle=order.triangle.name, bps=realized.profit_bps,
+            expected_bps=order.expected_bps, pnl=pnl, size=order.size,
+        )
 
         if self.quiet:
             return
