@@ -14,6 +14,15 @@ dependencies = [
     "httpx>=0.27",
 ]
 
+# Without this, setuptools sees both app/ and migrations/ at the top level
+# and refuses to guess which is the package -- breaking `pip install -e .`.
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "pytest-asyncio>=0.24", "ruff>=0.6"]
 

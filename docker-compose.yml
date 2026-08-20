@@ -1,0 +1,30 @@
+services:
+  bot:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Postgres, so the data survives container rebuilds.
+      DATABASE_URL: postgresql+asyncpg://chansub:${DB_PASSWORD:?set DB_PASSWORD in .env}@db:5432/chansub
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: chansub
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+      POSTGRES_DB: chansub
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # The bot must not start against a database still booting.
+      test: ["CMD-SHELL", "pg_isready -U chansub"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pgdata:
