@@ -118,7 +118,26 @@ function omni {
         }
 
         'stop' {
-            omniroute stop 2>$null | Out-Null
+            # Same shim problem as the launch path: calling omniroute directly
+            # can hit the extensionless npm shim and fail silently, so go
+            # through cmd.exe here too.
+            Start-Process -FilePath 'cmd.exe' -ArgumentList '/c omniroute stop' -WindowStyle Hidden -Wait
+
+            for ($i = 0; $i -lt 5; $i++) {
+                if (-not (Test-OmniUp)) { break }
+                Start-Sleep -Seconds 1
+            }
+
+            # If it is still listening, close whatever actually holds the port.
+            if (Test-OmniUp) {
+                $owners = Get-NetTCPConnection -LocalPort $global:OmniPort -State Listen -ErrorAction SilentlyContinue |
+                          Select-Object -ExpandProperty OwningProcess -Unique
+                foreach ($owner in $owners) {
+                    Stop-Process -Id $owner -Force -ErrorAction SilentlyContinue
+                }
+                Start-Sleep -Seconds 1
+            }
+
             if (Test-OmniUp) {
                 Write-Host "gateway is still answering on port $($global:OmniPort)." -ForegroundColor Red
             } else {
