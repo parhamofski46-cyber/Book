@@ -17,8 +17,24 @@ const stats = require('../services/stats');
  * عمل روی حافظه است) یک میلی‌ثانیه هم به زمان بارگذاری صفحه اضافه
  * نمی‌کند.
  */
+/**
+ * نام کوکی «مرا نشمار».
+ * وقتی مالک وارد پنل می‌شود این کوکی روی مرورگرش گذاشته می‌شود و از آن
+ * به بعد بازدیدهای خودش شمرده نمی‌شود.
+ *
+ * چرا لازم است: مالک روزی ده‌ها بار سایت خودش را باز می‌کند تا محصول و
+ * عکس را چک کند. بدون این، بخش بزرگی از «بازدیدکننده‌ها» خودِ اوست و
+ * عدد داشبورد دروغ می‌شود — دقیقاً همان چیزی که آمار قرار بود جلویش را
+ * بگیرد.
+ */
+const NO_TRACK_COOKIE = 'fi_notrack';
+
 function trackPageView(req, res, next) {
   if (req.method !== 'GET' || req.path.startsWith('/admin')) return next();
+  // بازدید خودِ مالک شمرده نمی‌شود
+  if (req.headers.cookie && req.headers.cookie.indexOf(NO_TRACK_COOKIE + '=1') !== -1) {
+    return next();
+  }
 
   res.on('finish', function () {
     try {
@@ -41,4 +57,4 @@ function trackPageView(req, res, next) {
   next();
 }
 
-module.exports = { trackPageView };
+module.exports = { trackPageView, NO_TRACK_COOKIE };

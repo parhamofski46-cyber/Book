@@ -11,6 +11,7 @@ const { requireLogin, csrf, loginLimiter } = require('../middleware/auth');
 const { processUpload, deleteImageFiles } = require('../services/images');
 const captcha = require('../services/captcha');
 const stats = require('../services/stats');
+const { NO_TRACK_COOKIE } = require('../middleware/stats');
 const QRCode = require('qrcode');
 const { slugify, uniqueSlug } = require('../utils/slug');
 
@@ -104,6 +105,14 @@ router.post('/login', loginLimiter, express.urlencoded({ extended: false }), csr
     if (err) throw err;
     req.session.adminId = admin.id;
     req.session.username = admin.username;
+    // از این به بعد بازدیدهای خودِ مالک در آمار شمرده نمی‌شود.
+    // یک سال اعتبار دارد و هیچ داده‌ی شخصی در آن نیست — فقط یک پرچم.
+    res.cookie(NO_TRACK_COOKIE, '1', {
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+      httpOnly: false, // خود مالک باید بتواند در صورت لزوم پاکش کند
+      sameSite: 'lax',
+      path: '/',
+    });
     req.session.mustChange = !!admin.must_change;
     // فقط به مسیرهای داخلی سایت اجازه‌ی هدایت می‌دهیم
     const safeNext = nextUrl.startsWith('/') && !nextUrl.startsWith('//') ? nextUrl : '/admin';
@@ -148,6 +157,7 @@ router.get('/stats', csrf, (req, res) => {
     range,
     data: q.visitStats(range),
     ga4: getSetting('ga4_id', ''),
+    flash: req.query.ok || null,
   });
 });
 
@@ -181,6 +191,22 @@ router.get('/poster', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+/**
+ * پاک‌کردن کامل آمار و شروع دوباره از صفر.
+ *
+ * چرا لازم است: در روزهای اول، بخش بزرگی از بازدیدها خودِ مالک است که
+ * دارد سایت را چک می‌کند. بعد از اینکه سایت واقعاً آماده شد، منطقی است
+ * که شمارش از یک نقطه‌ی تمیز شروع شود.
+ *
+ * برگشت‌ناپذیر است، پس فرم `data-confirm` دارد و فقط با POST و توکن
+ * CSRF کار می‌کند — نه با یک لینک ساده که با یک کلیک اشتباهی همه‌چیز را
+ * پاک کند.
+ */
+router.post('/stats/reset', csrf, (req, res) => {
+  stats.reset();
+  res.redirect('/admin/stats?ok=reset');
 });
 
 // ============================================================ محصولات

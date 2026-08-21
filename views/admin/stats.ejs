@@ -83,9 +83,24 @@
     <p class="hint">
       این آمار روی سرور خودتان جمع می‌شود — بدون گوگل، بدون فیلترشکن، و بدون
       ذخیره‌ی هیچ اطلاعات شخصی از بازدیدکننده‌ها.
+      <br>
+      ✅ بازدیدهای <b>خودتان</b> شمرده نمی‌شود؛ از لحظه‌ای که وارد پنل شدید،
+      مرورگر شما از آمار کنار گذاشته شده است.
     </p>
   </div>
+  <form method="post" action="/admin/stats/reset"
+        data-confirm="همه‌ی آمار بازدید برای همیشه پاک شود و شمارش از صفر شروع شود؟ این کار برگشت‌ناپذیر است.">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <button class="btn btn-danger" type="submit">پاک‌کردن آمار و شروع از صفر</button>
+  </form>
 </div>
+
+<% if (flash === 'reset') { %>
+  <div class="alert alert-ok">
+    آمار پاک شد. شمارش از همین لحظه دوباره شروع می‌شود — و از این به بعد
+    فقط بازدید مشتری‌های واقعی شمرده می‌شود.
+  </div>
+<% } %>
 
 <div class="stats">
   <div class="stat"><b><%= h.toFaDigits(data.today.views) %></b><span>بازدید امروز</span></div>

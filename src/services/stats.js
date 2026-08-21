@@ -285,6 +285,31 @@ function flush() {
   }
 }
 
+/**
+ * پاک‌کردن کامل آمار.
+ *
+ * برای وقتی که مالک می‌خواهد شمارش را از صفر شروع کند — مثلاً بعد از
+ * اینکه خودش چند روز داشته سایت را بالا و پایین می‌کرده و می‌خواهد عدد
+ * واقعیِ مشتری‌ها را ببیند.
+ *
+ * بافر حافظه هم خالی می‌شود، وگرنه چند ثانیه بعد همان بازدیدهای
+ * ثبت‌نشده دوباره روی جدول خالی می‌نشستند و کاربر فکر می‌کرد پاک نشده.
+ */
+const wipeAll = db.transaction(() => {
+  db.prepare('DELETE FROM stats_daily').run();
+  db.prepare('DELETE FROM stats_pages').run();
+  db.prepare('DELETE FROM stats_referrers').run();
+  db.prepare('DELETE FROM stats_visitors').run();
+  db.prepare('DELETE FROM stats_events').run();
+  db.prepare('DELETE FROM stats_searches').run();
+  db.prepare('DELETE FROM stats_hours').run();
+});
+
+function reset() {
+  buf = newBuffer();
+  wipeAll();
+}
+
 /** پاک‌سازی داده‌ی قدیمی تا دیتابیس بی‌جهت بزرگ نشود */
 function purge() {
   try {
@@ -312,4 +337,4 @@ if (timer.unref) timer.unref();
 // آخرین بافر موقع خاموش‌شدن هم ذخیره شود تا آمار چند ثانیه‌ی آخر گم نشود
 ['SIGINT', 'SIGTERM', 'beforeExit'].forEach((ev) => process.on(ev, flush));
 
-module.exports = { record, recordEvent, recordSearch, flush, purge, today, daysAgo, isBot, EVENT_KINDS };
+module.exports = { record, recordEvent, recordSearch, reset, flush, purge, today, daysAgo, isBot, EVENT_KINDS };
