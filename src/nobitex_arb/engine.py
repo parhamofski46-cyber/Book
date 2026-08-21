@@ -61,6 +61,7 @@ class PaperEngine:
         self.wins = 0
         self.opportunities = 0
         self.irt_unit = cfg.irt_unit
+        self.min_notionals = dict(cfg.min_order_by_quote)
         self.quiet = False
         self.live = LiveState()
         self.live.set(
@@ -97,9 +98,12 @@ class PaperEngine:
                       balance=self.balance, capital=float(self.cfg.capital_irt),
                       fee_rate=self.cfg.fee_rate)
         self.live.push_equity(started, self.balance)
-        self.live.set_triangles({t.name: {"path": t.path, "net_bps": None, "size": 0.0}
-                                 for t in self.triangles})
+        self.live.set_triangles({
+            t.name: {"path": t.path, "net_bps": None, "size": 0.0,
+                     "note": "در انتظار اولین خواندن دفتر"}
+            for t in self.triangles})
         self.live.push_event("run", f"run #{self.run_id} started")
+        self._refresh_limits()
 
         if not self.quiet:
             print(f"run #{self.run_id} | {len(self.triangles)} triangles | "
@@ -143,6 +147,23 @@ class PaperEngine:
         self.live.push_event("run", f"run #{self.run_id} stopped")
         if not self.quiet:
             self._print_summary(time.time() - started)
+
+    def _refresh_limits(self) -> None:
+        """Replace the configured minimum order values with the exchange's own."""
+        if not self.cfg.fetch_exchange_limits:
+            return
+        try:
+            limits = self.feed.fetch_options()
+        except Exception as exc:
+            log.warning("could not read exchange limits, using the configured ones: %s", exc)
+            self.live.push_event(
+                "run", "حداقل حجم سفارش از صرافی خوانده نشد؛ مقدار تنظیمات استفاده می‌شود")
+            return
+        self.min_notionals.update(limits)
+        self.live.set(min_notionals=dict(self.min_notionals))
+        summary = "، ".join(f"{v:,.0f} {k}" for k, v in sorted(self.min_notionals.items()))
+        log.info("exchange minimum order values: %s", summary)
+        self.live.push_event("run", f"حداقل حجم سفارش صرافی: {summary}")
 
     def _sleep(self, seconds: float) -> None:
         """Sleep in slices so a stop request is honoured promptly."""
@@ -190,7 +211,8 @@ class PaperEngine:
             cap = min(self.cfg.max_order_irt, self.balance)
             if cap < self.cfg.min_order_irt:
                 continue
-            res = best_size(tri, books, self.cfg.fee_rate, self.cfg.min_order_irt, cap)
+            res = best_size(tri, books, self.cfg.fee_rate, self.cfg.min_order_irt, cap,
+                            min_notionals=self.min_notionals)
             if res is None or not res.feasible:
                 scan[tri.name] = {"path": tri.path, "net_bps": None, "size": 0.0,
                                   "note": (res.reason if res else "no depth")}

@@ -10,7 +10,7 @@ from .models import Market
 
 DEFAULT_CONFIG: dict = {
     "_comment": "Verify fee_rate and min_order_* against your own Nobitex account before trusting any number this produces.",
-    "base_url": "https://api.nobitex.ir",
+    "base_url": "https://apiv2.nobitex.ir",
     "start_currency": "IRT",
     "irt_unit": "auto",
     "markets": [
@@ -21,10 +21,12 @@ DEFAULT_CONFIG: dict = {
         {"symbol": "ETHUSDT", "base": "ETH", "quote": "USDT"}
     ],
     "fee_rate": 0.0025,
+    "min_order_by_quote": {"IRT": 3000000, "USDT": 11},
+    "fetch_exchange_limits": True,
     "poll_interval_sec": 3.0,
     "request_timeout_sec": 10.0,
     "capital_irt": 100000000,
-    "min_order_irt": 5000000,
+    "min_order_irt": 3000000,
     "max_order_irt": 50000000,
     "min_profit_bps": 5.0,
     "cooldown_sec": 15.0,
@@ -46,11 +48,21 @@ class Config:
     markets: list[Market] = field(default_factory=list)
 
     fee_rate: float = 0.0025        # per leg, taker
+
+    # Nobitex enforces a minimum order value per quote currency: 3,000,000 rial
+    # on rial markets and 11 USDT on tether markets. The tether one is the
+    # binding constraint for a triangle, because the middle leg is quoted in
+    # USDT: at ~1,150,000 rial per USDT, 11 USDT is about 12,650,000 rial, far
+    # above the rial minimum. Ignoring it would let the simulator "trade" sizes
+    # the exchange would reject outright.
+    min_order_by_quote: dict[str, float] = field(
+        default_factory=lambda: {"IRT": 3_000_000.0, "USDT": 11.0})
+    fetch_exchange_limits: bool = True   # refresh the above from GET /v2/options
     poll_interval_sec: float = 3.0
     request_timeout_sec: float = 10.0
 
     capital_irt: float = 100_000_000
-    min_order_irt: float = 5_000_000
+    min_order_irt: float = 3_000_000
     max_order_irt: float = 50_000_000
     min_profit_bps: float = 5.0
     cooldown_sec: float = 15.0
@@ -73,6 +85,9 @@ class Config:
         raw = json.loads(p.read_text(encoding="utf-8"))
         raw.pop("_comment", None)
         markets = [Market(**m) for m in raw.pop("markets", [])]
+        if "min_order_by_quote" in raw:
+            raw["min_order_by_quote"] = {
+                str(k): float(v) for k, v in dict(raw["min_order_by_quote"]).items()}
         known = {f for f in Config.__dataclass_fields__ if f != "markets"}
         unknown = set(raw) - known
         if unknown:
@@ -94,6 +109,9 @@ class Config:
             raise ValueError("poll_interval_sec below 1s risks hitting the exchange rate limit")
         if self.irt_unit not in ("rial", "toman", "auto"):
             raise ValueError("irt_unit must be rial, toman or auto")
+        for quote, minimum in self.min_order_by_quote.items():
+            if minimum < 0:
+                raise ValueError(f"negative minimum order for {quote}")
 
     def to_dict(self) -> dict:
         d = asdict(self)

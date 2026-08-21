@@ -19,7 +19,9 @@ from nobitex_arb.execution import buy_base, sell_base
 from nobitex_arb.models import Level, Market, OrderBook
 from nobitex_arb.microstructure import order_book_imbalance
 from nobitex_arb.stats import bootstrap_ci, max_drawdown, summarize
-from nobitex_arb.triangle import best_size, break_even_fee, build_triangles, run_cycle
+from nobitex_arb.triangle import (
+    best_size, break_even_fee, build_triangles, implied_min_start, run_cycle,
+)
 
 USDTIRT = Market("USDTIRT", "USDT", "IRT")
 BTCIRT = Market("BTCIRT", "BTC", "IRT")
@@ -211,6 +213,66 @@ class TestSizing(unittest.TestCase):
         res = best_size(tri, books, 0.0025, 1_000.0, 1_000_000.0)
         self.assertIsNotNone(res)
         self.assertLess(res.profit, 0)
+
+
+class TestExchangeMinimums(unittest.TestCase):
+    """Nobitex requires 3,000,000 rial on rial markets and 11 USDT on tether ones.
+
+    The tether floor binds a triangle harder than the rial one, because the
+    middle leg is quoted in USDT. A simulator that ignores it reports trades
+    the exchange would have rejected.
+    """
+
+    USDT_IRT = 1_150_000.0
+    BTC_USDT = 95_000.0
+    MINIMUMS = {"IRT": 3_000_000.0, "USDT": 11.0}
+
+    def books(self, skew: float = 0.0):
+        return {
+            "USDTIRT": book("USDTIRT", self.USDT_IRT, self.USDT_IRT),
+            "BTCUSDT": book("BTCUSDT", self.BTC_USDT, self.BTC_USDT),
+            "BTCIRT": book("BTCIRT", self.USDT_IRT * self.BTC_USDT * (1 + skew),
+                           self.USDT_IRT * self.BTC_USDT * (1 + skew)),
+        }
+
+    def test_tether_leg_sets_the_floor_not_the_rial_leg(self):
+        for tri in build_triangles(MARKETS, "IRT"):
+            floor = implied_min_start(tri, self.books(), self.MINIMUMS)
+            self.assertAlmostEqual(floor, 11 * self.USDT_IRT, delta=1.0)
+            self.assertGreater(floor, self.MINIMUMS["IRT"])
+
+    def test_a_cycle_under_the_tether_minimum_is_rejected(self):
+        tri = next(t for t in build_triangles(MARKETS, "IRT") if t.name == "IRT>USDT>BTC>IRT")
+        # 5,000,000 rial clears the rial floor but is only ~4.3 USDT on leg two.
+        res = run_cycle(tri, self.books(0.02), 5_000_000.0, 0.0, self.MINIMUMS)
+        self.assertFalse(res.feasible)
+        self.assertIn("USDT", res.reason)
+        self.assertIn("BTCUSDT", res.reason)
+
+    def test_the_same_cycle_is_accepted_above_the_floor(self):
+        tri = next(t for t in build_triangles(MARKETS, "IRT") if t.name == "IRT>USDT>BTC>IRT")
+        res = run_cycle(tri, self.books(0.02), 20_000_000.0, 0.0, self.MINIMUMS)
+        self.assertTrue(res.feasible, res.reason)
+        self.assertGreater(res.profit, 0)
+
+    def test_sizing_never_proposes_an_unplaceable_order(self):
+        tri = next(t for t in build_triangles(MARKETS, "IRT") if t.name == "IRT>USDT>BTC>IRT")
+        res = best_size(tri, self.books(0.02), 0.0, 1_000_000.0, 100_000_000.0,
+                        min_notionals=self.MINIMUMS)
+        self.assertIsNotNone(res)
+        self.assertTrue(res.feasible, res.reason)
+        self.assertGreaterEqual(res.start_amount, 11 * self.USDT_IRT - 1.0)
+
+    def test_capital_below_the_floor_yields_no_trade_at_all(self):
+        tri = next(t for t in build_triangles(MARKETS, "IRT") if t.name == "IRT>USDT>BTC>IRT")
+        res = best_size(tri, self.books(0.02), 0.0, 1_000_000.0, 8_000_000.0,
+                        min_notionals=self.MINIMUMS)
+        self.assertIsNone(res, "a cap under the tether floor must produce nothing")
+
+    def test_without_minimums_the_old_permissive_behaviour_remains(self):
+        tri = next(t for t in build_triangles(MARKETS, "IRT") if t.name == "IRT>USDT>BTC>IRT")
+        res = run_cycle(tri, self.books(0.02), 5_000_000.0, 0.0)
+        self.assertTrue(res.feasible)
 
 
 class TestBreakEvenFee(unittest.TestCase):

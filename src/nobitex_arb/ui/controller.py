@@ -135,6 +135,13 @@ class AppController:
 
         out["ok"] = True
         out["mode"] = feed.mode
+        limits = dict(cfg.min_order_by_quote)
+        try:
+            limits.update(feed.fetch_options())
+            out["limits_source"] = "exchange"
+        except Exception as exc:
+            out["limits_source"] = f"config ({exc})"
+        out["min_notionals"] = limits
         out["missing"] = [s for s in symbols if s not in books]
         out["unit"] = detect_irt_unit(books["USDTIRT"].mid) if "USDTIRT" in books else "unknown"
         out["markets"] = [
@@ -145,7 +152,8 @@ class AppController:
         rows = []
         for tri in build_triangles(cfg.markets, cfg.start_currency):
             res = best_size(tri, books, cfg.fee_rate, cfg.min_order_irt,
-                            min(cfg.max_order_irt, cfg.capital_irt))
+                            min(cfg.max_order_irt, cfg.capital_irt),
+                            min_notionals=limits)
             if res is None or not res.feasible:
                 rows.append({"name": tri.name, "path": tri.path, "net_bps": None,
                              "gross_bps": None, "size": 0.0,

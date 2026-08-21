@@ -75,13 +75,24 @@ def cmd_doctor(args: argparse.Namespace) -> int:
               f"{cfg.start_currency} plus the cross market between their bases.")
         return 1
 
+    limits = dict(cfg.min_order_by_quote)
+    try:
+        limits.update(feed.fetch_options())
+        print("minimum order value (from the exchange): "
+              + ", ".join(f"{v:,.0f} {k}" for k, v in sorted(limits.items())))
+    except Exception as exc:
+        print(f"minimum order value (from config; {exc}): "
+              + ", ".join(f"{v:,.0f} {k}" for k, v in sorted(limits.items())))
+    print()
+
     print(f"{len(triangles)} triangles, evaluated right now at "
           f"{cfg.fee_rate*100:.3f}% fee per leg:\n")
     print(f"{'cycle':<28} {'gross':>10} {'net':>10} {'best size':>16} {'status'}")
     any_positive = False
     for tri in triangles:
         res = best_size(tri, books, cfg.fee_rate, cfg.min_order_irt,
-                        min(cfg.max_order_irt, cfg.capital_irt))
+                        min(cfg.max_order_irt, cfg.capital_irt),
+                        min_notionals=limits)
         if res is None or not res.feasible:
             reason = res.reason if res else "not enough visible depth"
             print(f"{tri.name:<28} {'n/a':>10} {'n/a':>10} {'-':>16} {reason}")

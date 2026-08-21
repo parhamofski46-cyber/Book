@@ -130,8 +130,15 @@ def run_cycle(
     books: Mapping[str, OrderBook],
     start_amount: float,
     fee_rate: float,
+    min_notionals: Mapping[str, float] | None = None,
 ) -> CycleResult:
-    """Push `start_amount` through all three legs against live depth."""
+    """Push `start_amount` through all three legs against live depth.
+
+    `min_notionals` maps a quote currency to the smallest order the exchange
+    accepts in markets quoted in it. Every leg is checked against its own
+    quote currency: a cycle whose middle leg falls under the tether minimum
+    cannot be placed, however profitable it looks.
+    """
     for sym in triangle.symbols:
         book = books.get(sym)
         if book is None:
@@ -162,6 +169,16 @@ def run_cycle(
                 f"depth exhausted on {leg.market.symbol}",
             )
 
+        if min_notionals:
+            floor = min_notionals.get(leg.market.quote)
+            notional = fill.in_amount if leg.side == "buy" else fill.out_gross
+            if floor and notional < floor:
+                return CycleResult(
+                    triangle, start_amount, 0.0, tuple(fills), False,
+                    f"below the {_fmt_min(floor)} {leg.market.quote} minimum "
+                    f"on {leg.market.symbol}",
+                )
+
         amount = fill.out_amount
         currency = leg.gets
 
@@ -169,6 +186,40 @@ def run_cycle(
         return CycleResult(triangle, start_amount, 0.0, tuple(fills), False, "cycle did not close")
 
     return CycleResult(triangle, start_amount, amount, tuple(fills), True)
+
+
+def _fmt_min(value: float) -> str:
+    return f"{value:,.0f}" if value >= 1 else f"{value:g}"
+
+
+def implied_min_start(
+    triangle: Triangle,
+    books: Mapping[str, OrderBook],
+    min_notionals: Mapping[str, float],
+) -> float:
+    """Smallest starting amount that clears every leg's own minimum.
+
+    Worked backwards through the mid prices: an 11 USDT floor on the middle
+    leg becomes roughly 12.6 million rial at the start of the cycle, which is
+    four times the rial-market minimum. Approximate, because it uses mids
+    rather than the executed prices, so the exact check still runs per fill.
+    """
+    required = 0.0
+    rate = 1.0        # start-currency units per unit of the currency we hold
+    for leg in triangle.legs:
+        book = books.get(leg.market.symbol)
+        if book is None or not book.is_valid() or book.mid <= 0:
+            continue
+        # Buying spends the quote currency, so the leg's notional is measured
+        # in what we already hold. Selling spends the base and receives the
+        # quote, so the notional is measured in what we are about to hold.
+        rate_after = rate * book.mid if leg.side == "buy" else rate / book.mid
+        quote_rate = rate if leg.side == "buy" else rate_after
+        floor = min_notionals.get(leg.market.quote)
+        if floor:
+            required = max(required, floor * quote_rate)
+        rate = rate_after
+    return required
 
 
 def best_size(
@@ -179,6 +230,7 @@ def best_size(
     max_notional: float,
     grid: int = 24,
     refine: int = 32,
+    min_notionals: Mapping[str, float] | None = None,
 ) -> CycleResult | None:
     """Find the size that maximises absolute profit.
 
@@ -186,11 +238,15 @@ def best_size(
     so the optimum sits between the exchange minimum and the depth limit. We
     scan a log-spaced grid, then golden-section refine around the winner.
     """
+    if min_notionals:
+        # Start the search at a size that can actually be placed, instead of
+        # spending the whole grid on sizes the exchange would reject.
+        min_notional = max(min_notional, implied_min_start(triangle, books, min_notionals))
     if max_notional < min_notional or min_notional <= 0:
         return None
 
     def evaluate(size: float) -> CycleResult:
-        return run_cycle(triangle, books, size, fee_rate)
+        return run_cycle(triangle, books, size, fee_rate, min_notionals)
 
     lo_log, hi_log = math.log(min_notional), math.log(max_notional)
     candidates: list[CycleResult] = []

@@ -39,6 +39,7 @@ class LiveState:
             "best_edge_bps": None,
             "best_triangle": "",
             "cooldown_until": 0.0,
+            "min_notionals": {},
         }
         self._markets: dict[str, dict] = {}
         self._triangles: dict[str, dict] = {}

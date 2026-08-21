@@ -65,6 +65,7 @@ class NobitexFeed:
         self.levels = levels
         self.stats = FetchStats()
         self.mode = "auto"  # resolved to "batch" or "single" on first success
+        self._last_reasons: list[str] = []
         self._session = requests.Session()
         self._session.headers.update({"User-Agent": USER_AGENT, "Accept": "application/json"})
 
@@ -80,6 +81,7 @@ class NobitexFeed:
     def fetch(self, symbols: Sequence[str]) -> dict[str, OrderBook]:
         """Return a book per symbol. Symbols that fail are simply absent."""
         self.stats.attempts += 1
+        self._last_reasons = []
         try:
             if self.mode in ("auto", "batch"):
                 books = self._fetch_batch(symbols)
@@ -90,7 +92,10 @@ class NobitexFeed:
                     self.mode = "single"
             books = self._fetch_single(symbols)
             if not books:
-                raise FeedError("no order books returned")
+                # "no order books returned" on its own tells nobody anything.
+                # Carry what actually went wrong, per endpoint.
+                detail = "; ".join(self._last_reasons[:4]) or "no detail available"
+                raise FeedError(f"no order books returned ({detail})")
             self.mode = "single"
             return books
         except Exception as exc:  # network, JSON, or schema trouble -- caller retries
@@ -101,7 +106,8 @@ class NobitexFeed:
     def _fetch_batch(self, symbols: Sequence[str]) -> dict[str, OrderBook]:
         try:
             payload = self._get("/v3/orderbook/all")
-        except Exception:
+        except Exception as exc:
+            self._note("/v3/orderbook/all", exc)
             return {}
         if not isinstance(payload, dict):
             return {}
@@ -123,8 +129,11 @@ class NobitexFeed:
                 try:
                     entry = self._get(path)
                     break
-                except Exception:
+                except Exception as exc:
+                    self._note(path, exc)
                     continue
+            if entry is not None and self._parse(sym, entry, ts) is None:
+                self._note(f"/v3/orderbook/{sym}", "response had no usable bids/asks")
             book = self._parse(sym, entry, ts)
             if book is not None:
                 books[sym] = book
@@ -141,6 +150,35 @@ class NobitexFeed:
             return None
         book = OrderBook.build(symbol, bids[: self.levels], asks[: self.levels], ts)
         return book if book.is_valid() else None
+
+    def _note(self, path: str, problem: Any) -> None:
+        text = (f"{type(problem).__name__}: {problem}"
+                if isinstance(problem, BaseException) else str(problem))
+        self._last_reasons.append(f"{path} -> {text[:160]}")
+
+    def fetch_options(self) -> dict[str, float]:
+        """Read the exchange's own minimum order values from GET /v2/options.
+
+        Better than trusting a number typed into a config file: these are the
+        limits the matching engine will actually enforce.
+        """
+        payload = self._get("/v2/options")
+        if not isinstance(payload, dict):
+            raise FeedError("unexpected /v2/options payload")
+        raw = (payload.get("nobitex") or {}).get("minOrders") or {}
+        mapping = {"rls": "IRT", "irt": "IRT", "usdt": "USDT"}
+        out: dict[str, float] = {}
+        for key, value in raw.items():
+            quote = mapping.get(str(key).lower())
+            if quote is None:
+                continue
+            try:
+                out[quote] = _num(value)
+            except (TypeError, ValueError):
+                continue
+        if not out:
+            raise FeedError("/v2/options carried no recognisable minOrders")
+        return out
 
     def raw(self, symbol: str) -> Any:
         """Untouched payload, for the `doctor` command."""
