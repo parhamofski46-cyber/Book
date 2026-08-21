@@ -40,7 +40,7 @@ const faqSchema = faqContent.faqSchema(faq);
                     <%- icon(ch.key) %> پیام در <%= ch.label %>
                   </a>
                 <% }); %>
-                <a class="btn btn-dark btn-lg btn-block" href="<%= site.phoneHref %>">
+                <a data-track="phone" class="btn btn-dark btn-lg btn-block" href="<%= site.phoneHref %>">
                   <%- icon('phone') %> تماس: <span dir="ltr"><%= h.toFaDigits(site.phone) %></span>
                 </a>
               </div>

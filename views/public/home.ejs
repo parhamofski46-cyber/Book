@@ -27,7 +27,7 @@
               <%- icon('whatsapp') %> استعلام قیمت در واتساپ
             </a>
           <% } %>
-          <a class="btn btn-ghost btn-lg" href="<%= site.phoneHref %>">
+          <a data-track="phone" class="btn btn-ghost btn-lg" href="<%= site.phoneHref %>">
             <%- icon('phone') %> <span dir="ltr"><%= h.toFaDigits(site.phone) %></span>
           </a>
         </div>
@@ -202,7 +202,7 @@
                 <%- icon(ch.key) %> <%= ch.label %>
               </a>
             <% }); %>
-            <a class="btn btn-ghost btn-lg" href="<%= site.phoneHref %>">
+            <a data-track="phone" class="btn btn-ghost btn-lg" href="<%= site.phoneHref %>">
               <%- icon('phone') %> تماس تلفنی
             </a>
           </div>

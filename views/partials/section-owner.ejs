@@ -78,7 +78,7 @@ const alt = (ownerName ? ownerName + '، ' : '') + ownerTitle + ' — آهن‌�
               <%- icon(ch.key) %> گفت‌وگو در <%= ch.label %>
             </a>
           <% }); %>
-          <a class="btn btn-ghost" href="<%= site.phoneHref %>">
+          <a data-track="phone" class="btn btn-ghost" href="<%= site.phoneHref %>">
             <%- icon('phone') %> <span dir="ltr"><%= h.toFaDigits(site.phone) %></span>
           </a>
         </div>

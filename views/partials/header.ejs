@@ -51,7 +51,7 @@
 
     <!-- دکمه‌ی تماس همیشه در دسترس، حتی در موبایل -->
     <div class="header-cta">
-      <a class="btn btn-primary btn-sm" href="<%= site.phoneHref %>">
+      <a data-track="phone" class="btn btn-primary btn-sm" href="<%= site.phoneHref %>" data-track="phone">
         <%- icon('phone') %><span class="btn-label"><%= h.toFaDigits(site.phone) %></span>
       </a>
     </div>

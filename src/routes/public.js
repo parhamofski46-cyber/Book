@@ -7,6 +7,7 @@ const q = require('../db/queries');
 const { truncate, categoryCover } = require('../utils/view-helpers');
 const h = require('../utils/view-helpers');
 const articles = require('../content/articles');
+const stats = require('../services/stats');
 const faq = require('../content/faq');
 const cities = require('../content/cities');
 const categoryGuides = require('../content/category-guides');
@@ -141,6 +142,9 @@ function renderProductList(req, res, category) {
     onlyInStock,
   };
   const total = q.countProducts(filters);
+  // عبارت جست‌وجو با تعداد نتیجه‌اش ثبت می‌شود. جست‌وجوی بی‌نتیجه
+  // ارزشمندترین داده است: مشتری چیزی خواسته که در سایت نبوده.
+  if (search) stats.recordSearch(search, total);
   const pages = Math.max(1, Math.ceil(total / PER_PAGE));
   const page = Math.min(Math.max(1, parseInt(req.query.page, 10) || 1), pages);
 
@@ -469,6 +473,38 @@ router.get('/contact', (req, res) => {
     mapDirections: mapDirectionsUrl(getSetting('map_embed', '')),
     mapPlace: mapPlaceUrl(getSetting('map_embed', '')),
   });
+});
+
+// ------------------------------------------------- ثبت کلیک دکمه‌های تماس
+/**
+ * نقطه‌ی پایانی سبک برای شمردن کلیک روی دکمه‌های واتساپ/تلگرام/تلفن.
+ *
+ * چرا لازم است: «بازدید» یعنی کسی نگاه کرد؛ این یعنی کسی واقعاً سراغ
+ * مغازه آمد. برای مالک، عدد دوم است که معنی دارد.
+ *
+ * چند تصمیم عمدی:
+ *  • پاسخ ۲۰۴ بدون بدنه است و مرورگر با `sendBeacon` می‌فرستد، یعنی
+ *    رفتن کاربر به واتساپ حتی یک لحظه هم عقب نمی‌افتد.
+ *  • نوع رویداد از فهرست بسته‌ی `EVENT_KINDS` می‌آید؛ هر چیز دیگری
+ *    بی‌صدا رد می‌شود تا کسی نتواند جدول را با داده‌ی دلخواه پر کند.
+ *  • ربات‌ها شمرده نمی‌شوند، دقیقاً مثل بازدید صفحه.
+ *  • بدنه حداکثر ۲۰۰ بایت خوانده می‌شود.
+ */
+router.post('/e', express.text({ type: '*/*', limit: 200 }), (req, res) => {
+  try {
+    if (!stats.isBot(req.get('user-agent'))) {
+      // `sendBeacon` بدنه را با text/plain می‌فرستد و اینجا رشته می‌رسد.
+      // ولی اگر روزی میان‌افزار دیگری بدنه را زودتر تجزیه کند (مثلاً
+      // urlencoded سراسری)، `req.body` شیء می‌شود؛ آن حالت هم پوشش داده
+      // شده تا رویداد بی‌صدا گم نشود.
+      const raw =
+        typeof req.body === 'string' ? req.body : Object.keys(req.body || {})[0] || '';
+      stats.recordEvent(String(raw).trim().slice(0, 20));
+    }
+  } catch (err) {
+    /* آمار هرگز نباید خطا برگرداند */
+  }
+  res.status(204).end();
 });
 
 // --------------------------------------------------------------- خوراک RSS

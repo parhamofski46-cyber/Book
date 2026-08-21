@@ -307,6 +307,47 @@ function visitStats(range) {
            FROM stats_daily WHERE day >= ? AND day <= ?`
       )
       .get(range.from30, range.today),
+
+    // ── تماس‌ها: مهم‌ترین عدد سایت ───────────────────────────────────
+    // بازدید یعنی کسی نگاه کرد؛ این یعنی کسی واقعاً سراغ مغازه آمد.
+    contacts: {
+      today: db
+        .prepare('SELECT kind, count FROM stats_events WHERE day = ?')
+        .all(range.today),
+      month: db
+        .prepare(
+          `SELECT kind, SUM(count) AS count FROM stats_events
+            WHERE day >= ? AND day <= ? GROUP BY kind ORDER BY count DESC`
+        )
+        .all(range.from30, range.today),
+      monthTotal: db
+        .prepare(
+          `SELECT COALESCE(SUM(count), 0) AS n FROM stats_events
+            WHERE day >= ? AND day <= ?`
+        )
+        .get(range.from30, range.today).n,
+    },
+
+    // ── جست‌وجوهای داخل سایت ────────────────────────────────────────
+    // ترتیب بر اساس «بی‌نتیجه بودن» است، نه صرفاً تعداد: عبارتی که نتیجه
+    // نداشته، یعنی مشتری چیزی خواسته که نداریم یا در سایت ثبت نشده.
+    searches: db
+      .prepare(
+        `SELECT term, SUM(hits) AS hits, MIN(results) AS results
+           FROM stats_searches WHERE day >= ? AND day <= ?
+          GROUP BY term
+          ORDER BY (MIN(results) = 0) DESC, hits DESC
+          LIMIT 20`
+      )
+      .all(range.from30, range.today),
+
+    // ── توزیع ساعتی ────────────────────────────────────────────────
+    hours: db
+      .prepare(
+        `SELECT hour, SUM(views) AS views FROM stats_hours
+          WHERE day >= ? AND day <= ? GROUP BY hour ORDER BY hour`
+      )
+      .all(range.from30, range.today),
   };
 }
 

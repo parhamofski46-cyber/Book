@@ -139,7 +139,7 @@ const breadcrumbSchema = {
                   <%- icon(ch.key) %> استعلام قیمت از <%= ch.label %>
                 </a>
               <% }); %>
-              <a class="btn btn-dark btn-block" href="<%= site.phoneHref %>">
+              <a data-track="phone" class="btn btn-dark btn-block" href="<%= site.phoneHref %>">
                 <%- icon('phone') %> تماس تلفنی: <span dir="ltr"><%= h.toFaDigits(site.phone) %></span>
               </a>
               <button type="button" class="btn btn-ghost btn-block add-quote add-quote-lg"

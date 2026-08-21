@@ -620,3 +620,34 @@ tr:hover td {
   height: 100%;
   background: var(--brand, #a8552a);
 }
+
+/* کارت آمار «تماس» — عدد اصلی صفحه، باید از بقیه متمایز باشد */
+.stat.accent {
+  border-color: var(--brand, #a8552a);
+  background: #fdf6f1;
+}
+.stat.accent b { color: #a8431a; }
+
+/* نوار سهم هر راه تماس، داخل جدول */
+.mini-bar {
+  display: inline-block;
+  width: 70px;
+  height: 8px;
+  border-radius: 4px;
+  background: #e6ddd2;
+  overflow: hidden;
+  vertical-align: middle;
+  margin-inline-end: 6px;
+}
+.mini-bar > span {
+  display: block;
+  height: 100%;
+  background: #a8552a;
+}
+.hour-chart {
+  display: block;
+  width: 100%;
+  min-width: 560px;
+  height: auto;
+}
+.hour-chart text.num { direction: ltr; }

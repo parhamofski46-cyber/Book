@@ -250,6 +250,36 @@ db.exec(`
     token TEXT NOT NULL,
     PRIMARY KEY (day, token)
   );
+
+  -- کلیک روی دکمه‌های تماس. مهم‌ترین عدد سایت: بازدید یعنی کسی نگاه کرد،
+  -- ولی این یعنی کسی واقعاً سراغ شما آمد. بدون این، مالک نمی‌داند سایت
+  -- مشتری می‌آورد یا فقط بازدیدکننده.
+  CREATE TABLE IF NOT EXISTS stats_events (
+    day   TEXT NOT NULL,
+    kind  TEXT NOT NULL,              -- whatsapp | telegram | phone | quote
+    count INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (day, kind)
+  );
+
+  -- عبارت‌هایی که مردم در خود سایت جست‌وجو کرده‌اند.
+  -- جست‌وجوی بی‌نتیجه ارزشمندترین داده‌ی این جدول است: یعنی مشتری چیزی
+  -- می‌خواسته که در سایت نبوده.
+  CREATE TABLE IF NOT EXISTS stats_searches (
+    day     TEXT NOT NULL,
+    term    TEXT NOT NULL,
+    hits    INTEGER NOT NULL DEFAULT 0,  -- چند بار جست‌وجو شد
+    results INTEGER NOT NULL DEFAULT 0,  -- آخرین تعداد نتیجه
+    PRIMARY KEY (day, term)
+  );
+
+  -- توزیع ساعتی بازدید (به وقت تهران) — مالک بفهمد چه ساعتی باید کنار
+  -- گوشی باشد.
+  CREATE TABLE IF NOT EXISTS stats_hours (
+    day   TEXT NOT NULL,
+    hour  INTEGER NOT NULL,
+    views INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (day, hour)
+  );
 `);
 
 /** خواندن یک تنظیم با مقدار پیش‌فرض */

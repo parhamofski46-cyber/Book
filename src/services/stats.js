@@ -51,6 +51,9 @@ function newBuffer() {
     pages: new Map(), // 'day path' → count
     refs: new Map(), // 'day host' → count
     tokens: new Set(), // 'day token'
+    events: new Map(), // 'day kind' → count      (کلیک دکمه‌های تماس)
+    searches: new Map(), // 'day term' → {hits, results}
+    hours: new Map(), // 'day hour' → count
   };
 }
 
@@ -65,6 +68,17 @@ const bump = (map, key, by) => map.set(key, (map.get(key) || 0) + by);
  */
 function today() {
   return new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Tehran' });
+}
+
+/** ساعت جاری به وقت تهران (۰ تا ۲۳) */
+function currentHour() {
+  return Number(
+    new Date().toLocaleString('en-US', {
+      timeZone: 'Asia/Tehran',
+      hour: '2-digit',
+      hour12: false,
+    })
+  ) % 24;
 }
 
 /** n روز قبل، با همان قالب و همان منطقه‌ی زمانی */
@@ -138,9 +152,44 @@ function record(info) {
     const rh = referrerHost(info.referrer, info.host);
     if (rh) bump(buf.refs, day + ' ' + rh, 1);
 
+    bump(buf.hours, day + ' ' + currentHour(), 1);
     buf.tokens.add(day + ' ' + visitorToken(info.ip || '', ua, day));
   } catch (err) {
     /* آمار هرگز نباید باعث خطای صفحه شود */
+  }
+}
+
+/**
+ * ثبت کلیک روی دکمه‌های تماس.
+ * فهرست مجاز بسته است تا کسی نتواند با درخواست ساختگی، جدول را با
+ * نوع‌های دلخواه پر کند.
+ */
+const EVENT_KINDS = ['whatsapp', 'telegram', 'phone', 'quote'];
+
+function recordEvent(kind) {
+  try {
+    if (EVENT_KINDS.indexOf(kind) === -1) return false;
+    bump(buf.events, today() + ' ' + kind, 1);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+/**
+ * ثبت عبارت جست‌وجوشده در سایت.
+ * @param {string} term عبارت خام کاربر
+ * @param {number} results تعداد نتیجه‌ای که گرفت
+ */
+function recordSearch(term, results) {
+  try {
+    const t = String(term || '').trim().slice(0, 60);
+    if (!t) return;
+    const key = today() + ' ' + t;
+    const prev = buf.searches.get(key) || { hits: 0, results: 0 };
+    buf.searches.set(key, { hits: prev.hits + 1, results: Number(results) || 0 });
+  } catch (err) {
+    /* آمار نباید جست‌وجو را بشکند */
   }
 }
 
@@ -161,6 +210,19 @@ const upRef = db.prepare(
      ON CONFLICT(day, host) DO UPDATE SET views = views + excluded.views`
 );
 const addToken = db.prepare('INSERT OR IGNORE INTO stats_visitors (day, token) VALUES (?, ?)');
+const upEvent = db.prepare(
+  `INSERT INTO stats_events (day, kind, count) VALUES (?, ?, ?)
+     ON CONFLICT(day, kind) DO UPDATE SET count = count + excluded.count`
+);
+const upSearch = db.prepare(
+  `INSERT INTO stats_searches (day, term, hits, results) VALUES (?, ?, ?, ?)
+     ON CONFLICT(day, term) DO UPDATE SET hits = hits + excluded.hits,
+                                          results = excluded.results`
+);
+const upHour = db.prepare(
+  `INSERT INTO stats_hours (day, hour, views) VALUES (?, ?, ?)
+     ON CONFLICT(day, hour) DO UPDATE SET views = views + excluded.views`
+);
 const syncVisitors = db.prepare(
   `UPDATE stats_daily SET visitors =
      (SELECT COUNT(*) FROM stats_visitors v WHERE v.day = stats_daily.day)
@@ -192,11 +254,28 @@ const flushAll = db.transaction((b) => {
     addToken.run(kv[0], kv[1]);
     days.add(kv[0]);
   });
+  b.events.forEach((n, key) => {
+    const kv = splitKey(key);
+    upEvent.run(kv[0], kv[1], n);
+  });
+  b.searches.forEach((v, key) => {
+    const kv = splitKey(key);
+    upSearch.run(kv[0], kv[1], v.hits, v.results);
+  });
+  b.hours.forEach((n, key) => {
+    const kv = splitKey(key);
+    upHour.run(kv[0], Number(kv[1]), n);
+  });
   days.forEach((day) => syncVisitors.run(day));
 });
 
 function flush() {
-  if (!buf.daily.size && !buf.pages.size && !buf.refs.size && !buf.tokens.size) return;
+  if (
+    !buf.daily.size && !buf.pages.size && !buf.refs.size && !buf.tokens.size &&
+    !buf.events.size && !buf.searches.size && !buf.hours.size
+  ) {
+    return;
+  }
   const b = buf;
   buf = newBuffer();
   try {
@@ -213,6 +292,9 @@ function purge() {
     db.prepare('DELETE FROM stats_daily WHERE day < ?').run(old);
     db.prepare('DELETE FROM stats_pages WHERE day < ?').run(old);
     db.prepare('DELETE FROM stats_referrers WHERE day < ?').run(old);
+    db.prepare('DELETE FROM stats_events WHERE day < ?').run(old);
+    db.prepare('DELETE FROM stats_searches WHERE day < ?').run(old);
+    db.prepare('DELETE FROM stats_hours WHERE day < ?').run(old);
     db.prepare('DELETE FROM stats_visitors WHERE day < ?').run(daysAgo(KEEP_TOKEN_DAYS));
   } catch (err) {
     console.error('[stats] پاک‌سازی ناموفق بود:', err.message);
@@ -230,4 +312,4 @@ if (timer.unref) timer.unref();
 // آخرین بافر موقع خاموش‌شدن هم ذخیره شود تا آمار چند ثانیه‌ی آخر گم نشود
 ['SIGINT', 'SIGTERM', 'beforeExit'].forEach((ev) => process.on(ev, flush));
 
-module.exports = { record, flush, purge, today, daysAgo, isBot };
+module.exports = { record, recordEvent, recordSearch, flush, purge, today, daysAgo, isBot, EVENT_KINDS };

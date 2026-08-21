@@ -32,6 +32,28 @@
   const barW = Math.max(4, slot - 5);
   const plotH = CH - PAD_T - PAD_B;
 
+  /* نرخ تبدیل: از هر صد بازدیدکننده، چند نفر روی دکمه‌ی تماس زدند.
+     مبنا «بازدیدکننده» است نه «بازدید» — چون یک نفر که ده صفحه می‌بیند
+     یک مشتری بالقوه است، نه ده تا. */
+  const contactTotal = data.contacts.monthTotal;
+  const monthVisitors = data.month.visitors;
+  const convRate = monthVisitors ? (contactTotal / monthVisitors) * 100 : 0;
+
+  const KIND_LABEL = {
+    whatsapp: 'واتساپ', telegram: 'تلگرام',
+    phone: 'تماس تلفنی', quote: 'ارسال لیست استعلام',
+  };
+
+  const todayContacts = data.contacts.today.reduce(function (n, r) { return n + r.count; }, 0);
+
+  /* توزیع ساعتی — ۲۴ خانه‌ی پیوسته، ساعت‌های بدون بازدید صفر */
+  const hourMap = Object.create(null);
+  data.hours.forEach(function (r) { hourMap[r.hour] = r.views; });
+  const hours = [];
+  for (let hI = 0; hI < 24; hI++) hours.push({ h: hI, v: hourMap[hI] || 0 });
+  const maxHour = Math.max.apply(null, hours.map(function (x) { return x.v; }).concat([1]));
+  const peak = hours.reduce(function (a, b) { return b.v > a.v ? b : a; }, hours[0]);
+
   const dev = data.devices;
   const devTotal = (dev.mobile || 0) + (dev.desktop || 0);
   const mobilePct = devTotal ? Math.round((dev.mobile / devTotal) * 100) : 0;
@@ -71,6 +93,7 @@
   <div class="stat"><b><%= h.toFaDigits(data.yesterday.views) %></b><span>بازدید دیروز</span></div>
   <div class="stat"><b><%= h.toFaDigits(data.week.views) %></b><span>۷ روز اخیر</span></div>
   <div class="stat"><b><%= h.toFaDigits(data.month.views) %></b><span>۳۰ روز اخیر</span></div>
+  <div class="stat accent"><b><%= h.toFaDigits(todayContacts) %></b><span>تماس امروز</span></div>
 </div>
 
 <% if (data.total.views === 0) { %>
@@ -82,6 +105,53 @@
     گذاشته می‌شوند تا عدد، مشتری واقعی را نشان بدهد.
   </div>
 <% } %>
+
+<div class="panel">
+  <h2>تماس‌ها — مهم‌ترین عدد این صفحه</h2>
+  <p class="hint">
+    «بازدید» یعنی کسی سایت را دید. این عدد یعنی کسی روی دکمه‌ی واتساپ،
+    تلگرام یا تلفن زد — یعنی واقعاً سراغ شما آمد.
+  </p>
+
+  <% if (!contactTotal) { %>
+    <p class="hint">در ۳۰ روز اخیر هنوز تماسی از سایت ثبت نشده است.</p>
+  <% } else { %>
+    <div class="stats">
+      <div class="stat accent">
+        <b><%= h.toFaDigits(contactTotal) %></b>
+        <span>کل تماس (۳۰ روز)</span>
+      </div>
+      <div class="stat accent">
+        <b><%= h.toFaDigits(convRate.toFixed(1)) %>٪</b>
+        <span>نرخ تبدیل بازدیدکننده به تماس</span>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>از چه راهی</th><th>تعداد</th><th>سهم</th></tr></thead>
+        <tbody>
+          <% data.contacts.month.forEach(function (r) {
+               const pct = Math.round((r.count / contactTotal) * 100); %>
+            <tr>
+              <td><%= KIND_LABEL[r.kind] || r.kind %></td>
+              <td><%= h.toFaDigits(r.count) %></td>
+              <td>
+                <span class="mini-bar"><span style="width:<%= pct %>%"></span></span>
+                <%= h.toFaDigits(pct) %>٪
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">
+      نرخ تبدیل زیر ۲٪ یعنی مردم سایت را می‌بینند ولی تماس نمی‌گیرند —
+      معمولاً چون عکس محصول کم است یا اطلاعات کافی نیست. بالای ۵٪ یعنی
+      سایت خوب کار می‌کند.
+    </p>
+  <% } %>
+</div>
 
 <div class="panel">
   <h2>نمودار ۳۰ روز اخیر</h2>
@@ -179,6 +249,71 @@
       (<%= h.toFaDigits(dev.mobile) %> بازدید) و
       <b><%= h.toFaDigits(100 - mobilePct) %>٪</b> با کامپیوتر
       (<%= h.toFaDigits(dev.desktop) %> بازدید).
+    </p>
+  <% } %>
+</div>
+
+<div class="panel">
+  <h2>مردم داخل سایت دنبال چه بودند؟</h2>
+  <% if (!data.searches.length) { %>
+    <p class="hint">هنوز کسی از جست‌وجوی سایت استفاده نکرده است.</p>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>عبارت</th><th>دفعات</th><th>نتیجه</th></tr></thead>
+        <tbody>
+          <% data.searches.forEach(function (r) { %>
+            <tr>
+              <td><%= r.term %></td>
+              <td><%= h.toFaDigits(r.hits) %></td>
+              <td>
+                <% if (r.results === 0) { %>
+                  <span class="pill pill-out">بدون نتیجه</span>
+                <% } else { %>
+                  <%= h.toFaDigits(r.results) %> کالا
+                <% } %>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">
+      <b>عبارت‌های «بدون نتیجه» را جدی بگیرید.</b> یعنی مشتری چیزی خواسته
+      که در سایت پیدا نکرده — یا در انبار دارید و ثبت نکرده‌اید، یا کالایی
+      است که ارزش دارد تهیه کنید. این فهرست، سفارش‌های ازدست‌رفته را
+      نشان می‌دهد.
+    </p>
+  <% } %>
+</div>
+
+<div class="panel">
+  <h2>چه ساعتی سراغ سایت می‌آیند؟</h2>
+  <% if (!data.hours.length) { %>
+    <p class="hint">هنوز داده‌ای نیست.</p>
+  <% } else { %>
+    <div class="chart-scroll">
+      <svg class="hour-chart" viewBox="0 0 720 130" role="img"
+           aria-label="توزیع ساعتی بازدید">
+        <% hours.forEach(function (x, i) {
+             const bw = 720 / 24;
+             const hh = x.v ? Math.max(2, (x.v / maxHour) * 92) : 0; %>
+          <rect x="<%= (i * bw + 3).toFixed(1) %>" y="<%= (100 - hh).toFixed(1) %>"
+                width="<%= (bw - 6).toFixed(1) %>" height="<%= hh.toFixed(1) %>"
+                rx="2" fill="<%= x.h === peak.h ? '#c0763c' : '#a8552a' %>">
+            <title>ساعت <%= h.toFaDigits(x.h) %> — <%= h.toFaDigits(x.v) %> بازدید</title>
+          </rect>
+          <% if (i % 3 === 0) { %>
+            <text class="num" x="<%= (i * bw + bw / 2).toFixed(1) %>" y="118"
+                  font-size="10" fill="#7d6f62" text-anchor="middle"><%= x.h %></text>
+          <% } %>
+        <% }); %>
+      </svg>
+    </div>
+    <p class="hint">
+      شلوغ‌ترین ساعت: <b><%= h.toFaDigits(peak.h) %></b> (به وقت تهران).
+      همان ساعت کنار گوشی باشید — پیام واتساپی که سریع جواب بگیرد،
+      خیلی بیشتر به سفارش تبدیل می‌شود.
     </p>
   <% } %>
 </div>

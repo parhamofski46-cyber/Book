@@ -10,11 +10,11 @@
           <strong>علی‌آباد کتول</strong>، <strong>گرگان</strong> و سراسر استان گلستان.
         </p>
         <div class="footer-contact">
-          <a href="<%= site.phoneHref %>">
+          <a data-track="phone" href="<%= site.phoneHref %>">
             <%- icon('phone') %><span dir="ltr"><%= h.toFaDigits(site.phone) %></span>
           </a>
           <% activeChannels().forEach(function (ch) { %>
-            <a href="<%= ch.href %>" target="_blank" rel="noopener">
+            <a data-track="<%= ch.key %>" href="<%= ch.href %>" target="_blank" rel="noopener" data-track="<%= ch.key %>">
               <%- icon(ch.key) %><span class="label"><%= ch.label %></span>
             </a>
           <% }); %>
@@ -79,7 +79,7 @@
   <ul class="quote-items" id="quote-items"></ul>
   <div class="quote-foot">
     <% const waBase = site.channels.whatsapp.enabled ? site.channels.whatsapp.base : ''; %>
-    <a class="btn btn-wa btn-block" id="quote-send"
+    <a class="btn btn-wa btn-block" id="quote-send" data-track="quote"
        data-base="<%= waBase %>" href="<%= waBase %>" target="_blank" rel="noopener">
       <%- icon('whatsapp') %> ارسال کل لیست در واتساپ
     </a>
@@ -97,11 +97,12 @@
   <% activeChannels().forEach(function (ch) { %>
     <a class="float-btn float-<%= ch.key === 'whatsapp' ? 'wa' : (ch.key === 'telegram' ? 'tg' : 'call') %>"
        href="<%= ch.href %>" target="_blank" rel="noopener"
+       data-track="<%= ch.key %>"
        aria-label="ارتباط از طریق <%= ch.label %>">
       <%- icon(ch.key) %><span class="txt"><%= ch.label %></span>
     </a>
   <% }); %>
-  <a class="float-btn float-call" href="<%= site.phoneHref %>" aria-label="تماس تلفنی">
+  <a data-track="phone" class="float-btn float-call" href="<%= site.phoneHref %>" data-track="phone" aria-label="تماس تلفنی">
     <%- icon('phone') %><span class="txt">تماس</span>
   </a>
 </div>

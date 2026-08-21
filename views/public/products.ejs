@@ -171,7 +171,7 @@ if (category) {
             <%= site.name %> در علی‌آباد کتول، <%= category ? category.name : 'انواع آهن‌آلات ساختمانی' %>
             را با قیمت روز عرضه می‌کند. اگر در گرگان یا شهرهای اطراف هستید، بار شما با هماهنگی
             خودمان ارسال می‌شود. برای استعلام قیمت و موجودی، شماره‌ی
-            <a href="<%= site.phoneHref %>" dir="ltr"><%= h.toFaDigits(site.phone) %></a>
+            <a data-track="phone" href="<%= site.phoneHref %>" dir="ltr"><%= h.toFaDigits(site.phone) %></a>
             هم تلفن است و هم واتساپ.
           </p>
         </div>
