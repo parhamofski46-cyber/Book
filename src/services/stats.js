@@ -171,7 +171,7 @@ function record(info) {
  * فهرست مجاز بسته است تا کسی نتواند با درخواست ساختگی، جدول را با
  * نوع‌های دلخواه پر کند.
  */
-const EVENT_KINDS = ['whatsapp', 'telegram', 'phone', 'quote'];
+const EVENT_KINDS = ['whatsapp', 'telegram', 'phone', 'quote', 'share'];
 
 function recordEvent(kind) {
   try {

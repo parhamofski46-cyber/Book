@@ -146,6 +146,16 @@ const breadcrumbSchema = {
                       data-slug="<%= product.slug %>" data-name="<%= product.name %>">
                 <span class="plus">+</span> افزودن به لیست استعلام
               </button>
+              <%# دکمه‌ی اشتراک‌گذاری. عمداً با hidden شروع می‌شود و main.js
+                  فقط وقتی نمایشش می‌دهد که مرورگر واقعاً بتواند اشتراک
+                  بگذارد یا لینک را کپی کند — دکمه‌ای که کلیک شود و هیچ
+                  کاری نکند، بدتر از نبودنش است. %>
+              <button type="button" hidden class="btn btn-ghost btn-block btn-share"
+                      data-share
+                      data-share-url="<%= canonical %>"
+                      data-share-title="<%= product.name %> — <%= site.shortName %>">
+                <%- icon('chat') %> ارسال این محصول برای دیگران
+              </button>
             </div>
             <p class="order-note" style="margin-top:.6rem">
               چند قلم جنس می‌خواهید؟ همه را به لیست اضافه کنید و یک‌جا بفرستید.

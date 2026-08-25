@@ -418,6 +418,61 @@
     });
   })();
 
+  /* ══════════════════════════ اشتراک‌گذاری محصول ══════════════════════
+     مشتری که داخل مغازه مدل فرفورژه را روی گوشی می‌بیند، با یک کلیک
+     همان لینک را برای جوشکار یا همسرش می‌فرستد. هر بازدیدکننده تبدیل
+     می‌شود به یک کانال توزیع — این تنها راه رشد واقعی و مرکب ترافیک
+     یک سایت محلی است.
+
+     • روی گوشی از `navigator.share` استفاده می‌کند: همان برگه‌ی
+       اشتراک‌گذاری خود سیستم که واتساپ و تلگرام و پیامک را نشان می‌دهد.
+       یعنی هیچ اسکریپت بیرونی و هیچ سوراخی در CSP لازم نیست.
+     • روی دسکتاپ که این API نیست، لینک در حافظه کپی می‌شود و پیام
+       تأیید نشان داده می‌شود.
+     • اگر هیچ‌کدام نبود (مرورگر خیلی قدیمی)، دکمه اصلاً نمایش داده
+       نمی‌شود — بهتر از دکمه‌ای که کلیک می‌شود و هیچ کاری نمی‌کند. */
+  (function () {
+    var canShare = !!navigator.share;
+    var canCopy = !!(navigator.clipboard && navigator.clipboard.writeText);
+    if (!canShare && !canCopy) return;
+
+    // دکمه‌ها پیش‌فرض پنهان‌اند و فقط وقتی کاری از دستشان برمی‌آید ظاهر می‌شوند
+    var btns = document.querySelectorAll('[data-share]');
+    for (var i = 0; i < btns.length; i++) btns[i].hidden = false;
+
+    function done() {
+      toast('لینک آماده‌ی ارسال شد');
+      if (navigator.sendBeacon) {
+        try { navigator.sendBeacon('/e', 'share'); } catch (err) {}
+      }
+    }
+
+    bindOnce(document, 'click', 'shareproduct', function (e) {
+      var btn = e.target.closest && e.target.closest('[data-share]');
+      if (!btn) return;
+      e.preventDefault();
+
+      var url = btn.getAttribute('data-share-url') || location.href;
+      var title = btn.getAttribute('data-share-title') || document.title;
+
+      if (canShare) {
+        navigator
+          .share({ title: title, text: title, url: url })
+          .then(done)
+          .catch(function () {
+            /* کاربر منصرف شد — نه خطاست، نه اشتراک‌گذاری */
+          });
+        return;
+      }
+      navigator.clipboard.writeText(url).then(function () {
+        toast('لینک کپی شد — حالا بفرستید');
+        if (navigator.sendBeacon) {
+          try { navigator.sendBeacon('/e', 'share'); } catch (err) {}
+        }
+      });
+    });
+  })();
+
   /* ══════════════════════════ شمردن کلیک روی دکمه‌های تماس ══════════════
      مالک باید بداند از هر صد بازدید، چند نفر واقعاً سراغش آمدند. بدون
      این، آمار فقط می‌گوید «کسی نگاه کرد».

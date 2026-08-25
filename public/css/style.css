@@ -3785,3 +3785,11 @@ p {
   color: var(--ink-faint);
   line-height: 1.8;
 }
+
+/* دکمه‌ی اشتراک‌گذاری محصول — با hidden شروع می‌شود و JS نشانش می‌دهد.
+   [hidden] در ابتدای فایل display:none !important دارد، پس تا وقتی
+   مرورگر توانایی اشتراک‌گذاری نداشته باشد اصلاً دیده نمی‌شود. */
+.btn-share svg {
+  width: 20px;
+  height: 20px;
+}
