@@ -1,0 +1,14 @@
+{
+  "name": "gamebazar",
+  "version": "0.1.0",
+  "private": true,
+  "description": "بازارگاه امن خرید و فروش اکانت بازی با سیستم پرداخت امانی",
+  "type": "module",
+  "engines": { "node": ">=22.5.0" },
+  "scripts": {
+    "start": "node --experimental-sqlite src/server.js",
+    "dev": "node --experimental-sqlite --watch src/server.js",
+    "seed": "node --experimental-sqlite src/db/seed.js",
+    "test": "node --experimental-sqlite --test test/"
+  }
+}
