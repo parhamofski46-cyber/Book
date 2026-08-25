@@ -94,4 +94,25 @@ function loginLimiter(req, res, next) {
   return next();
 }
 
+/**
+ * پاک‌کردن سطرهای منقضیِ جدول تلاش ورود.
+ *
+ * بدون این، جدول برای همیشه رشد می‌کند: هر آی‌پی که یک‌بار فرم ورود را
+ * زده — از جمله ربات‌هایی که شبانه‌روز آدرس‌های تصادفی را اسکن می‌کنند —
+ * یک سطر دائمی می‌ساخت. در چند سال ده‌ها هزار سطر بی‌مصرف جمع می‌شد.
+ *
+ * سطرهایی که پنجره‌ی زمانی‌شان تمام شده دیگر هیچ اثری ندارند، پس
+ * حذفشان بی‌خطر است.
+ */
+const purgeAttempts = db.prepare('DELETE FROM login_attempts WHERE window_start < ?');
+
+const attemptsTimer = setInterval(() => {
+  try {
+    purgeAttempts.run(Date.now() - LOGIN_WINDOW_MS);
+  } catch (err) {
+    console.error('[auth] پاک‌سازی جدول تلاش ورود ناموفق بود:', err.message);
+  }
+}, 60 * 60 * 1000);
+if (attemptsTimer.unref) attemptsTimer.unref();
+
 module.exports = { requireLogin, csrf, loginLimiter };

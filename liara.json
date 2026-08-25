@@ -2,7 +2,7 @@
   "platform": "node",
   "port": 3000,
   "node": {
-    "version": "20"
+    "version": "22"
   },
   "disks": [
     {

@@ -5,7 +5,7 @@
   "description": "وب‌سایت کاتالوگ محصولات گروه تولیدی صنعتی فولاد ایمان — علی‌آباد کتول و گرگان",
   "main": "server.js",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "start": "node server.js",
@@ -24,7 +24,7 @@
     "express": "^4.21.1",
     "express-session": "^1.18.1",
     "helmet": "^8.0.0",
-    "multer": "^1.4.5-lts.1",
+    "multer": "^2.2.0",
     "qrcode": "^1.5.4",
     "sharp": "^0.35.3"
   }
