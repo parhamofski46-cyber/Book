@@ -1,14 +1,8 @@
-# 1 — Reef Technologies
+# 1 — Reef Technologies · hiring@reef.pl
 
-- **To:** hiring@reef.pl
-- **Role:** Python Backend Engineer — trustless GPU supercluster
-- **Terms:** $45–70/hr (or 180–280 PLN/hr), time-tracked, min 30 hrs/week, rates inflation-adjusted twice a year
-- **Location:** Fully remote, worldwide — "contribute from wherever you like"
-- **Requires:** 5+ yrs programming, 1+ yr Python, open-source and significant personal projects
-- **Source:** HN "Who is hiring?" via hnhiring.com · https://reef-technologies.com/
-- **Why this one:** the only listing of the five with no geographic restriction at all.
+$45–70/hr · ≥30 h/wk · fully remote worldwide · they explicitly want open source + personal projects
 
-**Subject:** Python backend engineer — sandboxed GPU runners — [[YOUR NAME]]
+**Subject:** Python backend engineer — sandboxed GPU runners — Parham Palangi
 
 ---
 
@@ -17,32 +11,30 @@ Hi,
 I'm applying for the Python backend role building the trustless supercluster of
 performance-proofed, GPU-enabled sandboxed container runners.
 
-The hard part of that system, as I read it, isn't the orchestration — it's
-proving the work was actually done on the hardware claimed, by a node you don't
-trust, without a central authority to arbitrate. That's a much more interesting
-problem than most backend work, and it's the reason I'm writing.
+The interesting problem there isn't orchestration — it's proving work was
+actually done, on the hardware claimed, by a node you have no reason to trust,
+with no central authority to arbitrate the dispute. Benchmarking is easy to
+fake when the machine being measured is the one reporting the measurement, and
+"performance-proofed" is doing a lot of quiet work in that sentence. That's why
+I'm writing rather than sending this to the usual backend postings.
 
-Relevant experience:
+I have five years of Python, mostly backend. Most relevant:
 
-- **[[PROJECT 1]]** — [[what you built; name the container/sandboxing or
-  distributed-systems angle: Docker APIs, cgroups, resource isolation, job
-  scheduling, consensus. One or two sentences, concrete numbers if you have
-  them.]]
-- **[[PROJECT 2]]** — [[same, ideally the one closest to performance
-  measurement, benchmarking, or untrusted-workload isolation.]]
+- **‹PROJECT 1›** — ‹what you built. Closest angle to theirs: Docker/container
+  APIs, resource isolation, job scheduling, queues, or untrusted workloads.›
+- **‹PROJECT 2›** — ‹second one. Ideally anything touching measurement,
+  benchmarking, or distributed coordination.›
 
-You ask for open source and personal projects rather than just a CV, so:
-**[[GITHUB URL]]**. The most relevant repositories there are [[REPO A]] and
-[[REPO B]].
+You ask for open source and personal projects over a CV, which I appreciate —
+so: **‹GITHUB URL›**. The most relevant work there is ‹REPO / what it does›.
 
-- Experience: [[N]] years programming, [[M]] with Python
-- Availability: [[X]] hrs/week, starting [[DATE]]
+- Availability: 30+ hrs/week, starting ‹DATE›
 - Rate: comfortable within your posted band
-- Timezone: [[TZ]]
+- Timezone: ‹TZ› — fully remote suits me, and I'm used to working async
 
-The Sociocracy 3.0 model is part of the appeal — I'd rather argue for a design
-decision on its merits than have it handed down. Happy to talk whenever suits.
+Sociocracy 3.0 is part of the appeal. I'd rather make the case for a design
+decision and lose the argument than have it arrive pre-decided.
 
 Best,
-[[YOUR NAME]]
-[[EMAIL]] · [[GITHUB]]
+Parham Palangi
+parhambamarame@gmail.com · ‹GITHUB›

@@ -1,41 +1,37 @@
-# 3 — Arcforma AI
+# 3 — Arcforma AI · jobs@arcforma.ai
 
-- **To:** jobs@arcforma.ai
-- **Role:** AI Engineer — strong Python engineering required
-- **Location:** Remote
-- **Source:** HN "Who is hiring?" (August 2026) via hnhiring.com
-- **Their required subject format:** `HN | TRACK | Your Name | your applicable background`
-- **They asked for:** what you shipped that applies, a link (GitHub / writeup / demo), LinkedIn, timezone
-- **Why this one:** the format request is the screening test. Following it exactly is most of the signal.
+AI Engineer, strong Python required · remote
+⚠ Their exact subject format is the screening test. Fill ‹BACKGROUND› and change nothing else.
 
-**Subject:** HN | AI Engineer | [[YOUR NAME]] | [[e.g. 6y Python, shipped LLM retrieval + agent tooling to production]]
+**Subject:** HN | AI Engineer | Parham Palangi | 5y Python, ‹e.g. shipped LLM retrieval + agent tooling to production›
 
 ---
 
 Hi,
 
-Applying for the AI Engineer role. Taking your requested format in order.
+Applying for the AI Engineer role — taking your requested format in order.
 
 **What I've shipped that applies:**
 
-- **[[PROJECT 1]]** — [[the closest thing to their work. Say what it does, who
-  uses it, and one hard thing you solved: eval methodology, latency, cost
-  control, tool-calling reliability, retrieval quality. Numbers beat
-  adjectives.]]
-- **[[PROJECT 2]]** — [[second most relevant, same structure.]]
+- **‹PROJECT 1›** — ‹the closest thing to their work. What it does, who uses
+  it, and one hard thing you solved: eval methodology, latency, cost control,
+  tool-calling reliability, retrieval quality. Numbers beat adjectives.›
+- **‹PROJECT 2›** — ‹second most relevant, same shape.›
 
-**Link:** [[GITHUB / WRITEUP / DEMO — pick the single strongest one]]
-**LinkedIn:** [[URL]]
-**Timezone:** [[TZ]] — [[N]] hours of overlap with [[THEIR HOURS]]
+**Link:** ‹GITHUB / WRITEUP / DEMO — one, the strongest›
+**LinkedIn:** ‹URL›
+**Timezone:** ‹TZ›
 
-One thing I'd add beyond the checklist: you asked for *strong Python
-engineering*, not just AI experience, which I read as wanting someone who
-treats a model call as an unreliable dependency rather than a magic box —
-retries, schema validation on outputs, evals in CI, and a fallback when the
-provider is degraded. [[ONE SENTENCE about how you've actually done this.]]
+Beyond the checklist: you asked for *strong Python engineering*, not just AI
+experience. I read that as wanting someone who treats a model call as an
+unreliable network dependency rather than a magic box — schema validation on
+every output, retries that don't silently multiply cost, evals that run in CI
+so a prompt change can't regress quietly, and a defined behaviour for when the
+provider is degraded rather than down. Five years of Python is most of why I
+can build the scaffolding around the model, not just the prompt.
 
-Available from [[DATE]], [[full-time / X hrs per week]].
+Available from ‹DATE›, ‹full-time / X hrs per week›.
 
 Best,
-[[YOUR NAME]]
-[[EMAIL]]
+Parham Palangi
+parhambamarame@gmail.com

@@ -1,48 +1,46 @@
-# 2 — BetterSea
+# 2 — BetterSea · gordana.ilic@bettersea.tech
 
-- **To:** gordana.ilic@bettersea.tech
-- **Role:** Backend-heavy Full-Stack Developer
-- **Terms:** CONTRACT
-- **Location:** Remote, CET ±2h
-- **Stack:** Python, FastAPI, DRF, Docker, GCP, Terraform · React, Redux, Zustand, TailwindCSS
-- **Requires:** 5+ years
-- **Their instruction:** add "HN" to the subject line — this is a filter, do not skip it
-- **Source:** HN "Who is hiring?" (August 2026) via hnhiring.com
-- **Why this one:** explicitly a contract, and CET ±2h is the best timezone match of the five.
+CONTRACT · remote CET ±2h · Python, FastAPI, DRF, Docker, GCP, Terraform · React/Redux/Zustand/Tailwind
+⚠ "HN" in the subject is their filter — kept.
 
-**Subject:** HN — Backend-heavy full-stack contractor, FastAPI/DRF — [[YOUR NAME]]
+**Subject:** HN — Backend-heavy full-stack contractor, FastAPI/DRF — Parham Palangi
 
 ---
 
 Hi Gordana,
 
-Replying to your Hacker News post for a backend-heavy full-stack developer.
+Replying to your Hacker News post for a backend-heavy full-stack developer on
+contract.
 
-Your stack is an unusual pairing — FastAPI *and* DRF — which normally means
-either a migration in progress or a newer async service living alongside an
-established Django codebase. I've worked on both sides of that:
+FastAPI *and* DRF in one stack is a specific signal — usually either a
+migration mid-flight or a newer async service running alongside an established
+Django codebase. Either way the friction tends to land in the same places:
+shared auth across two request models, connection pooling that behaves
+differently under async, and background work that has to be owned by exactly
+one of the two. I've worked on both sides of that split.
 
-- **FastAPI / async Python** — [[what you built, the load it handled, what you
-  did about the parts async makes harder: connection pooling, background jobs,
-  testing.]]
-- **Django REST Framework** — [[a real DRF codebase you worked in: serializer
-  or query performance, permissions, migrations against live data.]]
-- **Docker / GCP / Terraform** — [[what you actually manage in Terraform, and
-  what you've deployed on GCP: Cloud Run, GKE, Cloud SQL, whichever is true.]]
+Five years of Python, backend-weighted:
 
-On the frontend I'm productive rather than specialised: React with [[Redux /
-Zustand]] and Tailwind, comfortable owning a feature end to end, and I'd defer
-to a real frontend engineer on design-system decisions. Given you wrote
-"backend heavy," I assume that's the right balance.
+- **FastAPI / async** — ‹what you built, the load, and what you did about the
+  parts async makes harder.›
+- **Django REST Framework** — ‹a real DRF codebase: serializer or query
+  performance, permissions, migrations against live data.›
+- **Docker / GCP / Terraform** — ‹what you actually run and what you manage as
+  code.›
 
-- Availability: [[X]] hrs/week, starting [[DATE]]
-- Rate: [[€/$X per hour]] — flexible on structure
-- Timezone: [[TZ]], which puts me [[within / N hours of]] CET ±2
-- Code: [[GITHUB / PORTFOLIO]]
+On the frontend I'm productive rather than specialised — React with Tailwind,
+comfortable owning a feature end to end, and happy to defer to a real frontend
+engineer on design-system calls. You wrote "backend heavy," so I assume that's
+the balance you want.
 
-Happy to do a small paid trial ticket first if that's a faster read on fit than
-an interview.
+- Availability: ‹X› hrs/week from ‹DATE›
+- Rate: ‹€X/hr› — flexible on structure
+- Timezone: ‹TZ›, ‹N› hours from CET
+- Code: ‹GITHUB›
+
+If it's a faster read on fit than an interview, give me one small paid ticket
+from your actual backlog first.
 
 Best,
-[[YOUR NAME]]
-[[EMAIL]]
+Parham Palangi
+parhambamarame@gmail.com
