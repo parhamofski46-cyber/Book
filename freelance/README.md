@@ -1,33 +1,37 @@
-# Python Income Opportunities — Research Log
+# Python Income Opportunities — 5 Targets with Verified Contact Emails
 
-**Date:** 2026-08-27
-**Session constraint:** This research session had no general outbound internet
-access. Only the search tool worked; direct page fetches to job boards
-(python.org, freelancer.com, reddit.com, upwork.com, weworkremotely.com,
-news.ycombinator.com, peopleperhour.com) were blocked by the network egress
-proxy. Everything below was verified through search results only.
+**Compiled:** 2026-08-27
+**Source:** Hacker News "Who is hiring?" threads (mostly August 2026), via hnhiring.com
 
-## Verified open opportunities
+## Targets
 
-| # | Role | Client | Type | Location | Apply channel | Source |
-|---|------|--------|------|----------|---------------|--------|
-| 1 | Python Developer | Micro1 | Contract | Remote | Web form: jobs.micro1.ai | python.org/jobs/8101 |
-| 2 | Python Machine Learning Engineer | Turing | 3-month contractor | Remote (IN, PK, NG, KE, EG, GH, BD, TR, MX + others) | python.org listing | python.org/jobs/8102 |
-| 3 | Senior Python Developer | Turing | Contract | Remote | python.org listing | python.org/jobs/8103 |
-| 4 | AI training / code evaluation | Mercor | Hourly contractor | Remote worldwide | Platform application + AI interview | mercor.com |
-| 5 | AI training / code tasks | Outlier | Hourly, weekly payout | Remote worldwide | Platform application | outlier / Scale AI |
+| # | Company | Email | Role | Terms | Location | Fit |
+|---|---------|-------|------|-------|----------|-----|
+| 1 | Reef Technologies | hiring@reef.pl | Python backend — GPU supercluster | $45–70/hr, ≥30 h/wk | Fully remote, worldwide | ★★★ no geo limit |
+| 2 | BetterSea | gordana.ilic@bettersea.tech | Backend-heavy full-stack | Contract | Remote, CET ±2h | ★★★ contract + timezone |
+| 3 | Arcforma AI | jobs@arcforma.ai | AI Engineer | — | Remote | ★★ strict subject format |
+| 4 | Bactrix | HR@bactrix.com | Founding Software Engineer | — | Remote, AI/Biotech | ★★ |
+| 5 | EggAI / Comvex | peter.lever@comvex.ai | Tech Lead / AI Eng / Platform Eng | Full-time or contract | Remote EU, CH, NO | ★ geo may be hard limit |
 
-### Important finding
-None of these accepts a cold email. All five route through an application form
-or platform onboarding. The same is true of Upwork, Freelancer, Fiverr and
-Toptal: the client's email address is deliberately hidden and contacting them
-off-platform violates their terms. "Email the project owner" is only viable on
-channels where the poster publishes an address themselves — mailing lists,
-company careers pages, agency contact pages, r/forhire posts that include one,
-and direct outreach to small businesses.
+## Method note
 
-## Email drafts
+General web egress is blocked in this environment; the GitHub search API is
+also blocked (sessions are bound to their configured repository). The only
+working channel was the search tool. Every email address above was read out of
+a published job posting — none was guessed or constructed from a domain name.
 
-See `emails/`. Five ready-to-send drafts covering the five realistic channels.
-Each has a `[BRACKET]` slot for the target-specific details. Nothing is sent
-until explicitly approved.
+## Rejected candidates
+
+- **Upwork / Freelancer / Fiverr / Toptal** — client emails are hidden by design; off-platform contact breaches their terms.
+- **python.org/jobs (Micro1, Turing)** — real openings, but application is via web form only.
+- **Tiger Tracks, Enveritas, Instrumentl** — remote and relevant, but form-only application.
+- **GovStar (nicholas.hanson@govstar.us), SolutionStreet (clittle@solutionstreet.com)** — real emails, but both look US-only. Held in reserve.
+
+## Emails
+
+`emails/01`–`05`. Job-specific content is complete. `[[DOUBLE BRACKETS]]` mark
+the personal facts that must come from the applicant — experience, projects,
+links, timezone, rate. **These must not be filled in by guessing: they are
+claims made to real employers.**
+
+Nothing has been sent.
