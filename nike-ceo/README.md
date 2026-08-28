@@ -66,71 +66,102 @@ Length ceiling: **200 words.** Anything longer signals you are not senior.
 
 ---
 
-## 6. The email — Version A (to the Board / Executive Chairman)
+## 6. Email 1 — to the Board / Executive Chairman
 
-> **Send as:** a printed letter to the Corporate Secretary address above, *and* the same text as a LinkedIn note if you have a path. Attach/enclose the one-page memo.
+> **Status: created as a Gmail draft, 28 Aug 2026. `To:` deliberately left empty — see note below.**
+> Send as a printed letter to the Corporate Secretary address, with the one-page memo enclosed. Nike publishes no board email address; `Investor.Relations@nike.com` is the wrong function and will not route this.
 
-**Subject: Nike's ASP problem — and a candidacy for the next succession cycle**
+**Subject: Nike's price authority problem — and a candidacy for the next succession cycle**
 
 ```
+Mr. Mark Parker
+Executive Chairman, NIKE, Inc.
+c/o Office of the Corporate Secretary
+One Bowerman Drive, Beaverton, Oregon 97005-6453
+
+
 Dear Mr. Parker,
 
-I am writing to place my name with the Board for consideration in any
+I am writing to place my name before the Board for consideration in any
 future CEO succession process at NIKE, Inc. — and, more usefully in the
 meantime, to leave you a point of view you can test me on.
 
-FY26 closed with the brand stabilized and the P&L not: Q4 revenue down 4%
-currency-neutral, Greater China down 17% with wholesale off 19%, and a
-49.2% gross margin that only holds because roughly 900 basis points of it
-is a non-recurring $986M tariff recovery. Underneath it, a Nike running
-shoe carries an $83 average selling price against On's $143.
+FY26 closed with the brand stabilized and the P&L not. Fourth-quarter
+revenue was down 4 percent currency-neutral. Greater China fell 17 percent,
+with wholesale off 19 and segment EBIT off 20. And the 49.2 percent gross
+margin holds only because roughly 900 basis points of it is a non-recurring
+$986 million tariff recovery. Strip that out and the margin is flat, against
+a tariff headwind guided at $1.5 billion that is not going away.
 
-That is the real fight. Nike is winning units and losing price. My thesis:
-the next chapter is won by rebuilding premium price authority in
-performance running and by resetting China as a locally-designed business
-rather than a distribution problem — not by chasing volume back.
+Underneath all of it sits the number I would run the company against: $83.
+That is the average selling price of a Nike running shoe, against $143 for
+On — while Nike sells more pairs than they do. Nike is winning units and
+losing price.
 
-[THREE LINES OF PROOF — P&L you have owned, scale you have run, the turn
-you have delivered. Numbers only.]
+So my thesis is that the next chapter is not won by recovering volume. It is
+won by rebuilding premium price authority in performance running, and by
+resetting Greater China as a locally designed and locally merchandised
+business rather than a distribution problem to be managed down.
 
-I have enclosed a one-page memo on what I would do in the first 90 days.
-I am not asking for a role today. I am asking for twenty minutes — with
-you, or with the Nominating & Corporate Governance Committee's search
-advisors — whenever a process next opens.
+[PROOF — THREE LINES, NUMBERS ONLY, NO ADJECTIVES:
+ 1. The P&L you have owned, and at what scale.
+ 2. The turn you delivered — from what number to what number, over what period.
+ 3. The single mechanism that did it.]
 
-Respectfully,
-[NAME] · [PHONE] · [LINKEDIN URL]
+I have enclosed a one-page memo setting out what I would do in the first
+ninety days, including the one thing I would stop.
+
+I am not asking for a role today. I am asking for twenty minutes — with you,
+or with the Nominating and Corporate Governance Committee's search advisors
+— whenever a process next opens.
+
+With respect,
+
+[FULL NAME]
+[PHONE] · [EMAIL] · [LINKEDIN URL]
+
+
+---
+Enclosure: one-page memo — "The first ninety days"
 ```
 
 ---
 
-## 7. The email — Version B (to an executive search partner)
+## 7. Email 2 — to an executive search partner
 
-> **Send to:** the Consumer/Retail practice leader or CEO & Board practice at Spencer Stuart, Heidrick & Struggles, Russell Reynolds, Egon Zehnder, Korn Ferry. This has the highest reply rate of anything here.
+> **Status: created as a Gmail draft, 28 Aug 2026. `To:` deliberately left empty.**
+> Duplicate it once per firm. Target the **Consumer/Retail practice leader** or the **CEO & Board practice** at Spencer Stuart, Heidrick & Struggles, Russell Reynolds, Egon Zehnder, Korn Ferry. None of them publish partner emails — reach the named partner via LinkedIn, or use the firm's own contact/CV portal. Do **not** use a firm's internal-recruiting address; that is for people applying to work at the firm.
 
-**Subject: Consumer/athletic CEO candidacy — [YOUR NAME], [SCALE YOU HAVE RUN]**
+**Subject: CEO / President candidacy — athletic and premium consumer**
 
 ```
 [FIRST NAME],
 
-Briefly, so you can file me correctly.
+Briefly, so you can file me correctly rather than read a CV.
 
-I run [SCOPE: revenue, headcount, geographies]. Over [PERIOD] I took
-[BUSINESS] from [NUMBER] to [NUMBER] by [THE ONE MECHANISM THAT DID IT].
-Before that, [SECOND PROOF POINT, WITH A NUMBER].
+Scope today: [revenue, headcount, geographies, who you report to].
 
-Where I am differentiated: [ONE THING — e.g. rebuilding price authority in
-a discount-damaged brand; running a China business through a marketplace
-reset; taking a wholesale-dependent P&L to a healthy DTC mix without
-breaking the channel].
+The turn: over [period] I took [business] from [number] to [number]. The
+mechanism was [the one thing that did it — not three].
 
-I am open to CEO and President/COO mandates in athletic, footwear, and
-premium consumer. Not in a process today, so there is no timing pressure —
-I would rather be known to you before there is.
+Before that: [second proof point, with a number].
+
+Where I am differentiated: [one sentence. For example — rebuilding price
+authority in a brand damaged by promotion; running a China business through
+a full marketplace reset; moving a wholesale-dependent P&L to a healthy
+direct mix without breaking the channel.]
+
+Sectors I am credible in: athletic, footwear and apparel, premium consumer.
+I am open to CEO and President/COO mandates, and to non-executive board work.
+
+I am not in a process and there is no timing pressure on my side — which is
+exactly why I would rather be on your map now than introduce myself when
+there is.
 
 Fifteen minutes whenever it suits you. CV attached.
 
-[NAME] · [PHONE] · [LINKEDIN URL]
+[FULL NAME]
+[PHONE] · [EMAIL] · [LINKEDIN URL]
 ```
 
 ---
