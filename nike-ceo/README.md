@@ -84,15 +84,19 @@ Full text lives in the Gmail draft. Structure:
 
 ---
 
-## 7. Email 2 — speculative application, European sportswear
+## 7. Email 2 — speculative application to On (finished, zero placeholders)
 
-> **In Gmail as a draft (28 Aug 2026).** Duplicate per company. Bracketed fields: company name, and one sentence on what the ASP argument means for *that* company. Do not send it without writing that sentence — it is the whole point of the email.
+> **In Gmail as a draft.** Written end to end for **On** specifically. No brackets left to fill.
 
-**Why this replaced the executive-search email.** The search-firm letter was built entirely on scale — revenue run, P&L owned, turn delivered. With none of that yet, it is an empty form, and sending it burns a contact who would otherwise be reachable in ten years. This one trades on the analysis instead, which is real.
+**Why this replaced the executive-search email.** That letter was built entirely on scale — revenue run, P&L owned, turn delivered. With none of that yet it is an empty form, and sending it burns a contact who would otherwise be reachable in ten years. This one trades on the analysis instead, which is real.
 
-**Subject: Speculative — strategy / consumer insight, and one argument about running ASPs**
+**Subject: The $83 problem is about to become On's problem**
 
-Targets: adidas, Puma, On, ASICS, Decathlon, JD Sports, New Balance. European and Japanese first — see the constraint below.
+**The move that makes it work.** It does not tell On that Nike is weak — On knows. It inverts the argument into On's own risk: the $143 ASP is On's whole equity story, and Nike has just proven it can win volume at half that price with the brand still impaired. Nike does not need to reach $143 to hurt On; it needs $110 with distribution it already owns. Going from $83 to $110 is a pricing decision. Defending $143 is a product and brand decision, and much harder. That is a non-obvious claim built only on verified numbers, and it is the reason someone would reply.
+
+**To adapt it for adidas, Puma, ASICS, New Balance, Decathlon, JD Sports:** rewrite the fourth paragraph only. Everything else carries over. Each company needs its own version of "why this is your risk, not Nike's weakness" — a generic swap of the company name kills the email.
+
+**No recipient address.** These brands hire through Workday portals, not inboxes. Use this text in the portal's cover-letter field, or send it as a LinkedIn message to a named person on the relevant team. Do not send it to a customer-service or general-info address.
 
 ---
 
