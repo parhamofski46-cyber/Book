@@ -100,6 +100,26 @@ Full text lives in the Gmail draft. Structure:
 
 ---
 
+## 7d. Where email actually works
+
+Large brands (Nike, adidas, Puma, On, ASICS) hire through Workday portals and publish no application inbox. `info@` and `service@` addresses are customer service and never reach a strategy team. Small premium brands are the opposite: they publish a real address and a real person reads it — and they are the brands whose entire model rests on the price authority question, so the analysis lands.
+
+| Brand | Email | Country | Notes |
+|---|---|---|---|
+| **norda** | `careers-carrieres@nordarun.com` | 🇨🇦 Montreal | Premium trail shoes, $300+. Best category fit for the ASP argument. |
+| **Ciele Athletics** | `career@cieleathletics.com` | 🇨🇦 Montreal | Explicitly invites unsolicited CV + cover letter. Highest reply probability. |
+| **SOAR Running** | `jobs@soarrunning.com` | 🇬🇧 London | Dedicated jobs inbox, so someone owns it. |
+| **Satisfy** | `contact@satisfyrunning.com` | 🇫🇷 Paris | Most extreme premium positioning; recruits mostly product and design. |
+| ~~Craft Sportswear NA~~ | ~~`info@craftsports.us`~~ | 🇺🇸 | Skip — US entity, same sanctions bar as Nike. |
+
+**Verify before sending.** These addresses come from search-result summaries; the brand pages themselves were blocked by the network proxy in this session and could not be read directly. Open each careers page and confirm the address first.
+
+**Montreal is not incidental.** Canada offers the most realistic relocation path of these jurisdictions (Express Entry, study permit) for an Iranian national, and Montreal is bilingual. The two highest-ranked targets are there, so a reply leads somewhere rather than into a visa dead end.
+
+**Two finished drafts exist**, addressed and complete: norda and Ciele. Each carries a different fourth-paragraph argument — for norda, that On proves the premium position scales but Nike at $110 compresses it, so the defence has to be physical (bio-Dyneema, construction); for Ciele, that the $143 On buyer and the $50 cap buyer are one wallet, and identity is the only defence a giant cannot bundle its way past. Sending the same text to both would burn both.
+
+---
+
 ## 7b. The hard constraint
 
 Nike is a US company. Under the Iranian Transactions and Sanctions Regulations (31 CFR Part 560), US persons and US-organised entities are generally prohibited from transacting with, or employing, persons ordinarily resident in Iran, absent OFAC authorisation. Nike also has no Iran operations.
