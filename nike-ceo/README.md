@@ -66,103 +66,47 @@ Length ceiling: **200 words.** Anything longer signals you are not senior.
 
 ---
 
-## 6. Email 1 — to the Board / Executive Chairman
+## 6. Email 1 — the outside memo to the Board
 
-> **Status: created as a Gmail draft, 28 Aug 2026. `To:` deliberately left empty — see note below.**
-> Send as a printed letter to the Corporate Secretary address, with the one-page memo enclosed. Nike publishes no board email address; `Investor.Relations@nike.com` is the wrong function and will not route this.
+> **In Gmail as a draft (28 Aug 2026), fully written, no placeholders left.** `To:` is empty on purpose — Nike publishes no board email address. Print it and post it to the Corporate Secretary at One Bowerman Drive. `Investor.Relations@nike.com` is the wrong function and will not route it.
 
-**Subject: Nike's price authority problem — and a candidacy for the next succession cycle**
+**What changed and why.** The first version of this letter was a CEO candidacy resting on a three-line block of P&L proof. That block cannot be filled truthfully in this case, and a fabricated one would fail at the first question anyone asked. So the letter was rewritten to say plainly what is and is not there. It is now an outside strategic memo with a small, answerable ask at the end — a name of someone who takes questions. That is a reachable outcome. The CEO seat is not.
 
-```
-Mr. Mark Parker
-Executive Chairman, NIKE, Inc.
-c/o Office of the Corporate Secretary
-One Bowerman Drive, Beaverton, Oregon 97005-6453
+**Subject: Nike is winning units and losing price — an outside memo**
 
-
-Dear Mr. Parker,
-
-I am writing to place my name before the Board for consideration in any
-future CEO succession process at NIKE, Inc. — and, more usefully in the
-meantime, to leave you a point of view you can test me on.
-
-FY26 closed with the brand stabilized and the P&L not. Fourth-quarter
-revenue was down 4 percent currency-neutral. Greater China fell 17 percent,
-with wholesale off 19 and segment EBIT off 20. And the 49.2 percent gross
-margin holds only because roughly 900 basis points of it is a non-recurring
-$986 million tariff recovery. Strip that out and the margin is flat, against
-a tariff headwind guided at $1.5 billion that is not going away.
-
-Underneath all of it sits the number I would run the company against: $83.
-That is the average selling price of a Nike running shoe, against $143 for
-On — while Nike sells more pairs than they do. Nike is winning units and
-losing price.
-
-So my thesis is that the next chapter is not won by recovering volume. It is
-won by rebuilding premium price authority in performance running, and by
-resetting Greater China as a locally designed and locally merchandised
-business rather than a distribution problem to be managed down.
-
-[PROOF — THREE LINES, NUMBERS ONLY, NO ADJECTIVES:
- 1. The P&L you have owned, and at what scale.
- 2. The turn you delivered — from what number to what number, over what period.
- 3. The single mechanism that did it.]
-
-I have enclosed a one-page memo setting out what I would do in the first
-ninety days, including the one thing I would stop.
-
-I am not asking for a role today. I am asking for twenty minutes — with you,
-or with the Nominating and Corporate Governance Committee's search advisors
-— whenever a process next opens.
-
-With respect,
-
-[FULL NAME]
-[PHONE] · [EMAIL] · [LINKEDIN URL]
-
-
----
-Enclosure: one-page memo — "The first ninety days"
-```
+Full text lives in the Gmail draft. Structure:
+1. One line of intent — outside the industry, one argument, five minutes.
+2. The FY26 numbers, with the tariff benefit stripped out of the margin.
+3. The $83 vs $143 ASP gap as the thesis.
+4. What follows from it — price authority, not volume; China as a design problem, not a distribution one.
+5. **An explicit statement of what the sender has not done.** This is the paragraph that makes the letter sendable rather than embarrassing.
+6. Two zero-cost asks: take the analysis for free, and give me a name.
 
 ---
 
-## 7. Email 2 — to an executive search partner
+## 7. Email 2 — speculative application, European sportswear
 
-> **Status: created as a Gmail draft, 28 Aug 2026. `To:` deliberately left empty.**
-> Duplicate it once per firm. Target the **Consumer/Retail practice leader** or the **CEO & Board practice** at Spencer Stuart, Heidrick & Struggles, Russell Reynolds, Egon Zehnder, Korn Ferry. None of them publish partner emails — reach the named partner via LinkedIn, or use the firm's own contact/CV portal. Do **not** use a firm's internal-recruiting address; that is for people applying to work at the firm.
+> **In Gmail as a draft (28 Aug 2026).** Duplicate per company. Bracketed fields: company name, and one sentence on what the ASP argument means for *that* company. Do not send it without writing that sentence — it is the whole point of the email.
 
-**Subject: CEO / President candidacy — athletic and premium consumer**
+**Why this replaced the executive-search email.** The search-firm letter was built entirely on scale — revenue run, P&L owned, turn delivered. With none of that yet, it is an empty form, and sending it burns a contact who would otherwise be reachable in ten years. This one trades on the analysis instead, which is real.
 
-```
-[FIRST NAME],
+**Subject: Speculative — strategy / consumer insight, and one argument about running ASPs**
 
-Briefly, so you can file me correctly rather than read a CV.
+Targets: adidas, Puma, On, ASICS, Decathlon, JD Sports, New Balance. European and Japanese first — see the constraint below.
 
-Scope today: [revenue, headcount, geographies, who you report to].
+---
 
-The turn: over [period] I took [business] from [number] to [number]. The
-mechanism was [the one thing that did it — not three].
+## 7b. The hard constraint
 
-Before that: [second proof point, with a number].
+Nike is a US company. Under the Iranian Transactions and Sanctions Regulations (31 CFR Part 560), US persons and US-organised entities are generally prohibited from transacting with, or employing, persons ordinarily resident in Iran, absent OFAC authorisation. Nike also has no Iran operations.
 
-Where I am differentiated: [one sentence. For example — rebuilding price
-authority in a brand damaged by promotion; running a China business through
-a full marketplace reset; moving a wholesale-dependent P&L to a healthy
-direct mix without breaking the channel.]
+So: **no Nike role is available from Iran at any level** — not CEO, not an internship. The binding constraint is location and work authorisation, not the CV. Any real plan routes through relocation and a work permit first, and the sportswear job second. Non-US employers in the EU, UK, Japan, and the Gulf are the reachable set, and they still require sponsorship.
 
-Sectors I am credible in: athletic, footwear and apparel, premium consumer.
-I am open to CEO and President/COO mandates, and to non-executive board work.
+---
 
-I am not in a process and there is no timing pressure on my side — which is
-exactly why I would rather be on your map now than introduce myself when
-there is.
+## 7c. The thing that compounds
 
-Fifteen minutes whenever it suits you. CV attached.
-
-[FULL NAME]
-[PHONE] · [EMAIL] · [LINKEDIN URL]
-```
+Publish the ASP argument publicly, in English, under a real name — LinkedIn, Substack, anywhere indexable. It costs nothing, it is not gated by a CV, a visa, or a sanctions regime, and it is the one asset here that keeps working while its author sleeps. Several people have entered serious consideration for roles precisely this way. Do this before sending either email; it gives both of them something to point at.
 
 ---
 
