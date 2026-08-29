@@ -1,0 +1,133 @@
+================================================================================
+TARGET LIST — companies you can actually email
+Researched 29 Aug 2026. Filters applied: real inbox (not a portal),
+non-US (sanctions), fits a business-management graduate with German + English.
+================================================================================
+
+⚠️ VERIFY EVERY ADDRESS BEFORE SENDING. The brand sites themselves were blocked
+by the network proxy in this session, so these come from search-result text.
+An address that has changed means your email goes nowhere and you think they
+ignored you. Two minutes per company — method at the bottom.
+
+
+--------------------------------------------------------------------------------
+TIER 1 — address found. Send here first.
+--------------------------------------------------------------------------------
+
+Ciele Athletics          career@cieleathletics.com          🇨🇦 Montreal
+  Running caps and apparel. Explicitly invites unsolicited CV + cover letter,
+  in French or English. The most open door on this list.
+  → Draft already written and sitting in your Gmail.
+
+norda                    careers-carrieres@nordarun.com     🇨🇦 Montreal
+  Premium trail running shoes, $300+. Best category match for your analysis.
+  → Draft already written and sitting in your Gmail.
+
+SOAR Running             jobs@soarrunning.com               🇬🇧 London
+  Premium British running apparel. A dedicated jobs inbox means someone owns it.
+
+Satisfy                  contact@satisfyrunning.com         🇫🇷 Paris
+  The most extreme premium positioning in running. Founder-led. Recruits mostly
+  product and design, so your angle has to be commercial, not creative.
+
+
+--------------------------------------------------------------------------------
+TIER 2 — they accept email or unsolicited applications, but you must read the
+address off their own careers page. All confirmed to have the route open.
+--------------------------------------------------------------------------------
+
+Houdini Sportswear       🇸🇪 Stockholm    Their careers page says to send a CV
+                                          by email. Sustainability-led premium
+                                          outdoor. Strong values fit.
+
+Jack Wolfskin            🇩🇪 Idstein      Has a formal Initiativbewerbung route
+                                          and names PRODUCT MANAGEMENT as a
+                                          wanted area. Apply in German.
+
+VAUDE                    🇩🇪 Tettnang     Family-owned, sustainability-driven
+                                          outdoor. Mid-size, German-speaking.
+
+Pas Normal Studios       🇩🇰 Copenhagen   Premium cycling. Small, design-led.
+
+Rapha                    🇬🇧 London       careers.rapha.cc has a "Connect" page
+                                          for open applications.
+
+Castore                  🇬🇧             careers.castore.com
+
+
+--------------------------------------------------------------------------------
+TIER 3 — German-speaking outdoor and sports companies.
+Your German makes all of these reachable by Initiativbewerbung. See below.
+--------------------------------------------------------------------------------
+
+🇩🇪 Germany      Deuter · Schöffel · Ortlieb · Edelrid · Maier Sports ·
+                 Engelbert Strauss · Sportscheck
+🇨🇭 Switzerland  Mammut · Odlo · On (portal only)
+🇦🇹 Austria      Ortovox · Löffler
+🇮🇹 Italy        Salewa / Oberalp Group · Scarpa · La Sportiva
+🇳🇴🇸🇪🇮🇸        Norrøna · Icebug · Klättermusen · 66°North
+🇫🇷 France       Fusalp · Rossignol · Salomon · Decathlon
+
+
+================================================================================
+YOUR REAL EDGE: THE INITIATIVBEWERBUNG
+================================================================================
+
+In German-speaking business culture, the Initiativbewerbung — an unsolicited
+application sent when no position is advertised — is a normal, expected,
+respected thing. It is not strange to send one. HR departments have a process
+for it. Many German companies keep a bewerbung@ address specifically for this.
+
+Almost nobody applying from outside Europe knows this or can do it in German.
+You can do both. That is a genuine advantage and it costs nothing to use.
+
+The German form has rules. Follow them:
+  · Anschreiben (cover letter) — ONE page, never more. Formal register.
+  · Lebenslauf (CV) — tabular, reverse chronological, one page.
+  · Address a named person if you can find one; "Sehr geehrte Damen und Herren"
+    only if you genuinely cannot.
+  · Subject line: "Initiativbewerbung als [Position]" — plain and specific.
+  · Attach as ONE combined PDF, named
+    Bewerbung_Palangsangdovini_[Firma].pdf
+  · German applications value precision and completeness over personality.
+    Do not write an American-style enthusiastic letter. It reads as unserious.
+
+
+================================================================================
+HOW TO FIND ANY COMPANY'S APPLICATION ADDRESS — two minutes
+================================================================================
+
+1. Open the company site. Scroll to the FOOTER. Look for:
+   Careers · Jobs · Work with us · Karriere · Stellenangebote · Join us
+
+2. On that page, look for a mailto link or a plain address. Often at the very
+   bottom, under a line like "no suitable position?" or
+   "Keine passende Stelle dabei?"
+
+3. If nothing is visible, search Google for:
+        site:brandname.com jobs email
+        "brandname" Initiativbewerbung E-Mail
+        "@brandname.com" careers
+
+4. Still nothing → the company is portal-only. Do not guess an address.
+   Use LinkedIn instead: find their recruiter or Head of Strategy and send the
+   same text as a connection note.
+
+NEVER send an application to info@, hello@, service@, or press@. Those are
+customer service and press inboxes. Your email is deleted unread and you learn
+nothing from the silence.
+
+
+================================================================================
+ORDER TO WORK THROUGH THIS
+================================================================================
+
+Week 1   Verify the four Tier 1 addresses. Send norda and Ciele with your CV
+         attached. Write and send SOAR and Satisfy.
+Week 2   Read the addresses off the six Tier 2 pages. Send those.
+Week 3   Pick eight from Tier 3. Write German Initiativbewerbungen.
+         One paragraph per company must be specific to that company.
+Ongoing  adidas and PUMA portals — motivation letters already written.
+
+Twenty applications is a realistic sample. Two is not. Most will not reply,
+and that is the normal shape of this work rather than a verdict on you.
