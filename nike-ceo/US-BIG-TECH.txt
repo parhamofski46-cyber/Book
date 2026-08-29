@@ -1,0 +1,221 @@
+================================================================================
+FOUR LETTERS TO LARGE US COMPANIES
+Written 29 Aug 2026 from Q2/Q3 2026 results.
+Route: LinkedIn message to a named recruiter, or the portal's cover-letter field.
+================================================================================
+
+
+--------------------------------------------------------------------------------
+1. GOOGLE / ALPHABET
+Subject: Search grew 17%. Capex doubled. Which number is the business?
+--------------------------------------------------------------------------------
+
+Hello,
+
+I am writing about an entry-level or associate role in strategy, business
+operations, or finance at Google. I studied business management and I work in
+German and English.
+
+Rather than describe myself, here is the question I have been sitting with.
+
+In Q2, Alphabet did $119.8 billion in revenue, up 24 percent. Search and other
+was $63.27 billion, up 17. Cloud was up 82 with a $514 billion backlog. AI Mode
+passed a billion monthly users. By any read of the demand side, the AI
+transition is going well.
+
+And the stock fell — on the capex line. Full-year guidance moved to $195–205
+billion, up from $180–190, with second-quarter capex doubling year over year.
+
+I find that gap more interesting than either number alone. It suggests the
+market has stopped asking whether Google keeps the queries. A billion monthly
+users settled that. It has started asking what a query now costs. A blue-link
+result had close to zero marginal cost. An AI answer does not. So the number
+that decides the next five years is not query volume or even Search revenue —
+it is the spread between revenue per AI query and cost per AI query, and
+whether that spread widens or narrows as adoption grows.
+
+Growth that costs more per unit than it returns is a different business than
+the one that made Google, even when both are called growth. I would want to
+work where that spread is measured.
+
+I am at the start of my career and have no track record yet. What I can offer
+is that I read primary filings rather than coverage, I work in two languages,
+and I will do the unglamorous analysis nobody volunteers for. I am not able to
+work in the US at present and would need sponsorship and relocation.
+
+If nothing fits, I would value fifteen minutes or one piece of advice on what to
+build over the next two years. I will take a hard answer as readily as a kind one.
+
+Mohammadparham Palangsangdovini
++98 911 278 6249 · parhambamarame@gmail.com · Telegram: @parham_plg
+
+
+--------------------------------------------------------------------------------
+2. APPLE
+Subject: Apple raised volume and price in the same quarter. Almost nobody can.
+--------------------------------------------------------------------------------
+
+Hello,
+
+I am writing about an entry-level or associate role in finance, business
+operations, or strategy at Apple. I studied business management and I work in
+German and English.
+
+Here is what I have been working on.
+
+I have been studying pricing power across consumer categories. The clearest
+failure case I found is Nike: it now sells more running shoes than On while
+carrying an $83 average selling price against On's $143, and its FY26 gross
+margin only reads healthy because roughly 900 basis points of it came from a
+one-off $986 million tariff recovery. Volume recovered. Price did not.
+
+Apple is the inverse, and the detail I find most interesting is not the
+headline. In Q2 iPhone shipments rose 13 percent while average selling price
+rose 8, and iPhone took a record 49 percent of global smartphone revenue.
+Volume and price moved up together, which most companies are told is a
+trade-off.
+
+What makes it unusual is how. Through the memory shortage, competitors raised
+list prices to cover bill-of-materials costs and Apple largely did not. So the
+ASP increase did not come from moving the ladder — it came from moving
+customers up it. That is a mix outcome, not a pricing action, and it is far more
+durable, because a list-price increase can be matched by a competitor in a
+quarter and a mix shift cannot.
+
+I would want to work on the question that follows: how far up that ladder is
+there still room, and what happens to Services attach rates as the mix moves.
+
+I am at the start of my career and have no track record yet. What I offer is
+that I read primary filings rather than coverage, and that I will do the
+analysis nobody volunteers for. I am not able to work in the US at present and
+would need sponsorship and relocation.
+
+Fifteen minutes, or one piece of advice, would be worth a great deal to me.
+
+Mohammadparham Palangsangdovini
++98 911 278 6249 · parhambamarame@gmail.com · Telegram: @parham_plg
+
+
+--------------------------------------------------------------------------------
+3. AMAZON
+Subject: The $19.8bn business nobody writes about
+--------------------------------------------------------------------------------
+
+Hello,
+
+I am writing about an entry-level or associate role in finance or business
+operations at Amazon. I studied business management and I work in German and
+English.
+
+Here is the argument I have been working on.
+
+Q2 was Amazon's first $200 billion quarter — $200.6 billion, up 20 percent —
+and almost all of the commentary went to AWS, fairly: $42.2 billion, up 37,
+accelerating for a fifth straight quarter, with operating margin up 650 basis
+points to 39.
+
+The line I keep returning to is advertising. $19.8 billion, up 26 percent. That
+is under half of AWS in revenue, but it does not sit in the cloud segment — it
+sits on top of the retail business, and marketplace advertising carries margin
+that retail itself never will. In practical terms it is the retail segment's
+profit engine wearing a different name.
+
+Which makes the interesting question a limit question rather than a growth one.
+Advertising on a marketplace is monetised attention, and attention is the same
+asset that makes the marketplace worth advertising on. Every incremental
+sponsored placement earns revenue now and takes a small amount of trust from
+the discovery experience that produced the demand. Nobody knows exactly where
+that line sits, and the segment reporting is not built to show it.
+
+I would want to work on measuring it, because a business that can only be grown
+by degrading its own input has a ceiling that does not appear in a growth rate.
+
+I am at the start of my career and have no track record yet. What I offer is
+that I read primary filings rather than coverage, and that I will take on the
+unglamorous work. I am not able to work in the US at present and would need
+sponsorship and relocation.
+
+Fifteen minutes, or a single piece of advice, would mean a lot.
+
+Mohammadparham Palangsangdovini
++98 911 278 6249 · parhambamarame@gmail.com · Telegram: @parham_plg
+
+
+--------------------------------------------------------------------------------
+4. STARBUCKS
+Subject: Back to Starbucks is a pricing strategy, and China is the proof
+--------------------------------------------------------------------------------
+
+Hello,
+
+I am writing about an entry-level or associate role in strategy or business
+operations at Starbucks. I studied business management and I work in German and
+English.
+
+Here is why Starbucks specifically.
+
+I have been studying pricing power in consumer brands. The failure case is
+Nike: more pairs sold than On, at an $83 average selling price against On's
+$143, with a gross margin that only looks healthy because roughly 900 basis
+points came from a one-off tariff recovery. Volume returned; price did not.
+
+Back to Starbucks reads to me as the deliberate opposite. A simplified menu,
+fresh-baked food, handwritten cups, faster service — those are not four service
+improvements, they are one decision to be worth more rather than to sell more
+cheaply. Every one of them is a cost line that only pays if the customer accepts
+a higher price for the experience. Q3 comparable sales of 7.9 percent against
+5.7 expected suggests they do.
+
+The part I find most instructive is China. Forming the joint venture and
+licensing roughly 90 percent of international locations is a decision to treat
+China as a market to be designed for locally rather than a distribution problem
+to be managed from headquarters. That is exactly the choice Nike has not made,
+and it is why Greater China fell 17 percent last quarter while Starbucks China
+grew 7. The same brand problem, two different theories of ownership, and one is
+visibly working.
+
+I would want to work on which categories can carry the higher price next, so
+the strategy keeps producing proof rather than only patience.
+
+I am at the start of my career and have no track record yet. What I offer is
+that I read primary filings rather than coverage, and I will do the analysis
+nobody volunteers for. I am not able to work in the US at present and would need
+sponsorship and relocation.
+
+Fifteen minutes, or one piece of advice, would be worth a great deal.
+
+Mohammadparham Palangsangdovini
++98 911 278 6249 · parhambamarame@gmail.com · Telegram: @parham_plg
+
+
+================================================================================
+HOW TO SEND THESE
+================================================================================
+
+LinkedIn, to a named person. Search the company plus "University Recruiter",
+"Early Careers", "Talent Acquisition", or the function you are writing about
+(Corporate Strategy, Business Operations, FP&A). Send the letter as a message.
+A connection request has a 300-character note limit — send the request first,
+then the full letter once accepted.
+
+Or paste it into the cover-letter field of the portal:
+  Google      google.com/about/careers
+  Apple       jobs.apple.com
+  Amazon      amazon.jobs
+  Starbucks   starbucks.com/careers
+
+Not to press@, info@, or support@. Those go nowhere useful.
+
+
+WHY THESE FOUR ARE BUILT THE WAY THEY ARE
+
+Each one names a number the company reports, then says something about that
+number the company's own press release does not say. That is the entire
+mechanism. A recruiter reads a hundred letters that say "I am passionate about
+your mission" and none that say "your capex doubled and here is the question
+that implies".
+
+If you write more of these, keep the rule: find one real, checkable, recent
+number, and say the non-obvious thing about it. If you cannot find the
+non-obvious thing, pick a different company. The letter is only as good as that
+one paragraph.
