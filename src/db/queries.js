@@ -192,11 +192,47 @@ const listProductImages = (productId) =>
     .all(productId);
 
 /** محصولات مرتبط (هم‌دسته) برای پایین صفحه‌ی محصول */
+/**
+ * «محصولات مشابه» — همسایه‌های محصول در همان دسته، نه چهار محصول اولِ دسته.
+ *
+ * ⚠️ این پرس‌وجو عمداً پیچیده‌تر از حالت بدیهی‌اش است. نسخه‌ی قبلی
+ * `ORDER BY in_stock DESC, sort_order LIMIT 4` بود، یعنی **هر** محصول یک
+ * دسته دقیقاً همان چهار محصول اول را نشان می‌داد. برای دسته‌ی فرفورژه با
+ * حدود ۵۰۰ محصول نتیجه‌اش این شد که ۴۹۰ صفحه همگی به یک مشت آدرس ثابت
+ * لینک می‌دادند و ۴۸۶ محصول دیگر **هیچ لینک داخلی‌ای دریافت نمی‌کردند** جز
+ * از صفحه‌های عمیق گالری. اندازه‌گیری شد: ۶۰ صفحه‌ی محصول فقط ۴۰ مقصد
+ * متمایز تولید می‌کرد و پرتکرارها ۸ بار تکرار می‌شدند.
+ *
+ * چرا مهم است: گوگل صفحه‌ای را که لینک داخلی کمی دارد و برای رسیدن به آن
+ * باید چند بار صفحه‌بندی را رد کرد، دیرتر و کمتر ایندکس می‌کند.
+ *
+ * راه‌حل: محصول‌های دسته را در یک ترتیب پایدار شماره می‌زنیم و همسایه‌های
+ * نزدیک محصول فعلی را برمی‌داریم. فاصله **حلقه‌ای** حساب می‌شود، پس اولین
+ * و آخرین محصول هم همسایه دارند و کل دسته به یک زنجیره‌ی بسته تبدیل
+ * می‌شود: هر محصول از همسایه‌هایش لینک می‌گیرد، هیچ‌کدام بی‌لینک نمی‌مانند
+ * و عمق کلیکی به‌جای صفحه‌بندی، از راه همین زنجیره کوتاه می‌شود.
+ *
+ * `in_stock DESC` عمداً معیار **دوم** است، نه اول: اگر اول بیاید دوباره
+ * همه‌ی صفحه‌ها به موجودهای یکسان کشیده می‌شوند و همان مشکل برمی‌گردد.
+ */
 const relatedProducts = (product, limit = 4) =>
   db
     .prepare(
-      `${PRODUCT_SELECT} WHERE p.is_active = 1 AND p.category_id = @cat AND p.id <> @id
-        ORDER BY p.in_stock DESC, p.sort_order LIMIT @limit`
+      `WITH ordered AS (
+         SELECT p.id, ROW_NUMBER() OVER (ORDER BY p.sort_order, p.id) AS rn
+           FROM products p
+          WHERE p.is_active = 1 AND p.category_id = @cat
+       ),
+       stats AS (SELECT COUNT(*) AS n, COALESCE(
+         (SELECT rn FROM ordered WHERE id = @id), 1) AS me FROM ordered)
+       ${PRODUCT_SELECT}
+       JOIN ordered o ON o.id = p.id
+       CROSS JOIN stats
+        WHERE p.id <> @id
+        ORDER BY MIN(ABS(o.rn - stats.me), stats.n - ABS(o.rn - stats.me)),
+                 p.in_stock DESC,
+                 o.rn
+        LIMIT @limit`
     )
     .all({ cat: product.category_id, id: product.id, limit });
 

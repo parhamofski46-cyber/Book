@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main id="main">
+    <div class="wrap">
+      <%- include('../partials/breadcrumb', { crumbs: [{ name: 'فهرست کامل کالاها' }] }) %>
+
+      <section class="section">
+        <div class="section-head">
+          <div class="section-title">
+            <h1 style="font-size:clamp(1.6rem,1.2rem+1.5vw,2.2rem)">فهرست کامل کالاها</h1>
+          </div>
+          <p>
+            همه‌ی <%= h.toFaDigits(total) %> کالای انبار در یک صفحه، دسته به دسته.
+            اگر کد مدل فرفورژه یا نام دقیق کالا را می‌دانید، با
+            <kbd>Ctrl</kbd>+<kbd>F</kbd> (روی گوشی: جست‌وجو در صفحه) سریع‌تر از
+            ورق‌زدن گالری پیدایش می‌کنید.
+          </p>
+        </div>
+
+        <nav class="index-jump" aria-label="پرش به دسته">
+          <% groups.forEach(function (g) { %>
+            <a href="#c-<%= g.category.id %>">
+              <%= g.category.name %>
+              <small><%= h.toFaDigits(g.items.length) %></small>
+            </a>
+          <% }); %>
+        </nav>
+
+        <% groups.forEach(function (g) { %>
+          <section class="index-group" id="c-<%= g.category.id %>">
+            <h2>
+              <a href="/category/<%= encodeURIComponent(g.category.slug) %>"><%= g.category.name %></a>
+              <span class="index-count"><%= h.toFaDigits(g.items.length) %> کالا</span>
+            </h2>
+            <ul class="index-list">
+              <% g.items.forEach(function (p) { %>
+                <li>
+                  <a href="/product/<%= encodeURIComponent(p.slug) %>"><%= p.name %></a><% if (!p.in_stock) { %><span class="index-out">ناموجود</span><% } %>
+                </li>
+              <% }); %>
+            </ul>
+          </section>
+        <% }); %>
+
+        <div class="cta-band">
+          <div class="ornament"><%- include('../partials/ornament', { variant: 'panel' }) %></div>
+          <div>
+            <h2>کالایی که می‌خواهید در فهرست نیست؟</h2>
+            <p>
+              این فهرست اقلام اصلی انبار است. هرچه لازم دارید بپرسید — اگر خودمان
+              نداشته باشیم، معمولاً می‌توانیم تهیه کنیم.
+            </p>
+          </div>
+          <div class="cta-actions">
+            <% if (site.channels.whatsapp.enabled) { %>
+              <a data-track="whatsapp" class="btn btn-wa btn-lg" href="<%= site.channels.whatsapp.base %>" target="_blank" rel="noopener">
+                <%- icon('whatsapp') %> پرسیدن در واتساپ
+              </a>
+            <% } %>
+            <a class="btn btn-ghost btn-lg" href="/contact">راه‌های دیگر تماس</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

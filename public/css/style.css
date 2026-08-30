@@ -3793,3 +3793,86 @@ p {
   width: 20px;
   height: 20px;
 }
+
+/* ---------------------------------------------------------------------------
+   فهرست کامل کالاها (/فهرست-محصولات)
+   صفحه‌ای متن‌محور با چند صد لینک. عمداً سبک است: نه عکس، نه کارت — چون
+   کاربری که به این صفحه می‌آید دنبال «پیدا کردن سریع یک نام یا کد» است، نه
+   مرور کردن. ستون‌بندی خودکار با auto-fill انجام می‌شود تا روی گوشی یک
+   ستون و روی دسکتاپ چند ستون شود، بدون مدیاکوئری جدا.
+--------------------------------------------------------------------------- */
+.index-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+.index-jump a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+.index-jump a:hover,
+.index-jump a:focus-visible {
+  border-color: var(--copper);
+  color: var(--copper);
+}
+.index-jump small {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.index-group {
+  margin-bottom: 34px;
+  /* لنگر پرش زیر هدر چسبان پنهان نشود */
+  scroll-margin-top: 90px;
+}
+.index-group h2 {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+  font-size: 1.15rem;
+}
+.index-group h2 a { color: var(--ink); text-decoration: none; }
+.index-group h2 a:hover { color: var(--copper); }
+.index-count { color: var(--muted); font-size: 0.85rem; font-weight: 400; }
+
+.index-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 4px 22px;
+}
+.index-list li { display: flex; align-items: baseline; gap: 8px; }
+.index-list a {
+  display: block;
+  padding: 6px 0;
+  color: var(--ink-soft, var(--ink));
+  text-decoration: none;
+  font-size: 0.93rem;
+  line-height: 1.5;
+}
+.index-list a:hover,
+.index-list a:focus-visible { color: var(--copper); text-decoration: underline; }
+.index-out {
+  flex: none;
+  font-size: 0.72rem;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 1px 6px;
+}

@@ -232,6 +232,56 @@ router.get('/products', (req, res) => {
  * اختصاصی بنویس — کپی کردن متن شهر دیگر، از نظر گوگل صفحه‌ی دروازه‌ای است
  * و به کل سایت ضرر می‌زند.
  */
+// ------------------------------------------ فهرست کامل کالاها (نمایه‌ی سایت)
+/**
+ * یک صفحه که به **همه‌ی** محصولات لینک می‌دهد، دسته‌بندی‌شده.
+ *
+ * ⚠️ این صفحه تزیینی نیست؛ برای رفع یک مشکل اندازه‌گیری‌شده ساخته شده.
+ * پیمایش سایت نشان داد ۲۸۵ صفحه‌ی محصول ۴ تا ۵ کلیک از صفحه‌ی اصلی فاصله
+ * دارند، چون تنها راه رسیدن به آن‌ها زنجیره‌ی صفحه‌بندی است:
+ *   /  →  /products  →  ?page=12  →  ?page=11  →  ?page=9  →  محصول
+ * گوگل برای سایت تازه‌ای که هنوز لینک بیرونی ندارد بودجه‌ی خزش کمی صرف
+ * می‌کند و صفحه‌های عمیق را دیرتر — یا اصلاً — ایندکس نمی‌کند. با این
+ * صفحه، هر محصول ۲ کلیک از خانه فاصله می‌گیرد.
+ *
+ * برای مشتری هم واقعاً به کار می‌آید و صرفاً «صفحه‌ای برای گوگل» نیست:
+ * خریدار فرفورژه معمولاً کد مدل را می‌داند و اینجا با Ctrl+F سریع پیدایش
+ * می‌کند — کاری که با ورق‌زدن ۱۲ صفحه‌ی گالری شدنی نیست.
+ *
+ * مثل صفحه‌های شهری با `/:slug` گرفته می‌شود، نه با مسیر فارسیِ لفظی:
+ * Express مسیر را رمزگشایی‌نشده تطبیق می‌دهد، پس نوشتن مستقیم اسلاگ فارسی
+ * در تعریف مسیر هرگز match نمی‌شود.
+ */
+const CATALOG_INDEX_SLUG = 'فهرست-محصولات';
+
+router.get('/:slug', (req, res, next) => {
+  if (req.params.slug !== CATALOG_INDEX_SLUG) return next();
+
+  cachePublic(res, 3600);
+
+  const products = q.listProducts();
+  const groups = q
+    .listCategories()
+    .map((c) => ({
+      category: c,
+      items: products
+        .filter((p) => p.category_slug === c.slug)
+        .sort((a, b) => a.sort_order - b.sort_order || a.id - b.id),
+    }))
+    .filter((g) => g.items.length);
+
+  res.render('public/catalog-index', {
+    title: `فهرست کامل کالاها | ${site.shortName} — آهن‌آلات گرگان و علی‌آباد کتول`,
+    metaDescription: truncate(
+      'فهرست همه‌ی کالاهای فولاد ایمان در یک صفحه: قوطی و پروفیل، نبشی، ' +
+        'رابیتس، فنس و توری، ایزوگام، یراق‌آلات، ورق گالوانیزه و همه‌ی ' +
+        'کدهای گل و طرح فرفورژه. کد مدل را همین‌جا جست‌وجو کنید.'
+    ),
+    groups,
+    total: products.length,
+  });
+});
+
 router.get('/:slug', (req, res, next) => {
   const city = cities.bySlug(req.params.slug);
   if (!city) return next();
@@ -564,6 +614,8 @@ router.get('/sitemap.xml', (req, res) => {
     { loc: '/reviews', priority: '0.7', changefreq: 'monthly' },
     { loc: '/contact', priority: '0.6', changefreq: 'monthly' },
     { loc: '/faq', priority: '0.7', changefreq: 'monthly' },
+    // فهرست کامل کالاها: راه کوتاه گوگل به همه‌ی صفحه‌های محصول
+    { loc: encodeURI('/' + CATALOG_INDEX_SLUG), priority: '0.6', changefreq: 'weekly' },
   ];
 
   // صفحه‌های شهری — هدفشان جست‌وجوهای محلی است، پس اولویت بالا می‌گیرند
