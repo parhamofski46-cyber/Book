@@ -1,0 +1,200 @@
+<%- include('_layout-top') %>
+<%
+const isNew = !product || !product.id;
+const action = isNew ? '/admin/products' : '/admin/products/' + product.id;
+const val = function (key, fallback) {
+  if (!product) return fallback === undefined ? '' : fallback;
+  return product[key] === null || product[key] === undefined ? (fallback === undefined ? '' : fallback) : product[key];
+};
+%>
+
+<div class="page-head">
+  <div>
+    <h1><%= isNew ? 'افزودن محصول جدید' : 'ویرایش محصول' %></h1>
+    <% if (!isNew) { %>
+      <p class="hint">
+        <a href="/product/<%= encodeURIComponent(product.slug) %>" target="_blank" rel="noopener">
+          دیدن این محصول در سایت ↗
+        </a>
+      </p>
+    <% } %>
+  </div>
+  <a class="btn btn-ghost" href="/admin/products">بازگشت به فهرست</a>
+</div>
+
+<% if (typeof flash !== 'undefined' && flash === 'created') { %>
+  <div class="alert alert-ok">✅ محصول ساخته شد. حالا می‌توانید عکس‌های بیشتری اضافه کنید.</div>
+<% } else if (typeof flash !== 'undefined' && flash === 'saved') { %>
+  <div class="alert alert-ok">✅ تغییرات ذخیره شد.</div>
+<% } %>
+
+<% if (error) { %>
+  <div class="alert alert-err"><%= error %></div>
+<% } %>
+
+<form method="post" action="<%= action %>" enctype="multipart/form-data">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+  <!-- ================================================ اطلاعات اصلی -->
+  <div class="panel">
+    <h2>اطلاعات محصول</h2>
+
+    <div class="field">
+      <label for="name">نام محصول *</label>
+      <p class="desc">همان اسمی که مشتری صدا می‌زند. مثال: «قوطی ۴۰×۴۰» یا «گل فرفورژه طرح پیچک»</p>
+      <input type="text" id="name" name="name" value="<%= val('name') %>" required maxlength="120">
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="category_id">دسته‌بندی *</label>
+        <select id="category_id" name="category_id" required>
+          <option value="">— انتخاب کنید —</option>
+          <% categories.forEach(function (c) { %>
+            <option value="<%= c.id %>" <%= String(val('category_id')) === String(c.id) ? 'selected' : '' %>>
+              <%= c.name %>
+            </option>
+          <% }); %>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="subcategory_id">زیردسته (اختیاری)</label>
+        <p class="desc">فقط برای دسته‌هایی مثل فرفورژه که طرح‌های مختلف دارند.</p>
+        <select id="subcategory_id" name="subcategory_id">
+          <option value="">— ندارد —</option>
+          <% subcategories.forEach(function (s) { %>
+            <option value="<%= s.id %>" data-category="<%= s.category_id %>"
+                    <%= String(val('subcategory_id')) === String(s.id) ? 'selected' : '' %>>
+              <%= s.category_name %> › <%= s.name %>
+            </option>
+          <% }); %>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="summary">توضیح کوتاه</label>
+      <p class="desc">یک خط که زیر اسم محصول در فهرست دیده می‌شود.</p>
+      <input type="text" id="summary" name="summary" value="<%= val('summary') %>" maxlength="180">
+    </div>
+
+    <div class="field">
+      <label for="description">توضیح کامل</label>
+      <p class="desc">
+        هرچه بیشتر و طبیعی‌تر توضیح بدهید (کاربرد، سایز، جنس، شهرهایی که ارسال می‌کنید)،
+        شانس دیده‌شدن در گوگل بیشتر می‌شود.
+      </p>
+      <textarea id="description" name="description"><%= val('description') %></textarea>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="price_text">قیمت (متنی)</label>
+        <p class="desc">مثال: «استعلام قیمت روز» یا «۴۵,۰۰۰ تومان / کیلوگرم»</p>
+        <input type="text" id="price_text" name="price_text"
+               value="<%= val('price_text', 'استعلام قیمت روز') %>" maxlength="60">
+      </div>
+
+      <div class="field">
+        <label for="unit">واحد فروش</label>
+        <p class="desc">مثال: شاخه ۶ متری، کیلوگرم، متر مربع، رول، عدد</p>
+        <input type="text" id="unit" name="unit" value="<%= val('unit') %>" maxlength="40">
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================ موجودی -->
+  <div class="panel">
+    <h2>موجودی و نمایش</h2>
+
+    <label class="check">
+      <input type="checkbox" name="in_stock" value="1" <%= isNew || val('in_stock') ? 'checked' : '' %>>
+      <span>موجود است <small>— اگر تیک را بردارید، در سایت با برچسب «ناموجود» نشان داده می‌شود</small></span>
+    </label>
+
+    <label class="check">
+      <input type="checkbox" name="is_active" value="1" <%= isNew || val('is_active') ? 'checked' : '' %>>
+      <span>در سایت نمایش داده شود <small>— برای پنهان‌کردن موقت محصول، تیک را بردارید</small></span>
+    </label>
+
+    <div class="row">
+      <div class="field">
+        <label for="stock_qty">تعداد موجود (اختیاری)</label>
+        <p class="desc">اگر خالی بگذارید، فقط «موجود» نمایش داده می‌شود بدون تعداد.</p>
+        <input type="number" id="stock_qty" name="stock_qty" min="0" step="1"
+               value="<%= val('stock_qty') %>">
+      </div>
+
+      <div class="field">
+        <label for="sort_order">ترتیب نمایش</label>
+        <p class="desc">عدد کوچک‌تر = بالاتر در فهرست. محصول‌های پرفروش را ۰ بگذارید.</p>
+        <input type="number" id="sort_order" name="sort_order" step="1" value="<%= val('sort_order', 0) %>">
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================ عکس‌ها -->
+  <div class="panel">
+    <h2>عکس محصول</h2>
+    <p class="hint">
+      عکس‌ها خودکار فشرده و در سه سایز ذخیره می‌شوند — نیازی نیست خودتان کاری بکنید.
+      بهترین نتیجه: عکس در نور روز، از فاصله‌ی نزدیک، با پس‌زمینه‌ی ساده.
+      حداکثر ۸ عکس در هر بار، هر کدام تا ۱۵ مگابایت.
+    </p>
+
+    <div class="field" style="margin-top:1rem">
+      <label for="images">انتخاب عکس از گوشی یا کامپیوتر</label>
+      <input type="file" id="images" name="images" accept="image/*" multiple>
+    </div>
+
+    <div class="field">
+      <label for="alt">توضیح عکس برای گوگل (اختیاری)</label>
+      <p class="desc">اگر خالی بگذارید، خودکار از نام محصول و نام شهرها ساخته می‌شود.</p>
+      <input type="text" id="alt" name="alt" maxlength="160"
+             placeholder="مثال: نرده فرفورژه طرح پیچک، ساخت فولاد ایمان در علی‌آباد کتول">
+    </div>
+
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-primary btn-lg" type="submit">
+      <%= isNew ? 'ساختن محصول' : 'ذخیره‌ی تغییرات' %>
+    </button>
+    <a class="btn btn-ghost" href="/admin/products">انصراف</a>
+  </div>
+</form>
+
+<!-- ================================================ عکس‌های فعلی
+     این بخش بیرون از فرم اصلی است تا هر عکس دکمه‌ی مستقل خودش را داشته باشد -->
+<% if (images && images.length) { %>
+  <div class="panel" style="margin-top:1.4rem">
+    <h2>عکس‌های فعلی این محصول</h2>
+    <p class="hint">اولین عکس، عکس اصلی است و در فهرست محصولات نمایش داده می‌شود.</p>
+
+    <div class="img-grid" style="margin-top:1rem">
+      <% images.forEach(function (im, i) { %>
+        <div class="img-item">
+          <img src="<%= h.imageUrl(im.basename, 'thumb') %>" alt="<%= im.alt %>" loading="lazy">
+          <div class="bar">
+            <% if (i === 0) { %>
+              <span class="main-tag">★ عکس اصلی</span>
+            <% } else { %>
+              <form method="post" action="/admin/images/<%= im.id %>/primary">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button class="btn btn-ghost btn-sm" type="submit">اصلی کن</button>
+              </form>
+            <% } %>
+            <form method="post" action="/admin/images/<%= im.id %>/delete"
+                  data-confirm="این عکس حذف شود؟">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button class="btn btn-danger btn-sm" type="submit">حذف</button>
+            </form>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+<% } %>
+
+<%- include('_layout-bottom') %>

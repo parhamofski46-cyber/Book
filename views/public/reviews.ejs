@@ -1,0 +1,133 @@
+<%
+/**
+ * صفحه‌ی نظر مشتریان.
+ *
+ * ⚠️ نکته‌ی مهم و همیشگی: نظرهای این صفحه باید واقعی باشند. داده‌ی ساختاریافته‌ی
+ * Review به گوگل فرستاده می‌شود و نظر ساختگی هم خلاف قوانین گوگل است و هم
+ * می‌تواند باعث حذف سایت از نتایج غنی شود. نظرهای نمونه با «(نمونه)» علامت
+ * خورده‌اند و باید از پنل مدیریت با نظر واقعی جایگزین شوند.
+ */
+const real = reviews.filter(function (r) { return !/\(نمونه\)/.test(r.name || ''); });
+const ld = real.length ? {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': site.url + '/#business',
+  name: site.name,
+  aggregateRating: reviewSummary.count ? {
+    '@type': 'AggregateRating',
+    ratingValue: reviewSummary.average,
+    reviewCount: reviewSummary.count,
+    bestRating: 5,
+    worstRating: 1,
+  } : undefined,
+  review: real.map(function (r) {
+    return {
+      '@type': 'Review',
+      author: { '@type': 'Person', name: r.name },
+      reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: 5, worstRating: 1 },
+      reviewBody: r.text,
+    };
+  }),
+} : null;
+%>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <%- include('../partials/head') %>
+  <% if (ld) { %>
+    <script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(ld) %></script>
+  <% } %>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main id="main">
+    <div class="wrap">
+      <%- include('../partials/breadcrumb', { crumbs: [{ name: 'نظر مشتریان', url: '/reviews' }] }) %>
+    </div>
+
+    <section class="page-head">
+      <div class="wrap">
+        <span class="eyebrow"><%- icon('chat') %> تجربه‌ی مشتری‌های ما</span>
+        <h1>مشتری‌ها چه می‌گویند</h1>
+        <% if (reviewSummary.count) { %>
+          <div class="rating-summary" style="justify-content:center;margin-top:1rem">
+            <%- include('../partials/stars', { rating: Math.round(reviewSummary.average) }) %>
+            <b><%= h.toFaDigits(reviewSummary.average) %></b>
+            <span>از <%= h.toFaDigits(reviewSummary.count) %> نظر ثبت‌شده</span>
+          </div>
+        <% } %>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <% if (reviews.length && !real.length) { %>
+          <%# همه‌ی نظرهای موجود نمونه‌اند: به‌جای وانمود کردن، صادقانه بگو. %>
+          <p class="sample-note">
+            <%- icon('info') %>
+            نظرهای زیر <strong>نمونه</strong> هستند و فقط برای نشان‌دادن شکل این بخش
+            گذاشته شده‌اند. به‌محض ثبت نظر واقعی مشتری‌ها از پنل مدیریت، جای اینها را
+            می‌گیرند و ستاره‌ی امتیاز هم فعال می‌شود.
+          </p>
+        <% } %>
+
+        <% if (reviews.length) { %>
+          <div class="review-grid reveal">
+            <% reviews.forEach(function (r) { %>
+              <article class="review-card">
+                <%- include('../partials/stars', { rating: r.rating }) %>
+                <p class="review-text"><%= r.text %></p>
+                <div class="review-who">
+                  <span class="avatar" aria-hidden="true"><%= String(r.name || '؟').replace(/\(نمونه\)/g, '').trim().charAt(0) || '؟' %></span>
+                  <div>
+                    <b><%= r.name %></b>
+                    <span>
+                      <% if (r.job) { %><%= r.job %><% } %>
+                      <% if (r.job && r.city) { %> · <% } %>
+                      <% if (r.city) { %><span class="loc"><%- icon('map') %><%= r.city %></span><% } %>
+                    </span>
+                  </div>
+                </div>
+              </article>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <%# حالت خالی. دکمه‌ی تماس عمداً اینجا تکرار نشده چون بلافاصله پایین‌تر
+              همان دکمه‌ها در cta-band هستند. %>
+          <div class="empty-reviews">
+            <p class="lead">هنوز نظری اینجا ثبت نشده است.</p>
+            <p>
+              ما فقط نظر واقعی مشتری‌های خودمان را منتشر می‌کنیم و نظر ساختگی
+              نمی‌نویسیم؛ برای همین این بخش تا رسیدن اولین نظر خالی می‌ماند.
+            </p>
+            <p class="hint">اگر از ما خرید کرده‌اید، از دکمه‌های پایین نظرتان را بفرستید.</p>
+          </div>
+        <% } %>
+
+        <div class="cta-band reveal" style="margin-top:clamp(2.5rem,5vw,4rem)">
+          <div class="ornament"><%- include('../partials/ornament', { variant: 'panel' }) %></div>
+          <div>
+            <h2>شما هم از ما خرید کرده‌اید؟</h2>
+            <p>
+              نظرتان را برایمان بفرستید — چه تعریف باشد چه انتقاد، هر دو کمکمان می‌کند
+              کارمان را بهتر کنیم.
+            </p>
+          </div>
+          <div class="cta-actions">
+            <% activeChannels().forEach(function (ch) { %>
+              <a class="btn <%= ch.key === 'whatsapp' ? 'btn-wa' : 'btn-tg' %> btn-lg"
+                 href="<%= ch.href %>" target="_blank" rel="noopener">
+                <%- icon(ch.key) %> ارسال نظر در <%= ch.label %>
+              </a>
+            <% }); %>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

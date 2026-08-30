@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<%
+const mainImg = h.productImage(product, 'large');
+const stock = h.stockLabel(product);
+
+// داده‌ی ساختاریافته‌ی محصول برای گوگل (نمایش وضعیت موجودی در نتایج جست‌وجو)
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: product.name,
+  description: (product.summary || product.description || product.name).slice(0, 300),
+  category: product.category_name,
+  brand: { '@type': 'Brand', name: site.name },
+  // شناسه‌ی یکتای کالا. گوگل برای تشخیص اینکه دو صفحه از یک کالا حرف
+  // می‌زنند یا دو کالای متفاوت، به همین تکیه می‌کند.
+  sku: 'FI-' + product.id,
+  image: [site.url + mainImg.src],
+  offers: {
+    '@type': 'Offer',
+    url: canonical,
+    priceCurrency: 'IRR',
+    itemCondition: 'https://schema.org/NewCondition',
+    availability: product.in_stock
+      ? 'https://schema.org/InStock'
+      : 'https://schema.org/OutOfStock',
+    seller: { '@type': 'Organization', name: site.name },
+    areaServed: site.areaServed.join('، '),
+  },
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'خانه', item: site.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'محصولات', item: site.url + '/products' },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: product.category_name,
+      item: site.url + '/category/' + encodeURIComponent(product.category_slug),
+    },
+    { '@type': 'ListItem', position: 4, name: product.name, item: canonical },
+  ],
+};
+%>
+<head>
+  <%- include('../partials/head', { ogImage: mainImg.src }) %>
+  <script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(productSchema) %></script>
+  <script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(breadcrumbSchema) %></script>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main id="main">
+    <div class="wrap">
+      <nav class="breadcrumb" aria-label="مسیر صفحه">
+        <a href="/">خانه</a> <span>›</span>
+        <a href="/products">محصولات</a> <span>›</span>
+        <a href="/category/<%= encodeURIComponent(product.category_slug) %>"><%= product.category_name %></a>
+        <span>›</span> <span><%= product.name %></span>
+      </nav>
+
+      <div class="product-layout">
+        <!-- ---------------------------------------------- گالری عکس -->
+        <div>
+          <%# عکس واقعی کالا کامل نشان داده می‌شود (contain)، نه بریده‌شده:
+              نسبت ابعاد عکس‌ها یکسان نیست و مثلاً ورق شیروانی عکس خیلی
+              پهنی دارد که با برش، دو سرش از کادر بیرون می‌ماند. در گرید
+              کارت‌ها برعکس، برش (cover) لازم است تا همه‌ی کارت‌ها هم‌قد باشند. %>
+          <div class="gallery-main <%= mainImg.isPlaceholder ? 'placeholder' : '' %> <%= mainImg.isPhoto ? 'photo' : '' %>" id="gallery-main">
+            <img id="gallery-img"
+                 src="<%= mainImg.src %>"
+                 <% if (mainImg.srcset) { %>srcset="<%= mainImg.srcset %>" sizes="(max-width: 860px) 100vw, 560px"<% } %>
+                 alt="<%= mainImg.alt %>"
+                 width="800" height="600"
+                 fetchpriority="high" decoding="async">
+          </div>
+
+          <% if (images.length > 1) { %>
+            <div class="gallery-thumbs" role="group" aria-label="عکس‌های دیگر این محصول">
+              <% images.forEach(function (im, i) { %>
+                <button type="button"
+                        class="<%= i === 0 ? 'active' : '' %>"
+                        data-full="<%= h.imageUrl(im.basename, 'large') %>"
+                        data-srcset="<%= h.imageSrcset(im.basename) %>"
+                        aria-label="نمایش عکس <%= h.toFaDigits(i + 1) %>">
+                  <img src="<%= h.imageUrl(im.basename, 'thumb') %>"
+                       alt="<%= im.alt || product.name %>" loading="lazy" decoding="async"
+                       width="76" height="60">
+                </button>
+              <% }); %>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- ---------------------------------------------- اطلاعات و سفارش -->
+        <div class="product-info">
+          <span class="card-cat"><%= product.category_name %><%= product.subcategory_name ? ' • ' + product.subcategory_name : '' %></span>
+          <h1><%= product.name %></h1>
+
+          <div class="stock-line <%= stock.cls %>">
+            <span class="dot"></span><%= stock.text %>
+          </div>
+
+          <% if (product.summary) { %>
+            <p style="font-size:1.05rem;color:var(--ink-soft)"><%= product.summary %></p>
+          <% } %>
+
+          <ul class="spec-list">
+            <li><span>دسته‌بندی</span><b><%= product.category_name %></b></li>
+            <% if (product.subcategory_name) { %>
+              <li><span>نوع طرح</span><b><%= product.subcategory_name %></b></li>
+            <% } %>
+            <% if (product.unit) { %>
+              <li><span>واحد فروش</span><b><%= product.unit %></b></li>
+            <% } %>
+            <li><span>قیمت</span><b><%= product.price_text || 'استعلام قیمت روز' %></b></li>
+            <li><span>موجودی</span><b><%= stock.text %></b></li>
+            <li><span>محل تحویل</span><b>علی‌آباد کتول — ارسال به گرگان و اطراف</b></li>
+          </ul>
+
+          <!-- جعبه‌ی سفارش: مهم‌ترین بخش صفحه -->
+          <div class="order-box">
+            <h3><%= product.in_stock ? 'قیمت امروز را بپرسید' : 'موجود شد خبرم کنید' %></h3>
+            <p>
+              <% if (product.in_stock) { %>
+                نام محصول از قبل در پیام نوشته شده؛ فقط تعداد موردنیازتان را اضافه کنید و بفرستید.
+              <% } else { %>
+                این محصول فعلاً در انبار نیست. پیام بدهید تا زمان رسیدن بار را به شما اطلاع دهیم.
+              <% } %>
+            </p>
+
+            <div class="order-actions">
+              <% activeChannels(product.name).forEach(function (ch) { %>
+                <a class="btn <%= ch.key === 'whatsapp' ? 'btn-wa' : 'btn-tg' %> btn-lg btn-block"
+                   href="<%= ch.href %>" target="_blank" rel="noopener">
+                  <%- icon(ch.key) %> استعلام قیمت از <%= ch.label %>
+                </a>
+              <% }); %>
+              <a data-track="phone" class="btn btn-dark btn-block" href="<%= site.phoneHref %>">
+                <%- icon('phone') %> تماس تلفنی: <span dir="ltr"><%= h.toFaDigits(site.phone) %></span>
+              </a>
+              <button type="button" class="btn btn-ghost btn-block add-quote add-quote-lg"
+                      data-slug="<%= product.slug %>" data-name="<%= product.name %>">
+                <span class="plus">+</span> افزودن به لیست استعلام
+              </button>
+              <%# دکمه‌ی اشتراک‌گذاری. عمداً با hidden شروع می‌شود و main.js
+                  فقط وقتی نمایشش می‌دهد که مرورگر واقعاً بتواند اشتراک
+                  بگذارد یا لینک را کپی کند — دکمه‌ای که کلیک شود و هیچ
+                  کاری نکند، بدتر از نبودنش است. %>
+              <button type="button" hidden class="btn btn-ghost btn-block btn-share"
+                      data-share
+                      data-share-url="<%= canonical %>"
+                      data-share-title="<%= product.name %> — <%= site.shortName %>">
+                <%- icon('chat') %> ارسال این محصول برای دیگران
+              </button>
+            </div>
+            <p class="order-note" style="margin-top:.6rem">
+              چند قلم جنس می‌خواهید؟ همه را به لیست اضافه کنید و یک‌جا بفرستید.
+            </p>
+            <p class="order-note">پاسخ‌گویی <%= site.openingHours %></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------- توضیح کامل -->
+      <% if (product.description) { %>
+        <section class="section">
+          <div class="section-head" style="max-width:70ch">
+            <div class="section-title"><h2>توضیحات <%= product.name %></h2></div>
+          </div>
+          <div class="prose" style="max-width:70ch"><%= product.description %></div>
+        </section>
+      <% } %>
+
+      <!-- ---------------------------------------------- محصولات مرتبط -->
+      <% if (related.length) { %>
+        <%- include('../partials/ornament') %>
+        <section class="section">
+          <div class="section-head">
+            <div class="section-title"><h2>محصولات مشابه</h2></div>
+          </div>
+          <div class="product-grid">
+            <% related.forEach(function (p) { %>
+              <%- include('../partials/product-card', { product: p }) %>
+            <% }); %>
+          </div>
+        </section>
+      <% } %>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title><%= title %></title>
+<meta name="description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : site.description %>">
+<meta name="theme-color" content="#a8431a">
+<link rel="canonical" href="<%= canonical %>">
+
+<!-- فونت‌ها از قبل بارگذاری می‌شوند تا متن بدون تأخیر نمایش داده شود.
+     هر دو وزن لازم‌اند: Regular برای متن، و Bold که بیشترین استفاده را دارد
+     (عنوان‌ها، دکمه‌ها، قیمت‌ها). قبلاً فقط Regular preload می‌شد و متن‌های
+     درشت با تأخیر و یک پرش کوتاه جایگزین می‌شدند.
+     وزن Black عمداً preload نمی‌شود: فقط چند عنوان از آن استفاده می‌کنند و
+     اضافه‌کردنش ۳۲ کیلوبایت دیگر را به مسیر بحرانی می‌آورد. -->
+<link rel="preload" href="/fonts/Vazirmatn-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Vazirmatn-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/style.css?v=<%= assetVersion.css %>">
+<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="مقالات فولاد ایمان" href="/rss.xml">
+<link rel="apple-touch-icon" href="/img/favicon.svg">
+
+<!-- اشتراک‌گذاری در شبکه‌های اجتماعی و پیام‌رسان‌ها -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="<%= site.name %>">
+<meta property="og:locale" content="fa_IR">
+<meta property="og:title" content="<%= title %>">
+<meta property="og:description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : site.description %>">
+<meta property="og:url" content="<%= canonical %>">
+<%# اگر صفحه عکس اختصاصی دارد از آن، وگرنه کارت پیش‌فرض سایت %>
+<meta property="og:image" content="<%= site.url %><%= (typeof ogImage !== 'undefined' && ogImage) ? ogImage : '/img/og-cover.jpg' %>">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="<%= site.name %> — <%= site.tagline %>">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- علامت‌گذاری فعال‌بودن جاوااسکریپت؛ انیمیشن ورودِ بخش‌ها فقط در این حالت
+     اجرا می‌شود تا اگر اسکریپت لود نشد، محتوا همچنان دیده شود -->
+<script nonce="<%= nonce %>">document.documentElement.className += ' js';</script>
+
+<%# تأیید مالکیت سایت در گوگل سرچ کنسول. تا وقتی مالک کد را در تنظیمات
+    نگذاشته، هیچ تگی چاپ نمی‌شود. %>
+<% const gsv = setting('google_site_verification', ''); if (gsv) { %>
+<meta name="google-site-verification" content="<%= gsv %>">
+<% } %>
+
+<%# گوگل آنالیتیکس — فقط اگر مالک شناسه‌ی GA4 را وارد کرده باشد.
+    عمداً پیش‌فرض خاموش است: اسکریپتش سنگین است، داشبوردش از ایران باز
+    نمی‌شود، و آمار محلی سایت (پنل ← آمار بازدید) کار خودش را می‌کند.
+    `nonce` لازم است چون CSP سایت اسکریپت بدون nonce را اجرا نمی‌کند. %>
+<% const ga4 = setting('ga4_id', ''); if (/^G-[A-Za-z0-9_-]+$/.test(ga4)) { %>
+<script async src="https://www.googletagmanager.com/gtag/js?id=<%= encodeURIComponent(ga4) %>" nonce="<%= nonce %>"></script>
+<script nonce="<%= nonce %>">
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '<%= ga4 %>', { anonymize_ip: true });
+</script>
+<% } %>
+
+<!-- کلمات کلیدی محلی برای موتورهای جست‌وجو -->
+<meta name="geo.region" content="IR-37">
+<meta name="geo.placename" content="علی‌آباد کتول، گرگان">
+<%# صفحه‌هایی مثل نتیجه‌ی جست‌وجو یا فیلتر موجودی، نسخه‌های تکراری و کم‌ارزش
+    از همان محتوا هستند. اگر گوگل ایندکسشان کند، اعتبار سایت بین ده‌ها آدرس
+    مشابه پخش می‌شود و صفحه‌ی اصلیِ دسته پایین‌تر می‌آید. `noindex, follow`
+    یعنی «این صفحه را ایندکس نکن، ولی لینک‌هایش را دنبال کن». %>
+<meta name="robots" content="<%= typeof robotsMeta !== 'undefined' && robotsMeta ? robotsMeta : 'index, follow, max-image-preview:large' %>">

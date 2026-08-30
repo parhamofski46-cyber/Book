@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<%
+const listSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'مقالات آموزشی ' + site.name,
+  description: 'راهنماهای خرید و اجرا برای آهن‌آلات، ورق گالوانیزه، عایق و فرفورژه.',
+  url: canonical,
+  hasPart: articles.map(function (a) {
+    return {
+      '@type': 'Article',
+      headline: a.title,
+      description: a.excerpt,
+      url: site.url + '/blog/' + encodeURIComponent(a.slug),
+    };
+  }),
+};
+%>
+<head>
+  <%- include('../partials/head') %>
+  <script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(listSchema) %></script>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main id="main">
+    <div class="wrap">
+      <nav class="breadcrumb" aria-label="مسیر صفحه">
+        <a href="/">خانه</a> <span>›</span> <span>مقالات</span>
+      </nav>
+
+      <section class="section">
+        <div class="section-title">
+          <h1 style="font-size:clamp(1.6rem,1.2rem+1.5vw,2.2rem)">مقالات و راهنمای خرید</h1>
+        </div>
+        <p style="max-width:64ch">
+          هرچه در این سال‌ها از مشتری‌ها پرسیده شده، اینجا جواب داده‌ایم: از انتخاب سایز
+          قوطی و محاسبه‌ی وزن تا عایق‌کاری سقف شیروانی و انتخاب رابیتس. بدون تعارف و
+          بدون تبلیغ.
+        </p>
+
+        <div class="article-grid">
+          <% articles.forEach(function (a) { %>
+            <article class="article-card">
+              <a class="article-card-link" href="/blog/<%= encodeURIComponent(a.slug) %>">
+                <span class="sr-only"><%= a.title %></span>
+              </a>
+              <div class="article-card-body">
+                <div class="article-meta">
+                  <span><%- icon('clock') %> <%= h.toFaDigits(a.minutes) %> دقیقه مطالعه</span>
+                </div>
+                <h2 class="article-card-title"><%= a.title %></h2>
+                <p class="article-card-excerpt"><%= a.excerpt %></p>
+                <div class="article-tags">
+                  <% a.tags.forEach(function (t) { %><span class="tag"><%= t %></span><% }); %>
+                </div>
+              </div>
+            </article>
+          <% }); %>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

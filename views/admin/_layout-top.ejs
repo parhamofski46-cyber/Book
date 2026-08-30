@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title><%= title %> — پنل مدیریت فولاد ایمان</title>
+  <link rel="stylesheet" href="/css/admin.css?v=<%= assetVersion.admin %>">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <header class="admin-header">
+    <div class="bar">
+      <a class="logo" href="/admin">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <rect width="64" height="64" rx="14" fill="#2a2a2c"/>
+          <g fill="none" stroke="#c0763c" stroke-width="3.4" stroke-linecap="round">
+            <path d="M20 46V26c0-6 5-10 11-10h14"/>
+            <path d="M31 46V33c0-3 2-5 5-5h9"/>
+            <path d="M38 20c0-6 5-9 9-7s3 9-2 9-6-5-2-8"/>
+          </g>
+        </svg>
+        پنل مدیریت
+      </a>
+
+      <nav class="admin-nav">
+        <a href="/admin" class="<%= currentPath === '/' ? 'active' : '' %>">داشبورد</a>
+        <a href="/admin/stats" class="<%= currentPath.indexOf('/stats') === 0 ? 'active' : '' %>">آمار بازدید</a>
+        <a href="/admin/products" class="<%= currentPath.indexOf('/products') === 0 ? 'active' : '' %>">محصولات</a>
+        <a href="/admin/categories" class="<%= currentPath.indexOf('/categories') === 0 ? 'active' : '' %>">دسته‌بندی‌ها</a>
+        <a href="/admin/reviews" class="<%= currentPath.indexOf('/reviews') === 0 ? 'active' : '' %>">نظرات مشتریان</a>
+        <a href="/admin/settings" class="<%= currentPath.indexOf('/settings') === 0 ? 'active' : '' %>">متن‌ها و آمار</a>
+        <a href="/admin/password" class="<%= currentPath.indexOf('/password') === 0 ? 'active' : '' %>">رمز عبور</a>
+        <a href="/" target="_blank" rel="noopener">مشاهده‌ی سایت ↗</a>
+        <form method="post" action="/admin/logout">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button type="submit">خروج</button>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <%# نوار هشدار ذخیره‌سازی موقت. عمداً بالای همه‌ی صفحه‌های پنل و پررنگ است:
+        اگر دیسک وصل نباشد، مالک ممکن است ساعت‌ها محصول وارد کند و همه‌اش با
+        اولین به‌روزرسانی از بین برود. %>
+    <% if (typeof storageWarning !== 'undefined' && (storageWarning || uploadWarning)) { %>
+      <div class="storage-alert" role="alert">
+        <strong>⚠️ هشدار: ذخیره‌سازی دائمی نیست</strong>
+        <% if (storageWarning) { %><p><%= storageWarning %></p><% } %>
+        <% if (uploadWarning) { %><p><%= uploadWarning %></p><% } %>
+        <p class="fix">
+          راه‌حل: در پنل لیارا یک «دیسک» بسازید و مسیرش را در متغیرهای محیطی
+          <code>DATA_DIR</code> و <code>UPLOAD_DIR</code> تنظیم کنید. تا آن موقع
+          از وارد کردن اطلاعات مهم خودداری کنید.
+        </p>
+      </div>
+    <% } %>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<%
+/* داده‌ی ساختاریافته‌ی صفحه‌ی دسته: مسیر راهنما + فهرست محصولات.
+   به گوگل کمک می‌کند صفحه را «فهرست محصولات فلان دسته» بفهمد، نه یک صفحه‌ی عمومی. */
+const schemas = [];
+if (category) {
+  schemas.push({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'خانه', item: site.url + '/' },
+      { '@type': 'ListItem', position: 2, name: 'محصولات', item: site.url + '/products' },
+      { '@type': 'ListItem', position: 3, name: category.name, item: canonical },
+    ],
+  });
+  schemas.push({
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: category.name + ' — ' + site.name,
+    numberOfItems: products.length,
+    itemListElement: products.slice(0, 30).map(function (p, i) {
+      return {
+        '@type': 'ListItem',
+        position: i + 1,
+        url: site.url + '/product/' + encodeURIComponent(p.slug),
+        name: p.name,
+      };
+    }),
+  });
+}
+%>
+<head>
+  <%- include('../partials/head') %>
+  <% schemas.forEach(function (sc) { %>
+    <script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(sc) %></script>
+  <% }); %>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main id="main">
+    <div class="wrap">
+      <nav class="breadcrumb" aria-label="مسیر صفحه">
+        <a href="/">خانه</a> <span>›</span>
+        <% if (category) { %>
+          <a href="/products">محصولات</a> <span>›</span> <span><%= category.name %></span>
+        <% } else { %>
+          <span>محصولات</span>
+        <% } %>
+      </nav>
+
+      <div class="section-head" style="padding-top:1.2rem">
+        <div class="section-title">
+          <%# نام شهر عمداً داخل خودِ H1 است، نه فقط در تگ title.
+              جست‌وجوی واقعی مردم «رابیتس گرگان» است نه «رابیتس»؛ وقتی
+              عبارت کامل در تیتر اصلی صفحه باشد، تطابق صفحه با آن جست‌وجو
+              برای گوگل صریح‌تر است. روی صفحه‌های بعدی شماره‌ی صفحه هم
+              می‌آید تا دو صفحه، تیتر یکسان نداشته باشند. %>
+          <h1 style="font-size:clamp(1.5rem,1.2rem+1.4vw,2.1rem)">
+            <% if (category) { %>
+              <%= category.name %> در گرگان و علی‌آباد کتول<%
+                 if (page > 1) { %> — صفحه‌ی <%= h.toFaDigits(page) %><% } %>
+            <% } else { %>
+              همه‌ی محصولات<% if (page > 1) { %> — صفحه‌ی <%= h.toFaDigits(page) %><% } %>
+            <% } %>
+          </h1>
+        </div>
+        <p>
+          <% if (category && category.description) { %>
+            <%= category.description %> — موجود در انبار فولاد ایمان، علی‌آباد کتول و گرگان.
+          <% } else { %>
+            آهن‌آلات ساختمانی و طرح‌های فرفورژه، با موجودی به‌روز. برای قیمت روز پیام بدهید.
+          <% } %>
+        </p>
+      </div>
+
+      <!-- ============================================================
+           پنل فیلتر: دسته‌ها، زیردسته‌ها، منوی سایز قوطی و جست‌وجو همه
+           داخل یک کادر جمع شده‌اند تا صفحه به‌جای چند ردیف شناور، یک
+           «ناحیه‌ی انتخاب» مشخص و یک «ناحیه‌ی نتیجه» داشته باشد.
+           ============================================================ -->
+      <div class="filter-panel">
+        <!-- فیلتر دسته‌بندی -->
+        <div class="filters">
+          <a class="chip <%= category ? '' : 'active' %>" href="/products">همه</a>
+          <% categories.forEach(function (c) { %>
+            <a class="chip <%= category && category.id === c.id ? 'active' : '' %>"
+               href="/category/<%= encodeURIComponent(c.slug) %>">
+              <%= c.name %> <small><%= h.toFaDigits(c.product_count) %></small>
+            </a>
+          <% }); %>
+        </div>
+
+        <!-- فیلتر زیردسته (فقط وقتی دسته زیرشاخه دارد) -->
+        <% if (subcategories && subcategories.length) { %>
+          <div class="filters filters-sub">
+            <a class="chip <%= activeSub ? '' : 'active' %>"
+               href="/category/<%= encodeURIComponent(category.slug) %>">همه</a>
+            <% subcategories.forEach(function (s) { %>
+              <a class="chip <%= activeSub === s.slug ? 'active' : '' %>"
+                 href="/category/<%= encodeURIComponent(category.slug) %>?sub=<%= encodeURIComponent(s.slug) %>">
+                <%= s.name %>
+              </a>
+            <% }); %>
+          </div>
+        <% } %>
+
+        <!-- منوی انتخاب سایز قوطی -->
+        <% if (typeof ghouti !== 'undefined' && ghouti) { %>
+          <%- include('../partials/size-menu', { ghouti: ghouti, openByDefault: !!category }) %>
+        <% } %>
+
+        <!-- جست‌وجو و فیلتر موجودی -->
+        <form class="toolbar" method="get"
+              action="<%= category ? '/category/' + encodeURIComponent(category.slug) : '/products' %>">
+          <% if (activeSub) { %><input type="hidden" name="sub" value="<%= activeSub %>"><% } %>
+          <label class="search-box">
+            <%- icon('search', '') %>
+            <span class="sr-only">جست‌وجو در محصولات</span>
+            <input type="search" name="q" value="<%= search %>" placeholder="جست‌وجو… مثلاً قوطی ۴۰">
+          </label>
+          <label class="switch">
+            <input type="checkbox" name="stock" value="1" <%= onlyInStock ? 'checked' : '' %> data-autosubmit>
+            فقط کالاهای موجود
+          </label>
+          <button class="btn btn-ghost btn-sm" type="submit">جست‌وجو</button>
+          <span class="result-count">
+            <%= h.toFaDigits(total) %> محصول<% if (pages > 1) { %> — صفحه <%= h.toFaDigits(page) %> از <%= h.toFaDigits(pages) %><% } %>
+          </span>
+        </form>
+      </div>
+
+      <% if (products.length) { %>
+        <div class="product-grid">
+          <% products.forEach(function (product, i) { %>
+            <%- include('../partials/product-card', { product: product, eager: i < 4, hideCategory: !!category }) %>
+          <% }); %>
+        </div>
+
+        <%- include('../partials/pagination', {
+              page: page, pages: pages,
+              baseUrl: (category ? '/category/' + encodeURIComponent(category.slug) : '/products')
+                + (search ? '?q=' + encodeURIComponent(search) : '')
+                + (onlyInStock ? (search ? '&' : '?') + 'stock=1' : '')
+                + (activeSub ? ((search || onlyInStock) ? '&' : '?') + 'sub=' + encodeURIComponent(activeSub) : '')
+            }) %>
+      <% } else { %>
+        <div class="empty">
+          <%- icon('box', '') %>
+          <h3>محصولی با این مشخصات پیدا نشد</h3>
+          <p>
+            شاید هنوز در سایت ثبتش نکرده باشیم — ولی احتمالاً در انبار داریم.
+            یک پیام بدهید تا بررسی کنیم.
+          </p>
+          <% const wa = inquiryLink('whatsapp'); if (wa) { %>
+            <a class="btn btn-wa" href="<%= wa %>" target="_blank" rel="noopener">
+              <%- icon('whatsapp') %> پرسیدن از واتساپ
+            </a>
+          <% } %>
+        </div>
+      <% } %>
+
+      <!-- متن سئوی محلی — طبیعی و مفید برای بازدیدکننده -->
+      <% if (!search) { %>
+      <section class="section">
+        <%- include('../partials/ornament') %>
+        <div class="section-head">
+          <div class="section-title"><h2>خرید <%= category ? category.name : 'آهن‌آلات' %> در علی‌آباد کتول و گرگان</h2></div>
+          <p>
+            <%= site.name %> در علی‌آباد کتول، <%= category ? category.name : 'انواع آهن‌آلات ساختمانی' %>
+            را با قیمت روز عرضه می‌کند. اگر در گرگان یا شهرهای اطراف هستید، بار شما با هماهنگی
+            خودمان ارسال می‌شود. برای استعلام قیمت و موجودی، شماره‌ی
+            <a data-track="phone" href="<%= site.phoneHref %>" dir="ltr"><%= h.toFaDigits(site.phone) %></a>
+            هم تلفن است و هم واتساپ.
+          </p>
+        </div>
+      </section>
+      <% } %>
+
+      <%# ── راهنمای خرید دسته ────────────────────────────────────────────
+          چرا اینجا و نه بالای صفحه: مشتری آمده محصول ببیند، نه متن بخواند.
+          محصولات بالا می‌مانند و این متن زیرشان قرار می‌گیرد — هم برای
+          کسی که واقعاً سؤال دارد مفید است و هم صفحه‌ی دسته را از یک گرید
+          خشک به صفحه‌ای تبدیل می‌کند که به جست‌وجوی کاربر جواب می‌دهد.
+
+          ⚠️ فقط روی صفحه‌ی اول و بدون فیلتر نشان داده می‌شود. اگر همین متن
+          روی صفحه‌های ۲ و ۳ هم تکرار شود، گوگل آن‌ها را محتوای تکراری
+          می‌بیند — یعنی دقیقاً برعکس هدف. %>
+      <% if (guide && page === 1 && !search && !activeSub && !onlyInStock) { %>
+        <section class="section category-guide">
+          <div class="section-head">
+            <div class="section-title"><h2><%= guide.title %></h2></div>
+          </div>
+          <div class="article-body">
+            <%- include('../partials/article-blocks', { blocks: guide.blocks }) %>
+          </div>
+          <% if (guideArticles && guideArticles.length) { %>
+            <div class="guide-links">
+              <h3>راهنماهای کامل‌تر درباره‌ی این دسته</h3>
+              <ul>
+                <% guideArticles.forEach(function (a) { %>
+                  <li>
+                    <a href="/blog/<%= encodeURIComponent(a.slug) %>"><%= a.title %></a>
+                    <small><%= a.excerpt %></small>
+                  </li>
+                <% }); %>
+              </ul>
+            </div>
+          <% } %>
+
+          <p class="guide-cta">
+            سؤال دیگری دارید؟ <a href="/faq">صفحه‌ی سؤال‌های متداول</a> را ببینید یا
+            مستقیم در واتساپ بپرسید — همان روز جواب می‌دهیم.
+          </p>
+        </section>
+      <% } %>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

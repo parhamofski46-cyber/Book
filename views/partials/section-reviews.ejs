@@ -1,0 +1,54 @@
+<%
+/**
+ * تیزر کوتاه نظرات مشتریان برای صفحه‌ی اصلی.
+ *
+ * قبلاً کل نظرها اینجا بود و صفحه‌ی اصلی را خیلی بلند می‌کرد. حالا فقط سه نظر
+ * نشان داده می‌شود و بقیه در صفحه‌ی مستقل /reviews است — هم صفحه‌ی اصلی
+ * کوتاه می‌ماند و هم نظرها آدرس مستقل خودشان را برای سئو می‌گیرند.
+ */
+const teaser = (reviews || []).slice(0, 3);
+const initials = function (name) {
+  const clean = String(name || '').replace(/\(نمونه\)/g, '').trim();
+  return clean ? clean.charAt(0) : '؟';
+};
+%>
+<% if (teaser.length) { %>
+<section class="section section-soft">
+  <div class="wrap">
+    <div class="section-head head-row">
+      <div>
+        <span class="eyebrow"><%- icon('chat') %> تجربه‌ی مشتری‌های ما</span>
+        <div class="section-title"><h2>مشتری‌ها چه می‌گویند</h2></div>
+        <% if (reviewSummary.count) { %>
+          <div class="rating-summary" style="margin-top:.6rem">
+            <%- include('stars', { rating: Math.round(reviewSummary.average) }) %>
+            <b><%= h.toFaDigits(reviewSummary.average) %></b>
+            <span>از <%= h.toFaDigits(reviewSummary.count) %> نظر</span>
+          </div>
+        <% } %>
+      </div>
+      <a class="btn btn-ghost btn-sm" href="/reviews">همه‌ی نظرها <%- icon('arrow') %></a>
+    </div>
+
+    <div class="review-grid reveal">
+      <% teaser.forEach(function (r) { %>
+        <article class="review-card">
+          <%- include('stars', { rating: r.rating }) %>
+          <p class="review-text"><%= r.text %></p>
+          <div class="review-who">
+            <span class="avatar" aria-hidden="true"><%= initials(r.name) %></span>
+            <div>
+              <b><%= r.name %></b>
+              <span>
+                <% if (r.job) { %><%= r.job %><% } %>
+                <% if (r.job && r.city) { %> · <% } %>
+                <% if (r.city) { %><span class="loc"><%- icon('map') %><%= r.city %></span><% } %>
+              </span>
+            </div>
+          </div>
+        </article>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% } %>

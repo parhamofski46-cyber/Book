@@ -1,0 +1,149 @@
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h4><%= site.name %></h4>
+        <p>
+          تولید ورق گالوانیزه (طرح سفال رنگی و شفاف) و عرضه‌ی قوطی، پروفیل، نبشی، رابیتس،
+          شاخ گوزنی، فنس، تور مرغی، ایزوگام، پشم شیشه، فوم، پیچ سرمته، قفل و لولا و
+          بیش از ۶۰۰ مدل گل و طرح فرفورژه. ارسال به
+          <strong>علی‌آباد کتول</strong>، <strong>گرگان</strong> و سراسر استان گلستان.
+        </p>
+        <div class="footer-contact">
+          <a data-track="phone" href="<%= site.phoneHref %>">
+            <%- icon('phone') %><span dir="ltr"><%= h.toFaDigits(site.phone) %></span>
+          </a>
+          <% activeChannels().forEach(function (ch) { %>
+            <a data-track="<%= ch.key %>" href="<%= ch.href %>" target="_blank" rel="noopener" data-track="<%= ch.key %>">
+              <%- icon(ch.key) %><span class="label"><%= ch.label %></span>
+            </a>
+          <% }); %>
+        </div>
+      </div>
+
+      <div>
+        <h4>دسترسی سریع</h4>
+        <ul class="footer-links">
+          <li><a href="/products">همه‌ی محصولات</a></li>
+          <li><a href="<%= encodeURI('/فهرست-محصولات') %>">فهرست کامل کالاها</a></li>
+          <li><a href="/forge">گل و طرح‌های فرفورژه</a></li>
+          <li><a href="/calculator">محاسبه‌گر وزن آهن</a></li>
+          <li><a href="/blog">مقالات و راهنمای خرید</a></li>
+          <li><a href="/about">درباره‌ی ما و تضمین‌ها</a></li>
+          <li><a href="/faq">سؤال‌های متداول</a></li>
+          <li><a href="/reviews">نظر مشتریان</a></li>
+          <li><a href="/contact">تماس و استعلام قیمت</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>ساعات کاری و منطقه</h4>
+        <p><%- icon('clock', 'ico') %> <%= site.openingHours %></p>
+        <p><%- icon('map', 'ico') %> <%= site.address.full %></p>
+        <p style="font-size:.85rem;color:var(--ink-faint)">
+          خدمات‌رسانی در: <%= site.areaServed.join('، ') %>
+        </p>
+        <%# لینک به صفحه‌ی اختصاصی هر شهر. لینک داخلی از فوتر یعنی این
+            صفحه‌ها از هر جای سایت یک کلیک فاصله دارند و گوگل هم راحت
+            پیدایشان می‌کند. %>
+        <ul class="footer-links footer-cities">
+          <% serviceCities.forEach(function (c) { %>
+            <li><a href="<%= encodeURI(c.url) %>">آهن‌فروشی <%= c.name %></a></li>
+          <% }); %>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <%= h.toFaDigits(new Date().toLocaleDateString('fa-IR-u-nu-latn', { year: 'numeric' })) %> — تمام حقوق برای <%= site.name %> محفوظ است.</span>
+      <span>ساخته‌شده برای علی‌آباد کتول و گرگان</span>
+      <span class="legal-note">این سایت تابع قوانین جمهوری اسلامی ایران می‌باشد.</span>
+      <%# ورود مدیر. عمداً فقط یک لینک ساده به صفحه‌ی ورود است و هیچ نام کاربری
+          یا رمزی اینجا نوشته نمی‌شود — این صفحه برای همه‌ی دنیا قابل دیدن است. %>
+      <a class="admin-link" href="/admin" rel="nofollow">
+        <%- icon('lock') %> ورود مدیر
+      </a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     لیست استعلام: مشتری چند کالا را انتخاب می‌کند و همه را در یک پیام
+     واتساپ می‌فرستد. سبد خرید نیست — نه قیمتی، نه پرداختی؛ فقط یک
+     لیست خرید که در مرورگر خودش ذخیره می‌شود.
+     ============================================================ -->
+<div class="quote-panel" id="quote-panel" hidden aria-live="polite">
+  <div class="quote-head">
+    <b>لیست استعلام شما</b>
+    <button type="button" class="quote-close" aria-label="بستن">✕</button>
+  </div>
+  <ul class="quote-items" id="quote-items"></ul>
+  <div class="quote-foot">
+    <% const waBase = site.channels.whatsapp.enabled ? site.channels.whatsapp.base : ''; %>
+    <a class="btn btn-wa btn-block" id="quote-send" data-track="quote"
+       data-base="<%= waBase %>" href="<%= waBase %>" target="_blank" rel="noopener">
+      <%- icon('whatsapp') %> ارسال کل لیست در واتساپ
+    </a>
+    <button type="button" class="quote-clear" id="quote-clear">پاک‌کردن لیست</button>
+  </div>
+</div>
+
+<!-- دکمه‌ی شناور تماس: همیشه در دسترس، مهم‌ترین مسیر رسیدن مشتری به شما -->
+<div class="float-cta">
+  <!-- وقتی چیزی در لیست باشد، این دکمه ظاهر می‌شود -->
+  <button type="button" class="float-btn float-quote" id="quote-toggle" hidden>
+    <%- icon('box') %><span class="txt">لیست استعلام</span>
+    <span class="count" id="quote-count">۰</span>
+  </button>
+  <% activeChannels().forEach(function (ch) { %>
+    <a class="float-btn float-<%= ch.key === 'whatsapp' ? 'wa' : (ch.key === 'telegram' ? 'tg' : 'call') %>"
+       href="<%= ch.href %>" target="_blank" rel="noopener"
+       data-track="<%= ch.key %>"
+       aria-label="ارتباط از طریق <%= ch.label %>">
+      <%- icon(ch.key) %><span class="txt"><%= ch.label %></span>
+    </a>
+  <% }); %>
+  <a data-track="phone" class="float-btn float-call" href="<%= site.phoneHref %>" data-track="phone" aria-label="تماس تلفنی">
+    <%- icon('phone') %><span class="txt">تماس</span>
+  </a>
+</div>
+
+<!-- ============================================================
+     نمای بزرگ‌شده‌ی طرح — main.js محتوایش را پر می‌کند (دکمه‌های
+     data-zoom در گالری فرفورژه این را باز می‌کنند)
+     ============================================================ -->
+<div class="lightbox" id="lightbox" hidden>
+  <div class="lightbox-inner">
+    <button type="button" class="lightbox-close" id="lightbox-close" aria-label="بستن">✕</button>
+    <img id="lightbox-img" src="" alt="">
+    <p class="lightbox-caption" id="lightbox-caption"></p>
+  </div>
+</div>
+
+<!-- ============================================================
+     پیش‌واکشی صفحه‌ی بعدی.
+     مرورگر وقتی نشانگر/انگشت روی یک لینک داخلی مکث می‌کند، همان صفحه را
+     از قبل می‌گیرد؛ کلیک بعدی تقریباً آنی باز می‌شود. صفر بایت
+     جاوااسکریپت خودمان و در مرورگرهای بی‌پشتیبان بی‌اثر است.
+
+     eagerness=moderate یعنی فقط با مکث روی لینک، نه برای همه‌ی لینک‌های
+     صفحه — وگرنه در صفحه‌ی گالری با ۶۰ کارت، ده‌ها درخواست بی‌مورد به
+     سرور می‌خورد و روی اینترنت موبایل ضرر می‌زد.
+     مسیر پنل مدیریت عمداً مستثناست: پیش‌واکشی صفحه‌های پشت ورود بی‌فایده
+     است و فقط نشست را بی‌جهت لمس می‌کند.
+     ============================================================ -->
+<script type="speculationrules" nonce="<%= nonce %>">
+{
+  "prefetch": [{
+    "source": "document",
+    "where": { "and": [
+      { "href_matches": "/*" },
+      { "not": { "href_matches": "/admin*" } },
+      { "not": { "selector_matches": "[rel~=nofollow]" } }
+    ]},
+    "eagerness": "moderate"
+  }]
+}
+</script>
+
+<script src="/js/main.js?v=<%= assetVersion.js %>" defer nonce="<%= nonce %>"></script>

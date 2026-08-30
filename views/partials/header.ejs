@@ -1,0 +1,64 @@
+<a class="skip-link" href="#main">رفتن به محتوای اصلی</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/">
+      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#1c1c1e"/>
+        <g fill="none" stroke="#c0763c" stroke-width="3.4" stroke-linecap="round">
+          <path d="M20 46V26c0-6 5-10 11-10h14"/>
+          <path d="M31 46V33c0-3 2-5 5-5h9"/>
+          <path d="M38 20c0-6 5-9 9-7s3 9-2 9-6-5-2-8"/>
+        </g>
+      </svg>
+      <span class="brand-text">
+        فولاد ایمان
+        <small>آهن‌آلات و فرفورژه — علی‌آباد کتول</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-label="منو" aria-expanded="false" aria-controls="main-nav">
+      <svg viewBox="0 0 24 24">
+        <path class="l1" d="M4 7h16"/>
+        <path class="l2" d="M4 12h16"/>
+        <path class="l3" d="M4 17h16"/>
+      </svg>
+    </button>
+
+    <nav class="nav" id="main-nav" aria-label="منوی اصلی">
+      <a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">صفحه اصلی</a>
+      <a href="/products" class="<%= currentPath === '/products' ? 'active' : '' %>">محصولات</a>
+      <a href="/forge" class="<%= currentPath === '/forge' ? 'active' : '' %>">فرفورژه</a>
+      <a href="/calculator" class="<%= currentPath === '/calculator' ? 'active' : '' %>">محاسبه وزن</a>
+      <%# در منو عمداً کوتاه نوشته شده؛ با عنوان کامل، نوار منو روی
+          نمایشگرهای ۱۲۸۰ پیکسلی دو خطی می‌شد. %>
+      <a href="/faq" class="<%= currentPath === '/faq' ? 'active' : '' %>">سؤالات</a>
+      <a href="/blog" class="<%= currentPath.indexOf('/blog') === 0 ? 'active' : '' %>">مقالات</a>
+      <a href="/reviews" class="<%= currentPath === '/reviews' ? 'active' : '' %>">نظر مشتریان</a>
+      <a href="/about" class="<%= currentPath === '/about' ? 'active' : '' %>">درباره‌ی ما</a>
+      <a href="/contact" class="<%= currentPath === '/contact' ? 'active' : '' %>">تماس با ما</a>
+
+      <!-- دکمه‌های تماس داخل منوی موبایل -->
+      <div class="nav-actions">
+        <% activeChannels().forEach(function (ch) { %>
+          <a class="btn <%= ch.key === 'whatsapp' ? 'btn-wa' : 'btn-tg' %>"
+             href="<%= ch.href %>" target="_blank" rel="noopener">
+            <%- icon(ch.key) %> <%= ch.label %>
+          </a>
+        <% }); %>
+      </div>
+    </nav>
+
+    <!-- دکمه‌ی تماس همیشه در دسترس، حتی در موبایل -->
+    <div class="header-cta">
+      <a data-track="phone" class="btn btn-primary btn-sm" href="<%= site.phoneHref %>" data-track="phone">
+        <%- icon('phone') %><span class="btn-label"><%= h.toFaDigits(site.phone) %></span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- پرده‌ی تیره‌ی پشت منوی موبایل — عمداً بیرون از تگ header قرار دارد، چون
+     backdrop-filter روی هدر باعث می‌شود عنصر fixed داخلش فقط به اندازه‌ی خود
+     هدر دیده شود و کل صفحه را نپوشاند -->
+<div class="nav-backdrop" hidden></div>

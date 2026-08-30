@@ -1,0 +1,190 @@
+<%- include('_layout-top') %>
+
+<div class="page-head">
+  <div>
+    <h1>متن‌ها و آمار سایت</h1>
+    <p class="hint">متن‌ها و اعدادی که در صفحه‌ی اصلی دیده می‌شوند. هر وقت خواستید عوضشان کنید.</p>
+  </div>
+</div>
+
+<% if (flash) { %><div class="alert alert-ok">✅ ذخیره شد.</div><% } %>
+
+<form method="post" action="/admin/settings" enctype="multipart/form-data">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+  <!-- ============================================ هیرو -->
+  <div class="panel">
+    <h2>بالای صفحه‌ی اصلی</h2>
+
+    <div class="field">
+      <label for="hero_title">عنوان اصلی</label>
+      <input type="text" id="hero_title" name="hero_title" value="<%= values.hero_title %>" maxlength="120">
+    </div>
+
+    <div class="field">
+      <label for="hero_subtitle">زیرعنوان</label>
+      <p class="desc">بهتر است اسم شهرها در آن باشد — برای دیده‌شدن در گوگل مفید است.</p>
+      <input type="text" id="hero_subtitle" name="hero_subtitle" value="<%= values.hero_subtitle %>" maxlength="180">
+    </div>
+
+    <div class="field">
+      <label for="hero_text">متن معرفی کوتاه</label>
+      <textarea id="hero_text" name="hero_text" style="min-height:100px"><%= values.hero_text %></textarea>
+    </div>
+  </div>
+
+  <!-- ============================================ آمار -->
+  <div class="panel">
+    <h2>آمار اعتمادسازی</h2>
+    <p class="hint">
+      نوار تیره‌ی زیر صفحه‌ی اصلی، چهار عدد نشان می‌دهد. دو تای اول را شما وارد می‌کنید
+      و دو تای بعدی (تعداد گروه کالا و شهرهای تحت پوشش) خودکار از خود سایت محاسبه می‌شوند.
+      <br><br>
+      عمداً از «تعداد فروش» استفاده نکرده‌ایم، چون عددی است که کسی نمی‌تواند راستی‌آزمایی
+      کند و اگر اغراق‌شده باشد به اعتماد ضربه می‌زند. عددهای زیر واقعی و قابل بررسی‌اند.
+      هر کدام را خالی بگذارید، آن ستون نمایش داده نمی‌شود.
+    </p>
+
+    <div class="row" style="margin-top:1rem">
+      <div class="field">
+        <label for="stat_models">تعداد مدل‌های فرفورژه‌ی موجود</label>
+        <p class="desc">در سایت به‌صورت «۶۰۰+ مدل» نمایش داده می‌شود.</p>
+        <input type="text" id="stat_models" name="stat_models" value="<%= values.stat_models %>" maxlength="10">
+      </div>
+      <div class="field">
+        <label for="stat_years">سال‌های سابقه</label>
+        <p class="desc">اگر عدد دقیقش را نمی‌دانید، عدد محتاطانه‌تر بگذارید.</p>
+        <input type="text" id="stat_years" name="stat_years" value="<%= values.stat_years %>" maxlength="10">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="stats_note">توضیح زیر آمار</label>
+      <input type="text" id="stats_note" name="stats_note" value="<%= values.stats_note %>" maxlength="160">
+    </div>
+  </div>
+
+  <!-- ============================================ معرفی مدیر -->
+  <div class="panel">
+    <h2>بخش معرفی مدیر</h2>
+    <p class="hint">
+      عکس و حرف مدیر، مؤثرترین بخش صفحه در جلب اعتماد مشتری محلی است.
+      نام واقعی را وارد کنید تا زیر عکس نمایش داده شود.
+    </p>
+
+    <div class="row" style="margin-top:1rem">
+      <div class="field">
+        <label for="owner_name">نام مدیر</label>
+        <p class="desc">اگر خالی بماند، فقط عنوان «مدیریت فولاد ایمان» نوشته می‌شود.</p>
+        <input type="text" id="owner_name" name="owner_name" value="<%= values.owner_name %>"
+               maxlength="60" placeholder="مثال: حاج‌آقا ...">
+      </div>
+      <div class="field">
+        <label for="owner_title">عنوان / سمت</label>
+        <input type="text" id="owner_title" name="owner_title" value="<%= values.owner_title %>" maxlength="80">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="owner_quote">جمله‌ی نقل‌قول (داخل گیومه نمایش داده می‌شود)</label>
+      <textarea id="owner_quote" name="owner_quote" style="min-height:90px"><%= values.owner_quote %></textarea>
+    </div>
+
+    <div class="field">
+      <label for="owner_text">متن معرفی</label>
+      <textarea id="owner_text" name="owner_text"><%= values.owner_text %></textarea>
+    </div>
+
+    <div class="field">
+      <span class="lbl">عکس مدیر</span>
+      <p class="desc">
+        عکس فعلی در سایت نمایش داده می‌شود. برای تعویض، عکس جدید انتخاب کنید
+        (بهترین نتیجه: عکس عمودی، نور روشن، پس‌زمینه‌ی ساده).
+      </p>
+      <div style="display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap;margin-top:.6rem">
+        <img src="<%= values.owner_image ? h.imageUrl(values.owner_image, 'thumb') : '/img/owner-480.webp' %>"
+             alt="عکس فعلی مدیر"
+             style="width:120px;aspect-ratio:4/5;object-fit:cover;border-radius:10px;border:1px solid var(--line)">
+        <div style="flex:1;min-width:240px">
+          <input type="file" name="owner_photo" accept="image/*">
+          <% if (values.owner_image) { %>
+            <label class="check" style="margin-top:.7rem">
+              <input type="checkbox" name="remove_owner_photo" value="1">
+              <span>برگرد به عکس پیش‌فرض <small>— عکس آپلودشده حذف می‌شود</small></span>
+            </label>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ چرا ما -->
+  <div class="panel">
+    <h2>بخش «چرا ما»</h2>
+    <div class="field">
+      <label for="about_text">متن معرفی کسب‌وکار</label>
+      <textarea id="about_text" name="about_text"><%= values.about_text %></textarea>
+    </div>
+  </div>
+
+  <!-- ============================================ نقشه -->
+  <div class="panel">
+    <h2>نقشه</h2>
+    <div class="field">
+      <label for="map_embed">نقشه‌ی فروشگاه</label>
+      <p class="desc">
+        هر کدام از این‌ها را می‌توانید اینجا بگذارید — سایت خودش تشخیص می‌دهد:
+        <br>• <strong>مختصات</strong> مثل <code dir="ltr">36.9061, 54.8514</code>
+        (دقیق‌ترین حالت — روی گوگل مپ محل مغازه را نگه دارید تا مختصات را بدهد)
+        <br>• <strong>لینک گوگل مپ</strong> محل مغازه
+        <br>• <strong>کد <code>&lt;iframe…&gt;</code></strong> از گوگل مپ یا نشان
+        <br>اگر خالی بگذارید، نقشه با جست‌وجوی آدرس فروشگاه نمایش داده می‌شود.
+        زیر نقشه یک دکمه‌ی «مسیریابی» هست که مشتری را مستقیم تا درِ مغازه
+        راهنمایی می‌کند.
+      </p>
+      <textarea id="map_embed" name="map_embed" dir="ltr" style="min-height:100px;font-family:monospace;font-size:.85rem"><%= values.map_embed %></textarea>
+    </div>
+  </div>
+
+  <!-- ============================================ گوگل و آمار -->
+  <div class="panel">
+    <h2>گوگل: ثبت سایت و آمار</h2>
+
+    <div class="field">
+      <label for="google_site_verification">کد تأیید مالکیت گوگل سرچ کنسول</label>
+      <p class="desc">
+        سرچ کنسول ابزار رایگان گوگل است و نشان می‌دهد مردم با چه کلمه‌هایی سایت
+        شما را پیدا می‌کنند. در <span dir="ltr">search.google.com/search-console</span>
+        سایت را اضافه کنید، روش <strong>HTML tag</strong> را انتخاب کنید و فقط
+        مقدار داخل <code dir="ltr">content="..."</code> را اینجا بگذارید.
+        <br>
+        <strong>خالی بگذارید اگر ندارید</strong> — هیچ مشکلی پیش نمی‌آید.
+      </p>
+      <input type="text" id="google_site_verification" name="google_site_verification"
+             dir="ltr" value="<%= values.google_site_verification %>" maxlength="120"
+             placeholder="مثال: AbCdEf123...">
+    </div>
+
+    <div class="field">
+      <label for="ga4_id">شناسه‌ی گوگل آنالیتیکس (GA4)</label>
+      <p class="desc">
+        اگر حساب گوگل آنالیتیکس دارید، شناسه‌اش را که با
+        <code dir="ltr">G-</code> شروع می‌شود اینجا بگذارید.
+        <br>
+        ⚠️ داشبورد گوگل آنالیتیکس از داخل ایران باز نمی‌شود و اسکریپتش سایت را
+        کمی سنگین‌تر می‌کند. <strong>آمار بازدید سایت شما بدون این هم کار
+        می‌کند</strong> — در <a href="/admin/stats">صفحه‌ی آمار بازدید</a>.
+        اگر مطمئن نیستید، خالی بگذارید.
+      </p>
+      <input type="text" id="ga4_id" name="ga4_id" dir="ltr"
+             value="<%= values.ga4_id %>" maxlength="40" placeholder="G-XXXXXXXXXX">
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-primary btn-lg" type="submit">ذخیره‌ی همه‌ی تغییرات</button>
+    <a class="btn btn-ghost" href="/" target="_blank" rel="noopener">دیدن سایت ↗</a>
+  </div>
+</form>
+
+<%- include('_layout-bottom') %>

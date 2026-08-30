@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <%- include('../partials/head') %>
+  <%- include('../partials/schema-business') %>
+  <%# داده‌ی ساختاریافته‌ی «خدمت در یک منطقه». به گوگل می‌گوید این کسب‌وکار
+      واقعاً به این شهر خدمات می‌دهد — همان چیزی که برای نتایج محلی
+      («آهن فروشی نزدیک من») ملاک است. %>
+  <script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(serviceSchema) %></script>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main id="main">
+    <div class="wrap">
+      <%- include('../partials/breadcrumb', { crumbs: [
+        { name: 'منطقه‌ی خدمات', url: '/contact' },
+        { name: city.name }
+      ] }) %>
+
+      <section class="section">
+        <div class="city-hero">
+          <div>
+            <span class="pill-badge"><%- icon('map') %> <%= city.name %>، استان گلستان</span>
+            <h1>آهن‌فروشی <%= city.name %> — <%= site.shortName %></h1>
+            <p class="lead"><%= city.lead %></p>
+
+            <div class="cta-actions">
+              <% if (site.channels.whatsapp.enabled) { %>
+                <a data-track="whatsapp" class="btn btn-wa btn-lg" href="<%= site.channels.whatsapp.base %>" target="_blank" rel="noopener">
+                  <%- icon('whatsapp') %> استعلام قیمت برای <%= city.name %>
+                </a>
+              <% } %>
+              <a class="btn btn-primary btn-lg" href="/products"><%- icon('box') %> دیدن محصولات</a>
+            </div>
+          </div>
+
+          <ul class="city-points">
+            <% city.highlights.forEach(function (t) { %>
+              <li><%- icon('check') %> <span><%= t %></span></li>
+            <% }); %>
+            <% if (!city.home) { %>
+              <li><%- icon('truck') %> <span>فاصله تا انبار: حدود <%= h.toFaDigits(city.distanceKm) %> کیلومتر</span></li>
+            <% } %>
+          </ul>
+        </div>
+
+        <div class="city-body">
+          <h2>خرید آهن‌آلات در <%= city.name %></h2>
+          <p><%= city.context %></p>
+
+          <h2>پرتقاضاترین کالاها در <%= city.name %></h2>
+          <p>
+            بر اساس سفارش‌هایی که از <%= city.name %> می‌گیریم، این دسته‌ها بیشترین
+            تقاضا را دارند:
+          </p>
+          <div class="city-cats">
+            <% popular.forEach(function (c) { %>
+              <a class="city-cat" href="/category/<%= encodeURIComponent(c.slug) %>">
+                <%- icon(categoryIcon(c.name)) %>
+                <b><%= c.name %></b>
+                <small><%= h.toFaDigits(c.product_count) %> محصول</small>
+              </a>
+            <% }); %>
+          </div>
+
+          <h2>چطور از <%= city.name %> سفارش بدهم؟</h2>
+          <ol class="city-steps">
+            <li>
+              <b>لیستتان را بفرستید.</b>
+              نوع کالا، سایز و ضخامت و مقدار را در واتساپ بنویسید
+              (<span dir="ltr"><%= h.toFaDigits(site.phone) %></span>). اگر عکس یا
+              نقشه دارید، همان را بفرستید.
+            </li>
+            <li>
+              <b>قیمت روز و کرایه‌ی حمل را می‌گیرید.</b>
+              قیمت هر قلم به‌علاوه‌ی هزینه‌ی ارسال تا <%= city.name %> را برایتان
+              می‌نویسیم — بدون هزینه‌ی پنهان.
+            </li>
+            <li>
+              <b>بار ارسال می‌شود.</b>
+              زمان تحویل را موقع تأیید سفارش اعلام می‌کنیم. تسویه هنگام تحویل است.
+            </li>
+          </ol>
+
+          <p class="city-note">
+            <%- icon('info') %>
+            اگر مطمئن نیستید چقدر جنس لازم دارید، از
+            <a href="/calculator">محاسبه‌گر وزن آهن</a> استفاده کنید یا ابعاد کار را
+            بفرستید تا خودمان برآورد کنیم. سؤال‌های پرتکرار را هم در
+            <a href="/faq">صفحه‌ی سؤال‌های متداول</a> جواب داده‌ایم.
+          </p>
+        </div>
+
+        <div class="city-others">
+          <h2>شهرهای دیگری که خدمات می‌دهیم</h2>
+          <div class="city-links">
+            <% others.forEach(function (c) { %>
+              <a href="<%= encodeURI(c.url) %>"><%- icon('map') %> آهن‌فروشی <%= c.name %></a>
+            <% }); %>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

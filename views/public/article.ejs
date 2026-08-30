@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<%
+/* داده‌ی ساختاریافته: Article برای خود مقاله، FAQPage برای پرسش‌ها و
+   BreadcrumbList برای مسیر. هر سه با h.jsonLd() امن می‌شوند. */
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: article.title,
+  description: article.excerpt,
+  inLanguage: 'fa-IR',
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+  author: { '@type': 'Organization', name: site.name },
+  publisher: {
+    '@type': 'Organization',
+    name: site.name,
+    address: { '@type': 'PostalAddress', addressLocality: site.address.city, addressCountry: 'IR' },
+  },
+  keywords: article.tags.join('، '),
+};
+const faqSchema = article.faq && article.faq.length ? {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: article.faq.map(function (f) {
+    return { '@type': 'Question', name: f[0], acceptedAnswer: { '@type': 'Answer', text: f[1] } };
+  }),
+} : null;
+const crumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'خانه', item: site.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'مقالات', item: site.url + '/blog' },
+    { '@type': 'ListItem', position: 3, name: article.title, item: canonical },
+  ],
+};
+%>
+<head>
+  <%- include('../partials/head') %>
+  <script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(articleSchema) %></script>
+  <script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(crumbSchema) %></script>
+  <% if (faqSchema) { %>
+    <script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(faqSchema) %></script>
+  <% } %>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main id="main">
+    <div class="wrap">
+      <nav class="breadcrumb" aria-label="مسیر صفحه">
+        <a href="/">خانه</a> <span>›</span>
+        <a href="/blog">مقالات</a> <span>›</span>
+        <span><%= article.title %></span>
+      </nav>
+
+      <article class="section article-body">
+        <header class="article-head">
+          <h1><%= article.title %></h1>
+          <p class="article-lead"><%= article.excerpt %></p>
+          <div class="article-meta">
+            <span><%- icon('clock') %> <%= h.toFaDigits(article.minutes) %> دقیقه مطالعه</span>
+            <span><%- icon('check') %> آخرین بازبینی: <%= h.toFaDigits(article.updated) %></span>
+          </div>
+        </header>
+
+        <%- include('../partials/article-blocks', { blocks: article.blocks }) %>
+
+        <% if (article.faq && article.faq.length) { %>
+          <h2>پرسش‌های پرتکرار</h2>
+          <div class="faq">
+            <% article.faq.forEach(function (f) { %>
+              <details class="faq-item">
+                <summary><%= f[0] %></summary>
+                <p><%= f[1] %></p>
+              </details>
+            <% }); %>
+          </div>
+        <% } %>
+
+        <%# دعوت به اقدام. مقاله بدون مسیرِ بعدی، بازدیدکننده را رها می‌کند. %>
+        <div class="article-cta">
+          <h2>قیمت روز و موجودی را بپرسید</h2>
+          <p>
+            لیست خریدتان را بفرستید — سایز، ضخامت و تعداد. قیمت روز و موجودی را
+            همان‌جا اعلام می‌کنیم.
+          </p>
+          <div class="cta-actions">
+            <% activeChannels().forEach(function (ch) { %>
+              <a class="btn <%= ch.key === 'whatsapp' ? 'btn-wa' : 'btn-tg' %> btn-lg"
+                 href="<%= ch.href %>" target="_blank" rel="noopener">
+                <%- icon(ch.key) %> استعلام در <%= ch.label %>
+              </a>
+            <% }); %>
+          </div>
+        </div>
+      </article>
+
+      <% if (relatedProducts && relatedProducts.length) { %>
+        <section class="section section-soft">
+          <div class="section-title"><h2>محصولات مرتبط</h2></div>
+          <div class="product-grid">
+            <% relatedProducts.forEach(function (p) { %>
+              <%- include('../partials/product-card', { product: p }) %>
+            <% }); %>
+          </div>
+        </section>
+      <% } %>
+
+      <% if (related && related.length) { %>
+        <section class="section">
+          <div class="section-title"><h2>مطالب مرتبط</h2></div>
+          <div class="article-grid">
+            <% related.forEach(function (a) { %>
+              <article class="article-card">
+                <a class="article-card-link" href="/blog/<%= encodeURIComponent(a.slug) %>">
+                  <span class="sr-only"><%= a.title %></span>
+                </a>
+                <div class="article-card-body">
+                  <h3 class="article-card-title"><%= a.title %></h3>
+                  <p class="article-card-excerpt"><%= a.excerpt %></p>
+                </div>
+              </article>
+            <% }); %>
+          </div>
+        </section>
+      <% } %>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

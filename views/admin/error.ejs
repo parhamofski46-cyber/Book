@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title><%= title %> — پنل مدیریت</title>
+  <link rel="stylesheet" href="/css/admin.css?v=<%= assetVersion.admin %>">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <main class="admin-main" style="max-width:560px;padding-top:3rem">
+    <div class="panel">
+      <h1><%= title %></h1>
+      <div class="alert alert-err" style="margin-top:1rem"><%= message %></div>
+      <div class="actions">
+        <a class="btn btn-primary" href="/admin/products">بازگشت به محصولات</a>
+        <a class="btn btn-ghost" href="/admin">داشبورد</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

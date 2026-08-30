@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>ورود به پنل مدیریت — فولاد ایمان</title>
+  <link rel="stylesheet" href="/css/admin.css?v=<%= assetVersion.admin %>">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+</head>
+<body class="login-page">
+  <form class="login-card" method="post" action="/admin/login">
+    <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+      <rect width="64" height="64" rx="14" fill="#1c1c1e"/>
+      <g fill="none" stroke="#c0763c" stroke-width="3.4" stroke-linecap="round">
+        <path d="M20 46V26c0-6 5-10 11-10h14"/>
+        <path d="M31 46V33c0-3 2-5 5-5h9"/>
+        <path d="M38 20c0-6 5-9 9-7s3 9-2 9-6-5-2-8"/>
+      </g>
+    </svg>
+
+    <h1>پنل مدیریت فولاد ایمان</h1>
+    <p class="sub">برای مدیریت محصولات و عکس‌ها وارد شوید</p>
+
+    <% if (error) { %>
+      <div class="alert alert-err"><%= error %></div>
+    <% } %>
+
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="next" value="<%= next %>">
+
+    <div class="field">
+      <label for="username">نام کاربری</label>
+      <input type="text" id="username" name="username" autocomplete="username"
+             required autofocus dir="ltr">
+    </div>
+
+    <div class="field">
+      <label for="password">رمز عبور</label>
+      <input type="password" id="password" name="password" autocomplete="current-password"
+             required dir="ltr">
+    </div>
+
+    <%# پرسش امنیتی. تصویر SVG است و مستقیم داخل صفحه می‌آید (نه با <img>)
+        تا نه درخواست اضافه‌ای به سرور بخورد و نه با کش مرورگر قاطی شود.
+        جوابش فقط در نشست سرور است و هرگز به مرورگر فرستاده نمی‌شود. %>
+    <div class="field">
+      <label for="captcha"><%= captcha.label %></label>
+      <div class="captcha-row">
+        <%- captcha.svg %>
+        <input type="text" id="captcha" name="captcha" inputmode="numeric"
+               autocomplete="off" required dir="ltr" maxlength="3"
+               aria-describedby="captcha-hint">
+      </div>
+      <small id="captcha-hint" class="captcha-hint">
+        اگر تصویر خوانا نیست، <a href="/admin/login">صفحه را تازه کنید</a> تا پرسش تازه‌ای بیاید.
+      </small>
+    </div>
+
+    <button class="btn btn-primary btn-lg btn-block" type="submit">ورود</button>
+
+    <a class="back" href="/">بازگشت به سایت</a>
+  </form>
+</body>
+</html>

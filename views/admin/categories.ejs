@@ -1,0 +1,112 @@
+<%- include('_layout-top') %>
+
+<div class="page-head">
+  <div>
+    <h1>دسته‌بندی‌ها</h1>
+    <p class="hint">
+      دسته‌ها همان چیزی هستند که در فهرست محصولات سایت به‌عنوان فیلتر دیده می‌شوند.
+      اگر جنس جدیدی به مغازه اضافه کردید، اینجا دسته‌اش را بسازید.
+    </p>
+  </div>
+</div>
+
+<% if (flash) { %><div class="alert alert-ok">✅ تغییرات ذخیره شد.</div><% } %>
+<% if (error) { %><div class="alert alert-err"><%= error %></div><% } %>
+
+<!-- ------------------------------------------------ افزودن دسته‌ی جدید -->
+<div class="panel">
+  <h2>افزودن دسته‌ی جدید</h2>
+  <form method="post" action="/admin/categories">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="row">
+      <div class="field">
+        <label for="new-cat">نام دسته *</label>
+        <input type="text" id="new-cat" name="name" required maxlength="60" placeholder="مثال: میلگرد">
+      </div>
+      <div class="field">
+        <label for="new-desc">توضیح کوتاه</label>
+        <input type="text" id="new-desc" name="description" maxlength="160">
+      </div>
+    </div>
+    <label class="check">
+      <input type="checkbox" name="is_featured" value="1">
+      <span>دسته‌ی شاخص <small>— در صفحه‌ی اصلی بزرگ‌تر نمایش داده می‌شود (فعلاً فرفورژه)</small></span>
+    </label>
+    <button class="btn btn-primary" type="submit">افزودن دسته</button>
+  </form>
+</div>
+
+<!-- ------------------------------------------------ فهرست دسته‌ها -->
+<% categories.forEach(function (cat) { %>
+  <div class="panel">
+    <form method="post" action="/admin/categories/<%= cat.id %>">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="row">
+        <div class="field">
+          <label for="cat-name-<%= cat.id %>">نام دسته</label>
+          <input type="text" id="cat-name-<%= cat.id %>" name="name" value="<%= cat.name %>" maxlength="60">
+        </div>
+        <div class="field">
+          <label for="cat-desc-<%= cat.id %>">توضیح</label>
+          <input type="text" id="cat-desc-<%= cat.id %>" name="description"
+                 value="<%= cat.description %>" maxlength="160">
+        </div>
+        <div class="field">
+          <label for="cat-sort-<%= cat.id %>">ترتیب</label>
+          <input type="number" id="cat-sort-<%= cat.id %>" name="sort_order" value="<%= cat.sort_order %>">
+        </div>
+      </div>
+
+      <label class="check">
+        <input type="checkbox" name="is_featured" value="1" <%= cat.is_featured ? 'checked' : '' %>>
+        <span>دسته‌ی شاخص</span>
+      </label>
+
+      <div class="actions">
+        <button class="btn btn-primary btn-sm" type="submit">ذخیره</button>
+        <span class="hint"><%= h.toFaDigits(cat.product_count) %> محصول در این دسته</span>
+      </div>
+    </form>
+
+    <!-- زیردسته‌ها -->
+    <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--line)">
+      <strong style="font-size:.94rem">زیردسته‌ها</strong>
+      <% if (cat.subs.length) { %>
+        <div class="actions" style="margin:.7rem 0">
+          <% cat.subs.forEach(function (s) { %>
+            <span class="pill pill-off" style="display:inline-flex;align-items:center;gap:.4rem">
+              <%= s.name %>
+              <form method="post" action="/admin/subcategories/<%= s.id %>/delete"
+                    data-confirm="زیردسته حذف شود؟ محصولات آن حذف نمی‌شوند.">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" title="حذف"
+                        style="border:0;background:none;color:var(--red);cursor:pointer;font-size:1rem;padding:0">×</button>
+              </form>
+            </span>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <p class="hint" style="margin:.4rem 0">زیردسته‌ای ندارد.</p>
+      <% } %>
+
+      <form method="post" action="/admin/subcategories" class="actions">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" name="category_id" value="<%= cat.id %>">
+        <input type="text" name="name" placeholder="نام زیردسته‌ی جدید" maxlength="60"
+               style="max-width:260px" required>
+        <button class="btn btn-ghost btn-sm" type="submit">افزودن زیردسته</button>
+      </form>
+    </div>
+
+    <!-- حذف دسته -->
+    <form method="post" action="/admin/categories/<%= cat.id %>/delete"
+          data-confirm="این دسته حذف شود؟"
+          style="margin-top:1rem;padding-top:.8rem;border-top:1px dashed var(--line)">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button class="btn btn-danger btn-sm" type="submit">حذف این دسته</button>
+      <span class="hint">دسته‌ای که محصول دارد حذف نمی‌شود.</span>
+    </form>
+  </div>
+<% }); %>
+
+<%- include('_layout-bottom') %>

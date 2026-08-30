@@ -1,0 +1,17 @@
+{
+  "platform": "node",
+  "port": 3000,
+  "node": {
+    "version": "22"
+  },
+  "disks": [
+    {
+      "name": "data",
+      "mountTo": "db"
+    },
+    {
+      "name": "upload",
+      "mountTo": "user-uploads"
+    }
+  ]
+}

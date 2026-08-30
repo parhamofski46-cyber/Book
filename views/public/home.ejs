@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <%- include('../partials/head') %>
+  <%- include('../partials/schema-business') %>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main id="main">
+
+    <!-- ================================================== هیرو -->
+    <section class="hero hero-home">
+      <div class="wrap hero-grid">
+        <div class="hero-inner">
+        <span class="eyebrow"><span class="dot"></span> فروش و تولید در علی‌آباد کتول و گرگان</span>
+        <h1><%= hero.title %></h1>
+        <p class="hero-sub"><%= hero.subtitle %></p>
+        <% if (hero.text) { %><p class="hero-text"><%= hero.text %></p><% } %>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="/products">
+            <%- icon('box') %> مشاهده‌ی محصولات
+          </a>
+          <% const wa = inquiryLink('whatsapp'); if (wa) { %>
+            <a class="btn btn-wa btn-lg" href="<%= wa %>" target="_blank" rel="noopener">
+              <%- icon('whatsapp') %> استعلام قیمت در واتساپ
+            </a>
+          <% } %>
+          <a data-track="phone" class="btn btn-ghost btn-lg" href="<%= site.phoneHref %>">
+            <%- icon('phone') %> <span dir="ltr"><%= h.toFaDigits(site.phone) %></span>
+          </a>
+        </div>
+
+        <div class="hero-badges">
+          <span><%- icon('check') %> قیمت روز و شفاف</span>
+          <span><%- icon('truck') %> ارسال به گرگان و شهرهای اطراف</span>
+          <span><%- icon('scroll') %> بیش از ۶۰۰ مدل فرفورژه‌ی آماده</span>
+          <span><%- icon('layers') %> تولیدکننده‌ی ورق گالوانیزه</span>
+        </div>
+        </div>
+
+        <!-- ترکیب تصویری هیرو: چهار دسته‌ی شاخص، هم تزئین است هم میان‌بر -->
+        <div class="hero-art" aria-hidden="true">
+          <%
+          /* این چهار کاشی، اولین چیزی است که بازدیدکننده می‌بیند. هر چهار
+             دسته عکس واقعی انبار دارند، پس طرح خطی استفاده نمی‌شود —
+             عکس واقعی برای مشتری محلی خیلی باورپذیرتر است. */
+          const heroPicks = ['گل و طرح‌های فرفورژه', 'ورق گالوانیزه', 'قوطی', 'شاخ گوزنی'];
+          heroPicks.forEach(function (nm, i) {
+            const ph = categoryPhoto(nm); %>
+            <span class="hero-tile hero-tile-<%= i + 1 %>">
+              <img src="<%= ph ? ph.src : categoryArtUrl(nm) %>"
+                   <% if (ph) { %>srcset="<%= ph.srcset %>" sizes="(max-width:900px) 45vw, 300px"<% } %>
+                   alt="" width="400" height="300"
+                   <% if (i === 0) { %>fetchpriority="high"<% } else { %>loading="lazy"<% } %> decoding="async">
+            </span>
+          <% }); %>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== نوار آمار -->
+    <%- include('../partials/section-stats') %>
+
+    <!-- ================================================== دسته‌بندی‌ها -->
+    <section class="section section-soft" id="categories">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-title"><h2>دنبال چه چیزی هستید؟</h2></div>
+          <p>روی دسته‌ی موردنظرتان بزنید تا محصولات و موجودی همان دسته را ببینید.</p>
+        </div>
+
+        <div class="cat-grid reveal">
+          <% gridCategories.forEach(function (cat, i) { %>
+            <a class="cat-card <%= cat.is_featured ? 'featured' : '' %>"
+               href="/category/<%= encodeURIComponent(cat.slug) %>"
+               style="--i:<%= i %>">
+              <%# عکس کارت دسته، به ترتیب اولویت:
+                  ۱) عکس اختصاصی دسته در public/img/catphoto
+                  ۲) عکس یکی از محصولات همان دسته (catCovers) — پس وقتی مالک
+                     از پنل برای محصولی عکس آپلود کند، کارت دسته هم عکس‌دار
+                     می‌شود بدون اینکه کدی عوض شود
+                  ۳) تصویرسازی خطی دسته %>
+              <% const catPh = categoryPhoto(cat.name) || (catCovers && catCovers[cat.id]); %>
+              <span class="cat-art <%= catPh ? 'is-photo' : '' %>">
+                <img src="<%= catPh ? catPh.src : categoryArtUrl(cat.name) %>"
+                     <% if (catPh && catPh.srcset) { %>srcset="<%= catPh.srcset %>" sizes="(max-width:600px) 92vw, 380px"<% } %>
+                     alt="" width="400" height="300" loading="lazy" decoding="async">
+              </span>
+              <span class="cat-meta">
+                <b><%= cat.name %></b>
+                <small><%= h.toFaDigits(cat.product_count) %> محصول</small>
+              </span>
+            </a>
+          <% }); %>
+        </div>
+      </div>
+    </section>
+
+    <%- include('../partials/ornament') %>
+
+    <!-- ================================================== محصولات تازه -->
+    <section class="section" id="products">
+      <div class="wrap">
+        <div class="section-head head-row">
+          <div>
+            <div class="section-title"><h2>محصولات پرفروش</h2></div>
+            <p>موجودی انبار به‌روز است؛ برای قیمت روز یک پیام واتساپ کافی است.</p>
+          </div>
+          <a class="btn btn-ghost btn-sm" href="/products">همه‌ی محصولات <%- icon('arrow') %></a>
+        </div>
+
+        <div class="product-grid reveal">
+          <% latest.forEach(function (product, i) { %>
+            <%- include('../partials/product-card', { product: product, eager: i < 4 }) %>
+          <% }); %>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== بخش ویژه‌ی فرفورژه -->
+    <% if (featuredCategory && forgeProducts.length) { %>
+    <section class="section" id="forge">
+      <div class="wrap">
+        <div class="section-head center">
+          <span class="eyebrow">بیش از ۶۰۰ مدل، آماده‌ی تحویل</span>
+          <div class="section-title"><h2>گل و طرح‌های فرفورژه</h2></div>
+          <p>
+            برای درب، پنجره و نرده. آنچه اینجا می‌بینید فقط چند نمونه است؛ انبار ما در
+            علی‌آباد کتول بیش از هزار مدل دارد. عکس طرح موردنظرتان را بفرستید تا بگوییم موجود است یا نه.
+          </p>
+        </div>
+
+        <div class="product-grid big reveal">
+          <% forgeProducts.forEach(function (product) { %>
+            <%- include('../partials/product-card', { product: product }) %>
+          <% }); %>
+        </div>
+
+        <p style="text-align:center;margin-top:1.6rem">
+          <a class="btn btn-primary" href="/forge">دیدن گالری کامل فرفورژه <%- icon('arrow') %></a>
+        </p>
+      </div>
+    </section>
+    <% } %>
+
+    <!-- ================================================== نظرات مشتریان (تیزر) -->
+    <%- include('../partials/section-reviews') %>
+
+    <!-- ================================ پل کوتاه به صفحه‌ی «درباره‌ی ما»
+         بخش کامل معرفی مدیر، تضمین‌ها و منطقه‌ی خدمات به صفحه‌ی /about منتقل شد
+         تا صفحه‌ی اصلی کوتاه و سریع بماند. -->
+    <section class="section">
+      <div class="wrap">
+        <div class="about-teaser reveal">
+          <div class="about-teaser-photo">
+            <%
+            const ownerImg = setting('owner_image', '');
+            const tphoto = ownerImg
+              ? { src: h.imageUrl(ownerImg, 'medium'), srcset: h.imageSrcset(ownerImg) }
+              : { src: '/img/owner-800.webp', srcset: '/img/owner-480.webp 480w, /img/owner-800.webp 800w' };
+            const tname = setting('owner_name', '');
+            %>
+            <img src="<%= tphoto.src %>" srcset="<%= tphoto.srcset %>"
+                 sizes="(max-width: 760px) 40vw, 220px"
+                 alt="<%= (tname ? tname + '، ' : '') + setting('owner_title', 'مدیر فولاد ایمان') %>"
+                 width="800" height="1000" loading="lazy" decoding="async">
+          </div>
+          <div class="about-teaser-body">
+            <span class="eyebrow"><%- icon('handshake') %> آدمی که پشت فولاد ایمان است</span>
+            <h2>با ما طرف هستید، نه با یک شماره‌ی ناشناس</h2>
+            <p>
+              مغازه‌ی ما آدرس دارد، انبار دارد و خودمان ورق گالوانیزه تولید می‌کنیم.
+              داستان کارمان، تضمین‌هایی که می‌دهیم و شهرهایی که بار می‌فرستیم را
+              در صفحه‌ی درباره‌ی ما بخوانید.
+            </p>
+            <a class="btn btn-primary" href="/about">درباره‌ی ما <%- icon('arrow') %></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <%- include('../partials/ornament') %>
+
+    <!-- ================================================== CTA پایانی -->
+    <section class="section">
+      <div class="wrap">
+        <div class="cta-band reveal">
+          <div class="ornament"><%- include('../partials/ornament', { variant: 'panel' }) %></div>
+          <div>
+            <h2>قیمت امروز را بپرسید</h2>
+            <p>
+              لیست خریدتان را در واتساپ بفرستید؛ قیمت روز، موجودی و زمان تحویل را
+              همان‌جا برایتان می‌نویسیم.
+            </p>
+          </div>
+          <div class="cta-actions">
+            <% activeChannels().forEach(function (ch) { %>
+              <a class="btn <%= ch.key === 'whatsapp' ? 'btn-wa' : 'btn-tg' %> btn-lg"
+                 href="<%= ch.href %>" target="_blank" rel="noopener">
+                <%- icon(ch.key) %> <%= ch.label %>
+              </a>
+            <% }); %>
+            <a data-track="phone" class="btn btn-ghost btn-lg" href="<%= site.phoneHref %>">
+              <%- icon('phone') %> تماس تلفنی
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

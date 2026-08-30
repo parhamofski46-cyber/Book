@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img">
+  <defs>
+    <pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0v20" fill="none" stroke="#A8431A" stroke-width=".5" opacity=".07"/>
+    </pattern>
+    <radialGradient id="glow" cx="78%" cy="18%" r="70%">
+      <stop offset="0" stop-color="#C0763C" stop-opacity=".16"/>
+      <stop offset="1" stop-color="#C0763C" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="300" fill="#FBF7F3"/>
+  <rect width="400" height="300" fill="url(#g)"/>
+  <rect width="400" height="300" fill="url(#glow)"/>
+  <g fill="none" stroke="#A8431A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+
+    <path d="M74 120 L85 104 L105 104 L116 120 L127 104 L147 104 L158 120 L169 104 L189 104 L200 120 L211 104 L231 104 L242 120 L253 104 L273 104 L284 120 L295 104 L315 104 L326 120" stroke-width="3"/>
+    <path d="M74 252 L85 236 L105 236 L116 252 L127 236 L147 236 L158 252 L169 236 L189 236 L200 252 L211 236 L231 236 L242 252 L253 236 L273 236 L284 252 L295 236 L315 236 L326 252" stroke-width="3"/>
+    <path d="M74 120 V252M326 120 V252" stroke-width="3"/>
+    <path d="M85 104 V236M105 104 V236" stroke="#C0763C" stroke-width="2"/>
+    <path d="M74 120 V252" stroke="#C0763C" stroke-width="1.6" opacity=".6"/>
+    <path d="M127 104 V236M147 104 V236" stroke="#C0763C" stroke-width="2"/>
+    <path d="M116 120 V252" stroke="#C0763C" stroke-width="1.6" opacity=".6"/>
+    <path d="M169 104 V236M189 104 V236" stroke="#C0763C" stroke-width="2"/>
+    <path d="M158 120 V252" stroke="#C0763C" stroke-width="1.6" opacity=".6"/>
+    <path d="M211 104 V236M231 104 V236" stroke="#C0763C" stroke-width="2"/>
+    <path d="M200 120 V252" stroke="#C0763C" stroke-width="1.6" opacity=".6"/>
+    <path d="M253 104 V236M273 104 V236" stroke="#C0763C" stroke-width="2"/>
+    <path d="M242 120 V252" stroke="#C0763C" stroke-width="1.6" opacity=".6"/>
+    <path d="M295 104 V236M315 104 V236" stroke="#C0763C" stroke-width="2"/>
+    <path d="M284 120 V252" stroke="#C0763C" stroke-width="1.6" opacity=".6"/>
+    <path d="M74 148 h252M74 192 h252" stroke="#A8431A" stroke-width="2.4" opacity=".8"/>
+
+  </g>
+</svg>

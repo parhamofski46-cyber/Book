@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<%
+/* اسکیمای سؤالات پرتکرار — گوگل می‌تواند پاسخ‌ها را مستقیم زیر نتیجه‌ی سایت
+   نشان بدهد، که هم فضای بیشتری در نتایج می‌گیرد و هم کلیک بیشتری می‌آورد. */
+/* پرسش‌ها از فایل مشترک src/content/faq.js می‌آیند تا یک جواب در دو جای
+   سایت با هم فرق نکند. اینجا فقط منتخب‌ها می‌آیند؛ فهرست کامل در /faq است. */
+const faq = faqContent.highlights();
+const faqSchema = faqContent.faqSchema(faq);
+%>
+<head>
+  <%- include('../partials/head') %>
+  <%- include('../partials/schema-business') %>
+  <script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(faqSchema) %></script>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main id="main">
+    <div class="wrap">
+      <nav class="breadcrumb" aria-label="مسیر صفحه">
+        <a href="/">خانه</a> <span>›</span> <span>تماس با ما</span>
+      </nav>
+
+      <section class="section">
+        <div class="area-grid">
+          <div>
+            <div class="section-title"><h1 style="font-size:clamp(1.6rem,1.2rem+1.5vw,2.2rem)">تماس با فولاد ایمان</h1></div>
+            <p>
+              سریع‌ترین راه گرفتن قیمت روز، پیام واتساپ است؛ لیست خریدتان را بفرستید،
+              قیمت و موجودی را همان‌جا می‌نویسیم. برای کارهای سفارشی فرفورژه هم عکس و
+              اندازه را بفرستید.
+            </p>
+
+            <div class="order-box" style="margin-top:1.4rem">
+              <div class="order-actions">
+                <% activeChannels().forEach(function (ch) { %>
+                  <a class="btn <%= ch.key === 'whatsapp' ? 'btn-wa' : 'btn-tg' %> btn-lg btn-block"
+                     href="<%= ch.href %>" target="_blank" rel="noopener">
+                    <%- icon(ch.key) %> پیام در <%= ch.label %>
+                  </a>
+                <% }); %>
+                <a data-track="phone" class="btn btn-dark btn-lg btn-block" href="<%= site.phoneHref %>">
+                  <%- icon('phone') %> تماس: <span dir="ltr"><%= h.toFaDigits(site.phone) %></span>
+                </a>
+              </div>
+            </div>
+
+            <!-- آدرس حضوری، برجسته -->
+            <div class="address-card">
+              <span class="a-ico"><%- icon('map') %></span>
+              <div>
+                <b>نشانی مراجعه‌ی حضوری</b>
+                <p><%= site.address.city %>، <%= site.address.street %></p>
+                <span class="hint-line">انبار، خط تولید ورق و نمایش مدل‌های فرفورژه، همه همین‌جاست.</span>
+              </div>
+            </div>
+
+            <ul class="spec-list" style="margin-top:1.4rem">
+              <li><span>نام کسب‌وکار</span><b><%= site.name %></b></li>
+              <li><span>مدیریت</span><b><%= setting('owner_name', 'مدیریت فولاد ایمان') %></b></li>
+              <li><span>شماره تماس و واتساپ</span><b dir="ltr"><%= h.toFaDigits(site.phone) %></b></li>
+              <li><span>آدرس</span><b><%= site.address.full %></b></li>
+              <li><span>ساعات کاری</span><b><%= site.openingHours %></b></li>
+              <li><span>منطقه‌ی خدمات</span><b><%= site.areaServed.slice(0, 4).join('، ') %></b></li>
+            </ul>
+          </div>
+
+          <div class="map-frame">
+            <% if (mapEmbed) { %>
+              <%- mapEmbed %>
+              <div class="map-actions">
+                <a class="btn btn-primary" href="<%= mapDirections %>" target="_blank" rel="noopener">
+                  <%- icon('map') %> مسیریابی تا فروشگاه
+                </a>
+                <a class="btn btn-ghost btn-sm" href="<%= mapPlace %>" target="_blank" rel="noopener">
+                  باز کردن در گوگل مپ
+                </a>
+              </div>
+            <% } else { %>
+              <div class="map-placeholder">
+                <%- icon('map', '') %>
+                <strong><%= site.address.full %></strong>
+                <span style="font-size:.88rem">
+                  اگر مسیر را پیدا نکردید، تماس بگیرید — راهنمایی‌تان می‌کنیم.
+                </span>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </section>
+
+      <%- include('../partials/ornament') %>
+
+      <section class="section">
+        <div class="section-head">
+          <div class="section-title"><h2>سؤال‌های پرتکرار</h2></div>
+        </div>
+        <ul class="spec-list faq-list">
+          <% faq.forEach(function (f) { %>
+            <li>
+              <b><%= f[0] %></b>
+              <span><%= f[1] %></span>
+            </li>
+          <% }); %>
+        </ul>
+        <p style="margin-top:1.1rem">
+          <a class="btn btn-ghost" href="/faq">دیدن همه‌ی سؤال‌های متداول ›</a>
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

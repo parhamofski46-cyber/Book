@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img">
+  <defs>
+    <pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0v20" fill="none" stroke="#A8431A" stroke-width=".5" opacity=".07"/>
+    </pattern>
+    <radialGradient id="glow" cx="78%" cy="18%" r="70%">
+      <stop offset="0" stop-color="#C0763C" stop-opacity=".16"/>
+      <stop offset="1" stop-color="#C0763C" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="300" fill="#FBF7F3"/>
+  <rect width="400" height="300" fill="url(#g)"/>
+  <rect width="400" height="300" fill="url(#glow)"/>
+  <g fill="none" stroke="#A8431A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+
+    <!-- ورق پهن‌شده با ضخامت -->
+    <path d="M176 112 H340 V208 H176"/>
+    <path d="M176 122 H340" stroke="#C0763C" stroke-width="2" opacity=".8"/>
+    <path d="M176 198 H340" stroke="#C0763C" stroke-width="2" opacity=".8"/>
+    <path d="M212 122 v76M252 122 v76M292 122 v76" stroke="#C0763C" stroke-width="1.5" opacity=".55"/>
+    <!-- رول با مارپیچ -->
+    <ellipse cx="130" cy="160" rx="30" ry="58" stroke-width="3"/>
+    <path d="M130 102 h46M130 218 h46" stroke-width="3"/>
+    <path d="M130 130 a16 30 0 1 0 0 60 a10 19 0 1 1 0 -38" stroke="#C0763C" stroke-width="2.4"/>
+    <!-- علامت عایق حرارتی -->
+    <g stroke="#C0763C" stroke-width="2.2" opacity=".9">
+      <path d="M232 88 q10 -10 0 -20M272 88 q10 -10 0 -20M312 88 q10 -10 0 -20"/>
+    </g>
+
+  </g>
+</svg>

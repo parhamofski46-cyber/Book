@@ -1,0 +1,31 @@
+{
+  "name": "foolad-iman",
+  "version": "1.0.0",
+  "private": true,
+  "description": "وب‌سایت کاتالوگ محصولات گروه تولیدی صنعتی فولاد ایمان — علی‌آباد کتول و گرگان",
+  "main": "server.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "start:cluster": "node cluster.js",
+    "dev": "node --watch server.js",
+    "seed": "node src/db/seed.js",
+    "reset-password": "node scripts/reset-password.js",
+    "set-admin": "node scripts/set-admin.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.5.0",
+    "compression": "^1.7.5",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0",
+    "multer": "^2.2.0",
+    "qrcode": "^1.5.4",
+    "sharp": "^0.35.3"
+  }
+}

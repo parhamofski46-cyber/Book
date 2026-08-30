@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>تابلوی مغازه — پنل مدیریت فولاد ایمان</title>
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <style>
+    /* این صفحه عمداً CSS خودش را دارد و از admin.css استفاده نمی‌کند:
+       تنها کارش چاپ‌شدن است و هر استایل اضافه‌ای فقط روی کاغذ خرابی
+       به بار می‌آورد. */
+    @page { size: A5 portrait; margin: 8mm; }
+
+    @font-face {
+      font-family: 'Vazirmatn';
+      src: url('/fonts/Vazirmatn-Bold.woff2') format('woff2');
+      font-weight: 700;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Vazirmatn';
+      src: url('/fonts/Vazirmatn-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-display: swap;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Vazirmatn', Tahoma, sans-serif;
+      background: #f2ede8;
+      padding: 18px;
+    }
+
+    /* نوار راهنما — فقط روی صفحه دیده می‌شود، روی کاغذ چاپ نمی‌شود */
+    .bar {
+      max-width: 128mm;
+      margin: 0 auto 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      border: 1px solid #e9e4df;
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+    .bar p { margin: 0; font-size: .88rem; color: #55555c; line-height: 1.8; }
+    .bar a, .bar button {
+      font: inherit;
+      font-weight: 700;
+      border-radius: 10px;
+      padding: .55rem 1rem;
+      cursor: pointer;
+      border: 1px solid #e9e4df;
+      background: #fff;
+      color: #1c1c1e;
+      text-decoration: none;
+    }
+    .bar .primary { background: #a8431a; border-color: #a8431a; color: #fff; }
+
+    .sheet {
+      width: 128mm;
+      min-height: 190mm;
+      margin: 0 auto;
+      background: #fff;
+      border: 2px solid #1c1c1e;
+      border-radius: 14px;
+      padding: 12mm 10mm;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .brand { font-weight: 700; font-size: 20pt; color: #1c1c1e; margin: 0; }
+    .tag { color: #a8431a; font-size: 11pt; margin: 3mm 0 0; font-weight: 700; }
+    .pitch { font-size: 13pt; line-height: 1.9; color: #33333a; margin: 7mm 0 0; }
+    .pitch b { color: #a8431a; }
+    .qr { margin: 6mm auto 0; width: 62mm; }
+    .qr svg { width: 100%; height: auto; display: block; }
+    .scan { font-size: 10.5pt; color: #55555c; margin: 3mm 0 0; }
+    .url {
+      direction: ltr;
+      font-size: 15pt;
+      font-weight: 700;
+      letter-spacing: .4px;
+      color: #1c1c1e;
+      margin: 4mm 0 0;
+      padding: 2.5mm;
+      border: 1.5px dashed #a8431a;
+      border-radius: 8px;
+    }
+    .foot { font-size: 10pt; color: #55555c; margin: 6mm 0 0; line-height: 1.9; }
+    .phone { direction: ltr; font-weight: 700; font-size: 12pt; color: #1c1c1e; }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .bar { display: none; }
+      .sheet { border-width: 1.5px; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <p>
+      روی کاغذ <b>A5</b> چاپ کنید و روی پیشخوان بگذارید.<br>
+      مشتری دوربین گوشی را روی کد می‌گیرد و کاتالوگ باز می‌شود.
+    </p>
+    <div>
+      <button type="button" class="primary" id="print">چاپ</button>
+      <a href="/admin">بازگشت به پنل</a>
+    </div>
+  </div>
+
+  <div class="sheet">
+    <div>
+      <h1 class="brand"><%= site.name %></h1>
+      <p class="tag"><%= site.tagline %></p>
+
+      <p class="pitch">
+        <b>بیش از ۶۰۰ مدل</b> گل و طرح فرفورژه<br>
+        را روی گوشی خودتان ببینید
+      </p>
+
+      <%# کد QR سمت سرور ساخته می‌شود، پس نه اینترنت لازم دارد و نه
+          سرویس بیرونی — و همیشه آدرس واقعی همین سایت را دارد. %>
+      <div class="qr"><%- qrSvg %></div>
+      <p class="scan">دوربین گوشی را روی کد بگیرید</p>
+
+      <div class="url"><%= prettyUrl %></div>
+    </div>
+
+    <p class="foot">
+      کاتالوگ کامل · محاسبه‌گر وزن آهن · استعلام قیمت روز<br>
+      <span class="phone"><%= site.phone %></span> — تلفن و واتساپ
+    </p>
+  </div>
+
+  <%# CSP سایت اسکریپت بدون nonce را اجرا نمی‌کند و onclick هم ممنوع است %>
+  <script nonce="<%= nonce %>">
+    document.getElementById('print').addEventListener('click', function () {
+      window.print();
+    });
+  </script>
+</body>
+</html>

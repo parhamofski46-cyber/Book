@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <%- include('../partials/head', { metaDescription: 'صفحه پیدا نشد — ' + site.name }) %>
+  <meta name="robots" content="noindex, follow">
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main id="main">
+    <div class="wrap page-404">
+      <% if (typeof serverError !== 'undefined' && serverError) { %>
+        <div class="code">!</div>
+        <h1>یک مشکل فنی پیش آمد</h1>
+        <p style="color:var(--ink-soft);max-width:48ch;margin-inline:auto">
+          چند لحظه دیگر دوباره امتحان کنید. اگر عجله دارید، مستقیم با ما تماس بگیرید —
+          همیشه پاسخ‌گو هستیم.
+        </p>
+      <% } else { %>
+        <div class="code">۴۰۴</div>
+        <h1>این صفحه پیدا نشد</h1>
+        <p style="color:var(--ink-soft);max-width:48ch;margin-inline:auto">
+          شاید محصول موردنظر جابه‌جا یا حذف شده باشد. از فهرست محصولات پیدایش کنید،
+          یا اسمش را برای ما بفرستید تا خودمان بگردیم.
+        </p>
+      <% } %>
+
+      <div class="ornament"><%- include('../partials/ornament') %></div>
+
+      <div class="hero-actions" style="justify-content:center">
+        <a class="btn btn-primary btn-lg" href="/products"><%- icon('box') %> فهرست محصولات</a>
+        <a class="btn btn-ghost btn-lg" href="/">صفحه‌ی اصلی</a>
+        <% const wa = inquiryLink('whatsapp'); if (wa) { %>
+          <a class="btn btn-wa btn-lg" href="<%= wa %>" target="_blank" rel="noopener">
+            <%- icon('whatsapp') %> پرسیدن در واتساپ
+          </a>
+        <% } %>
+      </div>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

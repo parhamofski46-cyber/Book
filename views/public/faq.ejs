@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <%- include('../partials/head') %>
+  <%- include('../partials/schema-business') %>
+  <%# داده‌ی ساختاریافته‌ی FAQPage — گوگل می‌تواند این پرسش‌ها را مستقیم
+      زیر نتیجه‌ی سایت نشان بدهد. %>
+  <script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(faqSchema) %></script>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main id="main">
+    <div class="wrap">
+      <%- include('../partials/breadcrumb', { crumbs: [{ name: 'سؤال‌های متداول' }] }) %>
+
+      <section class="section">
+        <div class="section-head">
+          <div class="section-title">
+            <h1 style="font-size:clamp(1.6rem,1.2rem+1.5vw,2.2rem)">سؤال‌های متداول</h1>
+          </div>
+          <p>
+            هر چیزی که مشتری‌ها معمولاً قبل از خرید می‌پرسند، اینجا جواب داده شده —
+            از قیمت و ارسال تا ورق گالوانیزه و فرفورژه. اگر جواب سؤالتان را پیدا
+            نکردید، در واتساپ بپرسید؛ همان روز جواب می‌دهیم.
+          </p>
+        </div>
+
+        <%# فهرست میان‌بر گروه‌ها. لینک لنگری اینجا بی‌اشکال است چون در همین
+            صفحه است و در منو/فوتر نیست (قانون پروژه فقط برای ناوبری اصلی است). %>
+        <nav class="faq-jump" aria-label="موضوع‌های پرسش">
+          <% GROUPS.forEach(function (g) { %>
+            <a href="#<%= g.id %>"><%- icon(g.icon) %><span><%= g.title %></span></a>
+          <% }); %>
+        </nav>
+
+        <% GROUPS.forEach(function (g) { %>
+          <section class="faq-group" id="<%= g.id %>">
+            <h2 class="faq-group-title"><%- icon(g.icon) %> <%= g.title %></h2>
+
+            <%# آکاردئون با details/summary ساخته شده، نه جاوااسکریپت:
+                بدون JS کار می‌کند، با CSP سختگیر سایت مشکلی ندارد، با کیبورد
+                و صفحه‌خوان درست رفتار می‌کند، و مهم‌تر — متن پاسخ همیشه در
+                سورس صفحه هست، پس گوگل آن را می‌بیند حتی وقتی بسته است. %>
+            <% g.items.forEach(function (f, i) { %>
+              <details class="faq-item"<%= i === 0 ? ' open' : '' %>>
+                <summary><%= f[0] %></summary>
+                <div class="faq-answer"><p><%= f[1] %></p></div>
+              </details>
+            <% }); %>
+          </section>
+        <% }); %>
+
+        <div class="cta-band faq-cta">
+          <div class="ornament"><%- include('../partials/ornament', { variant: 'panel' }) %></div>
+          <div>
+            <h2>جوابتان را پیدا نکردید؟</h2>
+            <p>
+              سؤالتان را در واتساپ بفرستید. عکس و اندازه هم می‌توانید بفرستید —
+              معمولاً همان روز جواب می‌گیرید.
+            </p>
+          </div>
+          <div class="cta-actions">
+            <% if (site.channels.whatsapp.enabled) { %>
+              <a data-track="whatsapp" class="btn btn-wa btn-lg" href="<%= site.channels.whatsapp.base %>" target="_blank" rel="noopener">
+                <%- icon('whatsapp') %> پرسیدن در واتساپ
+              </a>
+            <% } %>
+            <a class="btn btn-ghost btn-lg" href="/contact">راه‌های دیگر تماس</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

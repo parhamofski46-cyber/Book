@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img">
+  <defs>
+    <pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0v20" fill="none" stroke="#A8431A" stroke-width=".5" opacity=".07"/>
+    </pattern>
+    <radialGradient id="glow" cx="78%" cy="18%" r="70%">
+      <stop offset="0" stop-color="#C0763C" stop-opacity=".16"/>
+      <stop offset="1" stop-color="#C0763C" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="300" fill="#FBF7F3"/>
+  <rect width="400" height="300" fill="url(#g)"/>
+  <rect width="400" height="300" fill="url(#glow)"/>
+  <g fill="none" stroke="#A8431A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+
+    <path d="M132 202 h136 l-22 -96 h-92 z"/>
+    <path d="M154 106 h92" stroke="#C0763C" stroke-width="2.2"/>
+    <circle cx="200" cy="96" r="11" stroke="#C0763C" stroke-width="2.2"/>
+    <path d="M104 96 h85 M211 96 h85" stroke="#C0763C" stroke-width="2.4"/>
+    <path d="M112 202 h176" stroke="#C0763C" stroke-width="1.8" opacity=".6"/>
+    <path d="M300 106 V202 M294 106 h12 M294 202 h12" stroke="#C0763C" stroke-width="1.8"/>
+  </g>
+</svg>

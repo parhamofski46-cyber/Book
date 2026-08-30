@@ -1,0 +1,117 @@
+<%
+/**
+ * داده‌ی ساختاریافته‌ی Schema.org برای کسب‌وکار محلی.
+ * گوگل از این اطلاعات برای نمایش سایت در جست‌وجوهای محلی
+ * («آهن فروشی علی‌آباد کتول»، «فرفورژه گرگان») استفاده می‌کند.
+ */
+const business = {
+  '@context': 'https://schema.org',
+  '@type': ['LocalBusiness', 'HardwareStore'],
+  '@id': site.url + '/#business',
+  name: site.name,
+  alternateName: site.shortName,
+  description: site.description,
+  url: site.url,
+  telephone: '+' + site.phoneIntl,
+  // عکس باید تصویر واقعی و بزرگ باشد، نه آیکون؛ گوگل برای نتایج غنی
+  // تصویر کوچک یا SVG را نادیده می‌گیرد.
+  image: site.url + '/img/og-cover.jpg',
+  logo: site.url + '/img/og-cover.jpg',
+  priceRange: '$$',
+  currenciesAccepted: 'IRR',
+  paymentAccepted: 'نقدی، کارت به کارت',
+  slogan: site.tagline,
+  hasMap: 'https://www.google.com/maps/search/?api=1&query=' +
+    encodeURIComponent(site.address.full),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    addressLocality: site.address.city,
+    addressRegion: site.address.province,
+    addressCountry: 'IR',
+  },
+  founder: setting('owner_name', '')
+    ? { '@type': 'Person', name: setting('owner_name', '') }
+    : undefined,
+  geo: { '@type': 'GeoCoordinates', latitude: site.geo.lat, longitude: site.geo.lng },
+  areaServed: site.areaServed.map(function (a) {
+    return { '@type': 'City', name: a };
+  }),
+  openingHoursSpecification: [{
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'],
+    opens: '08:00',
+    closes: '20:00',
+  }],
+  knowsAbout: [
+    'ورق گالوانیزه', 'ورق شیروانی طرح سفال', 'قوطی', 'پروفیل', 'نبشی', 'رابیتس', 'رابیس',
+    'شاخ گوزنی', 'فنس', 'تور مرغی', 'ایزوگام', 'پشم شیشه', 'فوم', 'پیچ سرمته',
+    'قفل درب', 'لولا', 'گل و طرح فرفورژه',
+  ],
+};
+if (site.channels.whatsapp.enabled) {
+  business.sameAs = [site.channels.whatsapp.base];
+}
+if (site.channels.telegram.enabled && site.channels.telegram.base) {
+  business.sameAs = (business.sameAs || []).concat([site.channels.telegram.base]);
+}
+
+// امتیاز کلی بر اساس نظرات ثبت‌شده در پنل.
+// ⚠️ این داده باید بازتاب نظرات واقعی مشتریان باشد؛ نظر ساختگی هم خلاف قوانین
+// گوگل است و هم می‌تواند باعث حذف سایت از نتایج غنی شود.
+if (reviewSummary && reviewSummary.count > 0) {
+  business.aggregateRating = {
+    '@type': 'AggregateRating',
+    ratingValue: reviewSummary.average,
+    reviewCount: reviewSummary.count,
+    bestRating: 5,
+    worstRating: 1,
+  };
+}
+
+/**
+ * فهرست کالاها به‌صورت OfferCatalog.
+ * به گوگل می‌گوید این مغازه دقیقاً چه گروه‌هایی کالا دارد — برای
+ * جست‌وجوهایی مثل «کجا رابیتس بخرم» کمک می‌کند.
+ */
+if (typeof categories !== 'undefined' && categories && categories.length) {
+  business.hasOfferCatalog = {
+    '@type': 'OfferCatalog',
+    name: 'محصولات ' + site.shortName,
+    itemListElement: categories.map(function (c) {
+      return {
+        '@type': 'OfferCatalog',
+        name: c.name,
+        url: site.url + '/category/' + encodeURIComponent(c.slug),
+      };
+    }),
+  };
+}
+
+/**
+ * اسکیمای WebSite با SearchAction.
+ * اگر گوگل این را بپذیرد، زیر نتیجه‌ی سایت یک کادر جست‌وجو نشان می‌دهد که
+ * مستقیم داخل سایت ما جست‌وجو می‌کند — هم فضای بیشتری در نتایج می‌گیریم و
+ * هم کاربر یک قدم زودتر به محصول می‌رسد.
+ */
+const website = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': site.url + '/#website',
+  url: site.url,
+  name: site.name,
+  alternateName: site.shortName,
+  inLanguage: 'fa-IR',
+  publisher: { '@id': site.url + '/#business' },
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: site.url + '/products?q={search_term_string}',
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
+%>
+<script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(business) %></script>
+<script type="application/ld+json" nonce="<%= nonce %>"><%- h.jsonLd(website) %></script>

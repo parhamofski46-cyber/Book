@@ -1,0 +1,64 @@
+<%
+/**
+ * کارت محصول در گرید.
+ * ورودی: product (رکورد محصول)، اختیاری eager (عکس بدون lazy برای ردیف اول)،
+ * اختیاری zoomable (دکمه‌ی بزرگ‌نمایی — فقط گالری فرفورژه این را روشن می‌کند
+ * چون طرح‌های گل و حلزونی ریزکاری دارند و مشتری باید بدون رفتن به صفحه‌ی
+ * محصول بتواند نمای بزرگ‌تر ببیند).
+ */
+const img = h.productImage(product, 'thumb');
+const stock = h.stockLabel(product);
+const eagerLoad = typeof eager !== 'undefined' && eager;
+const zoomable = typeof locals !== 'undefined' && locals.zoomable;
+const zoomImg = zoomable ? h.productImage(product, 'large') : null;
+%>
+<div class="card <%= product.in_stock ? '' : 'is-out' %>">
+  <!-- کل کارت با همین لینک کلیک‌پذیر می‌شود (الگوی stretched link)،
+       تا دکمه‌ی «افزودن به لیست» بتواند دکمه‌ی مستقل خودش باشد -->
+  <a class="card-link" href="/product/<%= encodeURIComponent(product.slug) %>">
+    <span class="sr-only"><%= product.name %></span>
+  </a>
+
+  <div class="card-media <%= img.isPlaceholder ? 'placeholder' : '' %> <%= img.isCutout ? 'cutout' : '' %>">
+    <img
+      src="<%= img.src %>"
+      <% if (img.srcset) { %>srcset="<%= img.srcset %>" sizes="(max-width: 560px) 45vw, (max-width: 900px) 30vw, 260px"<% } %>
+      alt="<%= img.alt %>"
+      width="400" height="300"
+      loading="<%= eagerLoad ? 'eager' : 'lazy' %>"
+      decoding="async"
+      <% if (eagerLoad) { %>fetchpriority="high"<% } %>>
+    <span class="badge badge-<%= stock.cls %>"><%= stock.text %></span>
+    <% if (product.subcategory_name) { %>
+      <span class="badge-sub"><%= product.subcategory_name %></span>
+    <% } %>
+    <% if (zoomable) { %>
+      <button type="button" class="zoom-btn"
+              data-zoom
+              data-zoom-src="<%= zoomImg.src %>"
+              data-zoom-alt="<%= zoomImg.alt %>"
+              data-zoom-caption="<%= product.name %>"
+              aria-label="بزرگ‌نمایی طرح <%= product.name %>">
+        <%- icon('search') %>
+      </button>
+    <% } %>
+  </div>
+  <div class="card-body">
+    <%# نام دسته وقتی نمایش داده می‌شود که کارت بین محصولات دسته‌های مختلف
+        باشد. داخل صفحه‌ی یک دسته، تکرارش روی همه‌ی کارت‌ها فقط شلوغی است —
+        صفحه‌ی فرفورژه با ۱۳ کارت، ۱۳ بار «گل و طرح‌های فرفورژه» می‌نوشت. %>
+    <% if (typeof hideCategory === 'undefined' || !hideCategory) { %>
+      <span class="card-cat"><%= product.category_name %></span>
+    <% } %>
+    <h3 class="card-title"><%= product.name %></h3>
+    <% if (product.summary) { %><p class="card-desc"><%= product.summary %></p><% } %>
+    <div class="card-foot">
+      <span class="price"><%= product.price_text || 'استعلام قیمت' %></span>
+      <button type="button" class="add-quote"
+              data-slug="<%= product.slug %>" data-name="<%= product.name %>"
+              aria-label="افزودن <%= product.name %> به لیست استعلام">
+        <span class="plus">+</span> لیست
+      </button>
+    </div>
+  </div>
+</div>

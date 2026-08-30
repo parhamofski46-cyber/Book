@@ -1,0 +1,54 @@
+name: استقرار روی لیارا
+
+# این مسیر «نقشه‌ی دوم» است و معمولاً لازم نیست.
+# ------------------------------------------------------------------
+# روش عادی، همان اتصال گیت‌هاب از داخل کنسول لیاراست که بخش `disks` فایل
+# liara.json را هم درست اعمال می‌کند. این فایل فقط برای وقتی است که بخواهید
+# دیپلوی را از گیت‌هاب کنترل کنید (مثلاً چند محیط جدا داشته باشید).
+#
+# عمداً فقط دستی اجرا می‌شود (`workflow_dispatch`) تا با دیپلوی خودکار
+# کنسول تداخل نکند و هر push دو بار سایت را مستقر نکند.
+# برای فعال کردنش، در Settings مخزن این دو را بسازید:
+#   Secret   به نام LIARA_API_TOKEN  (از پنل لیارا: منوی API)
+#   Variable به نام LIARA_APP_NAME   (شناسه‌ی برنامه در آدرس کنسول)
+
+on:
+  workflow_dispatch: # فقط اجرای دستی از تب Actions در گیت‌هاب
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # اگر هنوز توکن یا نام برنامه تنظیم نشده، به‌جای شکست قرمز، یک پیام
+      # راهنمای واضح می‌دهیم و بی‌سروصدا رد می‌شویم.
+      - name: بررسی تنظیمات
+        id: check
+        env:
+          LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
+          LIARA_APP: ${{ vars.LIARA_APP_NAME }}
+        run: |
+          missing=""
+          [ -z "$LIARA_TOKEN" ] && missing="$missing\n  - Secret به نام LIARA_API_TOKEN"
+          [ -z "$LIARA_APP" ]   && missing="$missing\n  - Variable به نام LIARA_APP_NAME (شناسه‌ی برنامه در لیارا)"
+          if [ -n "$missing" ]; then
+            echo "::notice::استقرار خودکار هنوز فعال نشده است."
+            printf 'برای فعال شدن، در Settings مخزن گیت‌هاب این‌ها را بسازید:%b\n' "$missing"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: استقرار
+        if: steps.check.outputs.ready == 'true'
+        env:
+          LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
+          LIARA_APP: ${{ vars.LIARA_APP_NAME }}
+        run: |
+          npm i -g @liara/cli@9
+          liara deploy --app="$LIARA_APP" --api-token="$LIARA_TOKEN" --no-app-logs

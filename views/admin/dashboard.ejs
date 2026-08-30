@@ -1,0 +1,74 @@
+<%- include('_layout-top') %>
+
+<div class="page-head">
+  <div>
+    <h1>خوش آمدید 👋</h1>
+    <p class="hint">از اینجا محصولات، عکس‌ها و موجودی فروشگاه را مدیریت کنید.</p>
+  </div>
+  <div class="actions">
+    <a class="btn btn-primary btn-lg" href="/admin/products/new">+ افزودن محصول جدید</a>
+    <a class="btn btn-ghost btn-lg" href="/admin/poster" target="_blank" rel="noopener">🖨 تابلوی مغازه</a>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><b><%= h.toFaDigits(stats.products) %></b><span>کل محصولات</span></div>
+  <div class="stat"><b><%= h.toFaDigits(stats.active) %></b><span>نمایش داده می‌شوند</span></div>
+  <div class="stat <%= stats.outOfStock ? 'warn' : '' %>"><b><%= h.toFaDigits(stats.outOfStock) %></b><span>ناموجود</span></div>
+  <div class="stat <%= stats.noImage ? 'warn' : '' %>"><b><%= h.toFaDigits(stats.noImage) %></b><span>بدون عکس</span></div>
+  <div class="stat"><b><%= h.toFaDigits(stats.categories) %></b><span>دسته‌بندی</span></div>
+</div>
+
+<% if (stats.noImage > 0) { %>
+  <div class="alert alert-info">
+    📷 <%= h.toFaDigits(stats.noImage) %> محصول هنوز عکس ندارند. عکس واقعی، بیشترین تأثیر را
+    روی فروش دارد — از فهرست محصولات، روی «ویرایش» بزنید و عکس بگذارید.
+  </div>
+<% } %>
+
+<div class="panel">
+  <h2>سه کار اصلی که اینجا انجام می‌دهید</h2>
+  <ol class="hint" style="padding-inline-start:1.2rem">
+    <li>
+      <strong>افزودن محصول:</strong> دکمه‌ی «افزودن محصول جدید» بالای همین صفحه — نام،
+      دسته، توضیح و عکس را می‌دهید و تمام.
+    </li>
+    <li>
+      <strong>تغییر موجودی:</strong> در فهرست محصولات، دکمه‌ی «موجود / ناموجود» را بزنید؛
+      بلافاصله در سایت اعمال می‌شود.
+    </li>
+    <li>
+      <strong>تعویض عکس:</strong> وارد ویرایش محصول شوید، عکس قدیمی را حذف و عکس جدید را
+      آپلود کنید. عکس‌ها خودکار فشرده و بهینه می‌شوند.
+    </li>
+  </ol>
+</div>
+
+<div class="panel">
+  <h2>آخرین محصولات</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>عکس</th><th>نام</th><th>دسته</th><th>موجودی</th><th></th></tr>
+      </thead>
+      <tbody>
+        <% recent.forEach(function (p) { const im = h.productImage(p, 'thumb'); %>
+          <tr>
+            <td><img class="thumb <%= im.isPlaceholder ? 'ph' : '' %>" src="<%= im.src %>" alt="" loading="lazy"></td>
+            <td><%= p.name %></td>
+            <td><%= p.category_name %></td>
+            <td>
+              <% if (!p.is_active) { %><span class="pill pill-off">مخفی</span>
+              <% } else if (p.in_stock) { %><span class="pill pill-in">موجود</span>
+              <% } else { %><span class="pill pill-out">ناموجود</span><% } %>
+            </td>
+            <td><a class="btn btn-ghost btn-sm" href="/admin/products/<%= p.id %>/edit">ویرایش</a></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin:1rem 0 0"><a href="/admin/products">مشاهده‌ی همه‌ی محصولات ›</a></p>
+</div>
+
+<%- include('_layout-bottom') %>
