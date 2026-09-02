@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>جزئیات محصول | زرّین</title>
+<meta name="description" content="مشخصات کامل، نمایش سه‌بعدی و تفکیک شفاف قیمت هر قطعه در گالری زرّین.">
+<meta name="theme-color" content="#08080b">
+<link rel="canonical" href="https://example.com/product.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fa_IR">
+<meta property="og:title" content="جزئیات محصول | زرّین">
+<meta property="og:description" content="مشخصات کامل، نمایش سه‌بعدی و تفکیک شفاف قیمت هر قطعه در گالری زرّین.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 3 58 22 48 55H16L6 22Z' fill='none' stroke='%23d4af37' stroke-width='4'/%3E%3Cpath d='M6 22h52M32 3 20 22l12 33 12-33Z' fill='none' stroke='%23d4af37' stroke-width='2.5'/%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<!-- ═══════════ پیش‌بارگذار ═══════════ -->
+<div class="preloader" id="preloader">
+  <div class="preloader__in">
+    <svg class="preloader__mark" viewBox="0 0 64 64" aria-hidden="true">
+      <defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#8a6a1c"/><stop offset="40%" stop-color="#f6e6b0"/>
+        <stop offset="70%" stop-color="#d4af37"/><stop offset="100%" stop-color="#9d7a1e"/>
+      </linearGradient></defs>
+      <path d="M32 3 58 22 48 55H16L6 22Z" fill="none" stroke="url(#pg)" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M6 22h52M32 3 20 22l12 33 12-33Z" fill="none" stroke="url(#pg)" stroke-width="1.6" opacity=".8"/>
+    </svg>
+    <div class="preloader__bar"><i id="preBar"></i></div>
+    <span class="preloader__t">Z A R R I N</span>
+  </div>
+</div>
+
+<div class="progress" id="progress"></div>
+
+<!-- ═══════════ نوار نرخ لحظه‌ای ═══════════ -->
+<div class="topbar">
+  <div class="wrap topbar__in">
+    <div class="ticker"><div class="ticker__track" id="ticker"></div></div>
+    <div class="topbar__links">
+      <a href="contact.html">پیگیری سفارش</a>
+      <span class="hairline-v" style="height:16px"></span>
+      <a href="tel:+982188776655">۰۲۱ ۸۸۷۷۶۶۵۵</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ سربرگ ═══════════ -->
+<header class="header">
+  <div class="wrap header__in">
+    <a class="logo" href="index.html" data-logo aria-label="زرّین، صفحه‌ی نخست">
+      <span class="logo__txt"><span class="logo__fa">زرّین</span><span class="logo__en">FINE JEWELRY</span></span>
+    </a>
+
+    <nav class="nav" aria-label="فهرست اصلی">
+      <div class="nav__item"><a class="nav__link" href="index.html">خانه</a></div>
+      <div class="nav__item">
+        <a class="nav__link is-active" href="products.html" aria-expanded="false">دسته‌بندی‌ها <span data-ico="chevDown"></span></a>
+        <div class="mega">
+          <div>
+            <span class="eyebrow" style="margin-bottom:14px">مجموعه‌ها</span>
+            <div class="mega__grid" id="catGrid"></div>
+          </div>
+          <div class="mega__promo">
+            <span class="eyebrow">ویژه</span>
+            <h4 class="h3">ساخت اختصاصی</h4>
+            <p class="tiny">طرح سه‌بعدی قطعه‌ی خود را پیش از ساخت ببینید و تأیید کنید.</p>
+            <a class="btn btn--gold btn--sm" href="#configurator">شروع طراحی</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav__item"><a class="nav__link" href="products.html">فروشگاه</a></div>
+      <div class="nav__item"><a class="nav__link" href="#calc">قیمت طلا</a></div>
+      <div class="nav__item"><a class="nav__link" href="about.html">درباره‌ی ما</a></div>
+      <div class="nav__item"><a class="nav__link" href="contact.html">تماس</a></div>
+    </nav>
+
+    <div class="tools">
+      <button class="icon-btn" data-search-open aria-label="جست‌وجو" data-ico="search"></button>
+      <button class="icon-btn" data-theme-toggle aria-label="تغییر پوسته"></button>
+      <a class="icon-btn tools__opt" href="products.html" aria-label="علاقه‌مندی‌ها" data-ico="heart">
+        <span class="icon-btn__badge" id="favBadge">۰</span></a>
+      <button class="icon-btn" id="cartBtn" aria-label="سبد خرید" data-ico="cart">
+        <span class="icon-btn__badge" id="cartBadge">۰</span></button>
+      <button class="icon-btn burger" data-mnav aria-label="فهرست" data-ico="menu"></button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="pagehead" id="productPage">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="مسیر">
+      <a href="index.html">خانه</a>
+      <span data-ico="chevLeft"></span>
+      <a href="products.html">فروشگاه</a>
+      <span data-ico="chevLeft"></span>
+      <span id="pCrumb"></span>
+    </nav>
+
+    <div class="split mt-32" style="align-items:flex-start">
+      <div class="stage" data-jewel data-rotate="true" style="max-height:none">
+        <div class="stage__halo"></div>
+        <div class="stage__ring-deco"></div>
+        <canvas aria-label="نمایش سه‌بعدی محصول"></canvas>
+        <div class="stage__loader">در حال آماده‌سازی نمایش سه‌بعدی…</div>
+        <div class="stage__hint"><span data-ico="drag"></span> بکشید تا از هر زاویه ببینید</div>
+      </div>
+
+      <div class="stack gap-16">
+        <span class="card__cat" id="pCat"></span>
+        <h1 class="h1" id="pTitle"></h1>
+        <span class="en tiny" id="pEn"></span>
+        <div class="row gap-12" id="pRate"></div>
+        <p class="lead" id="pDesc"></p>
+
+        <div class="hairline"></div>
+
+        <div class="row gap-16" style="align-items:baseline">
+          <b class="gold-text" style="font-size:1.9rem" id="pPrice"></b>
+          <span id="pStock"></span>
+        </div>
+
+        <div>
+          <div class="opt-group__label"><span>رنگ طلا</span></div>
+          <div class="swatches" id="pMetals"></div>
+        </div>
+
+        <div class="field" id="pSizeWrap" style="max-width:320px">
+          <label for="pSize">سایز انگشتر</label>
+          <select class="select" id="pSize" style="height:52px;border-radius:14px;width:100%"></select>
+        </div>
+
+        <div class="row gap-12" style="flex-wrap:wrap">
+          <button class="btn btn--gold btn--lg" id="pAdd"><span data-ico="cart"></span> افزودن به سبد خرید</button>
+          <button class="btn btn--ghost btn--lg" id="pFav"></button>
+        </div>
+
+        <div class="values" style="grid-template-columns:1fr 1fr;border:1px solid var(--line-soft);border-radius:var(--r-lg);overflow:hidden;margin-block-start:8px">
+          <div class="value"><i data-ico="truck"></i><b>ارسال بیمه‌شده</b><p>تهران همان روز، شهرستان ۲ تا ۴ روز کاری.</p></div>
+          <div class="value"><i data-ico="refresh"></i><b>بازخرید تضمینی</b><p>هر زمان، با نرخ روز طلا.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="wrap split" style="align-items:flex-start">
+    <div>
+      <h2 class="h2">مشخصات فنی</h2>
+      <div class="calc__out mt-16" id="pSpecs"></div>
+    </div>
+    <div>
+      <h2 class="h2">تفکیک قیمت</h2>
+      <div class="calc__out mt-16" id="pBreak"></div>
+      <p class="tiny mt-16">این تفکیک دقیقاً همان چیزی است که روی فاکتور رسمی شما درج می‌شود.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">شاید بپسندید</span><h2 class="h1">قطعات مرتبط</h2></div>
+    <div class="grid-products" id="pRelated"></div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══════════ پابرگ ═══════════ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div class="footer__col footer__about">
+        <a class="logo" href="index.html" data-logo>
+          <span class="logo__txt"><span class="logo__fa">زرّین</span><span class="logo__en">FINE JEWELRY</span></span>
+        </a>
+        <p>گالری طلا و جواهر زرّین، از سال ۱۳۴۷ در بازار طلای تهران. ساخت دست، گواهی اصالت و قیمت‌گذاری شفاف؛ سه چیزی که هرگز روی آن مصالحه نکرده‌ایم.</p>
+        <div class="socials">
+          <a class="social" href="#" aria-label="اینستاگرام" data-ico="insta"></a>
+          <a class="social" href="#" aria-label="واتساپ" data-ico="whatsapp"></a>
+          <a class="social" href="#" aria-label="تلگرام" data-ico="telegram"></a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <h4>فروشگاه</h4>
+        <ul>
+          <li><a href="products.html?cat=ring">انگشتر</a></li>
+          <li><a href="products.html?cat=necklace">گردنبند</a></li>
+          <li><a href="products.html?cat=earring">گوشواره</a></li>
+          <li><a href="products.html?cat=bracelet">دستبند</a></li>
+          <li><a href="products.html?cat=coin">سکه و شمش</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>راهنما</h4>
+        <ul>
+          <li><a href="#size">راهنمای سایز</a></li>
+          <li><a href="#calc-sec">محاسبه‌ی قیمت</a></li>
+          <li><a href="#faq-sec">پرسش‌های پرتکرار</a></li>
+          <li><a href="about.html">درباره‌ی ما</a></li>
+          <li><a href="contact.html">تماس با ما</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>تماس</h4>
+        <ul class="footer__contact">
+          <li><span data-ico="map"></span><span>تهران، خیابان ولیعصر، بالاتر از پارک ساعی، برج زرّین، طبقه همکف</span></li>
+          <li><span data-ico="phone"></span><a href="tel:+982188776655">۰۲۱ ۸۸۷۷۶۶۵۵</a></li>
+          <li><span data-ico="mail"></span><a href="mailto:info@zarrin.gallery">info@zarrin.gallery</a></li>
+          <li><span data-ico="clock"></span><span>شنبه تا پنجشنبه، ۱۰:۰۰ تا ۲۱:۰۰</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__bar">
+      <span>© ۱۴۰۵ گالری زرّین. تمامی حقوق محفوظ است.</span>
+      <div class="footer__pay">
+        <i>پرداخت امن</i><i>نماد اعتماد</i><i>ارسال بیمه‌شده</i>
+      </div>
+    </div>
+    <div class="footer__wordmark" aria-hidden="true">ZARRIN</div>
+  </div>
+</footer>
+
+<!-- ═══════════ لایه‌ها ═══════════ -->
+<div class="scrim" id="scrim"></div>
+
+<aside class="drawer" id="cartDrawer" aria-label="سبد خرید">
+  <div class="drawer__head">
+    <h3 class="h3">سبد خرید</h3>
+    <button class="icon-btn" data-cart-close aria-label="بستن" data-ico="close"></button>
+  </div>
+  <div class="drawer__body" id="cartBody"></div>
+  <div class="drawer__foot" id="cartFoot">
+    <div class="calc__row"><span>هزینه‌ی ارسال</span><b id="cartShip">—</b></div>
+    <div class="cart-total"><span>جمع کل</span><b class="gold-text" id="cartTotal">—</b></div>
+    <button class="btn btn--gold btn--block" id="checkout">تکمیل سفارش</button>
+    <p class="tiny mt-8" style="text-align:center">ارسال سفارش‌های بالای ۵۰ میلیون تومان رایگان است.</p>
+  </div>
+</aside>
+
+<div class="search-ov" id="search">
+  <div class="search-ov__in">
+    <div class="search-ov__field">
+      <span data-ico="search"></span>
+      <input id="searchInput" type="search" placeholder="دنبال چه می‌گردید؟ مثلاً «حلقه الماس»" aria-label="جست‌وجو">
+      <button class="icon-btn" data-search-close aria-label="بستن" data-ico="close"></button>
+    </div>
+    <div class="search-tags">
+      <button class="chip" data-sq="حلقه">حلقه</button>
+      <button class="chip" data-sq="الماس">الماس</button>
+      <button class="chip" data-sq="گردنبند">گردنبند</button>
+      <button class="chip" data-sq="سکه">سکه</button>
+      <button class="chip" data-sq="زمرد">زمرد</button>
+    </div>
+    <div class="search-res" id="searchRes"></div>
+  </div>
+</div>
+
+<div class="mnav" id="mnav">
+  <div class="row" style="justify-content:space-between">
+    <a class="logo" href="index.html" data-logo>
+      <span class="logo__txt"><span class="logo__fa">زرّین</span><span class="logo__en">FINE JEWELRY</span></span>
+    </a>
+    <button class="icon-btn" data-mnav aria-label="بستن" data-ico="close"></button>
+  </div>
+  <nav class="mnav__list">
+    <a href="index.html">خانه <span>HOME</span></a>
+    <a href="products.html">فروشگاه <span>SHOP</span></a>
+    <a href="index.html#configurator">طراحی حلقه <span>DESIGN</span></a>
+    <a href="index.html#calc-sec">قیمت طلا <span>PRICE</span></a>
+    <a href="about.html">درباره‌ی ما <span>ABOUT</span></a>
+    <a href="contact.html">تماس <span>CONTACT</span></a>
+  </nav>
+  <div class="mnav__foot">
+    <a class="btn btn--gold btn--block" href="tel:+982188776655"><span data-ico="phone"></span> تماس با گالری</a>
+    <p class="tiny">تهران، ولیعصر، برج زرّین · شنبه تا پنجشنبه ۱۰ تا ۲۱</p>
+  </div>
+</div>
+
+<div class="fabs">
+  <a class="fab fab--wa" href="https://wa.me/989120000000" target="_blank" rel="noopener" aria-label="واتساپ" data-ico="whatsapp"></a>
+  <button class="fab fab--top" id="toTop" aria-label="بازگشت به بالا" data-ico="arrowUp"></button>
+</div>
+
+<script type="module" src="assets/js/main.js"></script>
+</body>
+</html>

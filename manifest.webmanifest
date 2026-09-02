@@ -1,0 +1,20 @@
+{
+  "name": "زرّین | گالری طلا و جواهر",
+  "short_name": "زرّین",
+  "description": "خرید طلا و جواهر با گواهی اصالت، نرخ لحظه‌ای و نمایش سه‌بعدی هر قطعه.",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#08080b",
+  "theme_color": "#08080b",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2308080b'/%3E%3Cpath d='M32 8 54 24 45 52H19L10 24Z' fill='none' stroke='%23d4af37' stroke-width='3'/%3E%3Cpath d='M10 24h44M32 8 21 24l11 28 11-28Z' fill='none' stroke='%23d4af37' stroke-width='2'/%3E%3C/svg%3E",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

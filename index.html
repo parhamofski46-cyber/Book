@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>زرّین | گالری طلا و جواهر — طراحی، ساخت و فروش با قیمت شفاف</title>
+<meta name="description" content="گالری طلا و جواهر زرّین: حلقه، گردنبند، گوشواره، دستبند و سکه با گواهی اصالت، نرخ لحظه‌ای طلا، محاسبه‌ی شفاف اجرت و ساخت اختصاصی. نمایش سه‌بعدی زنده‌ی هر قطعه.">
+<meta name="theme-color" content="#08080b">
+<link rel="canonical" href="https://example.com/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fa_IR">
+<meta property="og:title" content="زرّین | گالری طلا و جواهر">
+<meta property="og:description" content="طلا و جواهر دست‌ساز با گواهی اصالت و قیمت‌گذاری کاملاً شفاف.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 3 58 22 48 55H16L6 22Z' fill='none' stroke='%23d4af37' stroke-width='4'/%3E%3Cpath d='M6 22h52M32 3 20 22l12 33 12-33Z' fill='none' stroke='%23d4af37' stroke-width='2.5'/%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="stylesheet" href="assets/css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"JewelryStore","name":"گالری طلا و جواهر زرّین",
+"image":"https://example.com/og.jpg","priceRange":"$$$","telephone":"+982188776655",
+"address":{"@type":"PostalAddress","addressLocality":"تهران","addressCountry":"IR",
+"streetAddress":"خیابان ولیعصر، بالاتر از پارک ساعی، برج زرّین"},
+"openingHours":"Sa-Th 10:00-21:00",
+"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"1284"}}
+</script>
+</head>
+<body>
+
+<!-- ═══════════ پیش‌بارگذار ═══════════ -->
+<div class="preloader" id="preloader">
+  <div class="preloader__in">
+    <svg class="preloader__mark" viewBox="0 0 64 64" aria-hidden="true">
+      <defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#8a6a1c"/><stop offset="40%" stop-color="#f6e6b0"/>
+        <stop offset="70%" stop-color="#d4af37"/><stop offset="100%" stop-color="#9d7a1e"/>
+      </linearGradient></defs>
+      <path d="M32 3 58 22 48 55H16L6 22Z" fill="none" stroke="url(#pg)" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M6 22h52M32 3 20 22l12 33 12-33Z" fill="none" stroke="url(#pg)" stroke-width="1.6" opacity=".8"/>
+    </svg>
+    <div class="preloader__bar"><i id="preBar"></i></div>
+    <span class="preloader__t">Z A R R I N</span>
+  </div>
+</div>
+
+<div class="progress" id="progress"></div>
+
+<!-- ═══════════ نوار نرخ لحظه‌ای ═══════════ -->
+<div class="topbar">
+  <div class="wrap topbar__in">
+    <div class="ticker"><div class="ticker__track" id="ticker"></div></div>
+    <div class="topbar__links">
+      <a href="contact.html">پیگیری سفارش</a>
+      <span class="hairline-v" style="height:16px"></span>
+      <a href="tel:+982188776655">۰۲۱ ۸۸۷۷۶۶۵۵</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ سربرگ ═══════════ -->
+<header class="header">
+  <div class="wrap header__in">
+    <a class="logo" href="index.html" data-logo aria-label="زرّین، صفحه‌ی نخست">
+      <span class="logo__txt"><span class="logo__fa">زرّین</span><span class="logo__en">FINE JEWELRY</span></span>
+    </a>
+
+    <nav class="nav" aria-label="فهرست اصلی">
+      <div class="nav__item"><a class="nav__link is-active" href="index.html">خانه</a></div>
+      <div class="nav__item">
+        <a class="nav__link" href="products.html" aria-expanded="false">دسته‌بندی‌ها <span data-ico="chevDown"></span></a>
+        <div class="mega">
+          <div>
+            <span class="eyebrow" style="margin-bottom:14px">مجموعه‌ها</span>
+            <div class="mega__grid" id="catGrid"></div>
+          </div>
+          <div class="mega__promo">
+            <span class="eyebrow">ویژه</span>
+            <h4 class="h3">ساخت اختصاصی</h4>
+            <p class="tiny">طرح سه‌بعدی قطعه‌ی خود را پیش از ساخت ببینید و تأیید کنید.</p>
+            <a class="btn btn--gold btn--sm" href="#configurator">شروع طراحی</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav__item"><a class="nav__link" href="products.html">فروشگاه</a></div>
+      <div class="nav__item"><a class="nav__link" href="#calc">قیمت طلا</a></div>
+      <div class="nav__item"><a class="nav__link" href="about.html">درباره‌ی ما</a></div>
+      <div class="nav__item"><a class="nav__link" href="contact.html">تماس</a></div>
+    </nav>
+
+    <div class="tools">
+      <button class="icon-btn" data-search-open aria-label="جست‌وجو" data-ico="search"></button>
+      <button class="icon-btn" data-theme-toggle aria-label="تغییر پوسته"></button>
+      <a class="icon-btn tools__opt" href="products.html" aria-label="علاقه‌مندی‌ها" data-ico="heart">
+        <span class="icon-btn__badge" id="favBadge">۰</span></a>
+      <button class="icon-btn" id="cartBtn" aria-label="سبد خرید" data-ico="cart">
+        <span class="icon-btn__badge" id="cartBadge">۰</span></button>
+      <button class="icon-btn burger" data-mnav aria-label="فهرست" data-ico="menu"></button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════ قهرمان صفحه با نمایش سه‌بعدی ═══════════ -->
+<section class="hero">
+  <div class="hero__bg"></div>
+  <div class="hero__grain"></div>
+  <div class="wrap hero__in">
+    <div class="hero__copy">
+      <span class="eyebrow">از سال ۱۳۴۷ در قلب بازار طلای تهران</span>
+      <h1 class="display hero__title">
+        <span class="line"><span>درخششی که</span></span>
+        <span class="line"><span class="gold-text">به نام شما</span></span>
+        <span class="line"><span>ساخته می‌شود</span></span>
+      </h1>
+      <p class="lead">هر قطعه در کارگاه زرّین با دست ساخته می‌شود، با گواهی اصالت تحویل داده می‌شود و قیمتش تا آخرین ریال برایتان شفاف است. پیش از خرید، قطعه را از هر زاویه‌ای که بخواهید ببینید.</p>
+      <div class="hero__cta">
+        <a class="btn btn--gold btn--lg" href="products.html"><span data-ico="sparkles"></span> مشاهده‌ی مجموعه</a>
+        <a class="btn btn--ghost btn--lg" href="#configurator"><span data-ico="spin3d"></span> طراحی حلقه‌ی خودم</a>
+      </div>
+      <div class="hero__stats">
+        <div class="hero__stat"><b><span data-count="58">۰</span></b><span>سال سابقه‌ی خانوادگی</span></div>
+        <div class="hero__stat"><b><span data-count="12400">۰</span>+</b><span>مشتری راضی</span></div>
+        <div class="hero__stat"><b><span data-count="100">۰</span>٪</b><span>گواهی اصالت</span></div>
+      </div>
+    </div>
+
+    <div class="stage" data-jewel data-metal="yellow" data-gem="diamond" data-halo="true" data-rotate="true">
+      <div class="stage__halo"></div>
+      <div class="stage__ring-deco"></div>
+      <div class="stage__ring-deco stage__ring-deco--2"></div>
+      <canvas aria-label="نمایش سه‌بعدی حلقه‌ی تک‌نگین؛ برای چرخاندن بکشید"></canvas>
+      <div class="stage__loader">در حال آماده‌سازی نمایش سه‌بعدی…</div>
+      <div class="stage__hint"><span data-ico="drag"></span> برای چرخاندن قطعه بکشید</div>
+    </div>
+  </div>
+  <div class="scroll-cue"><span>SCROLL</span><span class="scroll-cue__bar"></span></div>
+</section>
+
+<!-- ═══════════ نوار متحرک ═══════════ -->
+<div class="marquee-band">
+  <div class="marquee-band__track">
+    <span class="marquee-band__item"><span data-ico="gem"></span> ساخت دست</span>
+    <span class="marquee-band__item">HANDCRAFTED</span>
+    <span class="marquee-band__item"><span data-ico="cert"></span> گواهی اصالت</span>
+    <span class="marquee-band__item">CERTIFIED</span>
+    <span class="marquee-band__item"><span data-ico="shield"></span> ضمانت بازخرید</span>
+    <span class="marquee-band__item">BUY-BACK</span>
+    <span class="marquee-band__item"><span data-ico="gem"></span> ساخت دست</span>
+    <span class="marquee-band__item">HANDCRAFTED</span>
+    <span class="marquee-band__item"><span data-ico="cert"></span> گواهی اصالت</span>
+    <span class="marquee-band__item">CERTIFIED</span>
+    <span class="marquee-band__item"><span data-ico="shield"></span> ضمانت بازخرید</span>
+    <span class="marquee-band__item">BUY-BACK</span>
+  </div>
+</div>
+
+<!-- ═══════════ اعتماد ═══════════ -->
+<section class="values" data-stagger>
+  <div class="value"><i data-ico="cert"></i><b>گواهی اصالت برای هر قطعه</b>
+    <p>عیار، وزن دقیق و مشخصات نگین روی کارت اصالت درج و با کد رهگیری قابل استعلام است.</p></div>
+  <div class="value"><i data-ico="scale"></i><b>قیمت‌گذاری کاملاً شفاف</b>
+    <p>طلا، اجرت، سود و مالیات جداگانه نمایش داده می‌شود؛ هیچ رقمی پنهان نمی‌ماند.</p></div>
+  <div class="value"><i data-ico="truck"></i><b>ارسال بیمه‌شده</b>
+    <p>تهران با پیک اختصاصی در همان روز، سایر شهرها با پست پیشتاز بیمه‌شده.</p></div>
+  <div class="value"><i data-ico="refresh"></i><b>بازخرید تضمینی</b>
+    <p>سکه و شمش با نرخ روز و بدون کسر اجرت، مصنوعات با کسر اجرت ساخت بازخرید می‌شوند.</p></div>
+</section>
+
+<!-- ═══════════ نرخ لحظه‌ای ═══════════ -->
+<section class="section section--tight" id="rates">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">بازار امروز</span>
+      <h2 class="h1">نرخ لحظه‌ای طلا و سکه</h2>
+      <p class="lead">قیمت‌ها هر ۴۵ ثانیه به‌روز می‌شوند و مبنای محاسبه‌ی همه‌ی قطعات همین نرخ‌هاست.
+        <span class="tiny" id="rateStamp"></span></p>
+    </div>
+    <div class="rates" data-stagger>
+      <div class="rate"><span class="rate__k">هر گرم طلای ۱۸ عیار</span>
+        <span class="rate__v"><span data-rate="gram18"></span> <small>تومان</small></span>
+        <span class="rate__d" data-rate-delta="gram18"></span></div>
+      <div class="rate"><span class="rate__k">هر گرم طلای ۲۴ عیار</span>
+        <span class="rate__v"><span data-rate="gram24"></span> <small>تومان</small></span>
+        <span class="rate__d" data-rate-delta="gram24"></span></div>
+      <div class="rate"><span class="rate__k">سکه تمام امامی</span>
+        <span class="rate__v"><span data-rate="coinEmami"></span> <small>تومان</small></span>
+        <span class="rate__d" data-rate-delta="coinEmami"></span></div>
+      <div class="rate"><span class="rate__k">مثقال طلا</span>
+        <span class="rate__v"><span data-rate="mesghal"></span> <small>تومان</small></span>
+        <span class="rate__d" data-rate-delta="mesghal"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ مجموعه‌ها ═══════════ -->
+<section class="section" id="collections-sec">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow eyebrow--center">مجموعه‌ها</span>
+      <h2 class="h1">برای هر لحظه، یک <span class="serif-accent gold-text">انتخاب</span></h2>
+      <p class="lead">چهار دنیای متفاوت؛ از ظرافت روزمره تا شکوه روز عروسی.</p>
+    </div>
+    <div class="collections" id="collections" data-stagger></div>
+  </div>
+</section>
+
+<!-- ═══════════ محصولات منتخب ═══════════ -->
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="sec-head" style="flex-direction:row;align-items:flex-end;justify-content:space-between;flex-wrap:wrap">
+      <div class="stack gap-12">
+        <span class="eyebrow">منتخب هفته</span>
+        <h2 class="h1">پرفروش‌ترین قطعات</h2>
+      </div>
+      <a class="link-underline" href="products.html">مشاهده‌ی همه‌ی محصولات <span data-ico="arrowL"></span></a>
+    </div>
+    <div class="grid-products" id="featured" data-stagger></div>
+  </div>
+</section>
+
+<!-- ═══════════ پیکربند سه‌بعدی ═══════════ -->
+<section class="section" id="configurator">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow eyebrow--center">استودیوی طراحی</span>
+      <h2 class="h1">حلقه‌ی خود را <span class="gold-text">زنده</span> بسازید</h2>
+      <p class="lead">رنگ طلا، نوع نگین و ضخامت رینگ را تغییر دهید و نتیجه را همان لحظه از هر زاویه ببینید. قیمت هم هم‌زمان به‌روز می‌شود.</p>
+    </div>
+
+    <div class="config">
+      <div class="stage" data-jewel data-metal="yellow" data-gem="diamond" data-rotate="true" data-reveal="zoom">
+        <div class="stage__halo"></div>
+        <div class="stage__ring-deco"></div>
+        <canvas aria-label="پیکربند سه‌بعدی حلقه"></canvas>
+        <div class="stage__loader">در حال آماده‌سازی…</div>
+        <div class="stage__hint"><span data-ico="drag"></span> بکشید تا بچرخد</div>
+      </div>
+
+      <div class="config__panel" data-reveal="right">
+        <div>
+          <div class="opt-group__label"><span>رنگ طلا</span><b id="cfgMetalName"></b></div>
+          <div class="swatches">
+            <button class="sw on" data-cfg-metal="yellow" style="--sw:#d9a441" aria-label="طلای زرد"><span class="sw__tip">زرد</span></button>
+            <button class="sw" data-cfg-metal="rose" style="--sw:#d98a72" aria-label="طلای رز"><span class="sw__tip">رز</span></button>
+            <button class="sw" data-cfg-metal="white" style="--sw:#dfe3ea" aria-label="طلای سفید"><span class="sw__tip">سفید</span></button>
+          </div>
+        </div>
+
+        <div>
+          <div class="opt-group__label"><span>نگین</span></div>
+          <div class="swatches">
+            <button class="sw on" data-cfg-gem="diamond"  style="--sw:#eef3ff" aria-label="الماس"><span class="sw__tip">الماس</span></button>
+            <button class="sw" data-cfg-gem="ruby"     style="--sw:#c0143c" aria-label="یاقوت سرخ"><span class="sw__tip">یاقوت</span></button>
+            <button class="sw" data-cfg-gem="emerald"  style="--sw:#0f8a58" aria-label="زمرد"><span class="sw__tip">زمرد</span></button>
+            <button class="sw" data-cfg-gem="sapphire" style="--sw:#1f4fd8" aria-label="یاقوت کبود"><span class="sw__tip">کبود</span></button>
+            <button class="sw" data-cfg-gem="amethyst" style="--sw:#8b4fd6" aria-label="آمتیست"><span class="sw__tip">آمتیست</span></button>
+            <button class="sw" data-cfg-gem="citrine"  style="--sw:#e0a11a" aria-label="سیترین"><span class="sw__tip">سیترین</span></button>
+          </div>
+        </div>
+
+        <div>
+          <div class="opt-group__label"><span>ضخامت رینگ</span><b id="cfgBandVal">۳.۰ میلی‌متر</b></div>
+          <input type="range" id="cfgBand" min="0.06" max="0.2" step="0.005" value="0.115" style="width:100%" aria-label="ضخامت رینگ">
+        </div>
+
+        <div class="row gap-12" style="flex-wrap:wrap">
+          <button class="chip" id="cfgHalo">بدون هاله</button>
+          <button class="chip is-on" id="cfgSpin">چرخش خودکار</button>
+        </div>
+
+        <div class="config__price">
+          <span class="tiny">برآورد قیمت</span>
+          <b class="gold-text" id="cfgPrice">—</b>
+        </div>
+        <p class="tiny" id="cfgSpec"></p>
+        <button class="btn btn--gold btn--block" id="cfgOrder"><span data-ico="sparkles"></span> ثبت درخواست ساخت اختصاصی</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ داستان کارگاه ═══════════ -->
+<section class="section">
+  <div class="wrap split">
+    <div class="split__media" data-reveal="left">
+      <div style="width:64%">
+        <svg viewBox="0 0 200 200" aria-hidden="true">
+          <g filter="url(#zgSoft)">
+            <circle cx="100" cy="100" r="66" fill="none" stroke="url(#zgYellow)" stroke-width="15"/>
+            <circle cx="100" cy="100" r="66" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="3"/>
+            <circle cx="100" cy="34" r="15" fill="url(#zgDiamond)" stroke="rgba(255,255,255,.5)"/>
+          </g>
+        </svg>
+      </div>
+      <div class="split__badge"><b>۵۸</b><span>سال ساخت دست<br>در بازار تهران</span></div>
+    </div>
+    <div data-reveal="right">
+      <span class="eyebrow">کارگاه زرّین</span>
+      <h2 class="h1 mt-16">از یک میز کوچک در بازار،<br>تا دست‌های شما</h2>
+      <p class="lead mt-16">سال ۱۳۴۷ پدربزرگ ما با یک میز کار و چند قلم ساده شروع کرد. امروز همان قلم‌ها کنار دستگاه‌های ریخته‌گری دقیق و مدل‌سازی سه‌بعدی کار می‌کنند؛ اما اصل ماجرا عوض نشده است: هر قطعه پیش از آنکه به دست شما برسد، از دست یک استادکار می‌گذرد.</p>
+      <ul class="split__list">
+        <li><i data-ico="check"></i><div><b>طراحی و تأیید سه‌بعدی</b><p>پیش از ریخته‌گری، مدل قطعه را می‌بینید و تغییر می‌دهید.</p></div></li>
+        <li><i data-ico="check"></i><div><b>نگین‌های انتخاب‌شده</b><p>هر نگین جداگانه با ذره‌بین بررسی و مشخصاتش ثبت می‌شود.</p></div></li>
+        <li><i data-ico="check"></i><div><b>پولیش و کنترل نهایی</b><p>هفت مرحله پولیش و بازرسی، پیش از بسته‌بندی و پلمب.</p></div></li>
+      </ul>
+      <a class="btn btn--ghost mt-24" href="about.html">داستان کامل ما <span data-ico="arrowL"></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ماشین‌حساب ═══════════ -->
+<section class="section" id="calc-sec">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow eyebrow--center">شفافیت کامل</span>
+      <h2 class="h1">ماشین‌حساب قیمت طلا</h2>
+      <p class="lead">دقیقاً همان فرمولی که ما استفاده می‌کنیم. وزن قطعه را وارد کنید تا ببینید پول شما کجا خرج می‌شود.</p>
+    </div>
+    <div class="calc">
+      <form class="stack gap-24" id="calc" onsubmit="return false">
+        <div class="field-row">
+          <div class="field"><label for="cWeight">وزن قطعه (گرم)</label>
+            <input class="input" type="number" id="cWeight" value="4.5" min="0.1" step="0.1"></div>
+          <div class="field"><label for="cKarat">عیار</label>
+            <select class="select" id="cKarat" style="height:52px;border-radius:14px;width:100%">
+              <option value="18" selected>۱۸ عیار (۷۵۰)</option>
+              <option value="24">۲۴ عیار (۹۹۹)</option>
+            </select></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="cWage">اجرت ساخت (درصد)</label>
+            <input class="input" type="number" id="cWage" value="14" min="0" max="60" step="0.5"></div>
+          <div class="field"><label for="cProfit">سود فروشنده (درصد)</label>
+            <input class="input" type="number" id="cProfit" value="7" min="0" max="30" step="0.5"></div>
+        </div>
+        <p class="tiny">مالیات بر ارزش افزوده تنها به اجرت و سود تعلق می‌گیرد، نه به ارزش طلای خام. این همان نکته‌ای است که بیشتر خریداران از آن بی‌خبرند.</p>
+      </form>
+      <div class="calc__out" id="calcOut" data-reveal="right"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ راهنمای سایز ═══════════ -->
+<section class="section section--tight" id="size">
+  <div class="wrap split">
+    <div data-reveal="left">
+      <span class="eyebrow">راهنما</span>
+      <h2 class="h1 mt-16">سایز انگشتر خود را پیدا کنید</h2>
+      <p class="lead mt-16">یک نخ یا نوار کاغذی دور انگشت بپیچید، محل تلاقی را علامت بزنید و طول آن را بر حسب میلی‌متر اندازه بگیرید. همان عدد را اینجا وارد کنید.</p>
+      <div class="field mt-24" style="max-width:340px">
+        <label for="sizeInput">محیط انگشت (میلی‌متر)</label>
+        <input class="input" type="number" id="sizeInput" placeholder="مثلاً ۵۶.۳" step="0.1">
+      </div>
+      <p class="form-msg" id="sizeResult">اندازه را وارد کنید تا سایز پیشنهادی مشخص شود.</p>
+      <p class="tiny mt-16">تنظیم سایز تا دو نمره، تا شش ماه پس از خرید رایگان است.</p>
+    </div>
+    <div class="table-wrap" data-reveal="right">
+      <table>
+        <thead><tr><th>سایز ایران</th><th>محیط (mm)</th><th>US</th><th>UK</th><th>قطر (mm)</th></tr></thead>
+        <tbody id="sizeTable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ نظرات ═══════════ -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow eyebrow--center">تجربه‌ی مشتریان</span>
+      <h2 class="h1">آنچه درباره‌ی ما گفته‌اند</h2>
+    </div>
+    <div class="slider" id="quotes"><div class="slider__track"></div></div>
+    <div class="slider__nav">
+      <button class="icon-btn" id="qPrev" aria-label="قبلی" data-ico="chevRight"></button>
+      <span id="quoteNav" style="display:flex;gap:8px;align-items:center"></span>
+      <button class="icon-btn" id="qNext" aria-label="بعدی" data-ico="chevLeft"></button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ مجله ═══════════ -->
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="sec-head" style="flex-direction:row;align-items:flex-end;justify-content:space-between;flex-wrap:wrap">
+      <div class="stack gap-12"><span class="eyebrow">مجله‌ی زرّین</span><h2 class="h1">دانستنی‌های طلا</h2></div>
+      <a class="link-underline" href="about.html">همه‌ی مقالات <span data-ico="arrowL"></span></a>
+    </div>
+    <div class="journal" id="journal" data-stagger></div>
+  </div>
+</section>
+
+<!-- ═══════════ پرسش‌های پرتکرار ═══════════ -->
+<section class="section" id="faq-sec">
+  <div class="wrap" style="max-width:920px">
+    <div class="sec-head center">
+      <span class="eyebrow eyebrow--center">پرسش و پاسخ</span>
+      <h2 class="h1">هر چه باید بدانید</h2>
+    </div>
+    <div id="faq" data-reveal="fade"></div>
+  </div>
+</section>
+
+<!-- ═══════════ شعبه‌ها ═══════════ -->
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow eyebrow--center">حضوری</span>
+      <h2 class="h1">ما را از نزدیک ببینید</h2>
+    </div>
+  </div>
+  <div class="values" id="branches" data-stagger></div>
+</section>
+
+<!-- ═══════════ خبرنامه ═══════════ -->
+<section class="section">
+  <div class="wrap">
+    <div class="cta-band" data-reveal="zoom">
+      <div style="position:relative;max-width:640px">
+        <span class="eyebrow">پیش از همه</span>
+        <h2 class="h1 mt-16">از مجموعه‌های تازه باخبر شوید</h2>
+        <p class="lead mt-16">ماهی یک ایمیل، بدون تبلیغات اضافه: مجموعه‌های جدید، نکات نگهداری و دعوت به رویدادهای خصوصی گالری.</p>
+        <form class="newsletter mt-24" data-validate data-ok="ثبت شد. اولین ایمیل را به‌زودی دریافت می‌کنید.">
+          <input class="input" type="email" placeholder="نشانی ایمیل شما" required aria-label="ایمیل">
+          <button class="btn btn--gold" type="submit">عضویت</button>
+          <p class="form-msg"></p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══════════ پابرگ ═══════════ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div class="footer__col footer__about">
+        <a class="logo" href="index.html" data-logo>
+          <span class="logo__txt"><span class="logo__fa">زرّین</span><span class="logo__en">FINE JEWELRY</span></span>
+        </a>
+        <p>گالری طلا و جواهر زرّین، از سال ۱۳۴۷ در بازار طلای تهران. ساخت دست، گواهی اصالت و قیمت‌گذاری شفاف؛ سه چیزی که هرگز روی آن مصالحه نکرده‌ایم.</p>
+        <div class="socials">
+          <a class="social" href="#" aria-label="اینستاگرام" data-ico="insta"></a>
+          <a class="social" href="#" aria-label="واتساپ" data-ico="whatsapp"></a>
+          <a class="social" href="#" aria-label="تلگرام" data-ico="telegram"></a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <h4>فروشگاه</h4>
+        <ul>
+          <li><a href="products.html?cat=ring">انگشتر</a></li>
+          <li><a href="products.html?cat=necklace">گردنبند</a></li>
+          <li><a href="products.html?cat=earring">گوشواره</a></li>
+          <li><a href="products.html?cat=bracelet">دستبند</a></li>
+          <li><a href="products.html?cat=coin">سکه و شمش</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>راهنما</h4>
+        <ul>
+          <li><a href="#size">راهنمای سایز</a></li>
+          <li><a href="#calc-sec">محاسبه‌ی قیمت</a></li>
+          <li><a href="#faq-sec">پرسش‌های پرتکرار</a></li>
+          <li><a href="about.html">درباره‌ی ما</a></li>
+          <li><a href="contact.html">تماس با ما</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>تماس</h4>
+        <ul class="footer__contact">
+          <li><span data-ico="map"></span><span>تهران، خیابان ولیعصر، بالاتر از پارک ساعی، برج زرّین، طبقه همکف</span></li>
+          <li><span data-ico="phone"></span><a href="tel:+982188776655">۰۲۱ ۸۸۷۷۶۶۵۵</a></li>
+          <li><span data-ico="mail"></span><a href="mailto:info@zarrin.gallery">info@zarrin.gallery</a></li>
+          <li><span data-ico="clock"></span><span>شنبه تا پنجشنبه، ۱۰:۰۰ تا ۲۱:۰۰</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__bar">
+      <span>© ۱۴۰۵ گالری زرّین. تمامی حقوق محفوظ است.</span>
+      <div class="footer__pay">
+        <i>پرداخت امن</i><i>نماد اعتماد</i><i>ارسال بیمه‌شده</i>
+      </div>
+    </div>
+    <div class="footer__wordmark" aria-hidden="true">ZARRIN</div>
+  </div>
+</footer>
+
+<!-- ═══════════ لایه‌ها ═══════════ -->
+<div class="scrim" id="scrim"></div>
+
+<aside class="drawer" id="cartDrawer" aria-label="سبد خرید">
+  <div class="drawer__head">
+    <h3 class="h3">سبد خرید</h3>
+    <button class="icon-btn" data-cart-close aria-label="بستن" data-ico="close"></button>
+  </div>
+  <div class="drawer__body" id="cartBody"></div>
+  <div class="drawer__foot" id="cartFoot">
+    <div class="calc__row"><span>هزینه‌ی ارسال</span><b id="cartShip">—</b></div>
+    <div class="cart-total"><span>جمع کل</span><b class="gold-text" id="cartTotal">—</b></div>
+    <button class="btn btn--gold btn--block" id="checkout">تکمیل سفارش</button>
+    <p class="tiny mt-8" style="text-align:center">ارسال سفارش‌های بالای ۵۰ میلیون تومان رایگان است.</p>
+  </div>
+</aside>
+
+<div class="search-ov" id="search">
+  <div class="search-ov__in">
+    <div class="search-ov__field">
+      <span data-ico="search"></span>
+      <input id="searchInput" type="search" placeholder="دنبال چه می‌گردید؟ مثلاً «حلقه الماس»" aria-label="جست‌وجو">
+      <button class="icon-btn" data-search-close aria-label="بستن" data-ico="close"></button>
+    </div>
+    <div class="search-tags">
+      <button class="chip" data-sq="حلقه">حلقه</button>
+      <button class="chip" data-sq="الماس">الماس</button>
+      <button class="chip" data-sq="گردنبند">گردنبند</button>
+      <button class="chip" data-sq="سکه">سکه</button>
+      <button class="chip" data-sq="زمرد">زمرد</button>
+    </div>
+    <div class="search-res" id="searchRes"></div>
+  </div>
+</div>
+
+<div class="mnav" id="mnav">
+  <div class="row" style="justify-content:space-between">
+    <a class="logo" href="index.html" data-logo>
+      <span class="logo__txt"><span class="logo__fa">زرّین</span><span class="logo__en">FINE JEWELRY</span></span>
+    </a>
+    <button class="icon-btn" data-mnav aria-label="بستن" data-ico="close"></button>
+  </div>
+  <nav class="mnav__list">
+    <a href="index.html">خانه <span>HOME</span></a>
+    <a href="products.html">فروشگاه <span>SHOP</span></a>
+    <a href="index.html#configurator">طراحی حلقه <span>DESIGN</span></a>
+    <a href="index.html#calc-sec">قیمت طلا <span>PRICE</span></a>
+    <a href="about.html">درباره‌ی ما <span>ABOUT</span></a>
+    <a href="contact.html">تماس <span>CONTACT</span></a>
+  </nav>
+  <div class="mnav__foot">
+    <a class="btn btn--gold btn--block" href="tel:+982188776655"><span data-ico="phone"></span> تماس با گالری</a>
+    <p class="tiny">تهران، ولیعصر، برج زرّین · شنبه تا پنجشنبه ۱۰ تا ۲۱</p>
+  </div>
+</div>
+
+<div class="fabs">
+  <a class="fab fab--wa" href="https://wa.me/989120000000" target="_blank" rel="noopener" aria-label="واتساپ" data-ico="whatsapp"></a>
+  <button class="fab fab--top" id="toTop" aria-label="بازگشت به بالا" data-ico="arrowUp"></button>
+</div>
+
+<script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
