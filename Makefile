@@ -1,6 +1,6 @@
 FIXTURES := backend/test/fixtures/threeday.jsonl
 
-.PHONY: test test-collector test-backend fixtures report check run clean
+.PHONY: test test-collector test-backend fixtures report check run clean release
 
 test: test-collector test-backend
 
@@ -36,5 +36,11 @@ check:
 run:
 	@cd backend && node --no-warnings src/main.js
 
+# Release assets: dashboard screenshots and the landing page built from them.
+# Needs playwright-core available to release/screenshot.js.
+release: $(FIXTURES)
+	@node --no-warnings release/screenshot.js
+	@node --no-warnings release/build-landing.js
+
 clean:
-	@rm -rf backend/test/fixtures backend/data
+	@rm -rf backend/test/fixtures backend/data release/landing.html

@@ -1,0 +1,343 @@
+<title>Pulse for FiveM</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --ground:#f5f7fb; --surface:#ffffff; --sunken:#eef2f8;
+  --ink:#0c1017; --ink-2:#57637a; --ink-3:#8590a5;
+  --line:#dde4ee; --line-soft:#e9eef5;
+  --accent:#1f6fd0; --accent-soft:rgba(31,111,208,.10);
+  --event:#cf4f1d; --good:#0a8f3c;
+  --screen:#12161f; --screen-line:#242c3a; --screen-ink:#d6dcE6;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#0f131b; --surface:#161c27; --sunken:#131924;
+    --ink:#e9edf4; --ink-2:#98a3b7; --ink-3:#6d7891;
+    --line:#252d3b; --line-soft:#1e2531;
+    --accent:#5b9ef0; --accent-soft:rgba(91,158,240,.14);
+    --event:#f0743e; --good:#2fb35f;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#0f131b; --surface:#161c27; --sunken:#131924;
+  --ink:#e9edf4; --ink-2:#98a3b7; --ink-3:#6d7891;
+  --line:#252d3b; --line-soft:#1e2531;
+  --accent:#5b9ef0; --accent-soft:rgba(91,158,240,.14);
+  --event:#f0743e; --good:#2fb35f;
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-soft)}
+a:hover{border-bottom-color:currentColor}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+.page{max-width:1120px;margin:0 auto;padding:0 24px 96px}
+
+/* Two-track spine: mono labels left, content right. */
+.row{display:grid;grid-template-columns:132px minmax(0,1fr);gap:0 40px;
+  padding:52px 0;border-top:1px solid var(--line-soft)}
+.row:first-of-type{border-top:none}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.10em;
+  text-transform:uppercase;color:var(--ink-3);padding-top:6px}
+.track{min-width:0;max-width:66ch}
+.track.wide{max-width:none}
+@media (max-width:900px){
+  .row{grid-template-columns:1fr;gap:14px;padding:40px 0}
+  .eyebrow{padding-top:0}
+}
+
+h1{font-size:clamp(34px,5.2vw,54px);line-height:1.08;font-weight:700;letter-spacing:-.025em;
+  margin:0 0 20px;text-wrap:balance;max-width:16ch}
+h2{font-size:clamp(22px,2.6vw,28px);line-height:1.2;font-weight:600;letter-spacing:-.018em;
+  margin:0 0 14px;text-wrap:balance}
+h3{font-size:16px;font-weight:600;margin:0 0 6px;letter-spacing:-.008em}
+p{margin:0 0 16px}
+p:last-child{margin-bottom:0}
+.lede{font-size:19px;line-height:1.55;color:var(--ink-2);max-width:56ch}
+strong{font-weight:600;color:var(--ink)}
+code{font-family:var(--mono);font-size:.875em;background:var(--sunken);
+  border:1px solid var(--line-soft);border-radius:4px;padding:1px 5px}
+
+/* Masthead */
+.mast{display:flex;align-items:center;gap:11px;padding:30px 0 0}
+.mark{width:26px;height:26px;flex:none}
+.wordmark{font-family:var(--mono);font-size:15px;font-weight:600;letter-spacing:-.01em}
+.tagpill{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);border:1px solid var(--line);border-radius:999px;padding:2px 9px}
+
+.hero{padding:44px 0 0}
+.verdict{font-family:var(--mono);font-size:14px;line-height:1.75;color:var(--ink-2);
+  background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--event);
+  border-radius:0 8px 8px 0;padding:16px 20px;margin:0 0 30px;max-width:62ch;overflow-x:auto}
+.verdict b{color:var(--ink);font-weight:600}
+
+.cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:28px}
+.btn{font-family:var(--mono);font-size:13px;font-weight:500;padding:11px 20px;border-radius:7px;
+  border:1px solid transparent;display:inline-block;border-bottom:1px solid transparent}
+.btn.primary{background:var(--accent);color:#fff}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{border-color:var(--line);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--ink-3)}
+.cta-note{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+
+/* A screenshot is a screen: it keeps its own dark ground in either theme. */
+.screen{background:var(--screen);border:1px solid var(--screen-line);border-radius:11px;
+  padding:11px;margin:34px 0 0;overflow:hidden}
+.screen img{display:block;width:100%;height:auto;border-radius:5px}
+.screen figcaption{font-family:var(--mono);font-size:11.5px;color:#7e8a9e;
+  padding:11px 4px 2px;line-height:1.5}
+
+/* Steps: numbered because attribution genuinely is a sequence. */
+.steps{display:grid;gap:0;margin:4px 0 0}
+.step{display:grid;grid-template-columns:34px 1fr;gap:16px;padding:18px 0;
+  border-top:1px solid var(--line-soft)}
+.step:first-child{border-top:none;padding-top:4px}
+.num{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent);padding-top:3px}
+.step p{color:var(--ink-2);margin:0}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));
+  gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);border-radius:9px;
+  overflow:hidden;margin:6px 0 0}
+.stat{background:var(--surface);padding:18px 18px 16px}
+.stat .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:9px}
+.stat .v{font-size:27px;font-weight:600;letter-spacing:-.03em;line-height:1;
+  font-variant-numeric:tabular-nums}
+.stat .n{font-size:12.5px;color:var(--ink-2);margin-top:7px;line-height:1.45}
+
+.limits{border:1px solid var(--line);border-radius:9px;background:var(--surface);
+  padding:4px 22px;margin-top:8px}
+.limit{padding:18px 0;border-top:1px solid var(--line-soft)}
+.limit:first-child{border-top:none}
+.limit p{color:var(--ink-2);font-size:14.5px;margin:0}
+
+pre{font-family:var(--mono);font-size:13px;line-height:1.7;background:var(--sunken);
+  border:1px solid var(--line-soft);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:0 0 16px}
+pre .c{color:var(--ink-3)}
+pre .k{color:var(--accent)}
+
+.dl{display:grid;gap:0;margin:0}
+.dl div{display:grid;grid-template-columns:minmax(120px,auto) 1fr;gap:8px 22px;
+  padding:11px 0;border-top:1px solid var(--line-soft);align-items:baseline}
+.dl div:first-child{border-top:none}
+.dl dt{font-family:var(--mono);font-size:12.5px;color:var(--ink)}
+.dl dd{margin:0;color:var(--ink-2);font-size:14.5px}
+@media (max-width:560px){.dl div{grid-template-columns:1fr;gap:2px}}
+
+footer{border-top:1px solid var(--line-soft);padding:34px 0 0;
+  font-family:var(--mono);font-size:12.5px;color:var(--ink-3);
+  display:flex;gap:20px;flex-wrap:wrap;align-items:center}
+
+@media (prefers-reduced-motion: no-preference){
+  .btn{transition:filter .15s ease,border-color .15s ease}
+  a{transition:border-color .15s ease}
+}
+</style>
+
+<div class="page">
+
+  <header class="mast">
+    <svg class="mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M1 15h4.4l2.1-9.2 3.2 13.4 2.6-8.1 1.7 3.9H23" stroke="var(--accent)"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="wordmark">pulse</span>
+    <span class="tagpill">v0.1 &middot; free</span>
+  </header>
+
+  <section class="hero">
+    <div class="row" style="border-top:none;padding-top:26px">
+      <div class="eyebrow">The question</div>
+      <div class="track">
+        <h1>Which resource made your server slow?</h1>
+        <p class="lede"><code>resmon</code> only ever shows you <em>now</em>. When someone says
+          the server was unplayable last night, or that it has felt worse since Tuesday, there
+          is nothing to look at. You restart things until it stops.</p>
+        <p class="lede" style="margin-top:14px">Pulse records main-thread health continuously,
+          so the question has an answer.</p>
+
+        <div class="cta">
+          <a class="btn primary" href="https://github.com/">Get it on GitHub</a>
+          <a class="btn ghost" href="https://forum.cfx.re/">Cfx forum thread</a>
+          <span class="cta-note">MIT collector &middot; self-hosted backend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="border-top:none;padding-top:8px">
+      <div class="eyebrow">Verdict</div>
+      <div class="track wide">
+        <div class="verdict">
+          <b>qb-inventory</b> restarted at 14:06.<br>
+          Since then, stall time per window went <b>10ms &rarr; 98ms</b> at comparable player
+          counts.<br>
+          Confidence: <b>high</b> &middot; compared day-over-day and locally.
+        </div>
+        <figure class="screen">
+          <img src="__TIMELINE__" alt="Stall time per 15-second window over three days. The line
+            holds near 200ms, an orange marker shows a resource restart, and the line steps
+            immediately to about 500ms and stays there. Below, player count continues its
+            unchanged daily rhythm across the same moment.">
+          <figcaption>Three days of a 200-resource server. The step is the restart. The panel
+            below is population &mdash; unchanged across the same moment, which is how you know
+            it was not just a busy evening.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <div class="row">
+    <div class="eyebrow">How it measures</div>
+    <div class="track">
+      <h2>By timing its own lateness</h2>
+      <p>FiveM runs every resource's threads cooperatively on one main thread. Pulse sleeps for
+        a known interval and reports how much longer it actually took. A thread that asks for
+        50ms and wakes at 900ms proves the main thread was blocked for 850ms &mdash; time no
+        resource could use, and what your players feel as rubber-banding and frozen peds.</p>
+
+      <div class="limits">
+        <div class="limit">
+          <h3>It will not claim per-resource CPU</h3>
+          <p>No server native provides it. Any tool showing you a server-side CPU breakdown by
+            resource is inferring it. Pulse measures total stall time exactly, and works out the
+            cause by correlating stalls with restarts over time.</p>
+        </div>
+        <div class="limit">
+          <h3>Stall timing is a lower bound</h3>
+          <p>Accurate to one probe interval &mdash; 50ms by default. The reported figure is the
+            floor, not the exact number.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="eyebrow">Attribution</div>
+    <div class="track">
+      <h2>Player count is the trap</h2>
+      <p>Comparing the hour before a restart with the hour after does not work. Your server is
+        genuinely worse at 21:00 than at 09:00 because five times as many people are on it. Do
+        it naively and <strong>every resource that restarts during the evening climb looks
+        guilty</strong>. So Pulse never compares raw averages.</p>
+
+      <div class="steps">
+        <div class="step"><div class="num">01</div>
+          <p>The baseline for the hours after a restart is <strong>the same clock hours on
+            previous days</strong>. Population follows the clock, so like is compared with
+            like.</p></div>
+        <div class="step"><div class="num">02</div>
+          <p>Within that, samples are <strong>matched by player count</strong> &mdash; only
+            overlapping population ranges are compared, each weighted by the smaller side's
+            evidence.</p></div>
+        <div class="step"><div class="num">03</div>
+          <p>A <strong>step at the change itself</strong> is also required. A regression you have
+            not fixed poisons tomorrow's baseline, so every restart on the nights after would
+            look guilty. This is what keeps your nightly restart cycle out of the results.</p></div>
+        <div class="step"><div class="num">04</div>
+          <p><strong>Confidence reflects evidence, not effect size</strong> &mdash; and the
+            dashboard tells you which comparison it used, so you can disagree with it.</p></div>
+      </div>
+
+      <p style="margin-top:24px">On three days of a simulated 200-resource server with a
+        deliberately broken update, it names one resource, the right one, with zero false
+        positives on the nightly restart cycle. Given one day of history it still finds it, and
+        says the confidence is low instead of pretending otherwise.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="eyebrow">Overhead</div>
+    <div class="track wide">
+      <h2>It does not cost you performance</h2>
+      <p style="max-width:66ch">A performance monitor that costs performance is worse than none
+        &mdash; you cannot separate its overhead from the fault you installed it to find. So the
+        collector measures its own CPU, ships that number in every payload, shows it on the
+        dashboard, and halves its own sampling rate if it ever goes over budget.</p>
+      <div class="stats">
+        <div class="stat"><div class="k">Collector cost</div><div class="v">0.0084%</div>
+          <div class="n">of one core, against a 0.05% budget</div></div>
+        <div class="stat"><div class="k">Stall recovered</div><div class="v">100%</div>
+          <div class="n">of the time injected into the simulator</div></div>
+        <div class="stat"><div class="k">Send queue</div><div class="v">Fixed</div>
+          <div class="n">an unreachable backend costs samples, never memory</div></div>
+        <div class="stat"><div class="k">Dependencies</div><div class="v">Zero</div>
+          <div class="n">in the collector and the backend alike</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="eyebrow">The dashboard</div>
+    <div class="track wide">
+      <h2>Everything on one page</h2>
+      <p style="max-width:66ch">Health with the numbers behind it, the stall timeline with
+        restart markers, what changed and how confident it is, recent restarts, and the
+        collector's own cost. Discord alerts for sustained slowdowns, new regressions, and the
+        collector going quiet &mdash; with cooldowns, so you are not pinged into muting the
+        channel.</p>
+      <figure class="screen">
+        <img src="__DASHBOARD__" alt="The Pulse server dashboard: a health score of 90 graded A,
+          tiles for blocked time, p95 drift, hitches, worst stall and peak players, the stall
+          timeline, and a table naming qb-inventory as the cause of a slowdown with high
+          confidence.">
+        <figcaption>Server view. Self-hosted, server-rendered, no build step &mdash; and it
+          refuses to load anything from a CDN.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="eyebrow">Install</div>
+    <div class="track">
+      <h2>Two pieces</h2>
+      <p>The backend stores and analyses. The collector is a resource on your server. One
+        container, SQLite, one file on disk &mdash; there is no database server to run.</p>
+<pre><span class="c"># backend</span>
+echo "PULSE_ADMIN_TOKEN=$(openssl rand -hex 16)" &gt; .env
+docker compose up -d</pre>
+<pre><span class="c"># server.cfg</span>
+<span class="k">ensure</span> pulse_collector
+
+<span class="k">set</span> pulse_endpoint    "http://your-backend:8787/v1/ingest"
+<span class="k">set</span> pulse_token       "pls_..."
+<span class="k">set</span> pulse_server_name "my-rp"</pre>
+      <p>Every setting has a convar, so tuning survives an update. <code>/pulse</code> in the
+        server console prints agent status.</p>
+
+      <dl class="dl" style="margin-top:26px">
+        <div><dt>15 minutes</dt><dd>the timeline starts to say something</dd></div>
+        <div><dt>1 day</dt><dd>health scores mean something</dd></div>
+        <div><dt>3 days</dt><dd>regression attribution reaches high confidence &mdash; it needs
+          previous days to compare against</dd></div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="eyebrow">Status</div>
+    <div class="track">
+      <h2>What is not proven yet</h2>
+      <p>Everything above runs and is covered by 99 tests. But it has been validated against a
+        FiveM simulator &mdash; a virtual-time server reproducing cooperative threading and
+        main-thread stalls, which the collector runs inside completely unmodified &mdash; and
+        <strong>not yet against a live server</strong>.</p>
+      <p>That is exactly why it is free and why the collector is MIT: seven files of
+        dependency-free Lua you can read before putting anything on your server. Please read it.
+        And if it blames the wrong resource, that is the most useful bug report you can
+        send &mdash; it is real-world data the simulator cannot give.</p>
+    </div>
+  </div>
+
+  <footer>
+    <span>Pulse v0.1.0</span>
+    <span>Collector MIT &middot; backend source-available</span>
+    <a href="https://github.com/">GitHub</a>
+  </footer>
+</div>
