@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.1.0 — unreleased
+## v0.1.0 — 2026-09-04
 
 First release. Collector, backend, dashboard and alerting.
 
