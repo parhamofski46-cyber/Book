@@ -31,10 +31,15 @@ printf 'registered a server, token %s...\n' "$(printf '%s' "$TOKEN" | cut -c1-8)
 
 lua5.4 sim/live.lua "http://127.0.0.1:$PORT/v1/ingest" "$TOKEN" "${MINUTES:-30}"
 
-STORED=$(curl -s -H "authorization: Bearer verify-admin" \
-  "http://127.0.0.1:$PORT/v1/servers/1/series?range=24h" | grep -o '"count":[0-9]*' | cut -d: -f2)
-printf 'backend has %s windows from the collector\n' "${STORED:-0}"
-[ "${STORED:-0}" -gt 0 ] || { echo "FAILED: the backend stored nothing"; exit 1; }
+# Half an hour of data inside a 24-hour window is served hourly, by design --
+# so this reports points and their resolution rather than calling them windows.
+# What was actually stored is asserted by live.lua, from the ingest replies.
+SERIES=$(curl -s -H "authorization: Bearer verify-admin" \
+  "http://127.0.0.1:$PORT/v1/servers/1/series?range=24h")
+POINTS=$(printf '%s' "$SERIES" | grep -o '"count":[0-9]*' | cut -d: -f2)
+RESOLUTION=$(printf '%s' "$SERIES" | grep -o '"resolution":"[a-z]*"' | cut -d'"' -f4)
+printf 'backend serves %s points at %s resolution\n' "${POINTS:-0}" "${RESOLUTION:-unknown}"
+[ "${POINTS:-0}" -gt 0 ] || { echo "FAILED: the backend has nothing to serve"; exit 1; }
 
 curl -s -o /dev/null -w 'dashboard: HTTP %{http_code}\n' \
   -H "authorization: Bearer verify-admin" "http://127.0.0.1:$PORT/s/1"
