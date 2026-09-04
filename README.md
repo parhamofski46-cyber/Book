@@ -92,53 +92,43 @@ costs samples, never server memory.
 
 ## Run it
 
-**Backend** (one command; SQLite, one file on disk, no database server):
+```sh
+git clone https://github.com/YOUR-GITHUB pulse && cd pulse
+sh install.sh
+```
+
+`install.sh` starts the backend, asks what your server is called, and prints
+the block to paste into `server.cfg`. It uses Docker where it finds it and Node
+otherwise. Nothing is installed on your game server by it.
+
+Doing it by hand is three commands:
 
 ```sh
-echo "PULSE_ADMIN_TOKEN=$(openssl rand -hex 16)" > .env
-docker compose up -d
+docker compose up -d                              # or: cd backend && node src/main.js
+node backend/scripts/add-server.js "My RP Server"
 ```
 
-Or without Docker: `cd backend && PULSE_ADMIN_TOKEN=... node src/main.js`.
-
-The dashboard is **not public**. Server ids are small integers, so an open
-dashboard would let anyone read every server's telemetry by counting upwards.
-Open it with the admin token to see every server, or with a server's own
-collector token to see just that one:
+The second prints a ready-to-paste config block with the endpoint and token
+already filled in. Then copy `collector/` into your resources as
+`pulse_collector`, paste the block, restart, and run `pulse test` in the server
+console:
 
 ```
-http://localhost:8787/?token=<admin or collector token>
+[pulse] endpoint : http://your-backend:8787/v1/ingest
+[pulse] token    : pls_a1b2...
+[pulse] sending a test batch...
+[pulse] PASS (HTTP 200, 41ms)
+[pulse] OK. The backend accepted this server's token.
 ```
 
-The token is moved into an HttpOnly cookie and the address is cleaned, so it
-stops appearing in history and referrers — but only once it has been checked,
-so a link cannot pin a stranger's chosen identity into your browser. An empty
-`?token=` signs out. The cookie is marked `Secure` automatically when
-`PULSE_PUBLIC_URL` is https (or set `PULSE_COOKIE_SECURE=1`). Self-hosting behind a private network
-or an authenticating proxy? `PULSE_OPEN_DASHBOARD=1` drops the check — reading
-only; ingest always requires a real token.
+If it fails, that second line names the thing to change &mdash; a rejected
+token, a wrong path, or a backend nothing can reach are three different
+messages, not one generic error.
 
-Issue a token for a server:
-
-```sh
-curl -X POST localhost:8787/v1/admin/servers \
-  -H "authorization: Bearer $PULSE_ADMIN_TOKEN" \
-  -H 'content-type: application/json' \
-  -d '{"name":"my-rp","plan":"team","discordWebhook":"https://discord.com/api/webhooks/..."}'
-```
-
-**Collector** — drop `collector/` into your resources as `pulse_collector`:
-
-```cfg
-ensure pulse_collector
-
-set pulse_endpoint    "http://your-backend:8787/v1/ingest"
-set pulse_token       "pls_...."
-set pulse_server_name "my-rp"
-```
-
-Every setting in `collector/config.lua` has a convar, so tuning survives an
-update. `/pulse` in the server console prints agent status.
+An admin token is generated on first run and kept beside the database, so
+there is no chicken-and-egg between "the admin API needs a token" and "the
+token comes from the admin API". Set `PULSE_ADMIN_TOKEN` to choose your own, or
+`PULSE_NO_ADMIN=1` to keep the endpoint shut.
 
 ## Plans
 
@@ -162,7 +152,7 @@ makes it sharper.
 ## Development
 
 ```sh
-make test      # 99 tests: 24 collector (Lua), 75 backend (Node)
+make test      # 117 tests: 32 collector (Lua), 85 backend (Node)
 make report    # headline numbers from a simulated day
 make check     # syntax-check everything that ships
 make run       # start the backend locally

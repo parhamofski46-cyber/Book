@@ -90,29 +90,34 @@ Measured over a simulated day: **0.0084% of one core**, against a 0.05% budget.
 
 ## Install
 
-Collector — drop into your resources as `pulse_collector`:
-
-```cfg
-ensure pulse_collector
-
-set pulse_endpoint    "http://your-backend:8787/v1/ingest"
-set pulse_token       "pls_..."
-set pulse_server_name "my-rp"
-```
-
-Backend — one container, SQLite, one file on disk, no database server:
-
 ```sh
-echo "PULSE_ADMIN_TOKEN=$(openssl rand -hex 16)" > .env
-docker compose up -d
+git clone https://github.com/YOUR-GITHUB pulse && cd pulse
+sh install.sh
 ```
 
-Every setting has a convar, so tuning survives an update. `/pulse` in the
-server console prints agent status.
+That starts the backend and prints the block to paste into `server.cfg` — with
+the endpoint and token already filled in. Copy `collector/` into your resources
+as `pulse_collector`, paste, restart, then in the console:
+
+```
+pulse test
+```
+
+```
+[pulse] PASS (HTTP 200, 41ms)
+[pulse] OK. The backend accepted this server's token.
+```
+
+If it fails, that second line names the thing to change. A rejected token, a
+wrong path and a backend nothing can reach are three different messages, not
+one generic error.
+
+Backend is one container and one SQLite file — no database server. Every
+collector setting has a convar, so tuning survives an update.
 
 ## Honest status
 
-**v0.1.** Everything above runs and is covered by 99 tests, but it has been
+**v0.1.** Everything above runs and is covered by 117 tests, but it has been
 validated against a FiveM simulator, not yet against a live server. The
 simulator reproduces cooperative threading and main-thread stalls, and the
 collector runs inside it completely unmodified — but that is still a

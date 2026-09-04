@@ -1,6 +1,8 @@
 // Configuration, entirely from the environment so the same image runs as a
 // hosted service and as somebody's self-hosted container.
 
+import { fileURLToPath } from 'node:url';
+
 /**
  * Plan limits. Retention is the product: a free tier that keeps a week is
  * genuinely useful for "what happened last night", and useless for "we got
@@ -15,6 +17,13 @@ export const PLANS = {
   team: { rawDays: 90, hourlyDays: 400, maxServers: 25, alerts: true,  fleet: true  },
 };
 
+// The database has to resolve to the same file whether the server was started
+// from the backend directory or a script was run from the repository root.
+// Relative to the process's working directory, those are two different
+// databases -- and the failure is silent: registering a server writes one file
+// while the running backend reads another.
+const DEFAULT_DB = fileURLToPath(new URL('../data/pulse.db', import.meta.url));
+
 const num = (key, fallback) => {
   const v = process.env[key];
   const n = v === undefined ? NaN : Number(v);
@@ -26,7 +35,7 @@ export function loadConfig(env = process.env) {
   return {
     port: num('PULSE_PORT', 8787),
     host: env.PULSE_HOST || '0.0.0.0',
-    dbPath: env.PULSE_DB || './data/pulse.db',
+    dbPath: env.PULSE_DB || DEFAULT_DB,
     // Guards the provisioning endpoints. Without one set, they are refused
     // outright rather than left open.
     adminToken: env.PULSE_ADMIN_TOKEN || '',

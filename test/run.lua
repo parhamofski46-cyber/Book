@@ -2,7 +2,7 @@
 local T = dofile('test/harness.lua')
 local run = dofile('sim/run.lua')
 
-for _, spec in ipairs({ 'spec_manifest', 'spec_buffer', 'spec_hitch', 'spec_shipper', 'spec_detection' }) do
+for _, spec in ipairs({ 'spec_manifest', 'spec_buffer', 'spec_hitch', 'spec_shipper', 'spec_diagnostics', 'spec_detection' }) do
   dofile('test/' .. spec .. '.lua')(T, run)
 end
 

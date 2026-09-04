@@ -61,4 +61,23 @@ function Shipper:flush(nowMs, agentInfo)
   return true
 end
 
+-- A single empty batch, sent now, purely to find out whether the endpoint and
+-- the token are right. An operator whose telemetry is not arriving otherwise
+-- has to guess between a wrong URL, a wrong token, a closed port and a backend
+-- that is not running -- and every one of those looks identical from here.
+function Shipper:ping(cb)
+  local started = GetGameTimer()
+  PerformHttpRequest(self.cfg.endpoint, function(status, body)
+    cb(status, GetGameTimer() - started, body)
+  end, 'POST', json.encode({
+    server = { name = self.cfg.serverName },
+    agent = { version = Pulse.VERSION, probe = true },
+    samples = {},
+  }), {
+    ['Content-Type'] = 'application/json',
+    ['Authorization'] = 'Bearer ' .. (self.cfg.token or ''),
+    ['X-Pulse-Agent'] = Pulse.VERSION,
+  })
+end
+
 Pulse.Shipper = Shipper

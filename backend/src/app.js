@@ -193,7 +193,11 @@ export function createApp({ store, config, clock = nowS, fetchImpl = fetch, logg
     // cannot be enumerated by watching which ones give a different error.
     if (!server || !mayRead(reader, id)) return denied(res);
     return sendHtml(res, 200,
-      serverDetailPage(store, server, { now: clock(), rangeKey: req.query?.get('range') ?? '24h' }), CSP);
+      serverDetailPage(store, server, {
+        now: clock(),
+        rangeKey: req.query?.get('range') ?? '24h',
+        publicUrl: config.publicUrl,
+      }), CSP);
   });
 
   async function handleRequest(req, res) {

@@ -5,6 +5,9 @@ FROM node:22-alpine
 WORKDIR /app
 COPY package.json ./
 COPY src ./src
+# add-server.js is part of the install path, not a development extra: without
+# it, registering a server inside the container is impossible.
+COPY scripts ./scripts
 
 RUN mkdir -p /data && chown -R node:node /data /app
 USER node

@@ -24,10 +24,21 @@ answer; silence is not.
 does not block this release — the free version needs no payment rail — but it
 blocks every version after it.
 
-Then replace `YOUR-GITHUB` everywhere:
+Then replace the placeholders everywhere — the landing page carries them too,
+so one pass catches all of it:
 
 ```sh
 grep -rl 'YOUR-GITHUB' README.md release/ | xargs sed -i 's|YOUR-GITHUB|<owner>/<repo>|g'
+# once the forum thread exists:
+grep -rl 'YOUR-THREAD' release/ | xargs sed -i 's|forum.cfx.re/YOUR-THREAD|<thread url>|g'
+node release/build-landing.js   # rebuild the page with the real links
+```
+
+Before any of it, run the checks:
+
+```sh
+make test     # 117 tests
+make verify   # the real collector against a real backend, over real HTTP
 ```
 
 ## Publishing
@@ -42,6 +53,11 @@ git push origin v0.1.0
 Create a GitHub release from the tag with `CHANGELOG.md` as the body, and
 attach a zip of `collector/` so people who only want the resource do not have
 to clone the repository.
+
+**5b. Try the install yourself, on a clean machine.** Clone the published
+repository into a fresh directory and run `sh install.sh` exactly as a stranger
+would. Everything in the post depends on that working the first time, and you
+only get one first impression per person.
 
 **6. Post to the Cfx forum.** `forum.cfx.re` → Releases → Server Resources.
 The body is `release/forum-post.md`; the forum takes Markdown. Drag the

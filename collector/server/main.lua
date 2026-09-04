@@ -104,6 +104,45 @@ function Pulse.status()
   }
 end
 
+-- Turns an HTTP result into the one sentence that tells the operator what to
+-- change. Kept separate from the command so the test suite can check every
+-- branch without a network.
+function Pulse.diagnose(status)
+  if status >= 200 and status < 300 then
+    return true, 'OK. The backend accepted this server\'s token.'
+  elseif status == 401 or status == 403 then
+    return false, 'The backend rejected the token. Check pulse_token matches the one you were given.'
+  elseif status == 404 then
+    return false, 'Reached a server, but not the ingest endpoint. pulse_endpoint should end with /v1/ingest.'
+  elseif status == 429 then
+    return true, 'Rate limited, which means the backend is up and the token works. Nothing to fix.'
+  elseif status >= 500 then
+    return false, 'The backend is reachable but returned an error. Check its logs.'
+  elseif status == 0 then
+    return false, 'Could not reach the backend at all. Check the URL and port, that the backend is running, and that this machine can reach it.'
+  end
+  return false, ('Unexpected response (%d).'):format(status)
+end
+
+function Pulse.selfTest(print_)
+  print_ = print_ or print
+  print_(('[pulse] endpoint : %s'):format(cfg.endpoint))
+  print_(('[pulse] token    : %s'):format(
+    cfg.token == '' and '(not set)' or (cfg.token:sub(1, 8) .. '...')))
+
+  if cfg.token == '' then
+    print_('[pulse] FAILED: pulse_token is not set. Run add-server.js on the backend to get one.')
+    return
+  end
+
+  print_('[pulse] sending a test batch...')
+  shipper:ping(function(status, ms)
+    local ok, message = Pulse.diagnose(status)
+    print_(('[pulse] %s (HTTP %d, %dms)'):format(ok and 'PASS' or 'FAILED', status, ms))
+    print_('[pulse] ' .. message)
+  end)
+end
+
 function Pulse.start()
   Pulse.state.startedAt = GetGameTimer()
   inventory:poll(Pulse.state.startedAt)
@@ -120,11 +159,22 @@ function Pulse.start()
   CreateThread(inventoryLoop)
   CreateThread(flushLoop)
 
-  RegisterCommand('pulse', function()
+  RegisterCommand('pulse', function(_, args)
+    if args[1] == 'test' then return Pulse.selfTest() end
+
     local s = Pulse.status()
-    print(('[pulse] v%s  windows=%d  buffered=%d  dropped=%d  sent=%d  cpu=%.4f%%%s')
-      :format(s.version, s.windows, s.buffered, s.dropped, s.samplesSent,
-              s.cpuRatio * 100, s.degraded and '  DEGRADED' or ''))
+    print(('[pulse] v%s  cpu %.4f%% of one core%s')
+      :format(s.version, s.cpuRatio * 100, s.degraded and '  DEGRADED' or ''))
+    print(('[pulse] %d windows recorded, %d sent, %d queued, %d dropped')
+      :format(s.windows, s.samplesSent, s.buffered, s.dropped))
+    if s.lastStatus == nil then
+      print('[pulse] nothing sent yet. Run "pulse test" to check the connection.')
+    elseif s.failures > 0 then
+      local _, why = Pulse.diagnose(s.lastStatus)
+      print(('[pulse] last send failed (HTTP %d): %s'):format(s.lastStatus, why))
+    else
+      print(('[pulse] last send OK (HTTP %d)'):format(s.lastStatus))
+    end
   end, true)
 end
 

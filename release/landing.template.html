@@ -164,8 +164,8 @@ footer{border-top:1px solid var(--line-soft);padding:34px 0 0;
           so the question has an answer.</p>
 
         <div class="cta">
-          <a class="btn primary" href="https://github.com/">Get it on GitHub</a>
-          <a class="btn ghost" href="https://forum.cfx.re/">Cfx forum thread</a>
+          <a class="btn primary" href="https://github.com/YOUR-GITHUB">Get it on GitHub</a>
+          <a class="btn ghost" href="https://forum.cfx.re/YOUR-THREAD">Cfx forum thread</a>
           <span class="cta-note">MIT collector &middot; self-hosted backend</span>
         </div>
       </div>
@@ -297,19 +297,19 @@ footer{border-top:1px solid var(--line-soft);padding:34px 0 0;
     <div class="eyebrow">Install</div>
     <div class="track">
       <h2>Two pieces</h2>
-      <p>The backend stores and analyses. The collector is a resource on your server. One
-        container, SQLite, one file on disk &mdash; there is no database server to run.</p>
-<pre><span class="c"># backend</span>
-echo "PULSE_ADMIN_TOKEN=$(openssl rand -hex 16)" &gt; .env
-docker compose up -d</pre>
-<pre><span class="c"># server.cfg</span>
-<span class="k">ensure</span> pulse_collector
+      <p>The backend stores and analyses; the collector is a resource on your server. One
+        container, SQLite, one file on disk &mdash; there is no database server to run. The
+        install script prints a config block with your endpoint and token already in it.</p>
+<pre><span class="c"># starts the backend, then prints what to paste into server.cfg</span>
+sh install.sh</pre>
+<pre><span class="c"># then, in the FiveM server console</span>
+pulse test
 
-<span class="k">set</span> pulse_endpoint    "http://your-backend:8787/v1/ingest"
-<span class="k">set</span> pulse_token       "pls_..."
-<span class="k">set</span> pulse_server_name "my-rp"</pre>
-      <p>Every setting has a convar, so tuning survives an update. <code>/pulse</code> in the
-        server console prints agent status.</p>
+[pulse] PASS (HTTP 200, 41ms)
+[pulse] OK. The backend accepted this server's token.</pre>
+      <p>If that check fails, the last line names the thing to change. A rejected token, a wrong
+        path, and a backend nothing can reach are three different messages, not one generic
+        error. Every collector setting has a convar, so tuning survives an update.</p>
 
       <dl class="dl" style="margin-top:26px">
         <div><dt>15 minutes</dt><dd>the timeline starts to say something</dd></div>
@@ -324,7 +324,7 @@ docker compose up -d</pre>
     <div class="eyebrow">Status</div>
     <div class="track">
       <h2>What is not proven yet</h2>
-      <p>Everything above runs and is covered by 99 tests. But it has been validated against a
+      <p>Everything above runs and is covered by 117 tests. But it has been validated against a
         FiveM simulator &mdash; a virtual-time server reproducing cooperative threading and
         main-thread stalls, which the collector runs inside completely unmodified &mdash; and
         <strong>not yet against a live server</strong>.</p>
@@ -338,6 +338,6 @@ docker compose up -d</pre>
   <footer>
     <span>Pulse v0.1.0</span>
     <span>Collector MIT &middot; backend source-available</span>
-    <a href="https://github.com/">GitHub</a>
+    <a href="https://github.com/YOUR-GITHUB">GitHub</a>
   </footer>
 </div>

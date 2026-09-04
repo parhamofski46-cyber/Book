@@ -1,6 +1,6 @@
 FIXTURES := backend/test/fixtures/threeday.jsonl
 
-.PHONY: test test-collector test-backend fixtures report check run clean release
+.PHONY: test test-collector test-backend fixtures report check run clean release verify
 
 test: test-collector test-backend
 
@@ -23,6 +23,12 @@ $(FIXTURES): sim/*.lua collector/config.lua collector/server/*.lua
 
 report:
 	@lua5.4 test/report.lua
+
+# The one check that puts Lua, HTTP and Node in the same sentence: starts a
+# clean backend, registers a server, and has the real collector report into it
+# over the network. Slower than the suite, so it is its own target.
+verify:
+	@sh scripts/verify-live.sh
 
 # Syntax-check everything that ships to someone else's server.
 check:

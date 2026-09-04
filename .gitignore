@@ -8,3 +8,5 @@ backend/test/fixtures/
 .DS_Store
 # built by release/build-landing.js from the template plus the screenshots
 release/landing.html
+# generated on first run, kept beside the database
+admin-token

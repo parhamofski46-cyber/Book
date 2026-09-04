@@ -1,81 +1,110 @@
 # Installing Pulse
 
-Two pieces: the **backend** (stores and analyses) and the **collector** (a
-resource on your FiveM server). Set up the backend first — the collector needs
-a token from it.
+Two pieces: the **backend**, which stores and analyses, and the **collector**,
+a resource on your FiveM server. Ten minutes, and the backend tells you exactly
+what to paste.
 
-## 1. Backend
-
-Anywhere that can run Docker and that your game server can reach over HTTP. A
-€5/month VPS is more than enough; the storage is a single SQLite file.
+## The short version
 
 ```sh
 git clone https://github.com/YOUR-GITHUB pulse && cd pulse
-echo "PULSE_ADMIN_TOKEN=$(openssl rand -hex 16)" > .env
+sh install.sh
+```
+
+That starts the backend, asks what your server is called, and prints a config
+block. Copy `collector/` into your resources as `pulse_collector`, paste the
+block into `server.cfg`, restart, and run `pulse test` in the console.
+
+Everything below is the same thing, done by hand.
+
+---
+
+## 1. Backend
+
+Anywhere your game server can reach over HTTP. A €5/month VPS is plenty — the
+storage is a single SQLite file and there is no database server to run.
+
+```sh
 docker compose up -d
 ```
 
-Without Docker (Node 22.5 or newer, no dependencies to install):
+Or with Node 22.5+ and nothing to install:
 
 ```sh
-cd backend
-PULSE_ADMIN_TOKEN=your-secret PULSE_DB=./data/pulse.db node src/main.js
+cd backend && node --no-warnings src/main.js
 ```
 
-Check it is up:
+Check it:
 
 ```sh
 curl localhost:8787/healthz
 ```
+
+An admin token is generated on first run and saved next to the database as
+`admin-token`, readable only by its owner. Set `PULSE_ADMIN_TOKEN` if you would
+rather choose it, or `PULSE_NO_ADMIN=1` to keep the admin endpoint shut.
 
 ### Settings
 
 | Variable | Default | What it does |
 |---|---|---|
 | `PULSE_PORT` | `8787` | Listen port |
-| `PULSE_DB` | `./data/pulse.db` | Database file |
-| `PULSE_ADMIN_TOKEN` | *(unset)* | Required to issue collector tokens. Unset means the admin API is **off**, not open. |
+| `PULSE_DB` | `backend/data/pulse.db` | Database file |
+| `PULSE_ADMIN_TOKEN` | *generated* | Issues collector tokens |
+| `PULSE_NO_ADMIN` | — | `1` shuts the admin API |
 | `PULSE_DEFAULT_PLAN` | `team` | Retention for new servers |
-| `PULSE_PUBLIC_URL` | *(unset)* | Used in Discord links; https here also marks cookies `Secure` |
-| `PULSE_OPEN_DASHBOARD` | *(unset)* | `1` removes dashboard authentication. Only behind a private network or an authenticating proxy. |
+| `PULSE_PUBLIC_URL` | — | Used in Discord links and printed config; https here also marks cookies `Secure` |
+| `PULSE_OPEN_DASHBOARD` | — | `1` removes dashboard authentication. Only behind a private network or an authenticating proxy. |
 
 ## 2. Register your server
 
 ```sh
-curl -X POST localhost:8787/v1/admin/servers \
-  -H "authorization: Bearer $PULSE_ADMIN_TOKEN" \
-  -H 'content-type: application/json' \
-  -d '{"name":"my-rp","plan":"team","discordWebhook":"https://discord.com/api/webhooks/..."}'
+node backend/scripts/add-server.js "My RP Server"
 ```
 
-You get back a token beginning `pls_`. **It is shown once** — only its hash is
-stored, so it cannot be read back. Lose it and you issue a new one.
+Options: `--plan free|pro|team`, `--webhook <discord url>`, `--endpoint <url>`
+if the backend is reachable at something other than localhost.
 
-The `discordWebhook` is optional; without it alerts are recorded but not sent.
+It prints the block to paste, the dashboard link, and the admin link. **The
+token is shown once** — only its hash is stored, so it cannot be read back.
+Lose it and you register the server again.
 
 ## 3. Collector
 
 Copy the `collector/` directory into your resources folder as
-`pulse_collector`, then in `server.cfg`:
+`pulse_collector`, paste the printed block into `server.cfg`, and restart.
 
-```cfg
-ensure pulse_collector
+## 4. Check it
 
-set pulse_endpoint    "http://your-backend:8787/v1/ingest"
-set pulse_token       "pls_..."
-set pulse_server_name "my-rp"
-```
-
-Restart, then run `pulse` in the server console:
+In the server console:
 
 ```
-[pulse] v0.1.0  windows=8  buffered=0  dropped=0  sent=16  cpu=0.0081%
+pulse test
 ```
 
-`sent` climbing means telemetry is arriving. `dropped` climbing means the
-backend is unreachable — check `pulse_endpoint` and the token.
+```
+[pulse] endpoint : http://your-backend:8787/v1/ingest
+[pulse] token    : pls_a1b2...
+[pulse] sending a test batch...
+[pulse] PASS (HTTP 200, 41ms)
+[pulse] OK. The backend accepted this server's token.
+```
 
-## 4. Open the dashboard
+If it fails, the last line names the thing to change:
+
+| What you see | What it means |
+|---|---|
+| `rejected the token` | `pulse_token` does not match the one you were given |
+| `not the ingest endpoint` | `pulse_endpoint` must end with `/v1/ingest` |
+| `Could not reach the backend` | Wrong host or port, backend not running, or a firewall |
+| `returned an error` | Backend is up but unhappy — check its logs |
+
+`pulse` on its own prints running status: windows recorded, sent, queued,
+dropped, and the collector's own CPU cost.
+
+## 5. Open the dashboard
+
+The link is printed by step 2. Or:
 
 ```
 http://your-backend:8787/?token=<admin token or that server's collector token>
@@ -85,14 +114,21 @@ The token moves into a cookie and drops out of the address. The admin token
 shows every server; a collector token shows only its own. An empty `?token=`
 signs out.
 
-Give it about fifteen minutes before the timeline says much, a full day before
-health means anything, and **three days before regression attribution reaches
-high confidence** — it needs previous days to compare against.
+Until data arrives, the server's page shows the setup block instead of an empty
+chart, so a half-finished install tells you it is half-finished.
+
+## What to expect, and when
+
+| | |
+|---|---|
+| 15 minutes | the timeline starts to say something |
+| 1 day | health scores mean something |
+| 3 days | regression attribution reaches high confidence — it needs previous days to compare against |
 
 ## Tuning the collector
 
-Every value in `collector/config.lua` has a convar, so your changes survive an
-update. The ones worth knowing:
+Every value in `collector/config.lua` has a convar, so changes survive an
+update.
 
 | Convar | Default | Effect |
 |---|---|---|
@@ -104,12 +140,9 @@ update. The ones worth knowing:
 
 ## If something is wrong
 
-**`dropped` is climbing** — the backend is unreachable, or the token is wrong.
-The collector keeps working and keeps the newest samples; it never grows into
-your server's memory.
-
-**The dashboard says "no data"** — check `pulse` in the console. If `sent` is 0
-and `buffered` is climbing, it is a network or token problem.
+**`dropped` climbing in `pulse`** — the backend is unreachable or the token is
+wrong. Run `pulse test`. The collector keeps working and keeps the newest
+samples; it never grows into your server's memory.
 
 **`DEGRADED` in the `pulse` output** — the collector exceeded its CPU budget
 and halved its own sampling rate. Report it; that should not happen.
