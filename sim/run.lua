@@ -30,6 +30,7 @@ function M.build(opts)
   local sched = Scheduler.new()
   local world = Workload.new(sched, opts)
   world.convars = opts.convars or {}
+  world.resourceFiles = opts.resourceFiles or {}
   Natives.install(sched, world)
 
   -- The collector keeps its state in a global, as a FiveM resource must.

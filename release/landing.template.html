@@ -300,8 +300,11 @@ footer{border-top:1px solid var(--line-soft);padding:34px 0 0;
       <p>The backend stores and analyses; the collector is a resource on your server. One
         container, SQLite, one file on disk &mdash; there is no database server to run. The
         install script prints a config block with your endpoint and token already in it.</p>
-<pre><span class="c"># starts the backend, then prints what to paste into server.cfg</span>
+<pre><span class="c"># starts the backend, then prints a download link</span>
 sh install.sh</pre>
+<pre><span class="c"># server.cfg -- the whole install, because the download</span>
+<span class="c"># already carries your endpoint and token</span>
+<span class="k">ensure</span> pulse_collector</pre>
 <pre><span class="c"># then, in the FiveM server console</span>
 pulse test
 
@@ -324,7 +327,7 @@ pulse test
     <div class="eyebrow">Status</div>
     <div class="track">
       <h2>What is not proven yet</h2>
-      <p>Everything above runs and is covered by 117 tests. But it has been validated against a
+      <p>Everything above runs and is covered by 133 tests. But it has been validated against a
         FiveM simulator &mdash; a virtual-time server reproducing cooperative threading and
         main-thread stalls, which the collector runs inside completely unmodified &mdash; and
         <strong>not yet against a live server</strong>.</p>

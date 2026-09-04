@@ -50,24 +50,29 @@ const created = store.createServer({
 const base = (flag('endpoint') || config.publicUrl || `http://127.0.0.1:${config.port}`).replace(/\/$/, '');
 const admin = resolveAdminToken(config, { quiet: true });
 
-const line = '─'.repeat(64);
+const line = '─'.repeat(68);
 console.log(`
 Registered "${name}" (id ${created.id}, plan ${plan}).
 
 ${line}
-Paste this into server.cfg, then restart the server:
+  Download the ready-made collector -- endpoint and token already in it:
+
+  ${base}/s/${created.id}/collector.zip?token=${created.token}
+
+  Unzip into your resources folder, add one line to server.cfg:
+
+      ensure pulse_collector
+
+  Restart, then run "pulse test" in the server console.
 ${line}
 
-ensure pulse_collector
+Dashboard:  ${base}/s/${created.id}?token=${created.token}
 
-set pulse_endpoint    "${base}/v1/ingest"
-set pulse_token       "${created.token}"
-set pulse_server_name "${name}"
+If you would rather configure it by hand instead of using the download:
 
-${line}
-
-Then in the server console:   pulse test
-Dashboard:                    ${base}/s/${created.id}?token=${created.token}
+    set pulse_endpoint    "${base}/v1/ingest"
+    set pulse_token       "${created.token}"
+    set pulse_server_name "${name}"
 `);
 
 if (admin) console.log(`Every server at once: ${base}/?token=${admin}\n`);

@@ -41,6 +41,12 @@ function Natives.install(sched, world)
   os.time = function() return world.baseWallS + (sched.now // 1000) end
 
   G.GetCurrentResourceName = function() return 'pulse_collector' end
+
+  -- Files sitting in the resource folder. The backend ships a settings.json
+  -- inside the download so an install is one line in server.cfg.
+  G.LoadResourceFile = function(resource, file)
+    return (world.resourceFiles or {})[file]
+  end
   G.GetNumResources = function() return #world.resources end
 
   -- FiveM indexes resources from zero.

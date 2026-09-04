@@ -9,6 +9,7 @@ import { healthScore } from './analysis/health.js';
 import { fleetComparison } from './analysis/fleet.js';
 import { evaluateAlerts } from './alerts/rules.js';
 import { dispatchAlerts } from './alerts/discord.js';
+import { bundleCollector } from './collector-bundle.js';
 import { nowS, newToken } from './db/store.js';
 import { planFor, PLANS } from './config.js';
 
@@ -183,6 +184,43 @@ export function createApp({ store, config, clock = nowS, fetchImpl = fetch, logg
     return sendHtml(res, 200, serverListPage(store, { now: clock() }), CSP);
   });
 
+  /**
+   * The collector, packaged with this server's settings already in it.
+   *
+   * The token can only be baked in when the *collector token itself* is what
+   * authenticated the request: the database keeps a hash, so the backend
+   * genuinely cannot recover it otherwise. That is the right trade -- it means
+   * a stolen admin token still does not yield anyone's collector tokens -- and
+   * it costs nothing, because the download link add-server.js prints already
+   * carries that token.
+   */
+  router.get('/s/:id/collector.zip', (req, res) => {
+    const id = Number(req.params.id);
+    const reader = readerFor(req);
+    const server = store.getServer(id);
+    if (!server || !mayRead(reader, id)) return denied(res);
+
+    const token = reader.via === 'server' ? tokenFrom(req) : '';
+    const endpoint = `${config.publicUrl || `http://127.0.0.1:${config.port}`}/v1/ingest`;
+
+    let zip;
+    try {
+      zip = bundleCollector({ endpoint, token, serverName: server.name });
+    } catch (err) {
+      return sendJson(res, err.status ?? 500, { error: err.message });
+    }
+
+    res.writeHead(200, {
+      'content-type': 'application/zip',
+      'content-length': zip.length,
+      'content-disposition': `attachment; filename="pulse_collector-${id}.zip"`,
+      // It contains a token: never cached, never stored by a proxy.
+      'cache-control': 'no-store, private',
+      'x-content-type-options': 'nosniff',
+    });
+    res.end(zip);
+  });
+
   router.get('/s/:id', (req, res) => {
     const id = Number(req.params.id);
     if (stashToken(req, res, `/s/${id}`)) return;
@@ -197,6 +235,7 @@ export function createApp({ store, config, clock = nowS, fetchImpl = fetch, logg
         now: clock(),
         rangeKey: req.query?.get('range') ?? '24h',
         publicUrl: config.publicUrl,
+        canBundle: reader.via === 'server',
       }), CSP);
   });
 

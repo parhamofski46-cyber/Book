@@ -1,5 +1,5 @@
 Pulse backend
-Copyright (c) 2026 the Pulse authors
+Copyright (c) 2026 Mohammadparham Palangsangdovini <parhamofski46@gmail.com>
 
 Licensed under the Elastic License 2.0. The full text is in the LICENSE file
 beside this one, reproduced verbatim from
@@ -12,7 +12,3 @@ purpose. You may not offer it to third parties as a hosted or managed service.
 The collector, at /collector in this repository, is MIT instead. That is
 deliberate: it runs on other people's machines, so it has to be readable and
 freely usable or nobody will install it.
-
-BEFORE PUBLISHING: replace "the Pulse authors" in this file, in LICENSE at the
-repository root, and in collector/LICENSE with your own legal name or company.
-A copyright line naming nobody in particular is weak.

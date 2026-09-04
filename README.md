@@ -108,10 +108,15 @@ docker compose up -d                              # or: cd backend && node src/m
 node backend/scripts/add-server.js "My RP Server"
 ```
 
-The second prints a ready-to-paste config block with the endpoint and token
-already filled in. Then copy `collector/` into your resources as
-`pulse_collector`, paste the block, restart, and run `pulse test` in the server
-console:
+The second prints a **download link for a collector that is already configured**
+— the endpoint and token are inside it. Unzip that into your resources folder,
+add one line to `server.cfg`:
+
+```cfg
+ensure pulse_collector
+```
+
+Restart, then run `pulse test` in the server console:
 
 ```
 [pulse] endpoint : http://your-backend:8787/v1/ingest
@@ -152,7 +157,7 @@ makes it sharper.
 ## Development
 
 ```sh
-make test      # 117 tests: 32 collector (Lua), 85 backend (Node)
+make test      # 133 tests: 37 collector (Lua), 96 backend (Node)
 make report    # headline numbers from a simulated day
 make check     # syntax-check everything that ships
 make run       # start the backend locally

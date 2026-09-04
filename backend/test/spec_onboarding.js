@@ -166,3 +166,124 @@ export async function versionSuite() {
     });
   });
 }
+
+// Appended: the one-click download.
+export async function bundleSuite() {
+  const { execFileSync } = await import('node:child_process');
+  const { writeFileSync, mkdtempSync, rmSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os');
+  const { join } = await import('node:path');
+  const { bundleCollector, makeZip } = await import('../src/collector-bundle.js');
+  const { createApp } = await import('../src/app.js');
+
+  await suite('one-click: the download is a real archive', async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'pulse-zip-'));
+    const path = join(dir, 'c.zip');
+    writeFileSync(path, bundleCollector({
+      endpoint: 'https://box:8787/v1/ingest', token: 'pls_bundled', serverName: 'zip-rp',
+    }));
+
+    await test('a real unzip accepts it', async () => {
+      // Hand-written zip headers are exactly the sort of thing that looks fine
+      // in a unit test and fails on the operator's machine.
+      const out = execFileSync('unzip', ['-t', path], { encoding: 'utf8' });
+      contains(out, 'No errors detected', 'the archive is well formed');
+    });
+
+    await test('it extracts as the folder FiveM expects', async () => {
+      const listing = execFileSync('unzip', ['-Z1', path], { encoding: 'utf8' });
+      contains(listing, 'pulse_collector/fxmanifest.lua', 'the manifest is in place');
+      contains(listing, 'pulse_collector/server/main.lua', 'and the server scripts');
+      contains(listing, 'pulse_collector/LICENSE', 'with its licence');
+      contains(listing, 'pulse_collector/INSTALL.txt', 'and instructions');
+    });
+
+    await test('the settings inside are this server’s', async () => {
+      const settings = JSON.parse(
+        execFileSync('unzip', ['-p', path, 'pulse_collector/settings.json'], { encoding: 'utf8' }));
+      eq(settings.endpoint, 'https://box:8787/v1/ingest');
+      eq(settings.token, 'pls_bundled');
+      eq(settings.server_name, 'zip-rp');
+    });
+
+    await test('nothing beyond the three bundled settings is written into it', async () => {
+      const settings = JSON.parse(
+        execFileSync('unzip', ['-p', path, 'pulse_collector/settings.json'], { encoding: 'utf8' }));
+      eq(Object.keys(settings).sort().join(','), 'endpoint,server_name,token',
+        'tuning stays in convars, where a re-download will not overwrite it');
+    });
+
+    await test('an empty archive is still a valid archive', async () => {
+      const empty = join(dir, 'empty.zip');
+      writeFileSync(empty, makeZip([]));
+      // unzip exits non-zero for an archive with no entries even though it
+      // parsed the thing perfectly well, so the output is what to read here,
+      // not the exit code.
+      let out;
+      try {
+        out = execFileSync('unzip', ['-t', empty], { encoding: 'utf8' });
+      } catch (err) {
+        out = `${err.stdout ?? ''}${err.stderr ?? ''}`;
+      }
+      contains(out, 'Archive:', 'unzip read the archive');
+      ok(/empty/i.test(out), 'and found it well formed with no entries in it');
+    });
+
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  await suite('one-click: who may download it', async () => {
+    const store = openStore(':memory:');
+    const config = { ...loadConfig({}), adminToken: 'admin-secret', publicUrl: 'https://pulse.test' };
+    const app = createApp({ store, config });
+    const listening = await app.listen(0, '127.0.0.1');
+    const base = `http://127.0.0.1:${listening.address().port}`;
+    const a = store.createServer({ name: 'alpha', plan: 'team' });
+    const b = store.createServer({ name: 'beta', plan: 'team' });
+
+    const settingsFrom = async (res) => {
+      const { mkdtempSync, writeFileSync, rmSync } = await import('node:fs');
+      const dir = mkdtempSync(join(tmpdir(), 'pulse-dl-'));
+      const path = join(dir, 'd.zip');
+      writeFileSync(path, Buffer.from(await res.arrayBuffer()));
+      const out = execFileSync('unzip', ['-p', path, 'pulse_collector/settings.json'], { encoding: 'utf8' });
+      rmSync(dir, { recursive: true, force: true });
+      return JSON.parse(out);
+    };
+
+    await test('a stranger gets nothing', async () => {
+      eq((await fetch(`${base}/s/${a.id}/collector.zip`, { redirect: 'manual' })).status, 401);
+    });
+
+    await test("another server's token gets nothing", async () => {
+      const res = await fetch(`${base}/s/${a.id}/collector.zip`,
+        { headers: { authorization: `Bearer ${b.token}` }, redirect: 'manual' });
+      eq(res.status, 401, 'a download is as protected as the dashboard');
+    });
+
+    await test("the server's own token gets it, configured", async () => {
+      const res = await fetch(`${base}/s/${a.id}/collector.zip?token=${a.token}`);
+      eq(res.status, 200);
+      eq(res.headers.get('content-type'), 'application/zip');
+      contains(res.headers.get('content-disposition'), 'attachment', 'downloads rather than renders');
+      contains(res.headers.get('cache-control'), 'no-store', 'it carries a secret, so nothing caches it');
+
+      const settings = await settingsFrom(res);
+      eq(settings.token, a.token, 'the token is baked in');
+      eq(settings.endpoint, 'https://pulse.test/v1/ingest', 'pointed at this backend');
+      eq(settings.server_name, 'alpha');
+    });
+
+    await test('the admin token cannot bake in a secret it does not hold', async () => {
+      // Only a hash is stored, so this is not a limitation to work around: a
+      // stolen admin token must not yield every server's collector token.
+      const res = await fetch(`${base}/s/${a.id}/collector.zip`,
+        { headers: { authorization: 'Bearer admin-secret' } });
+      eq(res.status, 200, 'still served');
+      eq((await settingsFrom(res)).token, '', 'but with no token in it');
+    });
+
+    listening.close();
+    store.close();
+  });
+}

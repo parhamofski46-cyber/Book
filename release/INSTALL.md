@@ -11,9 +11,10 @@ git clone https://github.com/YOUR-GITHUB pulse && cd pulse
 sh install.sh
 ```
 
-That starts the backend, asks what your server is called, and prints a config
-block. Copy `collector/` into your resources as `pulse_collector`, paste the
-block into `server.cfg`, restart, and run `pulse test` in the console.
+That starts the backend, asks what your server is called, and prints a
+**download link for a collector that already has your endpoint and token in
+it**. Unzip it into your resources folder, add `ensure pulse_collector` to
+`server.cfg`, restart, and run `pulse test` in the console.
 
 Everything below is the same thing, done by hand.
 
@@ -71,8 +72,17 @@ Lose it and you register the server again.
 
 ## 3. Collector
 
-Copy the `collector/` directory into your resources folder as
-`pulse_collector`, paste the printed block into `server.cfg`, and restart.
+Open the download link step 2 printed. It gives you a `pulse_collector` folder
+with a `settings.json` already holding this server's endpoint and token — there
+is nothing to copy by hand.
+
+1. Unzip it into your resources folder
+2. Add one line to `server.cfg`: `ensure pulse_collector`
+3. Restart
+
+`settings.json` contains the server's token, so keep it as private as the rest
+of your config. Any convar you set overrides the bundled value, so
+`set pulse_endpoint "..."` still wins and survives a re-download.
 
 ## 4. Check it
 

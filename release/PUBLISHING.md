@@ -10,19 +10,11 @@ code.
 `Book`, which tells a visitor nothing. Create `pulse-fivem` (or similar) and
 push there. The repository name is the first thing anyone reads.
 
-**2. Put your name on the copyright.** The licences are in place: MIT at the
-repository root and in `collector/`, the official Elastic License 2.0 text
-verbatim in `backend/LICENSE`. What is still a placeholder is who owns it:
-
-```sh
-grep -rl 'the Pulse authors' LICENSE NOTICE collector/ backend/NOTICE \
-  | xargs sed -i 's|the Pulse authors|<your legal name or company>|g'
-```
-
-A copyright line naming nobody in particular is weak. None of this has been
-reviewed by a lawyer — the texts are the standard published ones, but if real
-money ends up depending on the hosted-service restriction, have someone look at
-it.
+**2. The licences are done.** MIT at the repository root and in `collector/`,
+the official Elastic License 2.0 text verbatim in `backend/LICENSE`, both
+copyrighted to Mohammadparham Palangsangdovini. None of it has been reviewed by
+a lawyer — the texts are the standard published ones, but if real money ends up
+depending on the hosted-service restriction, have someone look at it.
 
 **3. Decide where the hosted backend will live**, even if the answer is "not
 yet". People will ask on the thread. "Self-host today, hosted later" is a fine

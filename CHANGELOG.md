@@ -29,8 +29,12 @@ First release. Collector, backend, dashboard and alerting.
   forbidden server answers identically to a missing one
 
 **Getting it running**
-- `install.sh` brings the backend up and prints the block to paste into
-  `server.cfg`, with the endpoint and token already filled in
+- The backend packages a **pre-configured collector**: a download whose
+  `settings.json` already holds that server's endpoint and token, so installing
+  is one line in `server.cfg` rather than three convars copied by hand. The
+  token is only baked in when the server's own token authenticated the
+  download — only a hash is stored, so an admin token cannot produce one.
+- `install.sh` brings the backend up and prints that download link
 - `add-server.js` registers a server from the command line, replacing a curl
   incantation with a bearer header
 - An admin token is generated and kept beside the database on first run, so
@@ -43,7 +47,7 @@ First release. Collector, backend, dashboard and alerting.
   instead of an empty chart
 
 **Testing**
-- 117 tests: 32 collector (Lua), 85 backend (Node)
+- 133 tests: 37 collector (Lua), 96 backend (Node)
 - A virtual-time FiveM simulator the collector runs inside **unmodified**
 - End-to-end suite replays the bytes the collector really shipped, against the
   ground truth of every injected fault

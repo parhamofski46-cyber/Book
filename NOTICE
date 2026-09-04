@@ -1,5 +1,5 @@
 Pulse
-Copyright (c) 2026 the Pulse authors
+Copyright (c) 2026 Mohammadparham Palangsangdovini <parhamofski46@gmail.com>
 
 Two licences, on purpose:
 
@@ -14,5 +14,4 @@ Two licences, on purpose:
   everything else (sim/, test/, scripts/, release/)
                 MIT (see LICENSE at the repository root)
 
-BEFORE PUBLISHING: replace "the Pulse authors" everywhere it appears with your
-own legal name or company.
+Contact: parhamofski46@gmail.com

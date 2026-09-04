@@ -144,30 +144,45 @@ function regressionRows(store, serverId, now) {
  * something is not connected. So the empty state is the setup instructions,
  * with the endpoint already filled in.
  */
-function waitingForCollector(server, publicUrl) {
+function waitingForCollector(server, publicUrl, canBundle) {
   const endpoint = `${publicUrl || 'http://your-backend:8787'}/v1/ingest`;
+  // With the server's own token in hand the download comes pre-configured, so
+  // the install is one line. Viewed with the admin token it cannot be, because
+  // only a hash of the collector token is stored.
+  const step2 = canBundle
+    ? `<li>Add one line to <code>server.cfg</code>:
+<pre style="margin:8px 0">ensure pulse_collector</pre>
+        That is all &mdash; the endpoint and token are already inside the download.</li>`
+    : `<li>Add this to <code>server.cfg</code>:
+<pre style="margin:8px 0">ensure pulse_collector
+
+set pulse_endpoint    "${esc(endpoint)}"
+set pulse_token       "the token you were given"
+set pulse_server_name "${esc(server.name)}"</pre></li>`;
+
   return `
     <div class="card">
       <h3 style="margin:0 0 6px;font-size:15px">Waiting for ${esc(server.name)} to report</h3>
       <p class="n" style="color:var(--ink-2);margin:0 0 14px">
         Nothing has arrived yet. This page fills in within a minute of the collector starting.</p>
+      ${canBundle ? `<p style="margin:0 0 16px">
+        <a class="dl-btn" href="/s/${server.id}/collector.zip">Download the configured collector</a>
+        <span style="color:var(--muted);font-size:12px;margin-left:10px">
+          contains this server's token &mdash; keep it private</span></p>` : ''}
       <ol style="margin:0;padding-left:20px;color:var(--ink-2);font-size:13.5px;line-height:1.9">
-        <li>Copy the <code>collector/</code> folder into your resources as <code>pulse_collector</code></li>
-        <li>Add this to <code>server.cfg</code>:
-<pre style="margin:8px 0">ensure pulse_collector
-
-set pulse_endpoint    "${esc(endpoint)}"
-set pulse_token       "the token you were given"
-set pulse_server_name "${esc(server.name)}"</pre></li>
+        <li>Unzip it into your resources folder${canBundle ? '' :
+          ' as <code>pulse_collector</code>'}</li>
+        ${step2}
         <li>Restart the server, then run <code>pulse test</code> in its console</li>
       </ol>
       <p class="n" style="color:var(--ink-2);margin:14px 0 0">
-        <code>pulse test</code> says in one line whether the endpoint and token are right.
+        <code>pulse test</code> says in one line whether the endpoint and token are right.${
+        canBundle ? '' : ' Open this page with the server\'s own token to get a pre-configured download instead.'}
         Lost the token? Register the server again &mdash; only its hash is stored.</p>
     </div>`;
 }
 
-export function serverDetailPage(store, server, { now, rangeKey = '24h', publicUrl = '' }) {
+export function serverDetailPage(store, server, { now, rangeKey = '24h', publicUrl = '', canBundle = false }) {
   const range = rangeFor(rangeKey);
   const from = now - range.seconds;
   const { rows, resolution } = seriesForRange(store, server.id, from, now + 1);
@@ -223,9 +238,10 @@ export function serverDetailPage(store, server, { now, rangeKey = '24h', publicU
     <p class="sub">Plan <b>${esc(server.plan)}</b> &middot; ${plan.rawDays}d full detail, ${plan.hourlyDays}d hourly
       &middot; agent ${esc(server.agent_version ?? 'unknown')}
       &middot; last seen ${esc(server.last_seen_s ? fmtAgo(now - server.last_seen_s) : 'never')}</p>
-    <p class="sub">Range: ${nav}${resolution === 'hourly' ? ' &middot; <b>hourly resolution</b> (raw windows aged out)' : ''}</p>
+    <p class="sub">Range: ${nav}${resolution === 'hourly' ? ' &middot; <b>hourly resolution</b> (raw windows aged out)' : ''}${
+      canBundle ? ` &middot; <a href="/s/${server.id}/collector.zip">download collector</a>` : ''}</p>
 
-    ${neverSeen ? waitingForCollector(server, publicUrl) : `<div class="tiles">${tiles}</div>`}
+    ${neverSeen ? waitingForCollector(server, publicUrl, canBundle) : `<div class="tiles">${tiles}</div>`}
 
     <h2>Timeline</h2>
     ${timelineChart({ samples: rows, changes, flagged, from, to: now })}

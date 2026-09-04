@@ -95,9 +95,15 @@ git clone https://github.com/YOUR-GITHUB pulse && cd pulse
 sh install.sh
 ```
 
-That starts the backend and prints the block to paste into `server.cfg` — with
-the endpoint and token already filled in. Copy `collector/` into your resources
-as `pulse_collector`, paste, restart, then in the console:
+That starts the backend and prints a download link for a collector that already
+has your endpoint and token inside it. Unzip into your resources, add one line
+to `server.cfg`:
+
+```cfg
+ensure pulse_collector
+```
+
+Restart, then in the console:
 
 ```
 pulse test
@@ -117,7 +123,7 @@ collector setting has a convar, so tuning survives an update.
 
 ## Honest status
 
-**v0.1.** Everything above runs and is covered by 117 tests, but it has been
+**v0.1.** Everything above runs and is covered by 133 tests, but it has been
 validated against a FiveM simulator, not yet against a live server. The
 simulator reproduces cooperative threading and main-thread stalls, and the
 collector runs inside it completely unmodified — but that is still a

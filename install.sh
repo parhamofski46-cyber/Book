@@ -62,6 +62,6 @@ read -r NAME || NAME=""
 
 $RUNNER --no-warnings "$ADD_SERVER" "$NAME"
 
-say "Last step: copy the collector/ folder into your FiveM resources"
-say "as 'pulse_collector', paste the block above into server.cfg, restart,"
+say "Last step: open the download link above, unzip it into your FiveM"
+say "resources folder, add 'ensure pulse_collector' to server.cfg, restart,"
 say "then run 'pulse test' in the server console."

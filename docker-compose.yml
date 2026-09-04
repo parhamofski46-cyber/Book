@@ -5,7 +5,11 @@
 # be able to keep their own telemetry without taking on an operations project.
 services:
   pulse:
-    build: ./backend
+    build:
+      # The whole repository, so the image can carry the collector sources it
+      # packages into each server's pre-configured download.
+      context: .
+      dockerfile: backend/Dockerfile
     restart: unless-stopped
     ports:
       - "8787:8787"
