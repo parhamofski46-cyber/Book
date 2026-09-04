@@ -1,0 +1,29 @@
+Pulse backend -- source available, all rights reserved.
+
+Copyright (c) 2026 the Pulse authors.
+
+You may read this source, run it to host your own Pulse instance for your own
+servers, and modify it for that purpose.
+
+You may not offer this software, modified or not, to third parties as a hosted
+or managed service.
+
+No warranty of any kind is given.
+
+---
+
+NOTE FOR THE PROJECT OWNER
+
+This is a deliberately plain statement of intent, not a standard licence, and it
+has not been reviewed by a lawyer. The collector under /collector is MIT on
+purpose -- it runs on other people's servers and must be readable and freely
+usable, or nobody will install it. The backend is what a hosted service would be
+sold as, so it should not be MIT.
+
+Before publishing, replace this file with the official text of whichever
+standard form you choose. The usual choices for exactly this situation are:
+
+  - Business Source License 1.1 (converts to an open licence after a set period)
+  - Elastic License 2.0 (shorter; forbids offering the software as a service)
+
+Both are published texts that should be copied verbatim rather than paraphrased.

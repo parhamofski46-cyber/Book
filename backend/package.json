@@ -1,0 +1,11 @@
+{
+  "name": "pulse-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.5.0" },
+  "scripts": {
+    "start": "node --no-warnings src/main.js",
+    "test": "node --no-warnings test/run.js"
+  }
+}

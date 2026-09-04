@@ -2,11 +2,20 @@
 
 `resmon` only ever shows you *now*. When a server hitched at 21:04 with 180
 players on, or got slower after last Tuesday's update, there is nothing to look
-at. Pulse records main-thread health continuously so those questions have
-answers.
+at. Pulse records main-thread health continuously, and then answers the question
+that actually matters: **what changed?**
 
-**Status: v0.1 — collector and test harness.** The ingest service and dashboard
-are not written yet. What is here runs, is measured, and is covered by tests.
+It is two halves.
+
+| | | Licence |
+|---|---|---|
+| **`collector/`** | A FiveM resource. Measures the server and ships it. | MIT |
+| **`backend/`** | Stores it, finds regressions, draws the dashboard, alerts Discord. | Source-available |
+
+The collector is MIT because it runs on other people's machines: an operator who
+cannot read it should not install it. Everything in it is plain Lua with no
+dependencies. The backend is standard-library Node — no framework, no ORM, no
+build step, no `node_modules` at all.
 
 ## What it measures, and what it cannot
 
@@ -17,95 +26,182 @@ excess is time no resource could use. A thread that asks for 50ms and wakes at
 
 Two honest limits, stated up front:
 
-- **There is no server native that gives per-resource CPU time.** Any tool that
-  claims a server-side CPU breakdown by resource is inferring it. Pulse measures
-  total stall time exactly and attributes it by correlating stalls against
-  resource restarts over time — which is why history is the product.
-- **Stall timing is accurate to one probe interval** (50ms by default). Reported
-  stall time is a lower bound.
+- **There is no server native that gives per-resource CPU time.** Any tool
+  claiming a server-side CPU breakdown by resource is inferring it. Pulse
+  measures total stall time exactly and attributes it by correlating stalls
+  against resource restarts over time — which is why history *is* the product.
+- **Stall timing is accurate to one probe interval** (50ms by default), so
+  reported stall time is a lower bound.
 
-Alongside stalls it records player count, resource inventory, and every resource
-start/stop — from both the lifecycle event (exact timing) and a reconciling poll
-(so neither path is load-bearing alone).
+## Finding the resource that caused a slowdown
 
-## It polices its own cost
+This is the part with real difficulty in it, and the part nothing else does.
 
-A performance monitor that costs performance is worse than none: the operator
-cannot separate your overhead from the fault they installed you to find. Pulse
-measures its own CPU with `os.clock()`, ships that number in every payload, and
-halves its own sampling rate if it ever exceeds its budget.
+The naive approach — compare the hour before a restart with the hour after —
+fails immediately, because **population is a confounder**. A roleplay server is
+genuinely worse at 21:00 than at 09:00 because five times as many players are on
+it. Any restart during the evening climb looks guilty.
 
-The buffer is a fixed-size ring. When the backend is unreachable, old samples
-are dropped and counted — the agent never grows into the server's memory.
+So Pulse never compares aggregates:
 
-## Measured over a simulated day
+1. **Same hours, previous days.** The baseline for "the three hours after this
+   restart" is the same three clock hours on the days before it. Population
+   follows the clock, so like is compared with like.
+2. **Matched population within that.** Samples are bucketed by player count and
+   only buckets present on both sides are compared, each weighted by the smaller
+   side's evidence.
+3. **A local step is also required.** An unfixed regression poisons tomorrow's
+   baseline, so every restart on the following nights looks guilty against
+   yesterday. Requiring a step *at the change itself* is what keeps the nightly
+   restart cycle out of the results.
+4. **Confidence reflects evidence, not effect size.** A huge jump seen in one
+   population bucket is weaker than a moderate one seen across five, and the
+   dashboard says which.
 
-A 200-resource server, 24 hours, replayed in 13.5 seconds:
+The result reads: *`qb-inventory` restarted at 12:00; stall time per window went
+10ms to 98ms at comparable player counts (high confidence, day-over-day).*
+
+## Measured, not asserted
+
+The test suite does not check that the pieces agree with each other. It runs the
+real collector inside a simulated FiveM server, injects faults whose cause and
+timing are known, replays the bytes the collector actually shipped through the
+real ingest path, and asserts the product recovers the truth.
+
+Over three simulated days of a 200-resource server with a seeded bad update:
 
 | | |
 |---|---|
-| Probe samples taken | 1,728,000 |
-| Stall time recovered | **100%** of injected (332.8s of 333.3s) |
-| Regression signal | 14.2 hitches/h → **99.2/h** after the seeded bad update |
+| Stall time recovered by the collector | **100%** of injected |
 | Collector CPU cost | **0.0084%** of one core (budget: 0.05%) |
-| Samples lost to backpressure | 0 |
+| Regression signal | 14.2 hitches/h → **99.2/h** after the seeded update |
+| Resources the backend named | **`qb-inventory`, and only that** — high confidence |
+| False positives on the nightly restart cycle | **0** |
+| Verdict on one day of history instead of three | still found, **confidence lowered** |
 
-Reproduce with `make report`.
+Reproduce with `make test` and `make report`.
 
-## The simulator
+## The collector polices its own cost
 
-There is no FiveM server in this repository's test loop, so `sim/` provides one:
-a virtual-time scheduler that reproduces cooperative threading and main-thread
-stalls, plus a 200-resource workload with a daily population curve, scheduled
-restarts, and a seeded regression at 12:00.
+A performance monitor that costs performance is worse than none: the operator
+cannot separate your overhead from the fault they installed you to find. So the
+collector measures its own CPU with `os.clock()`, ships that number in every
+payload, shows it on the dashboard, and halves its own sampling rate if it ever
+exceeds its budget. Its send queue is a fixed-size ring — an unreachable backend
+costs samples, never server memory.
 
-The collector runs there **completely unmodified** — `sim/natives.lua` installs
-the same globals FiveM does, and files load in the order `fxmanifest.lua`
-declares (a test asserts the two lists stay in step).
+## Run it
 
-The point is that the workload knows ground truth. It records every fault it
-injected, and the suite asserts the collector recovers them. Anything reported
-that was not injected is a false positive, and that is a failing test.
+**Backend** (one command; SQLite, one file on disk, no database server):
 
-## Install on a server
+```sh
+echo "PULSE_ADMIN_TOKEN=$(openssl rand -hex 16)" > .env
+docker compose up -d
+```
+
+Or without Docker: `cd backend && PULSE_ADMIN_TOKEN=... node src/main.js`.
+
+The dashboard is **not public**. Server ids are small integers, so an open
+dashboard would let anyone read every server's telemetry by counting upwards.
+Open it with the admin token to see every server, or with a server's own
+collector token to see just that one:
+
+```
+http://localhost:8787/?token=<admin or collector token>
+```
+
+The token is moved into an HttpOnly cookie and the address is cleaned, so it
+stops appearing in history and referrers. Self-hosting behind a private network
+or an authenticating proxy? `PULSE_OPEN_DASHBOARD=1` drops the check — reading
+only; ingest always requires a real token.
+
+Issue a token for a server:
+
+```sh
+curl -X POST localhost:8787/v1/admin/servers \
+  -H "authorization: Bearer $PULSE_ADMIN_TOKEN" \
+  -H 'content-type: application/json' \
+  -d '{"name":"my-rp","plan":"team","discordWebhook":"https://discord.com/api/webhooks/..."}'
+```
+
+**Collector** — drop `collector/` into your resources as `pulse_collector`:
 
 ```cfg
 ensure pulse_collector
 
-set pulse_endpoint "https://your-backend/v1/ingest"
-set pulse_token    "your-server-token"
-set pulse_server_name "my-rp-server"
+set pulse_endpoint    "http://your-backend:8787/v1/ingest"
+set pulse_token       "pls_...."
+set pulse_server_name "my-rp"
 ```
 
-Every setting in `collector/config.lua` has a convar, so tuning survives updates.
-`/pulse` in the server console prints agent status.
+Every setting in `collector/config.lua` has a convar, so tuning survives an
+update. `/pulse` in the server console prints agent status.
+
+## Plans
+
+Retention is the product. A week is genuinely useful for "what happened last
+night" and useless for "we got slower after last month's update".
+
+| | Raw windows | Hourly | Servers | Alerts | Fleet |
+|---|---|---|---|---|---|
+| free | 7d | 30d | 1 | — | — |
+| pro | 30d | 400d | 3 | yes | yes |
+| team | 90d | 400d | 25 | yes | yes |
+
+Self-hosters default to `team`. Raw windows are folded into hourly buckets
+before they are pruned, so the long view survives cheaply.
+
+**Fleet comparison** — where a server sits among comparable servers — is the one
+feature a competitor cannot obtain by copying the code, because it comes from
+many servers reporting rather than from the implementation. Every free install
+makes it sharper.
 
 ## Development
 
 ```sh
-make test     # full suite, ~30s
-make report   # headline numbers from a simulated day
+make test      # 89 tests: 24 collector (Lua), 65 backend (Node)
+make report    # headline numbers from a simulated day
+make check     # syntax-check everything that ships
+make run       # start the backend locally
 ```
 
-Requires `lua5.4`. No other dependencies — deliberately, so the collector stays
-something an operator can read end to end before trusting it on their server.
+Requires `lua5.4` and Node 22.5+. Nothing else — no package manager step in
+either half.
+
+`sim/` is a virtual-time FiveM: cooperative threading, main-thread stalls, and a
+200-resource workload with a daily population curve, scheduled restarts, and a
+seeded regression. The collector runs there **completely unmodified**, loaded in
+the order `fxmanifest.lua` declares — a test asserts those two lists stay in
+step. Test fixtures are generated from it rather than committed, because a
+deterministic simulator is a better source of truth than a file someone typed.
 
 ## Layout
 
 ```
-collector/     the FiveM resource — this is the product
-  config.lua       convar-backed settings
+collector/            the FiveM resource (MIT)
+  config.lua            convar-backed settings
   server/
-    budget.lua     self-instrumentation and automatic degradation
-    buffer.lua     bounded ring buffer
-    hitch.lua      main-thread stall detection
-    inventory.lua  resource inventory and state changes
-    shipper.lua    batching, backoff, delivery
-    main.lua       wiring and sampling loops
-sim/           simulated FiveM server (test-time only, never shipped)
-test/          suite and reporting
+    budget.lua          self-instrumentation and automatic degradation
+    buffer.lua          bounded ring buffer
+    hitch.lua           main-thread stall detection
+    inventory.lua       resource inventory and restart tracking
+    shipper.lua         batching, backoff, delivery
+    main.lua            wiring and sampling loops
+backend/              the service (source-available)
+  src/
+    db/                 schema, migrations, data access
+    http/               router, ingest, dashboard pages
+    analysis/           stratified comparison, regressions, health, fleet
+    alerts/             rules and Discord delivery
+    ui/                 design tokens and server-rendered SVG charts
+sim/                  simulated FiveM server (test-time only, never shipped)
+test/                 collector suite
+backend/test/         backend suite, including the end-to-end replay
 ```
 
-## License
+## Status
 
-MIT — see LICENSE.
+v0.1. Everything described here runs and is covered by tests — but it has been
+validated against the simulator, not yet against a live server. The simulator was
+built conservatively, and the collector is designed to fail quietly rather than
+badly, but that remains the one assumption still to be proved in the field.

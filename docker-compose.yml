@@ -1,0 +1,21 @@
+# Self-hosting, in one command:  docker compose up -d
+#
+# One container and one file on disk. There is no database server to run, no
+# broker, and no external dependency -- which is the point: an operator should
+# be able to keep their own telemetry without taking on an operations project.
+services:
+  pulse:
+    build: ./backend
+    restart: unless-stopped
+    ports:
+      - "8787:8787"
+    volumes:
+      - pulse-data:/data
+    environment:
+      # Required to enable the admin API that issues collector tokens.
+      PULSE_ADMIN_TOKEN: "${PULSE_ADMIN_TOKEN:?set PULSE_ADMIN_TOKEN in your .env}"
+      # Self-hosters are not on a plan; keep everything.
+      PULSE_DEFAULT_PLAN: "team"
+
+volumes:
+  pulse-data:

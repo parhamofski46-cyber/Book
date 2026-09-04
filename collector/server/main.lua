@@ -51,6 +51,11 @@ local function windowLoop()
     local c0 = os.clock()
 
     local sample = hitch:summary(now, GetNumPlayerIndices())
+    -- GetGameTimer() restarts from zero with the server, so it cannot carry a
+    -- history. Stamp wall-clock seconds as well: the backend needs a monotonic
+    -- axis that survives restarts, and samples buffered through an outage must
+    -- land at the time they were taken, not the time they were finally sent.
+    sample.wall = os.time()
     sample.resources = inventory:count()
     local changes = inventory:drainChanges()
     if #changes > 0 then sample.resourceChanges = changes end

@@ -58,6 +58,9 @@ function Workload.new(sched, opts)
     sched = sched,
     rand = lcg(opts.seed or 20260903),
     resources = buildResources(),
+    -- Fixed epoch (2026-09-01T00:00:00Z) so dumped fixtures are byte-stable.
+    baseWallS = opts.baseWallS or 1788220800,
+    degradeAtHour = opts.degradeAtHour,
     minPlayers = opts.minPlayers or 18,
     maxPlayers = opts.maxPlayers or 190,
     http = { delivered = {}, attempts = 0, failUntilMs = 0, latencyMs = 40 },
@@ -124,11 +127,16 @@ function Workload:plan(hours, degrade)
     self:restartResource(base + 6 * MS_PER_HOUR + 60000, 'qb-houses', 'scheduled')
   end
 
-  -- The scenario that sells the product: at 12:00 an operator updates
-  -- qb-inventory, and from then on it stalls the main thread every ~45s.
-  -- Nothing in the server console says so; resmon only shows "now".
-  if degrade and hours > 13 then
-    local updateAt = 12 * MS_PER_HOUR
+  -- The scenario that sells the product: an operator updates qb-inventory at
+  -- midday and from then on it stalls the main thread every ~45s. Nothing in
+  -- the server console says so; resmon only shows "now".
+  --
+  -- On runs long enough to hold more than a day, the update lands on the
+  -- second day, leaving clean history before it -- which is what a
+  -- day-over-day comparison needs, and what a real server would have.
+  local updateHour = self.degradeAtHour or (hours >= 48 and 36 or 12)
+  if degrade and hours > updateHour + 1 then
+    local updateAt = updateHour * MS_PER_HOUR
     self:restartResource(updateAt, 'qb-inventory', 'update')
     local s = updateAt + 60000
     while s < totalMs do

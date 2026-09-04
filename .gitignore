@@ -1,2 +1,8 @@
+node_modules/
+backend/data/
+backend/test/fixtures/
+*.db
+*.db-wal
+*.db-shm
 *.out
 .DS_Store

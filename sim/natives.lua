@@ -32,6 +32,14 @@ function Natives.install(sched, world)
   -- makes stall detection possible.
   G.GetGameTimer = function() return sched.now end
 
+  -- os.time() must advance with virtual time, not the host's clock. The
+  -- collector stamps every sample with it, and the backend builds its entire
+  -- timeline on those stamps: left unshimmed, a simulated day arrives as
+  -- thousands of samples all claiming the same second.
+  -- os.clock() is deliberately NOT shimmed -- the collector's self-measurement
+  -- has to remain real CPU time.
+  os.time = function() return world.baseWallS + (sched.now // 1000) end
+
   G.GetCurrentResourceName = function() return 'pulse_collector' end
   G.GetNumResources = function() return #world.resources end
 

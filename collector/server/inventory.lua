@@ -29,7 +29,7 @@ end
 
 -- Emitted by the FiveM resource lifecycle events; authoritative on timing.
 function Inventory:onEvent(kind, name, nowMs)
-  self:record({ at = nowMs, resource = name, change = kind, source = 'event' })
+  self:record({ at = nowMs, wall = os.time(), resource = name, change = kind, source = 'event' })
 end
 
 -- Periodic reconciliation; catches whatever the events did not.
@@ -39,14 +39,14 @@ function Inventory:poll(nowMs)
     for name, state in pairs(current) do
       local was = self.known[name]
       if was == nil then
-        self:record({ at = nowMs, resource = name, change = 'added', source = 'poll' })
+        self:record({ at = nowMs, wall = os.time(), resource = name, change = 'added', source = 'poll' })
       elseif was ~= state then
-        self:record({ at = nowMs, resource = name, change = state, from = was, source = 'poll' })
+        self:record({ at = nowMs, wall = os.time(), resource = name, change = state, from = was, source = 'poll' })
       end
     end
     for name in pairs(self.known) do
       if current[name] == nil then
-        self:record({ at = nowMs, resource = name, change = 'removed', source = 'poll' })
+        self:record({ at = nowMs, wall = os.time(), resource = name, change = 'removed', source = 'poll' })
       end
     end
   end

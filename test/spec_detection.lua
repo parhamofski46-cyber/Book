@@ -96,6 +96,10 @@ return function(T, run)
         T.ok(s.at and s.at > 0, 'timestamped')
         T.ok(s.samples and s.samples > 0, 'window has probe samples')
         T.ok(s.players ~= nil, 'population recorded alongside')
+        -- Without a wall clock the backend cannot build a timeline that
+        -- survives a server restart, nor place samples that were buffered
+        -- through an outage.
+        T.ok(s.wall and s.wall > 1600000000, 'carries wall-clock seconds')
       end
     end)
   end)
