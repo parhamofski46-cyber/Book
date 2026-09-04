@@ -172,7 +172,7 @@ echo "   پنل مدیریت:  https://$DOMAIN/admin"
 if [ -n "${ADMIN_USERNAME:-}" ] && [ -n "${ADMIN_PASSWORD:-}" ]; then
   echo "   کاربر مدیر:   $ADMIN_USERNAME (رمزی که خودتان دادید)"
 else
-  echo "   کاربر پیش‌فرض: admin / foolad1234"
+  echo "   کاربر پیش‌فرض: admin — رمزش تصادفی ساخته و در لاگ اولین اجرا چاپ می‌شود"
   echo "   ⚠️  در اولین ورود، سایت رمز را از شما عوض می‌کند."
   echo "   یا همین حالا: npm run set-admin -- <نام‌کاربری> <رمز>"
 fi

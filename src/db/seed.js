@@ -1,6 +1,7 @@
 'use strict';
 
 require('dotenv').config();
+const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const { db, setSetting, getSetting } = require('./index');
 const { slugify, uniqueSlug, toFaDigits } = require('../utils/slug');
@@ -973,12 +974,34 @@ function seedCatalog() {
 
 // ------------------------------------------------- کاربر پیش‌فرض پنل
 
+/**
+ * رمز اولیه‌ی تصادفی برای اولین اجرا.
+ *
+ * از الفبایی استفاده می‌شود که کاراکترهای اشتباه‌گرفتنی در آن نیست
+ * (0/O و 1/l/I حذف شده‌اند) چون مالک این رمز را از روی لاگ سرور
+ * می‌خواند و دستی تایپ می‌کند.
+ * `randomInt` به‌جای `Math.random` — این رمز نگهبان کل پنل است و
+ * `Math.random` برای کار رمزنگاری ساخته نشده.
+ */
+function randomPassword(len = 14) {
+  const abc = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let out = '';
+  for (let i = 0; i < len; i += 1) out += abc[crypto.randomInt(abc.length)];
+  return out;
+}
+
 function seedAdmin() {
   const exists = db.prepare('SELECT COUNT(*) n FROM admins').get().n;
   if (exists > 0) return null;
 
   const username = process.env.ADMIN_USERNAME || 'admin';
-  const password = process.env.ADMIN_PASSWORD || 'foolad1234';
+  // ⚠️ رمز پیش‌فرض **تصادفی** است، نه یک مقدار ثابت. قبلاً `foolad1234` بود و
+  // چون مخزن عمومی است، همین یک خط کل پنل را در دسترس هرکسی می‌گذاشت که
+  // مخزن را می‌خواند: کافی بود کپچا را (که جمع ساده است) با چشم حل کند،
+  // با رمز پیش‌فرض وارد شود و در همان صفحه‌ی «تغییر اجباری رمز» رمز خودش را
+  // بگذارد — یعنی تصاحب کامل. این سناریو دقیقاً تست و تأیید شد.
+  // حالا حتی با در دست داشتن کل سورس، حدس‌زدنی نیست.
+  const password = process.env.ADMIN_PASSWORD || randomPassword();
   const mustChange = process.env.ADMIN_PASSWORD ? 0 : 1;
 
   db.prepare('INSERT INTO admins (username, password_hash, must_change) VALUES (?, ?, ?)').run(
