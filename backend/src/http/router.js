@@ -10,6 +10,15 @@ export function createRouter() {
 
   const compile = (pattern) => pattern.split('/').filter(Boolean);
 
+  // "/s/%" is a syntactically valid URL whose path decodes to nothing. Left
+  // alone, decodeURIComponent throws from inside routing -- before any handler
+  // exists to catch it -- and an unauthenticated one-line request takes the
+  // process down with it. A segment that will not decode simply stays as it is
+  // and matches no route.
+  const decode = (segment) => {
+    try { return decodeURIComponent(segment); } catch { return segment; }
+  };
+
   return {
     add(method, pattern, handler) {
       routes.push({ method, segments: compile(pattern), handler });
@@ -26,7 +35,7 @@ export function createRouter() {
         let ok = true;
         for (let i = 0; i < route.segments.length; i++) {
           const seg = route.segments[i];
-          if (seg.startsWith(':')) params[seg.slice(1)] = decodeURIComponent(parts[i]);
+          if (seg.startsWith(':')) params[seg.slice(1)] = decode(parts[i]);
           else if (seg !== parts[i]) { ok = false; break; }
         }
         if (ok) return { handler: route.handler, params };

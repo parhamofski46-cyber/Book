@@ -54,12 +54,6 @@ export function createApp({ store, config, clock = nowS, fetchImpl = fetch, logg
     return true;
   };
 
-  const resolveServer = (params, res) => {
-    const server = store.getServer(Number(params.id));
-    if (!server) { sendJson(res, 404, { error: 'no such server' }); return null; }
-    return server;
-  };
-
   /**
    * Who is asking, and what may they see.
    *
@@ -73,25 +67,46 @@ export function createApp({ store, config, clock = nowS, fetchImpl = fetch, logg
    */
   const tokenFrom = (req) => bearer(req) || req.query?.get('token') || cookie(req, 'pulse_token');
 
-  const readerFor = (req) => {
-    if (config.openDashboard) return { admin: true, via: 'open' };
-    const token = tokenFrom(req);
+  const readerFromToken = (token) => {
     if (!token) return null;
     if (config.adminToken && token === config.adminToken) return { admin: true, via: 'admin' };
     const server = store.findServerByToken(token);
     return server ? { admin: false, serverId: server.id, via: 'server' } : null;
   };
 
+  const readerFor = (req) => {
+    if (config.openDashboard) return { admin: true, via: 'open' };
+    return readerFromToken(tokenFrom(req));
+  };
+
   const mayRead = (reader, serverId) => Boolean(reader && (reader.admin || reader.serverId === serverId));
 
-  // Promote a token supplied in the URL to an HttpOnly cookie and send the
-  // reader on to a clean address, so it stops appearing in history, in
-  // referrers, and in whatever they paste into a support channel.
+  const cookieAttrs = `Path=/; HttpOnly; SameSite=Lax${config.cookieSecure ? '; Secure' : ''}`;
+
+  /**
+   * Promote a token supplied in the URL to an HttpOnly cookie and send the
+   * reader on to a clean address, so the secret stops appearing in history, in
+   * referrers, and in whatever they paste into a support channel.
+   *
+   * Only a token that actually names a reader is remembered. An unvalidated
+   * stash would let anyone who can get a link clicked pin an identity of their
+   * choosing into the victim's browser for a month: the victim would see the
+   * attacker's server instead of their own, be refused their real ones, and
+   * have no way to clear a cookie their own scripts cannot touch. Since the
+   * README teaches operators to share `?token=` links, that link is entirely
+   * plausible, and SameSite=Lax does not stop a top-level navigation.
+   */
   const stashToken = (req, res, pathname) => {
-    const supplied = req.query?.get('token');
-    if (!supplied) return false;
+    if (!req.query?.has('token')) return false;
+    const supplied = req.query.get('token');
+    // An empty ?token= is how someone signs out of a shared browser.
+    if (!supplied) {
+      sendRedirect(res, pathname, `pulse_token=; ${cookieAttrs}; Max-Age=0`);
+      return true;
+    }
+    if (!readerFromToken(supplied)) return false;
     sendRedirect(res, pathname,
-      `pulse_token=${encodeURIComponent(supplied)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`);
+      `pulse_token=${encodeURIComponent(supplied)}; ${cookieAttrs}; Max-Age=2592000`);
     return true;
   };
 
@@ -121,7 +136,7 @@ export function createApp({ store, config, clock = nowS, fetchImpl = fetch, logg
 
     const name = typeof body.name === 'string' ? body.name.trim().slice(0, 120) : '';
     if (!name) return sendJson(res, 400, { error: 'name is required' });
-    const plan = PLANS[body.plan] ? body.plan : config.defaultPlan;
+    const plan = Object.hasOwn(PLANS, body.plan) ? body.plan : config.defaultPlan;
     const token = newToken();
     const created = store.createServer({
       name, plan, token,
@@ -133,9 +148,11 @@ export function createApp({ store, config, clock = nowS, fetchImpl = fetch, logg
   });
 
   router.get('/v1/servers/:id/summary', (req, res) => {
-    const server = resolveServer(req.params, res);
-    if (!server) return;
-    if (!mayRead(readerFor(req), server.id)) return sendJson(res, 401, { error: 'unauthorised' });
+    const id = Number(req.params.id);
+    const server = store.getServer(id);
+    // Answering 404 for a missing server and 401 for someone else's would let
+    // the id space be mapped from outside; both give the same reply.
+    if (!server || !mayRead(readerFor(req), id)) return sendJson(res, 401, { error: 'unauthorised' });
     const now = clock();
     const plan = planFor(server.plan);
     return sendJson(res, 200, {
@@ -148,9 +165,9 @@ export function createApp({ store, config, clock = nowS, fetchImpl = fetch, logg
   });
 
   router.get('/v1/servers/:id/series', (req, res) => {
-    const server = resolveServer(req.params, res);
-    if (!server) return;
-    if (!mayRead(readerFor(req), server.id)) return sendJson(res, 401, { error: 'unauthorised' });
+    const id = Number(req.params.id);
+    const server = store.getServer(id);
+    if (!server || !mayRead(readerFor(req), id)) return sendJson(res, 401, { error: 'unauthorised' });
     const now = clock();
     const range = rangeFor(req.query?.get('range'));
     const { rows, resolution } = seriesForRange(store, server.id, now - range.seconds, now + 1);
@@ -180,15 +197,17 @@ export function createApp({ store, config, clock = nowS, fetchImpl = fetch, logg
   });
 
   async function handleRequest(req, res) {
-    let url;
-    try { url = new URL(req.url, 'http://localhost'); }
-    catch { return sendJson(res, 400, { error: 'bad request' }); }
-
-    const route = router.match(req.method, url.pathname);
-    if (!route) return sendJson(res, 404, { error: 'not found' });
-    req.params = route.params;
-    req.query = url.searchParams;
     try {
+      let url;
+      try { url = new URL(req.url, 'http://localhost'); }
+      catch { return sendJson(res, 400, { error: 'bad request' }); }
+
+      // Matching is inside the guard too: it parses the path, so it can throw,
+      // and an exception escaping an async handler ends the process in Node.
+      const route = router.match(req.method, url.pathname);
+      if (!route) return sendJson(res, 404, { error: 'not found' });
+      req.params = route.params;
+      req.query = url.searchParams;
       await route.handler(req, res);
     } catch (err) {
       logger.error('[pulse] request failed:', err.stack ?? err.message);

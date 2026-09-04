@@ -111,7 +111,10 @@ http://localhost:8787/?token=<admin or collector token>
 ```
 
 The token is moved into an HttpOnly cookie and the address is cleaned, so it
-stops appearing in history and referrers. Self-hosting behind a private network
+stops appearing in history and referrers — but only once it has been checked,
+so a link cannot pin a stranger's chosen identity into your browser. An empty
+`?token=` signs out. The cookie is marked `Secure` automatically when
+`PULSE_PUBLIC_URL` is https (or set `PULSE_COOKIE_SECURE=1`). Self-hosting behind a private network
 or an authenticating proxy? `PULSE_OPEN_DASHBOARD=1` drops the check — reading
 only; ingest always requires a real token.
 
@@ -159,7 +162,7 @@ makes it sharper.
 ## Development
 
 ```sh
-make test      # 89 tests: 24 collector (Lua), 65 backend (Node)
+make test      # 99 tests: 24 collector (Lua), 75 backend (Node)
 make report    # headline numbers from a simulated day
 make check     # syntax-check everything that ships
 make run       # start the backend locally

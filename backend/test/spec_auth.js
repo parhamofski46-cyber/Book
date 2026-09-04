@@ -95,7 +95,117 @@ export default async function run() {
       eq(res.status, 401);
     });
 
+    await test('a token that names nobody is never written into the browser', async () => {
+      // Otherwise a link is enough to pin an identity of the sender's choosing
+      // into someone else's browser for a month, and an HttpOnly cookie is not
+      // something the victim can clear themselves.
+      const res = await get(env.base, `/s/${env.a.id}?token=pls_attacker_supplied_garbage`);
+      eq(res.status, 401, 'refused rather than redirected');
+      eq(res.headers.get('set-cookie'), null, 'and nothing was stored');
+    });
+
+    await test("a valid but foreign token cannot be pinned onto another's page", async () => {
+      // b's token is real, so it names a reader -- but it must not become the
+      // identity used to view a's server.
+      const res = await get(env.base, `/s/${env.a.id}?token=${env.b.token}`);
+      eq(res.status, 302, 'the token is remembered, being genuine');
+      const followed = await get(env.base, `/s/${env.a.id}`, {
+        headers: { cookie: `pulse_token=${encodeURIComponent(env.b.token)}` },
+      });
+      eq(followed.status, 401, "and still cannot read someone else's server");
+    });
+
+    await test('an empty token parameter signs the reader out', async () => {
+      const res = await get(env.base, `/s/${env.a.id}?token=`, {
+        headers: { cookie: `pulse_token=${encodeURIComponent(env.a.token)}` },
+      });
+      eq(res.status, 302);
+      contains(res.headers.get('set-cookie'), 'Max-Age=0', 'the cookie is cleared');
+    });
+
     env.stop();
+  });
+
+  await suite('access: malformed input reaches no handler', async () => {
+    const env = await start();
+
+    await test('an undecodable path is a miss, not a crash', async () => {
+      // "/s/%" is a valid URL whose path will not percent-decode. Routing runs
+      // before any handler exists to catch it, and in Node an exception out of
+      // an async handler ends the process -- so one unauthenticated request
+      // would take the service down.
+      const res = await get(env.base, '/s/%');
+      ok(res.status === 404 || res.status === 401, `answered ${res.status} instead of dying`);
+      const after = await get(env.base, '/healthz');
+      eq(after.status, 200, 'and the service is still up afterwards');
+    });
+
+    await test('numeric coercion of the id cannot cross a tenant boundary', async () => {
+      const own = { headers: { authorization: `Bearer ${env.a.token}` } };
+      for (const variant of ['1e0', '01', ' 1', '1.0', '0x1']) {
+        const res = await get(env.base, `/s/${encodeURIComponent(variant)}`, own);
+        ok(res.status === 200 || res.status === 401, `${variant} handled cleanly`);
+      }
+      const other = await get(env.base, `/s/${env.b.id}e0`, own);
+      eq(other.status, 401, "coercion does not open someone else's server");
+    });
+
+    await test('a missing server answers as a forbidden one does, on the API too', async () => {
+      const own = { headers: { authorization: `Bearer ${env.a.token}` } };
+      const forbidden = await get(env.base, `/v1/servers/${env.b.id}/summary`, own);
+      const absent = await get(env.base, '/v1/servers/99999/summary', own);
+      eq(absent.status, forbidden.status, 'same status');
+      eq(await absent.text(), await forbidden.text(), 'same body: the id space stays opaque');
+    });
+
+    env.stop();
+  });
+
+  await suite('access: provisioning', async () => {
+    const env = await start();
+
+    await test('an inherited property name is not accepted as a plan', async () => {
+      // PLANS is a plain object, so "__proto__" and "constructor" read as
+      // truthy. Stored as a plan, their limits are undefined and retention for
+      // that server silently stops running.
+      for (const bogus of ['__proto__', 'constructor', 'toString']) {
+        const res = await fetch(env.base + '/v1/admin/servers', {
+          method: 'POST',
+          headers: { authorization: 'Bearer admin-secret', 'content-type': 'application/json' },
+          body: JSON.stringify({ name: `x-${bogus}`, plan: bogus }),
+        });
+        eq(res.status, 201);
+        const body = await res.json();
+        ok(['free', 'pro', 'team'].includes(body.plan), `${bogus} fell back to a real plan`);
+      }
+    });
+
+    await test('an unknown plan falls back rather than being stored', async () => {
+      const res = await fetch(env.base + '/v1/admin/servers', {
+        method: 'POST',
+        headers: { authorization: 'Bearer admin-secret', 'content-type': 'application/json' },
+        body: JSON.stringify({ name: 'unknown-plan', plan: 'enterprise-mega' }),
+      });
+      ok(['free', 'pro', 'team'].includes((await res.json()).plan));
+    });
+
+    env.stop();
+  });
+
+  await suite('access: cookie flags follow the deployment', async () => {
+    await test('https deployments get a Secure cookie', async () => {
+      const env = await start({ publicUrl: 'https://pulse.example', cookieSecure: true });
+      const res = await get(env.base, `/s/${env.a.id}?token=${env.a.token}`);
+      contains(res.headers.get('set-cookie'), 'Secure', 'marked Secure');
+      env.stop();
+    });
+
+    await test('a plain-http self-hoster is not locked out by one', async () => {
+      const env = await start({ cookieSecure: false });
+      const res = await get(env.base, `/s/${env.a.id}?token=${env.a.token}`);
+      ok(!(res.headers.get('set-cookie') ?? '').includes('Secure'), 'no Secure flag over http');
+      env.stop();
+    });
   });
 
   await suite('access: the JSON API', async () => {

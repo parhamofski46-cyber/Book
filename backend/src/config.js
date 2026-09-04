@@ -22,6 +22,7 @@ const num = (key, fallback) => {
 };
 
 export function loadConfig(env = process.env) {
+  const publicUrl = (env.PULSE_PUBLIC_URL || '').replace(/\/$/, '');
   return {
     port: num('PULSE_PORT', 8787),
     host: env.PULSE_HOST || '0.0.0.0',
@@ -40,7 +41,10 @@ export function loadConfig(env = process.env) {
     maxClockSkewSeconds: num('PULSE_MAX_SKEW', 86400),
     maintenanceIntervalMs: num('PULSE_MAINTENANCE_MS', 15 * 60 * 1000),
     // Absolute URL used in Discord links, when the backend knows its own name.
-    publicUrl: (env.PULSE_PUBLIC_URL || '').replace(/\/$/, ''),
+    publicUrl,
+    // Set automatically when the service knows it is served over https; a
+    // self-hoster on plain http would be locked out by a Secure cookie.
+    cookieSecure: env.PULSE_COOKIE_SECURE === '1' || publicUrl.startsWith('https://'),
     // Opens the dashboard to anyone who can reach the port. Only sane behind a
     // private network or a reverse proxy that authenticates in front of it.
     openDashboard: env.PULSE_OPEN_DASHBOARD === '1',

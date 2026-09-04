@@ -1,5 +1,5 @@
 import { DatabaseSync } from 'node:sqlite';
-import { randomBytes, createHash, timingSafeEqual } from 'node:crypto';
+import { randomBytes, createHash } from 'node:crypto';
 import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { migrate } from './schema.js';
@@ -140,15 +140,14 @@ export function openStore(dbPath) {
       const info = stmt.insertServer.run(name, hashToken(token), plan, webhook, createdS);
       return { id: Number(info.lastInsertRowid), name, plan, token };
     },
-    // Constant-time compare on the hash so a token cannot be recovered by
-    // timing the lookup.
+    // Lookup is by SHA-256 of the presented token, so what is stored is never
+    // the secret, and the comparison the database performs is against a hash
+    // the caller could only produce by already holding the token. A
+    // constant-time compare afterwards would be comparing the row to the very
+    // value it was found by, which proves nothing -- so there isn't one.
     findServerByToken(token) {
       if (typeof token !== 'string' || token.length < 8) return null;
-      const row = stmt.byTokenHash.get(hashToken(token));
-      if (!row) return null;
-      const a = Buffer.from(row.token_hash, 'hex');
-      const b = Buffer.from(hashToken(token), 'hex');
-      return a.length === b.length && timingSafeEqual(a, b) ? row : null;
+      return stmt.byTokenHash.get(hashToken(token)) ?? null;
     },
     getServer: (id) => stmt.byId.get(id) ?? null,
     listServers: () => stmt.allServers.all(),
