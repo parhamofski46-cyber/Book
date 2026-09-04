@@ -9,6 +9,12 @@
 // Stall buckets take the maximum, not the mean. A 900ms freeze inside a
 // six-minute bucket is the event worth seeing; averaging it away leaves a flat
 // line under a server nobody can play on.
+//
+// Stall is a line, not an area. Filling to the baseline says "this accumulates
+// from zero", and on a server that is never at zero the fill becomes a solid
+// block with a fringe on top -- ink where the shape should be. Population keeps
+// its fill: it genuinely falls to nothing overnight, and being a soft mass
+// rather than a second line keeps it reading as context.
 
 import { esc } from './html.js';
 
@@ -18,10 +24,13 @@ const TOP_Y = 12, BOT_Y = TOP_Y + TOP_H + GAP;
 const H = BOT_Y + BOT_H + AXIS_H;
 const PLOT_W = W - PAD_L - PAD_R;
 
+// Finer steps than the usual 1/2/5 ladder: with only three of them a peak of
+// 510 rounds up to 750 and half the panel is empty, which reads as headroom
+// the server has rather than as a rounding artefact.
 const niceMax = (v) => {
   if (!(v > 0)) return 10;
   const mag = 10 ** Math.floor(Math.log10(v));
-  for (const step of [1, 1.5, 2, 3, 5, 7.5, 10]) {
+  for (const step of [1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) {
     if (v <= step * mag) return step * mag;
   }
   return 10 * mag;
@@ -46,6 +55,15 @@ function bucket(samples, from, to, count) {
 
 const hhmm = (unixS) => new Date(unixS * 1000).toISOString().slice(11, 16);
 const dayLabel = (unixS) => new Date(unixS * 1000).toISOString().slice(5, 10);
+const dayHour = (unixS) => `${dayLabel(unixS)} ${hhmm(unixS)}`;
+
+// Six ticks over three days land twice inside each day, so a date-only label
+// prints "09-01, 09-01, 09-02, 09-02" and stops telling the reader anything.
+const tickLabel = (unixS, spanHours) => {
+  if (spanHours <= 30) return hhmm(unixS);
+  if (spanHours <= 7 * 24) return dayHour(unixS);
+  return dayLabel(unixS);
+};
 
 function pathFor(points, yOf, xOf, baseline) {
   let line = '', area = '';
@@ -74,7 +92,10 @@ export function timelineChart({ samples, changes = [], flagged = new Set(), from
     return `<div class="card empty">No telemetry in this range yet.</div>`;
   }
 
-  const start = from ?? samples[0].wall_s;
+  // Never draw further back than the data goes. Asking for thirty days from a
+  // server that has reported for three should show three days of chart, not
+  // three days squeezed against a wall of blank.
+  const start = Math.max(from ?? samples[0].wall_s, samples[0].wall_s);
   const end = to ?? samples[samples.length - 1].wall_s;
   const rows = bucket(samples, start, end, buckets);
   const present = rows.filter(Boolean);
@@ -106,8 +127,11 @@ export function timelineChart({ samples, changes = [], flagged = new Set(), from
   for (let i = 0; i <= 6; i++) {
     const t = start + ((end - start) * i) / 6;
     const x = xOf(t);
-    const label = spanH > 30 ? dayLabel(t) : hhmm(t);
-    ticks += `<text x="${x.toFixed(1)}" y="${H - 8}" text-anchor="middle" fill="var(--muted)" font-size="11">${label}</text>`;
+    const label = tickLabel(t, spanH);
+    // The end labels are anchored inward; centred, they hang past the viewBox
+    // and the browser clips them mid-word.
+    const anchor = i === 0 ? 'start' : i === 6 ? 'end' : 'middle';
+    ticks += `<text x="${x.toFixed(1)}" y="${H - 8}" text-anchor="${anchor}" fill="var(--muted)" font-size="11">${label}</text>`;
   }
 
   // Restart markers. An accused resource gets a solid coloured rule; routine
@@ -140,7 +164,6 @@ export function timelineChart({ samples, changes = [], flagged = new Set(), from
     <path d="${players.area}" fill="var(--muted)" opacity="0.16"/>
     <path d="${players.line}" fill="none" stroke="var(--muted)" stroke-width="1.5"
           stroke-linejoin="round" stroke-linecap="round"/>
-    <path d="${stall.area}" fill="var(--series-soft)"/>
     <path d="${stall.line}" fill="none" stroke="var(--series)" stroke-width="2"
           stroke-linejoin="round" stroke-linecap="round"/>
     <line class="cursor" x1="0" y1="${TOP_Y}" x2="0" y2="${BOT_Y + BOT_H}"

@@ -42,10 +42,12 @@ function layout(title, body) {
 
 function chip(grade) {
   const s = STATUS[grade] ?? STATUS.F;
-  // Icon and label always accompany the colour: status is never carried by
-  // hue alone, and two of these steps are sub-3:1 on the light surface.
-  return `<span class="chip"><span class="dot" style="background:var(${s.var})"></span>` +
-         `${s.icon} ${esc(grade)} &middot; ${esc(s.label)}</span>`;
+  // One coloured mark, not two. The glyph differs per grade, so shape carries
+  // the state as well as hue does -- which matters because two of these steps
+  // sit under 3:1 on the light surface, and because colour alone is never
+  // allowed to be the signal.
+  return `<span class="chip"><span style="color:var(${s.var})">${s.icon}</span> ` +
+         `${esc(grade)} &middot; ${esc(s.label)}</span>`;
 }
 
 const tile = (k, v, note = '') =>

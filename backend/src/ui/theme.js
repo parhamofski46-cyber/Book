@@ -48,14 +48,14 @@ h2{font-size:15px;margin:32px 0 10px;font-weight:600}
 .tile .k{color:var(--muted);font-size:12px;margin-bottom:6px}
 .tile .v{font-size:26px;font-weight:640;letter-spacing:-0.02em;line-height:1.1}
 .tile .n{color:var(--ink-2);font-size:12px;margin-top:4px}
-.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;
-  padding:2px 9px;border-radius:999px;border:1px solid var(--border)}
-.chip .dot{width:8px;height:8px;border-radius:50%}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;
+  padding:2px 10px;border-radius:999px;border:1px solid var(--border);white-space:nowrap}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th{text-align:left;color:var(--muted);font-weight:500;font-size:12px;
   padding:6px 10px 6px 0;border-bottom:1px solid var(--grid)}
 td{padding:8px 10px 8px 0;border-bottom:1px solid var(--grid);vertical-align:top}
-td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;padding-right:0}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;padding-right:18px}
+th:last-child,td:last-child{padding-right:0}
 tr:last-child td{border-bottom:none}
 .empty{color:var(--ink-2);font-size:13px;padding:8px 0}
 .scroll{overflow-x:auto}
