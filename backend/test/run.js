@@ -6,6 +6,10 @@ const specs = ['spec_store.js', 'spec_ingest.js', 'spec_analysis.js', 'spec_aler
 for (const spec of specs) {
   const mod = await import(`./${spec}`);
   await mod.default();
+  // A spec may export extra suites alongside its default.
+  for (const [name, fn] of Object.entries(mod)) {
+    if (name !== 'default' && typeof fn === 'function') await fn();
+  }
 }
 
 process.exit(report() ? 0 : 1);

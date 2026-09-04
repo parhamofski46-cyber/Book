@@ -10,3 +10,4 @@ backend/test/fixtures/
 release/landing.html
 # generated on first run, kept beside the database
 admin-token
+dist/

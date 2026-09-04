@@ -1,6 +1,6 @@
 FIXTURES := backend/test/fixtures/threeday.jsonl
 
-.PHONY: test test-collector test-backend fixtures report check run clean release verify
+.PHONY: test test-collector test-backend fixtures report check run clean release verify package
 
 test: test-collector test-backend
 
@@ -48,5 +48,17 @@ release: $(FIXTURES)
 	@node --no-warnings release/screenshot.js
 	@node --no-warnings release/build-landing.js
 
+# The zip attached to the GitHub release. Server owners who only want the
+# resource should not have to clone anything -- and a release asset is the one
+# install signal GitHub actually counts.
+VERSION := $(shell sed -n "s/^version '\(.*\)'/\1/p" collector/fxmanifest.lua)
+
+package:
+	@rm -rf dist && mkdir -p dist/pulse_collector
+	@cp -r collector/* dist/pulse_collector/
+	@cd dist && zip -qr pulse_collector-v$(VERSION).zip pulse_collector
+	@rm -rf dist/pulse_collector
+	@ls -la dist/
+
 clean:
-	@rm -rf backend/test/fixtures backend/data release/landing.html
+	@rm -rf backend/test/fixtures backend/data release/landing.html dist

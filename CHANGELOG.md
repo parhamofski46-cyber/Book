@@ -50,6 +50,10 @@ First release. Collector, backend, dashboard and alerting.
 - `make verify` runs the real collector against a real backend over real HTTP,
   which is the only check that exercises Lua, the network and Node together
 
+**Licence**
+- Collector and tooling: MIT
+- Backend: Elastic License 2.0, the official text verbatim
+
 **Known limits**
 - Validated against the simulator, not yet against a live server
 - No per-resource CPU attribution: no server native provides it

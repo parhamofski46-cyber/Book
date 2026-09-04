@@ -10,7 +10,7 @@ It is two halves.
 | | | Licence |
 |---|---|---|
 | **`collector/`** | A FiveM resource. Measures the server and ships it. | MIT |
-| **`backend/`** | Stores it, finds regressions, draws the dashboard, alerts Discord. | Source-available |
+| **`backend/`** | Stores it, finds regressions, draws the dashboard, alerts Discord. | Elastic License 2.0 |
 
 The collector is MIT because it runs on other people's machines: an operator who
 cannot read it should not install it. Everything in it is plain Lua with no
@@ -180,7 +180,7 @@ collector/            the FiveM resource (MIT)
     inventory.lua       resource inventory and restart tracking
     shipper.lua         batching, backoff, delivery
     main.lua            wiring and sampling loops
-backend/              the service (source-available)
+backend/              the service (Elastic License 2.0)
   src/
     db/                 schema, migrations, data access
     http/               router, ingest, dashboard pages
@@ -198,3 +198,14 @@ v0.1. Everything described here runs and is covered by tests — but it has been
 validated against the simulator, not yet against a live server. The simulator was
 built conservatively, and the collector is designed to fail quietly rather than
 badly, but that remains the one assumption still to be proved in the field.
+
+## Licence
+
+| | | |
+|---|---|---|
+| `collector/` | MIT | It runs on other people's servers, so it has to be readable and freely usable. |
+| `backend/` | [Elastic License 2.0](https://www.elastic.co/licensing/elastic-license) | Run it for your own servers; do not offer it to third parties as a hosted service. |
+| everything else | MIT | Simulator, tests, tooling, release assets. |
+
+`backend/LICENSE` is the official Elastic License 2.0 text, reproduced verbatim.
+See `NOTICE` for the short version.

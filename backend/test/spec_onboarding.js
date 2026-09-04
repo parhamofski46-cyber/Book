@@ -138,3 +138,31 @@ export default async function run() {
     });
   });
 }
+
+// Appended: version consistency. Three files carry the version and a mismatch
+// ships a resource whose manifest disagrees with what it reports.
+export async function versionSuite() {
+  const { readFileSync } = await import('node:fs');
+  const { fileURLToPath } = await import('node:url');
+  const { dirname, join } = await import('node:path');
+  const root = join(dirname(fileURLToPath(import.meta.url)), '../..');
+
+  await suite('release: the version agrees with itself', async () => {
+    const manifest = readFileSync(join(root, 'collector/fxmanifest.lua'), 'utf8')
+      .match(/^version '([^']+)'/m)?.[1];
+    const lua = readFileSync(join(root, 'collector/server/main.lua'), 'utf8')
+      .match(/Pulse\.VERSION = '([^']+)'/)?.[1];
+    const pkg = JSON.parse(readFileSync(join(root, 'backend/package.json'), 'utf8')).version;
+
+    await test('fxmanifest, the collector and the backend all say the same thing', async () => {
+      ok(manifest, 'the manifest declares a version');
+      eq(lua, manifest, 'the collector reports what its manifest declares');
+      eq(pkg, manifest, 'the backend agrees');
+    });
+
+    await test('the changelog documents it', async () => {
+      const changelog = readFileSync(join(root, 'CHANGELOG.md'), 'utf8');
+      contains(changelog, `v${manifest}`, 'the released version has an entry');
+    });
+  });
+}

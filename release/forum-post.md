@@ -124,7 +124,8 @@ collector runs inside it completely unmodified — but that is still a
 simulator. **If you run it on a real server, I want to hear what breaks.**
 
 The collector is **MIT** and dependency-free Lua: read every line before you
-put it on your server. Please do.
+put it on your server. Please do. The backend is Elastic License 2.0 — yours to
+self-host and modify, just not to resell as a hosted service.
 
 **GitHub:** https://github.com/YOUR-GITHUB
 

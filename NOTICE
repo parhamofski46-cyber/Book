@@ -1,0 +1,18 @@
+Pulse
+Copyright (c) 2026 the Pulse authors
+
+Two licences, on purpose:
+
+  /collector    MIT (see collector/LICENSE)
+                The FiveM resource. It runs on other people's servers, so it
+                must be readable and freely usable.
+
+  /backend      Elastic License 2.0 (see backend/LICENSE)
+                The service. You may run it for your own servers; you may not
+                offer it to third parties as a hosted or managed service.
+
+  everything else (sim/, test/, scripts/, release/)
+                MIT (see LICENSE at the repository root)
+
+BEFORE PUBLISHING: replace "the Pulse authors" everywhere it appears with your
+own legal name or company.

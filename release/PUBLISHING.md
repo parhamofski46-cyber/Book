@@ -10,11 +10,19 @@ code.
 `Book`, which tells a visitor nothing. Create `pulse-fivem` (or similar) and
 push there. The repository name is the first thing anyone reads.
 
-**2. Replace the backend licence.** `backend/LICENSE` is a plain statement of
-intent that has not been reviewed by a lawyer. Before publishing, paste in the
-official text of whichever standard form you choose — Business Source License
-1.1 or Elastic License 2.0 are the usual choices for exactly this shape of
-project. Copy them verbatim; do not paraphrase. The collector stays MIT.
+**2. Put your name on the copyright.** The licences are in place: MIT at the
+repository root and in `collector/`, the official Elastic License 2.0 text
+verbatim in `backend/LICENSE`. What is still a placeholder is who owns it:
+
+```sh
+grep -rl 'the Pulse authors' LICENSE NOTICE collector/ backend/NOTICE \
+  | xargs sed -i 's|the Pulse authors|<your legal name or company>|g'
+```
+
+A copyright line naming nobody in particular is weak. None of this has been
+reviewed by a lawyer — the texts are the standard published ones, but if real
+money ends up depending on the hosted-service restriction, have someone look at
+it.
 
 **3. Decide where the hosted backend will live**, even if the answer is "not
 yet". People will ask on the thread. "Self-host today, hosted later" is a fine
@@ -50,9 +58,16 @@ git tag -a v0.1.0 -m "Pulse v0.1.0"
 git push origin v0.1.0
 ```
 
-Create a GitHub release from the tag with `CHANGELOG.md` as the body, and
-attach a zip of `collector/` so people who only want the resource do not have
-to clone the repository.
+```sh
+make package   # dist/pulse_collector-v0.1.0.zip
+```
+
+Create a GitHub release from the tag with `CHANGELOG.md` as the body and that
+zip attached. Two reasons: someone who only wants the resource should not have
+to clone anything, and **a release asset is the one install signal GitHub
+counts** — the download total is on the release page and in the API at
+`/repos/<owner>/<repo>/releases`. Nothing else tells you how many servers are
+running this, because the backend is theirs, not yours.
 
 **5b. Try the install yourself, on a clean machine.** Clone the published
 repository into a fresh directory and run `sh install.sh` exactly as a stranger
