@@ -29,7 +29,10 @@ export function openStore(dbPath) {
     byTokenHash: q('SELECT * FROM servers WHERE token_hash = ?'),
     byId: q('SELECT * FROM servers WHERE id = ?'),
     allServers: q('SELECT * FROM servers ORDER BY id'),
-    touch: q('UPDATE servers SET last_seen_s = ?, agent_version = ? WHERE id = ?'),
+    // COALESCE, because an ordinary batch carries no agent block and would
+    // otherwise blank the version on every send: a server reporting perfectly
+    // well would show "agent unknown".
+    touch: q('UPDATE servers SET last_seen_s = ?, agent_version = COALESCE(?, agent_version) WHERE id = ?'),
     setPlan: q('UPDATE servers SET plan = ? WHERE id = ?'),
     setWebhook: q('UPDATE servers SET discord_webhook = ? WHERE id = ?'),
 
@@ -83,12 +86,12 @@ export function openStore(dbPath) {
     // transaction, so folding twice cannot double-count.
     rollup: q(`
       INSERT INTO samples_hourly
-        (server_id, hour_s, windows, probes, players_max, players_avg, mean_drift, p95_max, max_drift, stall_ms, hitches)
+        (server_id, hour_s, windows, probes, players_max, players_avg, mean_drift, p95_max, max_drift, stall_ms, stall_max, hitches)
       SELECT server_id, (wall_s / ${HOUR}) * ${HOUR}, COUNT(*), COALESCE(SUM(probes),0),
              COALESCE(MAX(players),0), COALESCE(AVG(players),0),
              COALESCE(SUM(mean_drift * probes) / NULLIF(SUM(probes),0), 0),
              COALESCE(MAX(p95_drift),0), COALESCE(MAX(max_drift),0),
-             COALESCE(SUM(stall_ms),0), COALESCE(SUM(hitches),0)
+             COALESCE(SUM(stall_ms),0), COALESCE(MAX(stall_ms),0), COALESCE(SUM(hitches),0)
       FROM samples WHERE server_id = ? AND wall_s < ?
       GROUP BY server_id, (wall_s / ${HOUR}) * ${HOUR}
       ON CONFLICT(server_id, hour_s) DO UPDATE SET
@@ -104,6 +107,7 @@ export function openStore(dbPath) {
         p95_max     = MAX(samples_hourly.p95_max, excluded.p95_max),
         max_drift   = MAX(samples_hourly.max_drift, excluded.max_drift),
         stall_ms    = samples_hourly.stall_ms + excluded.stall_ms,
+        stall_max   = MAX(samples_hourly.stall_max, excluded.stall_max),
         hitches     = samples_hourly.hitches + excluded.hitches`),
     pruneRaw: q('DELETE FROM samples WHERE server_id = ? AND wall_s < ?'),
     pruneHourly: q('DELETE FROM samples_hourly WHERE server_id = ? AND hour_s < ?'),

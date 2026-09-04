@@ -7,8 +7,30 @@
 // The page is screenshotted in both themes because it ships supporting both,
 // and a release post that only ever shows one is hiding half the work.
 
-import { chromium } from '/tmp/shot/node_modules/playwright-core/index.mjs';
-import { mkdirSync, rmSync } from 'node:fs';
+// Resolved rather than hard-coded: the previous absolute path meant this
+// script only ran on the machine that first wrote it.
+async function loadChromium() {
+  for (const name of ['playwright-core', 'playwright']) {
+    try { return (await import(name)).chromium; } catch { /* try the next */ }
+  }
+  throw new Error('playwright-core is not installed. Run: npm i -D playwright-core');
+}
+
+function findBrowser() {
+  if (process.env.PULSE_CHROMIUM) return process.env.PULSE_CHROMIUM;
+  const root = process.env.PLAYWRIGHT_BROWSERS_PATH;
+  if (!root || !existsSync(root)) return undefined;  // let playwright find its own
+  const dir = readdirSync(root).filter((d) => d.startsWith('chromium-')).sort().pop();
+  if (!dir) return undefined;
+  for (const candidate of ['chrome-linux/chrome', 'chrome-mac/Chromium.app/Contents/MacOS/Chromium']) {
+    const full = join(root, dir, candidate);
+    if (existsSync(full)) return full;
+  }
+  return undefined;
+}
+
+import { mkdirSync, rmSync, existsSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { openStore } from '../backend/src/db/store.js';
 import { loadConfig } from '../backend/src/config.js';
@@ -32,7 +54,8 @@ const listening = await app.listen(0, '127.0.0.1');
 const base = `http://127.0.0.1:${listening.address().port}`;
 
 mkdirSync('release/screenshots', { recursive: true });
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
+const chromium = await loadChromium();
+const browser = await chromium.launch({ executablePath: findBrowser() });
 
 async function shoot(name, { theme, path, clip, width = 1200, height = 900 }) {
   const context = await browser.newContext({
@@ -80,7 +103,22 @@ await shootAuthed('dashboard-detail', { path: `/s/${serverId}?range=7d`, theme: 
 await shootAuthed('dashboard-light', { path: `/s/${serverId}?range=7d`, theme: 'light', height: 1150 });
 await shootAuthed('regression', { path: `/s/${serverId}?range=7d`, theme: 'dark', clip: '.scroll:has(table)' });
 await shootAuthed('timeline', { path: `/s/${serverId}?range=7d`, theme: 'dark', clip: 'figure.chartbox' });
-await shootAuthed('server-list', { path: '/', theme: 'dark', height: 520 });
+// The list needs the admin token: a collector token is scoped to one server,
+// so "/" redirects to it and this shot was silently the detail page again.
+{
+  const context = await browser.newContext({
+    viewport: { width: 1200, height: 520 }, deviceScaleFactor: 2, colorScheme: 'dark',
+  });
+  await context.addCookies([{
+    name: 'pulse_token', value: 'shot-admin', domain: '127.0.0.1',
+    path: '/', httpOnly: true, sameSite: 'Lax',
+  }]);
+  const page = await context.newPage();
+  await page.goto(`${base}/`, { waitUntil: 'networkidle' });
+  await page.screenshot({ path: 'release/screenshots/server-list.png' });
+  await context.close();
+  console.log('  release/screenshots/server-list.png');
+}
 
 await browser.close();
 listening.close();

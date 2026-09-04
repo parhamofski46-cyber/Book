@@ -152,7 +152,15 @@ export function timelineChart({ samples, changes = [], flagged = new Set(), from
 
   return `
 <figure class="card chartbox" data-series='${esc(JSON.stringify(series))}'
-        data-geo='${esc(JSON.stringify({ padL: PAD_L, plotW: PLOT_W, w: W, h: H, top: TOP_Y, topH: TOP_H, botY: BOT_Y, botH: BOT_H }))}'>
+        data-geo='${esc(JSON.stringify({
+          padL: PAD_L, plotW: PLOT_W, w: W, h: H, top: TOP_Y, topH: TOP_H,
+          botY: BOT_Y, botH: BOT_H,
+          // The scale the marks were actually drawn against. Recomputing it in
+          // the browser is how the hover dot ends up floating above its own
+          // line: niceMax rounds the ceiling up, and the data's own maximum
+          // does not.
+          yMax: stallMax, start, end,
+        }))}'>
   <div class="legend">
     <span><span class="sw" style="background:var(--series)"></span>Stall time per window (peak)</span>
     <span><span class="sw" style="background:var(--muted)"></span>Players</span>
@@ -189,18 +197,28 @@ for (const box of document.querySelectorAll('.chartbox')) {
   const geo = JSON.parse(box.dataset.geo);
   if (!data.length) continue;
   const fmt = (ms) => ms >= 1000 ? (ms / 1000).toFixed(1) + 's' : Math.round(ms) + 'ms';
+  const span = Math.max(1, geo.end - geo.start);
+  const xOf = (t) => geo.padL + ((t - geo.start) / span) * geo.plotW;
   const move = (ev) => {
     const rect = svg.getBoundingClientRect();
     const scale = geo.w / rect.width;
     const vx = (ev.clientX - rect.left) * scale;
     const frac = (vx - geo.padL) / geo.plotW;
     if (frac < 0 || frac > 1) return hide();
-    const i = Math.max(0, Math.min(data.length - 1, Math.round(frac * (data.length - 1))));
+
+    // Nearest in time, not nearest by index: the marks are placed by
+    // timestamp, and a gap in the data pulls the two apart.
+    const want = geo.start + frac * span;
+    let i = 0;
+    let closest = Infinity;
+    for (let k = 0; k < data.length; k++) {
+      const gap = Math.abs(data[k].t - want);
+      if (gap < closest) { closest = gap; i = k; }
+    }
     const d = data[i];
-    const x = geo.padL + (i / Math.max(1, data.length - 1)) * geo.plotW;
+    const x = xOf(d.t);
     cursor.setAttribute('x1', x); cursor.setAttribute('x2', x); cursor.setAttribute('opacity', '1');
-    const maxS = Math.max.apply(null, data.map(p => p.s)) || 1;
-    const y = geo.top + geo.topH - (Math.min(d.s, maxS) / maxS) * geo.topH;
+    const y = geo.top + geo.topH - (Math.min(d.s, geo.yMax) / geo.yMax) * geo.topH;
     dot.setAttribute('cx', x); dot.setAttribute('cy', y); dot.setAttribute('opacity', '1');
     const when = new Date(d.t * 1000).toISOString().slice(5, 16).replace('T', ' ');
     tip.innerHTML = '<b>' + when + 'Z</b><br>stall ' + fmt(d.s) + ' &middot; worst ' + fmt(d.w) +

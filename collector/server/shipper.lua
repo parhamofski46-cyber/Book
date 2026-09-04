@@ -40,15 +40,20 @@ function Shipper:flush(nowMs, agentInfo)
   PerformHttpRequest(self.cfg.endpoint, function(status)
     self.inflight = false
     self.lastStatus = status
-    -- 4xx means this payload will never be accepted; retrying it forever would
-    -- block every later sample behind it, so drop it and keep collecting.
     if status >= 200 and status < 300 then
       self.failures = 0
       self.batchesSent = self.batchesSent + 1
       self.samplesSent = self.samplesSent + #batch
-    elseif status >= 400 and status < 500 then
+    elseif status >= 400 and status < 500 and status ~= 429 then
+      -- A 4xx will never be accepted however often it is sent, and retrying it
+      -- forever would block every later sample behind it. Drop it -- but count
+      -- the loss, because samples quietly disappearing is exactly what the
+      -- dropped counter exists to make visible.
       self.failures = 0
+      self.buffer.dropped = self.buffer.dropped + #batch
     else
+      -- 429 belongs here, not above: being told to slow down is temporary, and
+      -- treating it as permanent throws away a batch while reporting success.
       self.failures = self.failures + 1
       self.buffer:requeue(batch)
       self.nextAttemptMs = GetGameTimer() + self:backoffMs()

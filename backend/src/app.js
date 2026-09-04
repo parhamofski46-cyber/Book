@@ -17,6 +17,9 @@ import { planFor, PLANS } from './config.js';
 // two batches thirty seconds apart.
 const ANALYSIS_INTERVAL_S = 600;
 
+// How often every server is checked regardless of whether it reported.
+const SWEEP_INTERVAL_MS = 5 * 60 * 1000;
+
 export function createApp({ store, config, clock = nowS, fetchImpl = fetch, logger = console }) {
   const lastAnalysis = new Map();
 
@@ -33,6 +36,31 @@ export function createApp({ store, config, clock = nowS, fetchImpl = fetch, logg
     const delivered = await dispatchAlerts(store, store.getServer(server.id), alerts,
       { now, publicUrl: config.publicUrl, fetchImpl });
     return { findings, alerts: delivered };
+  }
+
+  /**
+   * Check every server, including the ones that have stopped reporting.
+   *
+   * Alerting used to hang entirely off the ingest hook, which meant the rule
+   * for "this collector has gone quiet" could never fire: ingest stamps
+   * last_seen_s immediately before calling it, so the server had always just
+   * been seen. The one condition worth waking someone at night for was the one
+   * condition that was structurally impossible to detect.
+   */
+  async function sweepAlerts(now = clock()) {
+    const fired = [];
+    for (const server of store.listServers()) {
+      if (!planFor(server.plan).alerts) continue;
+      try {
+        const alerts = evaluateAlerts(store, server, { now });
+        if (alerts.length === 0) continue;
+        fired.push(...await dispatchAlerts(store, server, alerts,
+          { now, publicUrl: config.publicUrl, fetchImpl }));
+      } catch (err) {
+        logger.error(`[pulse] alert sweep failed for server ${server.id}:`, err.message);
+      }
+    }
+    return fired;
   }
 
   const ingest = createIngestHandler({
@@ -262,6 +290,7 @@ export function createApp({ store, config, clock = nowS, fetchImpl = fetch, logg
     router,
     handleRequest,
     analyseServer,
+    sweepAlerts,
     listen(port = config.port, host = config.host) {
       const server = createServer(handleRequest);
       // Maintenance folds raw windows into hourly buckets and applies each
@@ -271,6 +300,11 @@ export function createApp({ store, config, clock = nowS, fetchImpl = fetch, logg
         catch (err) { logger.error('[pulse] maintenance failed:', err.message); }
       }, config.maintenanceIntervalMs);
       timer.unref();
+
+      const sweep = setInterval(() => {
+        sweepAlerts().catch((err) => logger.error('[pulse] alert sweep failed:', err.message));
+      }, SWEEP_INTERVAL_MS);
+      sweep.unref();
       return new Promise((resolve) => server.listen(port, host, () => resolve(server)));
     },
   };

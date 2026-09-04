@@ -12,9 +12,9 @@ import { fileURLToPath } from 'node:url';
  * buckets, which stay far longer because they cost almost nothing.
  */
 export const PLANS = {
-  free: { rawDays: 7,  hourlyDays: 30,  maxServers: 1,  alerts: false, fleet: false },
-  pro:  { rawDays: 30, hourlyDays: 400, maxServers: 3,  alerts: true,  fleet: true  },
-  team: { rawDays: 90, hourlyDays: 400, maxServers: 25, alerts: true,  fleet: true  },
+  free: { rawDays: 7,  hourlyDays: 30,  alerts: false, fleet: false },
+  pro:  { rawDays: 30, hourlyDays: 400, alerts: true,  fleet: true  },
+  team: { rawDays: 90, hourlyDays: 400, alerts: true,  fleet: true  },
 };
 
 // The database has to resolve to the same file whether the server was started

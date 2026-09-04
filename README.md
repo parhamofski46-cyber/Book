@@ -140,11 +140,14 @@ token comes from the admin API". Set `PULSE_ADMIN_TOKEN` to choose your own, or
 Retention is the product. A week is genuinely useful for "what happened last
 night" and useless for "we got slower after last month's update".
 
-| | Raw windows | Hourly | Servers | Alerts | Fleet |
-|---|---|---|---|---|---|
-| free | 7d | 30d | 1 | — | — |
-| pro | 30d | 400d | 3 | yes | yes |
-| team | 90d | 400d | 25 | yes | yes |
+| | Raw windows | Hourly | Alerts | Fleet |
+|---|---|---|---|---|
+| free | 7d | 30d | — | — |
+| pro | 30d | 400d | yes | yes |
+| team | 90d | 400d | yes | yes |
+
+A plan attaches to a server, not to an account, so there is nothing to count
+servers against and no per-account limit is claimed.
 
 Self-hosters default to `team`. Raw windows are folded into hourly buckets
 before they are pruned, so the long view survives cheaply.
@@ -157,7 +160,7 @@ makes it sharper.
 ## Development
 
 ```sh
-make test      # 133 tests: 37 collector (Lua), 96 backend (Node)
+make test      # 149 tests: 39 collector (Lua), 110 backend (Node)
 make report    # headline numbers from a simulated day
 make check     # syntax-check everything that ships
 make run       # start the backend locally

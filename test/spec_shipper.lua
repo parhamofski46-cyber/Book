@@ -39,6 +39,26 @@ return function(T, run)
       T.gt(pulse.state.shipper.samplesSent, 0, 'samples got through')
     end)
 
+    T.test('being told to slow down is temporary, not fatal', function()
+      -- A 429 used to take the 4xx path: the batch was thrown away, the failure
+      -- streak reset, and the console reported the last send as fine.
+      local sched, world, pulse = run.build({ convars = { pulse_flush_interval = '5000' } })
+      world.http.forceStatus = 429
+      sched:run(2 * HOUR)
+      T.gt(pulse.state.shipper.failures, 0, 'counted as a failure')
+      T.gt(pulse.state.shipper:backoffMs(), 5000, 'and backed off')
+      T.eq(pulse.state.buffer.dropped, 0, 'nothing thrown away for a temporary refusal')
+      T.gt(pulse.state.buffer:size(), 0, 'the windows are still queued')
+    end)
+
+    T.test('a permanently rejected batch is counted as lost, not lost silently', function()
+      local sched, world, pulse = run.build({
+        convars = { pulse_flush_interval = '5000', pulse_buffer_size = '5000' } })
+      world.http.forceStatus = 400
+      sched:run(2 * HOUR)
+      T.gt(pulse.state.buffer.dropped, 0, 'the loss is visible in the dropped counter')
+    end)
+
     T.test('a rejected payload is dropped, not retried forever', function()
       local sched, world, pulse = run.build({ convars = { pulse_flush_interval = '5000' } })
       world.http.forceStatus = 401

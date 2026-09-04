@@ -47,7 +47,7 @@ First release. Collector, backend, dashboard and alerting.
   instead of an empty chart
 
 **Testing**
-- 133 tests: 37 collector (Lua), 96 backend (Node)
+- 149 tests: 39 collector (Lua), 110 backend (Node)
 - A virtual-time FiveM simulator the collector runs inside **unmodified**
 - End-to-end suite replays the bytes the collector really shipped, against the
   ground truth of every injected fault
@@ -57,6 +57,31 @@ First release. Collector, backend, dashboard and alerting.
 **Licence**
 - Collector and tooling: MIT
 - Backend: Elastic License 2.0, the official text verbatim
+
+**Fixed before release** (found by a full review of the diff)
+- The "collector has gone quiet" alert could never fire: alerting ran only from
+  the ingest hook, which stamps last_seen immediately before it. A periodic
+  sweep now checks every server, reporting or not.
+- 7-day and 30-day views silently showed only the raw retention window, because
+  the resolution was chosen by row count rather than by how far the data
+  reached. They now fall back to hourly, folding in the recent hours that are
+  not rolled up yet so the series still reaches the present.
+- Hourly buckets carried the hour's total stall time but were plotted under a
+  legend reading "peak per window" — around 240x too large. The rollup now
+  keeps the worst window in each hour.
+- A 429 was treated as permanent: the batch was discarded, the failure streak
+  reset, and the console reported the last send as fine. It is retried with
+  backoff, and a batch that really is dropped now increments the dropped count.
+- The hover dot was positioned against the data's own maximum while the line
+  was drawn against a rounded ceiling, so it never sat on the line; it also
+  mapped x by index against a time axis.
+- Any batch without an agent block blanked the stored agent version.
+- A regression was marked notified even when there was no webhook to notify,
+  so a server registered without one silently consumed every finding it made.
+- `make release` referenced absolute paths from one machine, and the
+  server-list screenshot was actually the detail page.
+- `maxServers` was a plan limit nothing could enforce, and a webhook could only
+  be set at registration time (`scripts/set-webhook.js` now changes it).
 
 **Known limits**
 - Validated against the simulator, not yet against a live server

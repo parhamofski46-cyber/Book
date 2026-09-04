@@ -115,7 +115,7 @@ function Pulse.diagnose(status)
   elseif status == 404 then
     return false, 'Reached a server, but not the ingest endpoint. pulse_endpoint should end with /v1/ingest.'
   elseif status == 429 then
-    return true, 'Rate limited, which means the backend is up and the token works. Nothing to fix.'
+    return true, 'Rate limited. The backend is up and the token works; the collector backs off and retries, so nothing is lost.'
   elseif status >= 500 then
     return false, 'The backend is reachable but returned an error. Check its logs.'
   elseif status == 0 then

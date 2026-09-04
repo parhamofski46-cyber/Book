@@ -56,8 +56,13 @@ export async function deliverAlert(webhookUrl, body, { fetchImpl = fetch, timeou
   }
 }
 
-/** Evaluate, deliver and record. Recording happens either way, so a failed
- *  delivery still counts against the cooldown rather than retrying forever. */
+/**
+ * Deliver and record. The alert is recorded either way, so a failed delivery
+ * counts against the cooldown instead of retrying in a loop -- but the
+ * regression is only marked notified once it actually reached someone.
+ * Otherwise a server registered without a webhook silently consumes every
+ * finding it ever makes, and adding a webhook later surfaces none of them.
+ */
 export async function dispatchAlerts(store, server, alerts, { now, publicUrl, fetchImpl } = {}) {
   const results = [];
   for (const alert of alerts) {
@@ -65,7 +70,7 @@ export async function dispatchAlerts(store, server, alerts, { now, publicUrl, fe
     const result = await deliverAlert(server.discord_webhook, body, { fetchImpl });
     store.recordAlert(server.id, alert.kind, alert.key, now, result.delivered,
       JSON.stringify({ title: alert.title, detail: alert.detail, ...result }));
-    if (alert.regressionId) store.markRegressionNotified(alert.regressionId, now);
+    if (alert.regressionId && result.delivered) store.markRegressionNotified(alert.regressionId, now);
     results.push({ ...alert, ...result });
   }
   return results;

@@ -122,6 +122,11 @@ const MIGRATIONS = [
   // 2 -- record how a finding was reached, so the dashboard can say whether it
   // came from a day-over-day baseline or an adjacent-window comparison.
   `ALTER TABLE regressions ADD COLUMN method TEXT NOT NULL DEFAULT 'adjacent';`,
+  // 3 -- the worst single window inside each hour. Without it the only stall
+  // figure an hourly bucket carried was the hour's total, which is a different
+  // quantity from the per-window peak the raw series plots -- roughly 240x
+  // larger, under a legend that said "peak".
+  `ALTER TABLE samples_hourly ADD COLUMN stall_max INTEGER NOT NULL DEFAULT 0;`,
 ];
 
 export function migrate(db) {

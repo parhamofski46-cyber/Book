@@ -9,7 +9,7 @@ return function(T, run)
         { 401, false, 'pulse_token' },
         { 403, false, 'pulse_token' },
         { 404, false, 'pulse_endpoint' },
-        { 429, true,  'Nothing to fix' },
+        { 429, true,  'backs off and retries' },
         { 500, false, 'logs' },
         { 0,   false, 'Could not reach' },
       }

@@ -123,7 +123,7 @@ collector setting has a convar, so tuning survives an update.
 
 ## Honest status
 
-**v0.1.** Everything above runs and is covered by 133 tests, but it has been
+**v0.1.** Everything above runs and is covered by 149 tests, but it has been
 validated against a FiveM simulator, not yet against a live server. The
 simulator reproduces cooperative threading and main-thread stalls, and the
 collector runs inside it completely unmodified — but that is still a

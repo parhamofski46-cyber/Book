@@ -1,0 +1,13 @@
+{
+  "name": "pulse",
+  "private": true,
+  "type": "module",
+  "description": "Release tooling only. Nothing shipped depends on this: the collector is dependency-free Lua and the backend is standard-library Node. This exists so `node release/screenshot.js` can find a browser.",
+  "scripts": {
+    "test": "make test",
+    "release": "make release"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.56.0"
+  }
+}

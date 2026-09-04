@@ -54,27 +54,84 @@ const tile = (k, v, note = '') =>
   `<div class="card tile"><div class="k">${esc(k)}</div><div class="v">${v}</div>` +
   (note ? `<div class="n">${note}</div>` : '') + `</div>`;
 
+const HOUR_S = 3600;
+
+// A 24-hour range is ~5,760 raw windows; a 30-day one would be 172,800, and
+// the JSON API would stringify every one of them. Past this, the series is
+// served hourly instead -- which is what the reader was going to see anyway,
+// since the chart buckets to a couple of hundred points.
+const MAX_RAW_ROWS = 8000;
+
+// Raw has to reach most of the way back before it can stand for the whole
+// range on its own. The previous test was a row count, which every server past
+// its first hour satisfied -- so a 30-day view silently showed 7 days and said
+// nothing about it.
+const RAW_COVERAGE = 0.9;
+
+/** Fold raw windows into the same shape the stored hourly buckets have. */
+function foldToHours(rows) {
+  const buckets = new Map();
+  for (const r of rows) {
+    const hour = Math.floor(r.wall_s / HOUR_S) * HOUR_S;
+    let b = buckets.get(hour);
+    if (!b) {
+      buckets.set(hour, (b = {
+        hour_s: hour, windows: 0, probes: 0, players_max: 0,
+        stall_ms: 0, stall_max: 0, hitches: 0, max_drift: 0, p95_max: 0,
+      }));
+    }
+    b.windows += 1;
+    b.probes += r.probes;
+    b.players_max = Math.max(b.players_max, r.players);
+    b.stall_ms += r.stall_ms;
+    b.stall_max = Math.max(b.stall_max, r.stall_ms);
+    b.hitches += r.hitches;
+    b.max_drift = Math.max(b.max_drift, r.max_drift);
+    b.p95_max = Math.max(b.p95_max, r.p95_drift);
+  }
+  return [...buckets.values()].sort((a, b) => a.hour_s - b.hour_s);
+}
+
 /**
- * Raw windows where they still exist, hourly rollups beyond that. The switch is
- * what a longer retention plan actually buys, so it is stated on the page
- * rather than hidden.
+ * An hourly bucket presented as a sample.
+ *
+ * stall_ms carries the worst window in the hour, not the hour's total: it has
+ * to mean the same thing the raw series means, or the chart's own legend
+ * becomes a lie the moment the resolution changes under it.
+ */
+const asSample = (h) => ({
+  wall_s: h.hour_s,
+  stall_ms: h.stall_max ?? 0,
+  hitches: h.hitches,
+  players: h.players_max,
+  max_drift: h.max_drift,
+  p95_drift: h.p95_max,
+  probes: h.probes,
+});
+
+/**
+ * Raw windows where they still exist and there are not too many of them,
+ * hourly beyond that. When it falls back to hourly, the recent windows that
+ * have not been rolled up yet are folded on the fly, so the series covers the
+ * whole range at one resolution instead of stopping where the rollup did.
  */
 export function seriesForRange(store, serverId, from, to) {
+  const span = Math.max(1, to - from);
   const raw = store.samplesBetween(serverId, from, to);
-  const expected = (to - from) / 15;
-  if (raw.length >= Math.min(expected * 0.4, 200) || raw.length > 0 && to - from <= 2 * 86400) {
+  const reachesBack = raw.length > 0 && (to - raw[0].wall_s) / span >= RAW_COVERAGE;
+
+  if (reachesBack && raw.length <= MAX_RAW_ROWS) {
     return { rows: raw, resolution: 'raw' };
   }
-  const hourly = store.hourlyBetween(serverId, from, to).map((h) => ({
-    wall_s: h.hour_s,
-    stall_ms: h.stall_ms,
-    hitches: h.hitches,
-    players: h.players_max,
-    max_drift: h.max_drift,
-    p95_drift: h.p95_max,
-    probes: h.probes,
-  }));
-  return { rows: hourly.length ? hourly : raw, resolution: hourly.length ? 'hourly' : 'raw' };
+
+  const stored = store.hourlyBetween(serverId, from, to);
+  const after = stored.length ? stored[stored.length - 1].hour_s + HOUR_S : from;
+  const rows = [...stored, ...foldToHours(raw.filter((r) => r.wall_s >= after))].map(asSample);
+
+  // Nothing rolled up and nothing recent enough to fold: whatever raw there is
+  // beats an empty chart.
+  if (!rows.length) return { rows: raw, resolution: 'raw' };
+  return { rows, resolution: 'hourly' };
 }
 
 export function serverListPage(store, { now }) {
