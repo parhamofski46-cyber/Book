@@ -4,7 +4,7 @@ The Cfx forum post. Paste into forum.cfx.re → Releases → Server Resources.
 Attach the screenshots from release/screenshots/ where the markers say so;
 the forum accepts drag-and-drop and rewrites them to its own CDN links.
 
-Replace YOUR-GITHUB with the repository you publish to before posting.
+Replace parhamofski46-cyber/pulse-fivem with the repository you publish to before posting.
 -->
 
 # [Free] Pulse — find out *which* resource made your server slow
@@ -91,7 +91,7 @@ Measured over a simulated day: **0.0084% of one core**, against a 0.05% budget.
 ## Install
 
 ```sh
-git clone https://github.com/YOUR-GITHUB pulse && cd pulse
+git clone https://github.com/parhamofski46-cyber/pulse-fivem pulse && cd pulse
 sh install.sh
 ```
 
@@ -133,7 +133,7 @@ The collector is **MIT** and dependency-free Lua: read every line before you
 put it on your server. Please do. The backend is Elastic License 2.0 — yours to
 self-host and modify, just not to resell as a hosted service.
 
-**GitHub:** https://github.com/YOUR-GITHUB
+**GitHub:** https://github.com/parhamofski46-cyber/pulse-fivem
 
 Bug reports, and especially "this blamed the wrong resource" reports with the
 data, are the most useful thing you can send me.

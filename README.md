@@ -1,9 +1,21 @@
-# Pulse — performance telemetry for FiveM servers
+# Pulse — find out *which* resource made your FiveM server slow
 
-`resmon` only ever shows you *now*. When a server hitched at 21:04 with 180
-players on, or got slower after last Tuesday's update, there is nothing to look
-at. Pulse records main-thread health continuously, and then answers the question
-that actually matters: **what changed?**
+`resmon` only ever shows you **now**. When someone reports the server was
+unplayable at 21:00 last night, or that it has felt worse since Tuesday, there
+is nothing to look at. You restart things until it stops.
+
+Pulse records main-thread health continuously, so the question has an answer:
+
+> **`qb-inventory`** restarted at 14:06. Since then, stall time per window went
+> **10ms → 98ms at comparable player counts.** High confidence.
+
+![Stall time across three days. The line holds near 200ms, an orange marker shows a resource restart, and the line steps immediately to about 500ms and stays there. Below, player count continues its unchanged daily rhythm across the same moment.](release/screenshots/timeline.png)
+
+*Three days of a 200-resource server. The step is the restart. The panel below
+is population — unchanged across the same moment, which is how you know it was
+not just a busy evening.*
+
+---
 
 It is two halves.
 
@@ -61,6 +73,8 @@ So Pulse never compares aggregates:
 The result reads: *`qb-inventory` restarted at 12:00; stall time per window went
 10ms to 98ms at comparable player counts (high confidence, day-over-day).*
 
+![The Pulse dashboard: a health score of 90 graded A, tiles for blocked time, p95 drift, hitches, worst stall and peak players, the stall timeline, and a table naming qb-inventory as the cause of a slowdown with high confidence.](release/screenshots/dashboard-detail.png)
+
 ## Measured, not asserted
 
 The test suite does not check that the pieces agree with each other. It runs the
@@ -93,7 +107,7 @@ costs samples, never server memory.
 ## Run it
 
 ```sh
-git clone https://github.com/YOUR-GITHUB pulse && cd pulse
+git clone https://github.com/parhamofski46-cyber/pulse-fivem pulse && cd pulse
 sh install.sh
 ```
 
@@ -199,6 +213,16 @@ sim/                  simulated FiveM server (test-time only, never shipped)
 test/                 collector suite
 backend/test/         backend suite, including the end-to-end replay
 ```
+
+## Contributing, and the report worth most
+
+If it blames the wrong resource, **that is the most valuable bug report there
+is** — real-world data the simulator cannot produce. Open an issue with the
+resource, the timestamp, and what you believe actually changed.
+
+Bug reports, questions and patches all welcome. `make test` before a pull
+request; `make verify` if you touched anything between the collector and the
+backend.
 
 ## Status
 

@@ -7,7 +7,7 @@ what to paste.
 ## The short version
 
 ```sh
-git clone https://github.com/YOUR-GITHUB pulse && cd pulse
+git clone https://github.com/parhamofski46-cyber/pulse-fivem pulse && cd pulse
 sh install.sh
 ```
 

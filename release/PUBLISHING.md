@@ -6,9 +6,10 @@ code.
 
 ## Before anything is public
 
-**1. Move it to its own repository.** This currently lives in a repo called
-`Book`, which tells a visitor nothing. Create `pulse-fivem` (or similar) and
-push there. The repository name is the first thing anyone reads.
+**1. Make the repository public.** It lives at
+`github.com/parhamofski46-cyber/pulse-fivem` and starts private, so nothing is
+exposed before you have looked at it. Settings → General → Danger Zone →
+Change visibility. Everything below assumes it is public by then.
 
 **2. The licences are done.** MIT at the repository root and in `collector/`,
 the official Elastic License 2.0 text verbatim in `backend/LICENSE`, both
@@ -28,7 +29,7 @@ Then replace the placeholders everywhere — the landing page carries them too,
 so one pass catches all of it:
 
 ```sh
-grep -rl 'YOUR-GITHUB' README.md release/ | xargs sed -i 's|YOUR-GITHUB|<owner>/<repo>|g'
+grep -rl 'parhamofski46-cyber/pulse-fivem' README.md release/ | xargs sed -i 's|parhamofski46-cyber/pulse-fivem|<owner>/<repo>|g'
 # once the forum thread exists:
 grep -rl 'YOUR-THREAD' release/ | xargs sed -i 's|forum.cfx.re/YOUR-THREAD|<thread url>|g'
 node release/build-landing.js   # rebuild the page with the real links
